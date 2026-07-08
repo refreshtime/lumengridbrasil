@@ -87,6 +87,18 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
   .cpage:last-child,.cpage-cont:last-child{page-break-after:auto}
   @page{size:A4;margin:0}
 }
+
+@media(max-width:768px){
+  .ed-header{padding:10px 16px;flex-wrap:wrap;gap:8px}
+  .editor{padding:16px}
+  .fs{padding:14px;margin-bottom:14px}
+  .frow{flex-direction:column;gap:8px}
+  .frow>div{width:100%!important;max-width:100%!important}
+  .btn-bar{padding:12px 16px;flex-wrap:wrap;gap:8px}
+  .btn-bar button{flex:1;min-width:130px}
+  #previewArea{display:none}
+  .ed-layout{display:block}
+}
 </style>
 </head>
 <body>
@@ -367,7 +379,7 @@ function generateContract(){
       '<div class="qual-line"><strong>Raz\u00e3o Social:</strong> [RAZÃO SOCIAL DA LUMEN GRID LTDA]</div>'+
       '<div class="qual-line"><strong>CNPJ:</strong> [CNPJ DA LUMEN GRID]</div>'+
       '<div class="qual-line"><strong>Endere\u00e7o:</strong> [Endere\u00e7o Completo da Lumen Grid]</div>'+
-      '<div class="qual-line"><strong>E-mail:</strong> contato@lumengrid.com.br &nbsp;&middot;&nbsp; <strong>Tel:</strong> [Telefone]</div>'+
+      '<div class="qual-line"><strong>E-mail:</strong> contato@lumengridbrasil.com.br &nbsp;&middot;&nbsp; <strong>Tel:</strong> [Telefone]</div>'+
       '<div class="qual-line"><strong>Representante:</strong> '+vendNome+' &mdash; '+vendCargo+'</div>'+
 
     '</div>'+

@@ -181,6 +181,40 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .empty svg{width:28px;height:28px;margin-bottom:10px;opacity:.35}
 .empty p{font-size:12px}
 
+
+/* ══ MOBILE ══ */
+@media(max-width:768px){
+  .hdr{padding:0 16px;height:50px}
+  .hdr-date{display:none}
+  .tabs{gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:0 14px;white-space:nowrap;flex-shrink:0;font-size:10px}
+  .tab svg{display:none}
+  .content{padding:16px}
+  .kpi-row{grid-template-columns:1fr 1fr!important;gap:8px}
+  .kpi{padding:12px}
+  .kpi-val{font-size:18px}
+  .frow{flex-direction:column;gap:8px}
+  .frow>div{max-width:100%!important;width:100%}
+  .card-body{padding:14px}
+  .card-hdr{padding:12px 14px;flex-wrap:wrap;gap:8px}
+  .card-hdr>div:last-child{width:100%}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.tbl{min-width:600px}
+  .upzone{padding:12px}
+  .btn{font-size:12px;padding:9px 16px}
+  .btn-bar{gap:6px}
+  #relMeses{gap:4px}
+  #relMeses button{font-size:10px;padding:4px 10px}
+  .bar-row{font-size:11px}
+  .vend-card,.vc-avatar{display:none}
+  div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+}
+@media(max-width:480px){
+  .kpi-row{grid-template-columns:1fr!important}
+  .tab{font-size:9px;padding:0 10px}
+}
+
 @media print{
   .hdr,.tabs{display:none!important}
   body{background:#fff}
@@ -297,10 +331,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
         </select>
       </div>
     </div>
-    <table class="tbl">
+    <div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Projeto</th><th>Método</th><th>Valor</th><th>Obs.</th><th>Anexo</th><th></th></tr></thead>
       <tbody id="despBody"></tbody>
-    </table>
+    </table></div>
     <div class="empty" id="despEmpty" style="display:none">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       <p>Nenhuma despesa registrada</p>

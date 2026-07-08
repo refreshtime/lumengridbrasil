@@ -244,6 +244,35 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .vc-fone{font-size:13px;color:rgba(232,100,26,.9)}
 .vc-role{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-top:3px}
 
+
+/* ══ MOBILE ══ */
+@media(max-width:900px){
+  .ed-layout{grid-template-columns:1fr!important;display:block}
+  .form-panel{max-height:none;border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
+  .preview-panel{display:none}
+  .btn-bar{flex-wrap:wrap;gap:6px;padding:10px 16px}
+  .btn-bar .bp{flex:1;min-width:140px;font-size:12px;padding:10px 12px}
+  .ed-header{padding:10px 16px}
+  .ed-logo{font-size:14px}
+}
+@media(max-width:768px){
+  .fs{padding:14px 16px;margin-bottom:0}
+  .fs-title{font-size:11px;margin-bottom:12px}
+  .frow{flex-direction:column;gap:8px}
+  .frow>div{flex:none!important;max-width:100%!important;width:100%}
+  .ftog-row{flex-wrap:wrap;gap:8px}
+  .equip-table{font-size:11px}
+  .equip-table th,.equip-table td{padding:6px 8px}
+  .section-header{padding:10px 16px}
+  table.equip-table{min-width:500px}
+}
+@media(max-width:480px){
+  .ed-header{padding:8px 12px;flex-wrap:wrap;gap:6px}
+  .ed-logo{font-size:13px;letter-spacing:2px}
+  .fi,.fsel,.fta{font-size:13px}
+  label.fl{font-size:9px}
+}
+
 @media print{
   body{background:#fff}
   .ed-header,.form-panel,.btn-bar,.prev-empty{display:none!important}
@@ -382,7 +411,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   <div class="fs">
     <div class="fs-title">Consumo & Economia</div>
     <div class="frow">
-      <div><label class="fl">Conta Atual (R$)</label><input class="fi" type="number" id="billValue" placeholder="Ex: 800"></div>
+      <div><label class="fl">Conta Atual (R$) <span style="color:var(--or);font-size:9px">★ gráfico</span></label><input class="fi" type="number" id="billValue" placeholder="Ex: 800"></div>
       <div><label class="fl">Consumo (kWh/mês)</label><input class="fi" type="number" id="consumoAtual" placeholder="Ex: 500"></div>
     </div>
     <div class="frow">
@@ -548,7 +577,7 @@ function resetForm(){
 
 function lbar(n,t){return'<div class="lbar"><div class="ll"><img class="limg" src="'+LOGOIMG+'" onerror="this.style.display=\'none\'"/><div><div class="ltext">LUMEN<span>GRID</span></div><div class="lsub">ENERGIA INTELIGENTE</div></div></div><span class="pnum">0'+n+' / 0'+t+'</span></div>';}
 function corners(){return'<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>';}
-function pfooter(today){return'<div class="pfooter"><span class="fbrand">LUMEN GRID &nbsp;&middot;&nbsp; ENERGIA INTELIGENTE</span><span class="flegal">Gerado em '+today+'</span><span class="fsite">lumengrid.com.br</span></div>';}
+function pfooter(today){return'<div class="pfooter"><span class="fbrand">LUMEN GRID &nbsp;&middot;&nbsp; ENERGIA INTELIGENTE</span><span class="flegal">Gerado em '+today+'</span><span class="fsite">lumengridbrasil.com.br</span></div>';}
 
 function buildChart(bill,eco,pv){
   if(!bill)return'';if(!eco)eco=bill*.85;
@@ -890,7 +919,7 @@ function generateProposal(){
         '</div>'+
         '<div style="margin-left:auto;text-align:right">'+
           '<div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:6px">LUMEN GRID</div>'+
-          '<div style="font-size:12px;color:rgba(232,100,26,.8);font-weight:700">lumengrid.com.br</div>'+
+          '<div style="font-size:12px;color:rgba(232,100,26,.8);font-weight:700">lumengridbrasil.com.br</div>'+
         '</div>'+
       '</div>'+
     '</div>'+
