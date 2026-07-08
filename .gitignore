@@ -1,0 +1,10 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Scripts do Google Apps (fica no Google, não vai pro Git)
+Codigo.gs
+
+# Temporários
+*.tmp
+*.log

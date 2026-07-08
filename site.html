@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Lumen Grid — Energia Solar Fotovoltaica com Armazenamento. Sistemas residenciais, comerciais e industriais. Mais de 5 anos transformando energia em inteligência."/>
+<title>Lumen Grid — Energia Inteligente</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#E8641A;--or-l:#F07328;--or-d:#C04F10;
+  --or-dim:rgba(232,100,26,.1);--or-glow:rgba(232,100,26,.15);
+  --ink:#09090B;--s1:#111115;--s2:#18181D;
+  --b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.04);
+  --t1:#F4F4F5;--t2:#A1A1AA;--t3:#52525B;
+  --green:#22C55E;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--t1);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(9,9,11,.85);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--b1);
+  padding:0 6vw;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-brand{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:900;letter-spacing:3px;color:var(--or);text-decoration:none}
+.nav-brand span{color:var(--t1)}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:13px;font-weight:500;color:var(--t2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--t1)}
+.nav-cta{padding:9px 20px;background:var(--or);color:#fff;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;transition:background .15s}
+.nav-cta:hover{background:var(--or-l)}
+.nav-menu{display:none;cursor:pointer;color:var(--t2)}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;padding:0 6vw;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 60% 40%, rgba(232,100,26,.12) 0%, transparent 65%),
+             radial-gradient(ellipse 40% 30% at 20% 80%, rgba(232,100,26,.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;max-width:1300px;margin:0 auto;padding-top:64px}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:var(--or-dim);border:1px solid rgba(232,100,26,.25);border-radius:20px;font-size:11px;font-weight:700;color:var(--or);letter-spacing:.5px;text-transform:uppercase;margin-bottom:24px}
+.hero-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--or);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+h1{font-family:'Montserrat',sans-serif;font-size:clamp(36px,4.5vw,64px);font-weight:900;line-height:1.08;letter-spacing:-1.5px;margin-bottom:24px}
+h1 em{font-style:normal;color:var(--or)}
+.hero-sub{font-size:17px;line-height:1.65;color:var(--t2);max-width:500px;margin-bottom:40px;font-weight:400}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{padding:14px 28px;background:var(--or);color:#fff;border-radius:9px;font-size:14px;font-weight:700;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{background:var(--or-l);transform:translateY(-1px)}
+.btn-secondary{padding:14px 28px;background:transparent;color:var(--t1);border:1px solid var(--b1);border-radius:9px;font-size:14px;font-weight:600;text-decoration:none;transition:all .15s}
+.btn-secondary:hover{border-color:rgba(255,255,255,.18);background:var(--s1)}
+
+/* Hero visual */
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center}
+.hero-card-stack{position:relative;width:100%;max-width:480px}
+.hcard{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:24px;backdrop-filter:blur(12px)}
+.hcard-main{position:relative;z-index:2}
+.hcard-float{position:absolute;background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:16px 20px;backdrop-filter:blur(8px)}
+.hcard-float.f1{bottom:-24px;right:-32px;z-index:3;min-width:180px}
+.hcard-float.f2{top:-24px;left:-32px;z-index:3;min-width:160px}
+.hcard-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:6px}
+.hcard-val{font-size:22px;font-weight:800;color:var(--t1);font-family:'Montserrat',sans-serif}
+.hcard-val.accent{color:var(--or)}
+.hcard-val.green{color:var(--green)}
+.hcard-sub{font-size:11px;color:var(--t3);margin-top:4px}
+.hcard-chart{display:flex;align-items:flex-end;gap:6px;margin-top:16px;height:60px}
+.hbar{flex:1;background:var(--or);border-radius:3px 3px 0 0;opacity:.7;transition:height .5s}
+.hbar.active{opacity:1}
+.hcard-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b2)}
+.hcard-row:last-child{border-bottom:none}
+.hcard-item{font-size:12px;color:var(--t1);font-weight:500}
+.hcard-badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;background:rgba(34,197,94,.12);color:var(--green)}
+
+/* ── STATS ── */
+.stats{padding:60px 6vw;border-top:1px solid var(--b1);border-bottom:1px solid var(--b1);background:var(--s1)}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:40px;text-align:center}
+.stat-num{font-family:'Montserrat',sans-serif;font-size:clamp(28px,3.5vw,48px);font-weight:900;color:var(--or);line-height:1}
+.stat-label{font-size:13px;color:var(--t2);margin-top:8px;font-weight:400}
+
+/* ── SECTIONS ── */
+section{padding:100px 6vw}
+.sec-inner{max-width:1200px;margin:0 auto}
+.sec-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--or);margin-bottom:14px}
+h2{font-family:'Montserrat',sans-serif;font-size:clamp(28px,3vw,44px);font-weight:900;letter-spacing:-1px;line-height:1.1;margin-bottom:16px}
+.sec-sub{font-size:16px;color:var(--t2);line-height:1.65;max-width:560px;margin-bottom:56px}
+
+/* ── SOLUTIONS ── */
+.solutions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sol-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:32px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.sol-card:hover{border-color:rgba(232,100,26,.3);transform:translateY(-2px)}
+.sol-card.featured{border-color:rgba(232,100,26,.3);background:linear-gradient(135deg,var(--s1) 0%,rgba(232,100,26,.05) 100%)}
+.sol-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--b1)}
+.sol-card.featured::before{background:linear-gradient(90deg,transparent,var(--or),transparent)}
+.sol-icon{width:48px;height:48px;background:var(--or-dim);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;border:1px solid rgba(232,100,26,.2)}
+.sol-icon svg{width:24px;height:24px;color:var(--or)}
+.sol-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;margin-bottom:12px;color:var(--t1)}
+.sol-desc{font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:20px}
+.sol-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.sol-list li{font-size:12px;color:var(--t2);display:flex;align-items:center;gap:8px}
+.sol-list li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--or);flex-shrink:0}
+.sol-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;border-radius:4px;background:var(--or-dim);color:var(--or);margin-bottom:16px}
+
+/* ── SEGMENTS ── */
+.seg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:48px}
+.seg-item{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:20px 16px;text-align:center;transition:border-color .15s}
+.seg-item:hover{border-color:rgba(232,100,26,.25)}
+.seg-icon{font-size:28px;margin-bottom:10px}
+.seg-item svg{width:28px;height:28px;color:var(--or);margin-bottom:10px}
+.seg-name{font-size:12px;font-weight:600;color:var(--t1)}
+.seg-sub{font-size:10px;color:var(--t3);margin-top:3px}
+
+/* ── HOW IT WORKS ── */
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.how-grid::before{content:'';position:absolute;top:28px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--b1),var(--or-dim),var(--b1),transparent)}
+.how-step{text-align:center;padding:0 20px}
+.how-num{width:56px;height:56px;border-radius:50%;background:var(--s1);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;color:var(--or);position:relative;z-index:1}
+.how-title{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:8px}
+.how-desc{font-size:12px;color:var(--t2);line-height:1.6}
+
+/* ── GUARANTEES ── */
+.guar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.guar-item{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:28px;display:flex;gap:16px;align-items:flex-start;transition:border-color .15s}
+.guar-item:hover{border-color:rgba(232,100,26,.2)}
+.guar-ico{width:40px;height:40px;border-radius:8px;background:var(--or-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(232,100,26,.2)}
+.guar-ico svg{width:20px;height:20px;color:var(--or)}
+.guar-title{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.guar-desc{font-size:12px;color:var(--t2);line-height:1.6}
+
+/* ── CTA ── */
+.cta-sec{padding:100px 6vw;background:var(--s1);border-top:1px solid var(--b1)}
+.cta-inner{max-width:700px;margin:0 auto;text-align:center}
+.cta-inner h2{margin-bottom:16px}
+.cta-inner p{font-size:16px;color:var(--t2);margin-bottom:40px;line-height:1.65}
+.cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-whats{padding:14px 28px;background:#25D366;color:#fff;border-radius:9px;font-size:14px;font-weight:700;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:10px}
+.btn-whats:hover{background:#1fb855;transform:translateY(-1px)}
+.btn-whats svg{width:20px;height:20px}
+
+/* ── FOOTER ── */
+footer{padding:40px 6vw;border-top:1px solid var(--b1)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-brand{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:900;letter-spacing:3px;color:var(--or)}
+.footer-brand span{color:var(--t2)}
+.footer-copy{font-size:11px;color:var(--t3)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:12px;color:var(--t3);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:var(--t2)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:48px}
+  .hero-visual{display:none}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .solutions-grid{grid-template-columns:1fr}
+  .seg-grid{grid-template-columns:repeat(3,1fr)}
+  .how-grid{grid-template-columns:repeat(2,1fr);gap:32px}
+  .how-grid::before{display:none}
+  .guar-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .nav-menu{display:block}
+}
+@media(max-width:600px){
+  .stats-inner{grid-template-columns:repeat(2,1fr);gap:24px}
+  .seg-grid{grid-template-columns:repeat(2,1fr)}
+  h1{font-size:34px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">LUMEN<span>GRID</span></a>
+  <div class="nav-links">
+    <a href="#solucoes">Soluções</a>
+    <a href="#como-funciona">Como Funciona</a>
+    <a href="#segmentos">Segmentos</a>
+    <a href="#garantias">Garantias</a>
+    <a href="#contato" class="nav-cta">Solicitar Proposta</a>
+  </div>
+  <div class="nav-menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-tag">Energia Solar Inteligente</div>
+      <h1>Energia que<br><em>trabalha por você,</em><br>dia e noite.</h1>
+      <p class="hero-sub">Sistemas fotovoltaicos com armazenamento em bateria para residências, empresas e indústrias. Gere, armazene e use sua própria energia — sem depender da concessionária.</p>
+      <div class="hero-actions">
+        <a href="#contato" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          Solicitar Proposta Gratuita
+        </a>
+        <a href="#solucoes" class="btn-secondary">Conhecer Soluções</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="hcard hcard-main">
+          <div class="hcard-lbl">Economia Estimada — Mensal</div>
+          <div class="hcard-val accent">R$ 1.840</div>
+          <div class="hcard-sub">com sistema de 10 kVp + bateria 10 kWh</div>
+          <div class="hcard-chart" id="heroChart"></div>
+        </div>
+        <div class="hcard hcard-float f1">
+          <div class="hcard-lbl">Retorno do Investimento</div>
+          <div class="hcard-val" style="font-size:18px">3,5 anos</div>
+          <div class="hcard-sub">payback médio</div>
+        </div>
+        <div class="hcard hcard-float f2">
+          <div class="hcard-lbl">Status do Sistema</div>
+          <div class="hcard-row">
+            <span class="hcard-item">Geração hoje</span>
+            <span class="hcard-badge">42 kWh</span>
+          </div>
+          <div class="hcard-row">
+            <span class="hcard-item">Bateria</span>
+            <span class="hcard-badge">87%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-num">+5</div>
+      <div class="stat-label">Anos de experiência</div>
+    </div>
+    <div>
+      <div class="stat-num">+300</div>
+      <div class="stat-label">Projetos entregues</div>
+    </div>
+    <div>
+      <div class="stat-num">+2 MW</div>
+      <div class="stat-label">Instalados</div>
+    </div>
+    <div>
+      <div class="stat-num">25</div>
+      <div class="stat-label">Anos de garantia nos módulos</div>
+    </div>
+  </div>
+</div>
+
+<!-- SOLUÇÕES -->
+<section id="solucoes">
+  <div class="sec-inner">
+    <div class="sec-tag">Nossas Soluções</div>
+    <h2>O sistema certo<br>para cada necessidade</h2>
+    <p class="sec-sub">Da energia solar básica ao sistema híbrido completo com armazenamento, projetamos cada instalação sob medida.</p>
+    <div class="solutions-grid">
+
+      <div class="sol-card">
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </div>
+        <div class="sol-title">Sistema Solar On-Grid</div>
+        <p class="sol-desc">Conectado à rede elétrica, com geração diurna e compensação de créditos. Ideal para quem tem bom histórico de consumo e quer reduzir a conta de energia.</p>
+        <ul class="sol-list">
+          <li>Redução de até 95% na conta</li>
+          <li>Créditos ANEEL (RN 482/2012)</li>
+          <li>Payback médio de 4 a 6 anos</li>
+          <li>Módulos de alta eficiência</li>
+        </ul>
+      </div>
+
+      <div class="sol-card featured">
+        <div class="sol-tag">Mais Completo</div>
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <div class="sol-title">Sistema Híbrido</div>
+        <p class="sol-desc">Solar + bateria de armazenamento. Gera durante o dia, armazena e usa à noite — total independência energética, mesmo em quedas de energia.</p>
+        <ul class="sol-list">
+          <li>Autonomia noturna garantida</li>
+          <li>Proteção contra apagões</li>
+          <li>Gestão inteligente de carga</li>
+          <li>Inversor híbrido integrado</li>
+          <li>Monitoramento em tempo real</li>
+        </ul>
+      </div>
+
+      <div class="sol-card">
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h2v5H7zM15 8l-2 2.5h3L14 13"/></svg>
+        </div>
+        <div class="sol-title">Wallbox — Carga Veicular</div>
+        <p class="sol-desc">Carregue seu carro elétrico ou híbrido com energia 100% solar. Integramos o Wallbox ao seu sistema fotovoltaico para máxima eficiência.</p>
+        <ul class="sol-list">
+          <li>Carregamento de 7,4 kW a 22 kW</li>
+          <li>Integração com sistema solar</li>
+          <li>Gestão de carga inteligente</li>
+          <li>Compatível com todos os EVs</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SEGMENTOS -->
+<section id="segmentos" style="padding-top:0">
+  <div class="sec-inner">
+    <div class="sec-tag">Segmentos Atendidos</div>
+    <h2>Experiência em<br>todos os setores</h2>
+    <div class="seg-grid">
+      <div class="seg-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <div class="seg-name">Residencial</div>
+        <div class="seg-sub">Casas e apartamentos</div>
+      </div>
+      <div class="seg-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2M12 12v5M10 14h4"/></svg>
+        <div class="seg-name">Comercial</div>
+        <div class="seg-sub">Lojas e escritórios</div>
+      </div>
+      <div class="seg-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M16 3v18M2 9h20M2 15h20"/></svg>
+        <div class="seg-name">Industrial</div>
+        <div class="seg-sub">Galpões e fábricas</div>
+      </div>
+      <div class="seg-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22V12M12 12C12 7 7 4 2 5c0 5 3 9 7 10M12 12c0-5 5-8 10-7 0 5-3 9-7 10"/></svg>
+        <div class="seg-name">Rural / Agro</div>
+        <div class="seg-sub">Fazendas e sítios</div>
+      </div>
+      <div class="seg-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        <div class="seg-name">Condomínios</div>
+        <div class="seg-sub">Áreas comuns e garagens</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona" style="background:var(--s1);border-top:1px solid var(--b1);border-bottom:1px solid var(--b1)">
+  <div class="sec-inner">
+    <div class="sec-tag">Processo</div>
+    <h2>Da visita técnica<br>à energia limpa</h2>
+    <p class="sec-sub" style="margin-bottom:64px">Um processo simples, transparente e acompanhado de perto pela nossa equipe em cada etapa.</p>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-num">01</div>
+        <div class="how-title">Visita e Diagnóstico</div>
+        <p class="how-desc">Avaliamos seu consumo, telhado e necessidades para projetar o sistema ideal sem desperdício.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">02</div>
+        <div class="how-title">Proposta Personalizada</div>
+        <p class="how-desc">Apresentamos o projeto detalhado com equipamentos, estimativa de geração, payback e condições de pagamento.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">03</div>
+        <div class="how-title">Instalação Certificada</div>
+        <p class="how-desc">Equipe técnica própria executa a instalação com ART/RRT, seguindo normas ABNT NBR 16690 e NR-10.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">04</div>
+        <div class="how-title">Homologação e Ativação</div>
+        <p class="how-desc">Cuidamos de todo o processo junto à concessionária para homologação e ativação do seu sistema.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GARANTIAS -->
+<section id="garantias">
+  <div class="sec-inner">
+    <div class="sec-tag">Segurança e Qualidade</div>
+    <h2>Você protegido<br>por décadas</h2>
+    <p class="sec-sub">Trabalhamos apenas com equipamentos certificados e oferecemos garantias reais, por escrito, em contrato.</p>
+    <div class="guar-grid">
+      <div class="guar-item">
+        <div class="guar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg></div>
+        <div>
+          <div class="guar-title">25 anos — Módulos Fotovoltaicos</div>
+          <p class="guar-desc">Garantia de desempenho mínimo de 80% após 25 anos, diretamente com o fabricante. Módulos de primeira linha com certificação IEC.</p>
+        </div>
+      </div>
+      <div class="guar-item">
+        <div class="guar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
+        <div>
+          <div class="guar-title">10 anos — Inversor e Bateria</div>
+          <p class="guar-desc">Inversores híbridos e sistemas de bateria com garantia extendida de até 10 anos. Reposição garantida pelo fabricante no Brasil.</p>
+        </div>
+      </div>
+      <div class="guar-item">
+        <div class="guar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div>
+          <div class="guar-title">Instalação com ART/RRT</div>
+          <p class="guar-desc">Toda instalação acompanhada de Anotação de Responsabilidade Técnica de engenheiro habilitado no CREA, conforme legislação vigente.</p>
+        </div>
+      </div>
+      <div class="guar-item">
+        <div class="guar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div>
+          <div class="guar-title">Atendimento em 72 horas</div>
+          <p class="guar-desc">SLA de atendimento técnico em até 72 horas para qualquer ocorrência durante o período de garantia de instalação.</p>
+        </div>
+      </div>
+      <div class="guar-item">
+        <div class="guar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div>
+          <div class="guar-title">Contrato Transparente</div>
+          <p class="guar-desc">Todos os termos, equipamentos, prazos e garantias documentados em contrato formal, com multas claras para ambas as partes.</p>
+        </div>
+      </div>
+      <div class="guar-item">
+        <div class="guar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polyline points="7 10 12 15 17 10"/></svg></div>
+        <div>
+          <div class="guar-title">Monitoramento Incluído</div>
+          <p class="guar-desc">App de monitoramento para acompanhar geração, consumo e performance do sistema em tempo real pelo celular.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec" id="contato">
+  <div class="cta-inner">
+    <div class="sec-tag" style="text-align:center">Fale Conosco</div>
+    <h2>Pronto para gerar<br>sua própria energia?</h2>
+    <p>Solicite uma proposta gratuita. Nossa equipe faz a visita técnica, projeta o sistema ideal para o seu perfil e apresenta as melhores condições de pagamento.</p>
+    <div class="cta-buttons">
+      <a href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20uma%20proposta%20de%20energia%20solar." class="btn-whats" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.824L.057 23.882l6.234-1.635A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.369l-.36-.214-3.706.972.988-3.608-.234-.371A9.818 9.818 0 0112 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
+        Falar no WhatsApp
+      </a>
+      <a href="mailto:contato@lumengrid.com.br" class="btn-secondary" style="font-size:14px;padding:14px 28px">
+        contato@lumengrid.com.br
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">LUMEN<span>GRID</span></div>
+      <div class="footer-copy" style="margin-top:6px">© 2026 Lumen Grid Energia Inteligente. Todos os direitos reservados.</div>
+    </div>
+    <div class="footer-links">
+      <a href="#solucoes">Soluções</a>
+      <a href="#garantias">Garantias</a>
+      <a href="#contato">Contato</a>
+      <a href="login.html">Portal Interno</a>
+    </div>
+    <div class="footer-copy">CNPJ: [00.000.000/0001-00] &nbsp;·&nbsp; lumengrid.com.br</div>
+  </div>
+</footer>
+
+<script>
+// Hero chart animado
+const heights=[35,50,42,65,58,72,80,68,90,100,85,95];
+const chart=document.getElementById('heroChart');
+if(chart){
+  chart.innerHTML=heights.map((h,i)=>`<div class="hbar${i===heights.length-1?' active':''}" style="height:${h}%;opacity:${0.4+h/250}"></div>`).join('');
+}
+
+// Nav scroll effect
+window.addEventListener('scroll',()=>{
+  document.querySelector('nav').style.borderBottomColor=window.scrollY>20?'rgba(255,255,255,.1)':'rgba(255,255,255,.07)';
+});
+
+// Smooth scroll para links internos
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const target=document.querySelector(a.getAttribute('href'));
+    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>

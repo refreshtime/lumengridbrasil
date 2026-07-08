@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lumen Grid — Portal</title>
+<script>if(!sessionStorage.getItem('lg_auth')){location.replace('login.html');}</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#E8641A;--or-d:rgba(232,100,26,.1);
+  --bg:#0A0A0C;--s1:#111115;--s2:#18181D;
+  --b1:rgba(255,255,255,.07);--t1:#F4F4F5;--t2:#A1A1AA;--t3:#52525B;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 20%,rgba(232,100,26,.07) 0%,transparent 60%);pointer-events:none}
+
+.hdr{background:var(--s1);border-bottom:1px solid var(--b1);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:900;letter-spacing:3px;color:var(--or)}
+.brand span{color:var(--t1)}
+.brand-sub{font-size:9px;letter-spacing:2px;color:var(--t3);margin-top:2px;text-transform:uppercase}
+.logout{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--b1);border-radius:6px;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;background:transparent;font-family:'Inter',sans-serif;transition:all .15s}
+.logout:hover{color:var(--t2);border-color:rgba(255,255,255,.12)}
+.logout svg{width:13px;height:13px}
+
+.main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px}
+.greeting{font-size:13px;color:var(--t3);margin-bottom:8px;text-align:center}
+.title{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:900;text-align:center;margin-bottom:6px}
+.sub{font-size:13px;color:var(--t2);text-align:center;margin-bottom:48px}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:860px;width:100%}
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:32px 28px;text-decoration:none;color:inherit;transition:all .18s;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:0}
+.card:hover{border-color:rgba(232,100,26,.3);transform:translateY(-2px)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--b1);transition:background .18s}
+.card:hover::before{background:linear-gradient(90deg,transparent,var(--or),transparent)}
+.card-icon{width:52px;height:52px;background:var(--or-d);border:1px solid rgba(232,100,26,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.card-icon svg{width:26px;height:26px;color:var(--or);stroke-width:1.5}
+.card-title{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:8px;font-family:'Montserrat',sans-serif}
+.card-desc{font-size:12px;color:var(--t2);line-height:1.65;flex:1}
+.card-action{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--or);margin-top:20px}
+.card-action svg{width:12px;height:12px;transition:transform .15s}
+.card:hover .card-action svg{transform:translateX(3px)}
+
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="brand">LUMEN<span>GRID</span></div>
+    <div class="brand-sub">Portal Interno</div>
+  </div>
+  <button class="logout" onclick="logout()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    Sair
+  </button>
+</div>
+
+<div class="main">
+  <div class="greeting" id="greet"></div>
+  <div class="title">O que você vai fazer hoje?</div>
+  <div class="sub">Escolha uma das ferramentas abaixo para continuar</div>
+
+  <div class="grid">
+
+    <a class="card" href="dashboard.html">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+      </div>
+      <div class="card-title">Dashboard</div>
+      <div class="card-desc">Gestão de despesas, receitas, fluxo de caixa e relatórios financeiros da empresa.</div>
+      <div class="card-action">Abrir Dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+
+    <a class="card" href="gerador.html">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="card-title">Gerador de Proposta</div>
+      <div class="card-desc">Crie propostas comerciais personalizadas para sistemas solar, híbrido e Wallbox em PDF.</div>
+      <div class="card-action">Abrir Gerador <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+
+    <a class="card" href="contrato.html">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <div class="card-title">Gerador de Contrato</div>
+      <div class="card-desc">Gere contratos de fornecimento e instalação personalizados para cada cliente, prontos para assinar.</div>
+      <div class="card-action">Abrir Contrato <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+
+  </div>
+</div>
+
+<script>
+function logout(){sessionStorage.clear();location.replace('login.html');}
+
+const user=sessionStorage.getItem('lg_user')||'';
+const hour=new Date().getHours();
+const greetWord=hour<12?'Bom dia':'hour<18?Boa tarde':'Boa noite';
+const greetFinal=hour<12?'Bom dia':'Boa tarde';
+document.getElementById('greet').textContent=(hour<12?'Bom dia, ':hour<18?'Boa tarde, ':'Boa noite, ')+(user||'');
+</script>
+</body>
+</html>
