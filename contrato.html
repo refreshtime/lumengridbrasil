@@ -240,15 +240,12 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
   </div>
 
   <div class="fs">
-    <div class="fs-title">Vendedor / Responsável Técnico</div>
+    <div class="fs-title">Vendedor / Consultor</div>
     <div class="frow">
       <div><label class="fl">Nome do Consultor</label><input class="fi" id="vendNome" placeholder="Nome"></div>
       <div><label class="fl">Cargo</label><input class="fi" id="vendCargo" placeholder="Consultor de Energia"></div>
     </div>
-    <div class="frow">
-      <div><label class="fl">Resp. Técnico (RT)</label><input class="fi" id="rtNome" placeholder="Nome do Engenheiro"></div>
-      <div><label class="fl">CREA / CAU</label><input class="fi" id="rtCrea" placeholder="CREA-SP 0000000"></div>
-    </div>
+
   </div>
 
   <div class="fs">
@@ -333,8 +330,6 @@ function generateContract(){
   const warDesemp=exN('warDesemp')||80;
   const vendNome=ext('vendNome')||'Lumen Grid';
   const vendCargo=ext('vendCargo')||'Consultor de Energia';
-  const rtNome=ext('rtNome');
-  const rtCrea=ext('rtCrea');
   const foro=ext('cForo')||'[CIDADE]';
   const obs=ext('cObs');
   const hasBat=ext('tipoSistema')==='solar_bateria';
@@ -374,7 +369,7 @@ function generateContract(){
       '<div class="qual-line"><strong>Endere\u00e7o:</strong> [Endere\u00e7o Completo da Lumen Grid]</div>'+
       '<div class="qual-line"><strong>E-mail:</strong> contato@lumengrid.com.br &nbsp;&middot;&nbsp; <strong>Tel:</strong> [Telefone]</div>'+
       '<div class="qual-line"><strong>Representante:</strong> '+vendNome+' &mdash; '+vendCargo+'</div>'+
-      (rtNome?'<div class="qual-line"><strong>Respons\u00e1vel T\u00e9cnico:</strong> '+rtNome+(rtCrea?' &mdash; '+rtCrea:'')+'</div>':'')+
+
     '</div>'+
 
     '<p><span class="cnum">1.2.</span> <strong>CONTRATANTE:</strong></p>'+
