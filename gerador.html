@@ -1314,7 +1314,7 @@ async function importSupplierPDF(input){
     if(filled.length){
       alert('\u2705 PDF importado! Campos preenchidos:\n\u2022 '+filled.join('\n\u2022')+'\n\nRevise e ajuste conforme necessário antes de gerar a proposta.');
     } else {
-      alert('\u26a0\ufe0f PDF lido, mas os dados não foram reconhecidos automaticamente.\n\nConsole do navegador (F12) tem o texto extraído para diagnóstico.\nPreencha os campos manualmente.');
+      alert('\u26a0\ufe0f PDF lido, mas os dados não foram reconhecidos automaticamente.\n\nVerifique se o PDF tem texto selecionável (não pode ser imagem/scan).\nPreencha os campos manualmente.');
     }
   }catch(e){
     console.error('[PDF Import]',e);
