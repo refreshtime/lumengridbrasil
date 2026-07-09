@@ -20,7 +20,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .ed-logo span{color:#fff}
 .ed-sub{font-size:8px;letter-spacing:3px;color:rgba(232,100,26,.5);margin-top:3px}
 .ed-layout{display:grid;grid-template-columns:440px 1fr;min-height:calc(100vh - 68px)}
-.form-panel{background:var(--uic);border-right:1px solid var(--uib);overflow-y:auto;max-height:calc(100vh - 68px);position:sticky;top:0;padding:24px 20px 120px}
+.form-panel{background:var(--uic);border-right:1px solid var(--uib);overflow-y:auto;max-height:calc(100vh - 68px);position:sticky;top:0;padding:24px 20px 40px}
 .fs{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--uib)}
 .fs:last-of-type{border-bottom:none}
 .fs-title{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:14px;padding-left:9px;border-left:3px solid var(--or)}
@@ -313,11 +313,17 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="ed-logo">LUMEN<span>GRID</span></div>
     <div class="ed-sub">ENERGIA INTELIGENTE — GERADOR DE PROPOSTA</div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <a href="portal.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);text-decoration:none">&#8592; Portal</a>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <a href="portal.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);text-decoration:none">&#8592; Portal</a>
     <button class="btn bo" onclick="resetForm()">Limpar</button>
     <button class="burg" id="urgencyToggle" onclick="toggleUrgency()">⚡ Urgência</button>
     <button class="btn bo" id="paybackToggle" onclick="togglePayback()" title="Ocultar payback">↩ Payback</button>
+    <div style="width:1px;height:24px;background:rgba(255,255,255,.15)"></div>
+    <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:7px 13px;border:1.5px solid rgba(232,100,26,.5);border-radius:6px;font-size:12px;font-weight:700;color:var(--or);background:rgba(232,100,26,.08);white-space:nowrap" title="Importar PDF do fornecedor">📄 Importar PDF
+      <input type="file" id="pdfImport" accept=".pdf" style="display:none" onchange="importSupplierPDF(this)">
+    </label>
+    <button class="bp btn" id="btnGerar" onclick="generateProposal()" style="white-space:nowrap">⚡ Gerar Proposta</button>
+    <button style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border:1.5px solid var(--or);border-radius:6px;font-size:12px;font-weight:700;color:var(--or);background:transparent;cursor:pointer;font-family:inherit;white-space:nowrap" id="btnPdf" onclick="downloadPDF()">⬇ Baixar PDF</button>
   </div>
 </div>
 
@@ -524,14 +530,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     </div>
   </div>
 
-  <div class="btn-bar">
-    <label class="bpdf btn" style="cursor:pointer" title="Importar PDF do fornecedor para preencher automaticamente">📄 Importar PDF
-      <input type="file" id="pdfImport" accept=".pdf" style="display:none" onchange="importSupplierPDF(this)">
-    </label>
-    <button class="bp btn" id="btnGerar" onclick="generateProposal()">⚡ Gerar Proposta</button>
-    <button class="bpdf btn" id="btnPdf" onclick="downloadPDF()">⬇ Baixar PDF</button>
-    <button class="bo btn" onclick="resetForm()">Limpar</button>
-  </div>
+
 </div>
 
 <div class="prev-panel">
@@ -855,6 +854,7 @@ function generateProposal(){
   let pageCount=6;
   if(hasWallbox)pageCount++;
   if(hasBat)pageCount++;
+  if(isEcoMode)pageCount++; // pUpgrade for solar
 
   const pctEco=bill&&ecoMonthly?Math.round((ecoMonthly/bill)*100):0;
   const leadText=mensagem||(
@@ -1033,7 +1033,68 @@ function generateProposal(){
     pfooter(today)+
   '</div>':'';
 
-  // PAGE GARANTIAS + EQUIPAMENTOS
+  // PAGE UPGRADE — proposta de bateria para sistemas solar
+  const pUpgrade=isEcoMode?'<div class="page" style="background:#0a0a0c;min-height:1050px;display:flex;flex-direction:column;position:relative;overflow:hidden">'+
+    '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#0a0a0c 0%,#120a00 50%,#0a0a0c 100%);z-index:0"></div>'+
+    '<div class="grid-ov"></div>'+
+    lbar(pg++,pageCount)+
+    '<div style="flex:1;padding:36px 60px 36px;position:relative;z-index:2">'+
+      // Topo: badge + título
+      '<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(232,100,26,.15);border:1px solid rgba(232,100,26,.4);border-radius:20px;padding:5px 16px;margin-bottom:20px">'+
+        '<span style="font-size:9px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase">Upgrade Recomendado</span>'+
+      '</div>'+
+      '<h2 style="font-family:Montserrat,sans-serif;font-size:34px;font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px">Sua energia solar pode ir <span style="color:var(--or)">muito mais longe</span></h2>'+
+      '<p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.7;max-width:680px;margin-bottom:28px">Ao optar por esta solu\u00e7\u00e3o, seu inversor ser\u00e1 substitu\u00eddo por um inversor h\u00edbrido, acompanhado de uma bateria de l\u00edtio de <strong style="color:#fff">5 kWh</strong>, permitindo armazenar a energia gerada e utiliz\u00e1-la quando necess\u00e1rio \u2014 inclusive durante quedas de energia.</p>'+
+      // Stats destaque
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:32px">'+
+        '<div style="border:1.5px solid rgba(232,100,26,.3);border-top:3px solid var(--or);border-radius:12px;padding:20px;text-align:center;background:rgba(232,100,26,.06)">'+
+          '<div style="font-size:36px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">6–12h</div>'+
+          '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:1px;margin-top:6px;text-transform:uppercase">Autonomia estimada</div>'+
+          '<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px">para cargas essenciais</div>'+
+        '</div>'+
+        '<div style="border:1.5px solid rgba(232,100,26,.3);border-top:3px solid var(--or);border-radius:12px;padding:20px;text-align:center;background:rgba(232,100,26,.06)">'+
+          '<div style="font-size:36px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">5 kWh</div>'+
+          '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:1px;margin-top:6px;text-transform:uppercase">Armazenamento</div>'+
+          '<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px">bateria de l\u00edtio inclusa</div>'+
+        '</div>'+
+        '<div style="border:1.5px solid rgba(232,100,26,.3);border-top:3px solid var(--or);border-radius:12px;padding:20px;text-align:center;background:rgba(232,100,26,.06)">'+
+          '<div style="font-size:36px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">24h</div>'+
+          '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:1px;margin-top:6px;text-transform:uppercase">Prote\u00e7\u00e3o</div>'+
+          '<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px">sua casa nunca para</div>'+
+        '</div>'+
+      '</div>'+
+      // Benefícios
+      '<div style="font-size:9px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:14px">Benef\u00edcios Inclu\u00eddos</div>'+
+      '<div style="display:flex;flex-direction:column;gap:0">'+
+        [
+          ['\u26a1','Autonomia de 6 a 12 horas','Funcionamento das cargas essenciais mesmo sem energia da rede el\u00e9trica.'],
+          ['\ud83c\udfe0','Equipamentos Protegidos','Geladeira, ilumina\u00e7\u00e3o, internet (Wi-Fi), sistema de alarme e c\u00e2meras de seguran\u00e7a funcionando normalmente durante quedas de energia.'],
+          ['\ud83d\udee1','Independ\u00eancia Energ\u00e9tica','Maior controle sobre sua energia, sem depender 100% da concession\u00e1ria. Seguran\u00e7a para sua fam\u00edlia a qualquer hora do dia.'],
+        ].map(([ic,t,d])=>
+          '<div style="display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.06)">'+
+            '<div style="width:40px;height:40px;border:1.5px solid rgba(232,100,26,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(232,100,26,.1)">'+ic+'</div>'+
+            '<div><div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px">'+t+'</div><div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6">'+d+'</div></div>'+
+          '</div>'
+        ).join('')+
+      '</div>'+
+      // CTA mais autonomia
+      '<div style="margin-top:24px;padding:20px 24px;border:1.5px solid rgba(232,100,26,.35);border-radius:12px;background:rgba(232,100,26,.07);display:flex;align-items:flex-start;gap:16px">'+
+        '<div style="font-size:24px;flex-shrink:0">\ud83d\udca1</div>'+
+        '<div>'+
+          '<div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:5px">Precisa de mais autonomia?</div>'+
+          '<div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.6">Desenvolvemos uma solu\u00e7\u00e3o personalizada de acordo com suas cargas, tempo de backup desejado e necessidades espec\u00edficas. Consulte nossa equipe para dimensionar o sistema ideal para voc\u00ea.</div>'+
+        '</div>'+
+      '</div>'+
+      // Disclaimer
+      '<div style="margin-top:16px;font-size:9px;color:rgba(255,255,255,.25);line-height:1.5">'+
+        '* Autonomia v\u00e1lida para aquisi\u00e7\u00e3o e instala\u00e7\u00e3o em conjunto com o sistema fotovoltaico. '+
+        '** A autonomia pode variar de acordo com o consumo e os equipamentos conectados.'+
+      '</div>'+
+    '</div>'+
+    pfooter(today)+
+  '</div>':'';
+
+    // PAGE GARANTIAS + EQUIPAMENTOS
   // spec table rows from form values
   const specRows=[
     totalPwDisp?{l:'Pot\u00eancia do Sistema',v:totalPwDisp+(modQty?' ('+modQty+' m\u00f3dulos \u00d7 '+modPower+' W)':'')}:null,
@@ -1197,7 +1258,7 @@ function generateProposal(){
     pfooter(today)+
   '</div>';
 
-  const html=p1+p2+p4+pWallbox+pGar+pInv+pSteps+pFinal;
+  const html=p1+p2+(isEcoMode?pUpgrade:'')+p4+pWallbox+pGar+pInv+pSteps+pFinal;
   document.getElementById('preview').innerHTML=html;
   document.getElementById('preview').style.display='';
   document.getElementById('previewEmpty').style.display='none';
