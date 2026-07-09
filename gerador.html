@@ -89,10 +89,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .capa-ov{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(5,5,5,.5) 0%,rgba(5,5,5,.2) 20%,rgba(10,10,10,.7) 55%,rgba(10,10,10,.97) 78%,#0a0a0a 100%)}
 .capa-body{position:absolute;left:0;right:0;bottom:0;z-index:10;padding:0 60px 60px;display:flex;flex-direction:column}
 .ctag{display:inline-flex;align-self:flex-start;background:var(--or);color:#fff;font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:6px 16px;margin-bottom:28px}
-.cheadline{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:68px;line-height:1.06;color:var(--white);margin-bottom:14px;letter-spacing:-.5px;text-shadow:0 4px 30px rgba(0,0,0,.8)}
-.cheadline .acc{color:var(--or)}
-.cgline{width:52px;height:3px;background:var(--or);margin-bottom:18px}
-.csub{font-size:15px;color:var(--wdim);font-weight:300;line-height:1.65;max-width:580px;margin-bottom:36px}
+.cheadline{font-family:'Montserrat',sans-serif;font-weight:900;font-size:62px;line-height:1.06;color:var(--white);margin-bottom:14px;letter-spacing:-.5px;text-shadow:0 4px 30px rgba(0,0,0,.8)}
+.cheadline .acc{color:var(--or);font-size:.5em;font-weight:700;letter-spacing:2px;display:block;margin-top:6px}
+.cgline{width:60px;height:4px;background:var(--or);margin:20px 0 24px;border-radius:2px}
+.csub{font-size:16px;color:rgba(255,255,255,.75);font-weight:400;line-height:1.7;max-width:620px;margin-bottom:36px;font-family:'Inter',sans-serif}
 .cmeta{display:flex;gap:44px;padding-top:24px;border-top:1px solid rgba(232,100,26,.3);flex-wrap:wrap}
 .ml{font-size:8px;letter-spacing:3px;color:rgba(232,100,26,.7);font-weight:700;text-transform:uppercase;margin-bottom:5px;display:block}
 .mv{font-size:15px;color:var(--white);font-weight:500}
@@ -173,7 +173,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .upsell-hero{display:grid;grid-template-columns:1fr 1fr;min-height:500px}
 .upsell-left{background:linear-gradient(135deg,#0f0f0f,#1a0f05);padding:52px 48px;display:flex;flex-direction:column;justify-content:center}
 .upsell-tag{display:inline-flex;background:var(--or);color:#fff;font-size:8px;font-weight:800;letter-spacing:3px;padding:5px 14px;margin-bottom:22px;text-transform:uppercase}
-.upsell-h1{font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:14px}
+.upsell-h1{font-family:'Montserrat',sans-serif;font-size:46px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:14px}
 .upsell-h1 span{color:var(--or)}
 .upsell-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:28px}
 .upsell-right{background:#111;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
@@ -217,7 +217,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .story-hero{display:grid;grid-template-columns:1fr 1fr;min-height:460px}
 .story-left{padding:52px 48px;display:flex;flex-direction:column;justify-content:center}
 .story-tag{display:inline-flex;background:var(--or);color:#fff;font-size:8px;font-weight:800;letter-spacing:3px;padding:5px 14px;margin-bottom:22px;text-transform:uppercase}
-.story-h1{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:14px}
+.story-h1{font-family:'Montserrat',sans-serif;font-size:44px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:14px}
 .story-h1 span{color:var(--or)}
 .story-desc{font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:16px}
 .story-right{display:flex;align-items:center;justify-content:center;background:rgba(232,100,26,.05);border-left:1px solid rgba(232,100,26,.1);padding:32px}
@@ -869,15 +869,15 @@ function generateProposal(){
       '<div class="story-left">'+
         '<span class="story-tag">Nossa Hist\u00f3ria</span>'+
         '<h2 class="story-h1">Energia que <span>transforma</span> vidas e neg\u00f3cios</h2>'+
-        '<p class="story-desc">A Lumen Grid nasceu da convic\u00e7\u00e3o de que energia limpa, inteligente e acess\u00edvel \u00e9 um direito. Atuamos em diferentes segmentos do mercado, levando solu\u00e7\u00f5es fotovoltaicas completas para resid\u00eancias, empresas, ind\u00fastrias, propriedades rurais e condom\u00ednios.</p>'+
-        '<p class="story-desc">Cada projeto \u00e9 \u00fanico. Nossa equipe de engenheiros e consultores desenha a solu\u00e7\u00e3o ideal para o perfil de consumo de cada cliente, garantindo o maior retorno poss\u00edvel no menor prazo.</p>'+
+        '<p class="story-desc">Somos um time com 8 anos de experiência no setor de energia solar, especializado em desenvolver projetos personalizados para residências, empresas, indústrias, propriedades rurais e condomínios.</p>'+
+        '<p class="story-desc">Nosso compromisso é entregar a solução ideal para a sua realidade, com agilidade na execução para que sua economia e independência energética começem o quanto antes.</p>'+
       '</div>'+
       '<div class="story-right">'+
         '<div class="story-nums">'+
-          '<div class="sn-item"><div class="sn-val">5+</div><div class="sn-lbl">Anos no mercado</div></div>'+
-          '<div class="sn-item"><div class="sn-val">+300</div><div class="sn-lbl">Projetos entregues</div></div>'+
-          '<div class="sn-item"><div class="sn-val">+2 MW</div><div class="sn-lbl">Pot\u00eancia instalada</div></div>'+
-          '<div class="sn-item"><div class="sn-val">100%</div><div class="sn-lbl">Satisfa\u00e7\u00e3o garantida</div></div>'+
+          '<div class="sn-item"><div class="sn-val">+8</div><div class="sn-lbl">Anos de experiência</div></div>'+
+          '<div class="sn-item"><div class="sn-val">+700</div><div class="sn-lbl">Projetos homologados</div></div>'+
+          '<div class="sn-item"><div class="sn-val">Equipe</div><div class="sn-lbl">Especializada</div></div>'+
+          '<div class="sn-item"><div class="sn-val">100%</div><div class="sn-lbl">Satisfação</div></div>'+
         '</div>'+
       '</div>'+
     '</div>'+
@@ -1063,29 +1063,7 @@ function generateProposal(){
           '<div class="prazo-card"><div class="prazo-val">'+prazo+'</div><div class="prazo-lbl">Dias \u00fateis</div><div class="prazo-sub">Instala\u00e7\u00e3o completa</div></div>'+
           '<div class="prazo-card"><div class="prazo-val">'+validity+'</div><div class="prazo-lbl">Dias</div><div class="prazo-sub">Validade da proposta</div></div>'+
         '</div>'+
-        '<div class="pay-header"><div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:4px">SOLUÇÕES DE PAGAMENTO PARA</div><div style="font-size:18px;font-weight:900;color:#fff">SEU PROJETO <span style="color:var(--or)">LUMEN GRID</span></div></div>'+
-        '<div class="pay-cards">'+
-          '<div class="pay-card">'+
-            '<div class="pay-num" style="background:var(--or)">01</div>'+
-            '<div class="pay-title">CARTÃO DE CRÉDITO</div>'+
-            '<div class="pay-highlight">PARCELE EM ATÉ 24X</div>'+
-            '<div class="pay-sub">(Consulte bandeiras e condições)</div>'+
-            '<div class="pay-badge">ATÉ<br><span class="pay-big">24x</span></div>'+
-          '</div>'+
-          '<div class="pay-card pay-card-main">'+
-            '<div class="pay-num" style="background:#1a6b3a">02</div>'+
-            '<div class="pay-title" style="color:#2ecc71">FINANCIAMENTO BANCÁRIO</div>'+
-            '<div class="pay-desc">Troque sua conta de luz por um investimento que se paga.</div>'+
-            '<div class="pay-info"><div style="font-size:9px;margin-bottom:6px">Necessário para simulação:</div><div style="font-size:11px">&#x2022; CPF/CNPJ</div><div style="font-size:11px">&#x2022; Data de nascimento</div></div>'+
-          '</div>'+
-          '<div class="pay-card">'+
-            '<div class="pay-num" style="background:#2d6a2d">03</div>'+
-            '<div class="pay-title">À VISTA (PIX / BOLETO)</div>'+
-            '<div class="pay-desc">Pague com desconto e aproveite os benefícios imediatos.</div>'+
-            '<div class="pay-badge" style="background:rgba(46,204,113,.1);color:#2ecc71;border-color:#2ecc71"><span style="font-size:22px">%</span><div style="font-size:9px">desconto</div></div>'+
-          '</div>'+
-        '</div>'+
-        '<div class="pay-footer">RESULTADO FINAL &mdash; AMBAS AS OPÇÕES CHEGAM NO MESMO FIM: <strong style="color:var(--or)">ECONOMIA REAL NO SEU BOLSO.</strong></div>'+
+        '<div style="text-align:center;margin:0 -20px"><img src="imagens/Formas de pagamento LumenGrid.png" style="width:calc(100% + 40px);max-width:none;display:block"></div>'+
       '</div>'+
       '<div>'+
         '<div class="stitle">Garantias</div>'+
