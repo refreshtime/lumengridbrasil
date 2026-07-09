@@ -855,6 +855,7 @@ function generateProposal(){
   if(hasWallbox)pageCount++;
   if(hasBat)pageCount++;
   if(isEcoMode)pageCount+=2; // pSolucao + pUpgrade for solar
+  pageCount++; // pResumo always
 
   const pctEco=bill&&ecoMonthly?Math.round((ecoMonthly/bill)*100):0;
   const leadText=mensagem||(
@@ -1033,33 +1034,59 @@ function generateProposal(){
     pfooter(today)+
   '</div>':'';
 
-  // PAGE SOLUÇÃO SOLAR — specs + eco + chart (solar only)
+  // PAGE SOLUÇÃO SOLAR — specs + projeção visual + chart
   const specCards2=[
     totalPwDisp?'<div class="spec-card"><div class="sc-num">01</div><div class="sc-val">'+totalPwDisp+'</div><div class="sc-lbl">Pot\u00eancia Solar</div>'+(modQty?'<div class="sc-sub">'+modQty+' m\u00f3dulos \u00d7 '+modPower+' W</div>':'')+'</div>':'',
-    genKwh?'<div class="spec-card"><div class="sc-num">02</div><div class="sc-val">'+genKwh+'</div><div class="sc-lbl">Gera\u00e7\u00e3o Mensal</div><div class="sc-sub">estimativa mensal</div></div>':'',
-    invQty?'<div class="spec-card"><div class="sc-num">03</div><div class="sc-val">'+(invQty>1?invQty+' un.':invQty+' un.')+'</div><div class="sc-lbl">'+(invQty>1?'Inversores':'Inversor')+'</div><div class="sc-sub">'+(invModel||'')+(invPower?' &middot; '+invPower+' kW':'')+'</div></div>':'',
-    '<div class="spec-card"><div class="sc-num">\ud83d\udccd</div><div class="sc-val" style="font-size:18px">'+instType+'</div><div class="sc-lbl">Tipo de Instala\u00e7\u00e3o</div><div class="sc-sub">'+conexao+(bill?' &middot; '+fmtBRL(bill)+'/m\u00eas':'')+'</div></div>',
+    genKwh?'<div class="spec-card"><div class="sc-num">02</div><div class="sc-val">'+genKwh+'</div><div class="sc-lbl">Gera\u00e7\u00e3o Mensal</div><div class="sc-sub">estimativa</div></div>':'',
+    invQty?'<div class="spec-card"><div class="sc-num">03</div><div class="sc-val">'+(invQty>1?invQty+' un.':invQty+' un.')+'</div><div class="sc-lbl">'+(invQty>1?'Inversores':'Inversor')+'</div><div class="sc-sub">'+(invModel||'')+(invPower?' · '+invPower+' kW':'')+'</div></div>':'',
+    '<div class="spec-card"><div class="sc-num">\ud83d\udccd</div><div class="sc-val" style="font-size:18px">'+instType+'</div><div class="sc-lbl">Instala\u00e7\u00e3o</div><div class="sc-sub">'+conexao+(bill?' · '+fmtBRL(bill)+'/m\u00eas':'')+'</div></div>',
   ].filter(Boolean).join('');
 
-  const ecoRow2=ecoMonthly||bill?
-    '<div class="eco-row">'+
-      (ecoMonthly?'<div class="eco-card"><div class="eco-lbl">Economia Mensal</div><div class="eco-val">'+fmtBRL(ecoMonthly)+'</div><div class="eco-sub">redu\u00e7\u00e3o imediata</div></div>':'')+
-      (ecoAnual?'<div class="eco-card"><div class="eco-lbl">Economia Anual</div><div class="eco-val">'+fmtBRL(ecoAnual)+'</div><div class="eco-sub">em 12 meses</div></div>':'')+
-      (paybackStr?'<div class="eco-card"><div class="eco-lbl">Retorno do Investimento</div><div class="eco-val" style="font-size:18px">'+paybackStr+'</div><div class="eco-sub">payback estimado</div></div>':'')+
-    '</div>':'';
+  const eco1=ecoMonthly?Math.round(ecoMonthly*12):0;
+  const eco5=ecoMonthly?Math.round(ecoMonthly*60):0;
+  const eco25=ecoMonthly?Math.round(ecoMonthly*300):0;
 
   const pSolucao=isEcoMode?'<div class="page page-light">'+
     '<div class="grid-ov"></div>'+
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
     '<div class="plc">'+
-      '<div class="sec-eyebrow">A Solu\u00e7\u00e3o Lumen Grid</div>'+
-      '<h2 class="sec-h2">Sistema personalizado <span style="color:var(--or)">para voc\u00ea</span></h2>'+
+      '<div class="sec-eyebrow">Sua Economia com Energia Solar</div>'+
+      '<h2 class="sec-h2">O que a Lumen Grid vai <span style="color:var(--or)">economizar para voc\u00ea</span></h2>'+
       '<div class="sec-rule"></div>'+
-      '<p class="lead">'+leadText+'</p>'+
-      '<div class="spec-grid">'+specCards2+'</div>'+
-      ecoRow2+
-      (bill&&ecoMonthly?buildChart(bill,ecoMonthly,projectVal):'')+
+      // Spec cards compactos
+      '<div class="spec-grid" style="margin-bottom:20px">'+specCards2+'</div>'+
+      // Projeção big numbers
+      (ecoMonthly?
+        '<div style="background:var(--lbg);border:1.5px solid var(--lborder);border-radius:12px;padding:20px 24px;margin-bottom:20px">'+
+          '<div style="font-size:9px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:16px">Proje\u00e7\u00e3o de Economia &mdash; '+name+'</div>'+
+          '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0">'+
+            '<div style="padding:0 16px 0 0;border-right:1px solid var(--lborder)">'+
+              '<div style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Por M\u00eas</div>'+
+              '<div style="font-size:24px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">'+fmtBRL(ecoMonthly)+'</div>'+
+              '<div style="font-size:9px;color:var(--lmuted);margin-top:4px">redu\u00e7\u00e3o imediata</div>'+
+            '</div>'+
+            '<div style="padding:0 16px;border-right:1px solid var(--lborder)">'+
+              '<div style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Em 1 Ano</div>'+
+              '<div style="font-size:24px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">'+fmtBRL(eco1)+'</div>'+
+              '<div style="font-size:9px;color:var(--lmuted);margin-top:4px">em 12 meses</div>'+
+            '</div>'+
+            '<div style="padding:0 16px;border-right:1px solid var(--lborder)">'+
+              '<div style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Em 5 Anos</div>'+
+              '<div style="font-size:24px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">'+fmtBRL(eco5)+'</div>'+
+              '<div style="font-size:9px;color:var(--lmuted);margin-top:4px">acumulado</div>'+
+            '</div>'+
+            '<div style="padding:0 0 0 16px">'+
+              '<div style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Em 25 Anos</div>'+
+              '<div style="font-size:24px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">'+fmtBRL(eco25)+'</div>'+
+              '<div style="font-size:9px;color:var(--lmuted);margin-top:4px">vida \u00fatil do sistema</div>'+
+            '</div>'+
+          '</div>'+
+          (paybackStr?'<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--lborder);display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--lmuted)">Retorno do investimento estimado:</span><span style="font-size:14px;font-weight:900;color:var(--or)">'+paybackStr+'</span></div>':'')+
+        '</div>':'')+ 
+      // Gráfico
+      (bill&&ecoMonthly?buildChart(bill,ecoMonthly,projectVal):
+        '<div style="padding:24px;background:var(--lbg);border:1px dashed var(--lborder);border-radius:8px;text-align:center;font-size:11px;color:var(--lmuted)">Preencha Conta de Energia e Economia Mensal para exibir o gr\u00e1fico de proje\u00e7\u00e3o.</div>')+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
@@ -1277,7 +1304,78 @@ function generateProposal(){
     pfooter(today)+
   '</div>';
 
-  // PAGE FINAL — fechamento impactante (dark)
+  // PAGE RESUMO — snapshot para o vendedor enviar ao cliente
+  const resumoRows=[
+    totalPwDisp?{l:'Pot\u00eancia do Sistema',v:totalPwDisp+(modQty?' ('+modQty+' m\u00f3dulos)':'')}:null,
+    genKwh?{l:'Gera\u00e7\u00e3o Mensal Estimada',v:genKwh}:null,
+    invQty?{l:'Inversor'+(invModel?' — '+invModel:''),v:(invQty>1?invQty+'×':'')+' '+(invPower?invPower+' kW':'')}:null,
+    hasBat&&batKwh?{l:'Armazenamento',v:batKwh+' kWh'+(batModel?' — '+batModel:'')}:null,
+    {l:'Tipo de Instala\u00e7\u00e3o',v:instType+' · '+conexao},
+    projectVal?{l:'Investimento',v:fmtBRL(projectVal)}:null,
+    ecoMonthly?{l:'Economia Mensal',v:fmtBRL(ecoMonthly)+'/m\u00eas'}:null,
+    paybackStr?{l:'Retorno do Investimento',v:paybackStr}:null,
+  ].filter(Boolean);
+
+  const pResumo='<div class="page page-light" style="min-height:900px">'+
+    '<div class="grid-ov"></div>'+
+    '<div class="corner tl"></div><div class="corner tr"></div>'+
+    lbar(pg++,pageCount)+
+    '<div class="plc">'+
+      '<div class="sec-eyebrow">Resumo da Proposta</div>'+
+      '<h2 class="sec-h2">Proposta para <span style="color:var(--or)">'+name+'</span></h2>'+
+      '<div class="sec-rule"></div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">'+
+        // Coluna 1: dados do sistema
+        '<div>'+
+          '<div class="stitle" style="margin-bottom:12px">Sistema</div>'+
+          resumoRows.map(r=>'<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--lborder)">'+
+            '<span style="font-size:12px;color:var(--lmuted)">'+r.l+'</span>'+
+            '<span style="font-size:12px;font-weight:700;color:var(--ltext)">'+r.v+'</span>'+
+          '</div>').join('')+
+        '</div>'+
+        // Coluna 2: economia destaque
+        '<div>'+
+          '<div class="stitle" style="margin-bottom:12px">Economia Projetada</div>'+
+          (ecoMonthly?
+            '<div style="display:flex;flex-direction:column;gap:10px">'+
+              [['Por M\u00eas',fmtBRL(ecoMonthly)],['Em 1 Ano',fmtBRL(eco1||Math.round(ecoMonthly*12))],['Em 5 Anos',fmtBRL(eco5||Math.round(ecoMonthly*60))],['Em 25 Anos',fmtBRL(eco25||Math.round(ecoMonthly*300))]].map(([l,v])=>
+                '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--lbg);border:1.5px solid var(--lborder);border-left:3px solid var(--or);border-radius:8px">'+
+                  '<span style="font-size:11px;font-weight:600;color:var(--ltext)">'+l+'</span>'+
+                  '<span style="font-size:15px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif">'+v+'</span>'+
+                '</div>'
+              ).join('')+
+            '</div>':
+            '<div style="padding:20px;text-align:center;background:var(--lbg);border-radius:8px;font-size:11px;color:var(--lmuted)">Preencha conta de energia para calcular economia</div>'
+          )+
+        '</div>'+
+      '</div>'+
+      // Investimento destaque
+      (projectVal?
+        '<div style="padding:20px 24px;background:rgba(232,100,26,.06);border:2px solid rgba(232,100,26,.3);border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">'+
+          '<div><div style="font-size:10px;font-weight:700;color:var(--or);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Investimento Total</div>'+
+          '<div style="font-size:32px;font-weight:900;color:var(--ltext);font-family:Montserrat,sans-serif">'+fmtBRL(projectVal)+'</div></div>'+
+          (paybackStr?'<div style="text-align:right"><div style="font-size:9px;color:var(--lmuted);margin-bottom:4px">Retorno estimado</div><div style="font-size:20px;font-weight:900;color:var(--or)">'+paybackStr+'</div></div>':'')+
+        '</div>':'')+ 
+      // Card consultor compacto
+      '<div style="background:var(--ltext);border-radius:12px;padding:18px 24px;display:flex;align-items:center;gap:16px">'+
+        '<div style="width:48px;height:48px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0">'+vendNome.charAt(0).toUpperCase()+'</div>'+
+        '<div>'+
+          '<div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:2px;margin-bottom:3px">CONSULTOR RESPONS\u00c1VEL</div>'+
+          '<div style="font-size:16px;font-weight:800;color:#fff">'+vendNome+'</div>'+
+          '<div style="font-size:10px;color:rgba(255,255,255,.4)">Especialista em Energia Renov\u00e1vel</div>'+
+        '</div>'+
+        '<div style="margin-left:auto;text-align:right">'+
+          '<div style="font-size:16px;font-weight:700;color:var(--or)">'+vendFone+'</div>'+
+          '<div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px">lumengridbrasil.com.br</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="text-align:center;margin-top:12px;font-size:9px;color:var(--lmuted)">Emitida em '+today+' · V\u00e1lida at\u00e9 '+validUntil+'</div>'+
+    '</div>'+
+    '<div class="corner bl"></div><div class="corner br"></div>'+
+    pfooter(today)+
+  '</div>';
+
+    // PAGE FINAL — fechamento impactante (dark)
   const ctaTitulo=sistTipo==='hibrido'?
     'Estamos prontos para garantir a independ\u00eancia energ\u00e9tica de <span style="color:var(--or)">'+name+'</span>':
     'Estamos prontos para colocar <span style="color:var(--or)">'+name+'</span> na frente da energia solar';
@@ -1306,7 +1404,7 @@ function generateProposal(){
     pfooter(today)+
   '</div>';
 
-  const html=p1+p2+(isEcoMode?pSolucao:'')+(isEcoMode?pUpgrade:'')+p4+pWallbox+pGar+pInv+pSteps+pFinal;
+  const html=p1+p2+(isEcoMode?pSolucao:'')+(isEcoMode?pUpgrade:'')+p4+pWallbox+pGar+pInv+pSteps+pResumo+pFinal;
   document.getElementById('preview').innerHTML=html;
   document.getElementById('preview').style.display='';
   document.getElementById('previewEmpty').style.display='none';
@@ -1323,27 +1421,24 @@ async function importSupplierPDF(input){
     pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     const ab=await file.arrayBuffer();
     const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-    let lines=[];
+    const lines=[];
     for(let i=1;i<=pdf.numPages;i++){
       const page=await pdf.getPage(i);
       const tc=await page.getTextContent();
-      // Agrupar itens por linha (mesmo y aproximado)
-      const items=tc.items;
-      let lineMap={};
-      items.forEach(it=>{
+      // Agrupar por linha (y-position)
+      const lineMap={};
+      tc.items.forEach(it=>{
         const y=Math.round(it.transform[5]);
-        if(!lineMap[y])lineMap[y]='';
-        lineMap[y]+=' '+it.str;
+        lineMap[y]=(lineMap[y]||'')+' '+it.str;
       });
-      Object.keys(lineMap).sort((a,b)=>b-a).forEach(y=>lines.push(lineMap[y].trim()));
+      Object.keys(lineMap).sort((a,b)=>Number(b)-Number(a)).forEach(y=>lines.push(lineMap[y].trim()));
     }
     const fullText=lines.join('\n');
-    console.log('[PDF Import] Texto extraído:\n'+fullText.substring(0,2000));
 
     let filled=[];
 
     // ── Potência total do sistema ──
-    const kwpM=fullText.match(/Pot[eê]ncia do sistema[:\s]+([\d,\.]+)\s*kWp/i)
+    const kwpM=fullText.match(/Pot[eê]ncia do sistema[:\s\n]+([\d,\.]+)\s*kWp/i)
                ||fullText.match(/([\d,\.]+)\s*kWp/i);
     if(kwpM){
       const kwp=parseFloat(kwpM[1].replace(',','.'));
@@ -1351,56 +1446,61 @@ async function importSupplierPDF(input){
       filled.push('Potência total: '+kwp.toFixed(2)+' kWp');
     }
 
-    // ── Módulos: detectar linha com MODULO/PAINEL e potência W ──
-    // Ex: "MODULO BIFACIAL 144 CEL N TYPE 590W BLACK FRAME... 34 PC"
-    const modLines=lines.filter(l=>/\bM[OÓ]DULO\b|\bPAINEL\b|\bPANEL\b/i.test(l));
-    if(modLines.length){
-      const ml=modLines[0];
-      // Potência do módulo (ex: 590W, 545W, 410W)
+    // ── Módulos: procurar linha com MODULO/PAINEL, depois pegar qty em "N PC" nas próximas linhas ──
+    const modLineIdx=lines.findIndex(l=>/\bM[ÓO]DULO\b|\bPAINEL\b/i.test(l)&&!/SUPORTE|GRAMPO|GARRA/i.test(l));
+    if(modLineIdx>=0){
+      const ml=lines[modLineIdx];
+      // Potência do módulo (ex: 590W)
       const mpwM=ml.match(/\b(\d{3,4})\s*W(?:p)?\b/i);
-      if(mpwM){document.getElementById('modPower').value=parseInt(mpwM[1]);filled.push('Módulo: '+mpwM[1]+'W');}
-      // Modelo resumido (primeira parte antes de detalhes)
-      const modNameM=ml.match(/M[OÓ]DULO[\s\w]+?(?=(\s+\d{3,4}W|\s*\d+\s*PC))/i);
-      if(modNameM)document.getElementById('modModel').value=modNameM[0].trim().substring(0,60);
+      if(mpwM){
+        document.getElementById('modPower').value=parseInt(mpwM[1]);
+        filled.push('Módulo: '+mpwM[1]+'W');
+      }
+      // Modelo: tudo antes do código/Fabricante
+      const modName=ml.replace(/\s*(FAB|FABRICANTE|MFRB|\d{4,})[\S]*/gi,'').trim();
+      if(modName.length>5)document.getElementById('modModel').value=modName.substring(0,70);
+
+      // Quantidade: buscar "N PC" nas próximas 6 linhas após o nome do módulo
+      for(let j=modLineIdx+1;j<Math.min(modLineIdx+7,lines.length);j++){
+        const qm=lines[j].match(/^\s*(\d{1,3})\s*PC\s*$/i)||lines[j].match(/^\s*(\d{1,3})\s*UN/i);
+        if(qm){
+          document.getElementById('modQty').value=parseInt(qm[1]);
+          filled.push('Qtd módulos: '+qm[1]);
+          break;
+        }
+      }
     }
 
-    // ── Quantidade de módulos (linha com "X PC" após nome do módulo) ──
-    const modQtyM=fullText.match(/M[OÓ]DULO[^\n]+?(\d{1,3})\s*PC/i)
-                  ||fullText.match(/(\d{1,3})\s*(?:m[oó]dulos?|placas?|painéis?)/i);
-    if(modQtyM){
-      const qty=parseInt(modQtyM[1]);
-      document.getElementById('modQty').value=qty;
-      filled.push('Qtd módulos: '+qty);
-    }
-
-    // ── Inversores: MICROINVERSOR, INVERSOR STRING ──
-    const invLines=lines.filter(l=>/\bINVERSOR\b/i.test(l));
-    if(invLines.length){
-      const il=invLines[0];
-      // Potência kW (ex: 2.5KW, 8K, 6000TL)
-      const invkwM=il.match(/([\d,\.]+)\s*KW/i)||il.match(/([\d]{4,5})W/i);
-      if(invkwM){
-        const kw=parseFloat(invkwM[1].replace(',','.'))<100?parseFloat(invkwM[1]):parseFloat(invkwM[1])/1000;
+    // ── Inversores ──
+    const invLineIdx=lines.findIndex(l=>/\bINVERSOR\b/i.test(l));
+    if(invLineIdx>=0){
+      const il=lines[invLineIdx];
+      // Potência kW (ex: 2.5KW, 8K, 10KW)
+      const ikwM=il.match(/\b([\d,\.]+)\s*KW\b/i);
+      if(ikwM){
+        const kw=parseFloat(ikwM[1].replace(',','.'));
         document.getElementById('invPower').value=kw.toFixed(1);
         filled.push('Inversor: '+kw.toFixed(1)+' kW');
       }
-      // Marca/modelo: Deye, Growatt, Foxess, Fronius, etc.
-      const invBrandM=il.match(/\b(Deye|Growatt|SMA|Fronius|ABB|Huawei|WEG|GoodWe|Sungrow|Sofar|Delta|SAJ|Hoymiles|Enphase|Foxess|Fox|Solax|Risen)[\s\-]?([\w\.\-]*)/i);
-      if(invBrandM)document.getElementById('invModel').value=invBrandM[0].trim().substring(0,40);
-    }
-    // Qtd inversores
-    const invQtyLine=invLines[0]||'';
-    const invQtyM=invQtyLine.match(/(\d{1,2})\s*PC/i)||fullText.match(/MICROINVERSOR[^\n]+?(\d{1,2})\s*PC/i);
-    if(invQtyM){
-      const qty=parseInt(invQtyM[1]);
-      document.getElementById('invQty').value=qty;
-      filled.push('Qtd inversores: '+qty);
+      // Marca
+      const ibM=il.match(/\b(Deye|Growatt|SMA|Fronius|ABB|Huawei|WEG|GoodWe|Sungrow|Sofar|Delta|SAJ|Hoymiles|Enphase|Foxess|Solax|Risen|Fox)[\w\s\-\.]+/i);
+      if(ibM)document.getElementById('invModel').value=ibM[0].trim().substring(0,50);
+
+      // Qtd nas próximas linhas
+      for(let j=invLineIdx+1;j<Math.min(invLineIdx+7,lines.length);j++){
+        const qm=lines[j].match(/^\s*(\d{1,2})\s*PC\s*$/i);
+        if(qm){
+          document.getElementById('invQty').value=parseInt(qm[1]);
+          filled.push('Qtd inversores: '+qm[1]);
+          break;
+        }
+      }
     }
 
     // ── Bateria ──
-    const batLines=lines.filter(l=>/\bBATER[IAL]|\bACUMULADOR|\bSTORAGE/i.test(l));
-    if(batLines.length){
-      const bl=batLines[0];
+    const batLineIdx=lines.findIndex(l=>/\bBATER[IAL]|\bACUMULADOR|\bSTORAGE/i.test(l));
+    if(batLineIdx>=0){
+      const bl=lines[batLineIdx];
       const kwhM=bl.match(/([\d,\.]+)\s*kWh/i);
       if(kwhM){
         const kwh=parseFloat(kwhM[1].replace(',','.'));
@@ -1412,7 +1512,6 @@ async function importSupplierPDF(input){
     }
 
     // ── Valor Total ──
-    // Ex: "Valor Total: R$ 58.994,86" ou "Valor Total: 58.994,86"
     const valM=fullText.match(/Valor Total[:\s\n]*R?\$?\s*([\d\.]+(?:,\d{2})?)/i);
     if(valM){
       const raw=valM[1].replace(/\./g,'').replace(',','.');
@@ -1421,16 +1520,14 @@ async function importSupplierPDF(input){
     }
 
     if(filled.length){
-      alert('\u2705 PDF importado! Campos preenchidos:\n\u2022 '+filled.join('\n\u2022')+'\n\nRevise e ajuste conforme necessário antes de gerar a proposta.');
+      alert('\u2705 PDF importado!\n\n' + filled.map(f=>'• '+f).join('\n') + '\n\nRevise os campos antes de gerar a proposta.');
     } else {
-      alert('\u26a0\ufe0f PDF lido, mas os dados não foram reconhecidos automaticamente.\n\nVerifique se o PDF tem texto selecionável (não pode ser imagem/scan).\nPreencha os campos manualmente.');
+      alert('\u26a0\ufe0f PDF lido, mas dados não reconhecidos.\nVerifique se o PDF possui texto selecionável (não pode ser scan/imagem).\nPreencha manualmente.');
     }
   }catch(e){
-    console.error('[PDF Import]',e);
     alert('Erro ao ler PDF: '+e.message);
   }finally{
     label.innerHTML=origHTML;
-    // Resetar input para permitir reimport do mesmo arquivo
     input.value='';
   }
 }
