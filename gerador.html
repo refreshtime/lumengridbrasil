@@ -246,6 +246,24 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 
 /* ══ MOBILE ══ */
+.pay-header{text-align:center;padding:20px 0 16px}
+.pay-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:0 0 14px}
+.pay-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px 16px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
+.pay-card-main{border-color:rgba(46,204,113,.4);background:rgba(46,204,113,.05)}
+.pay-num{display:inline-block;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:800;color:#fff;margin-bottom:4px}
+.pay-title{font-size:12px;font-weight:800;color:#fff}
+.pay-highlight{font-size:11px;font-weight:700;color:var(--or)}
+.pay-sub{font-size:9px;color:rgba(255,255,255,.4)}
+.pay-desc{font-size:10px;color:rgba(255,255,255,.6);line-height:1.5}
+.pay-info{background:rgba(255,255,255,.04);border-radius:6px;padding:8px 12px;text-align:left;color:rgba(255,255,255,.6);width:100%}
+.pay-badge{width:64px;height:64px;border-radius:50%;border:2px solid var(--or);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--or)}
+.pay-big{font-size:22px;font-weight:900;line-height:1}
+.pay-footer{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 16px;text-align:center;font-size:10px;color:rgba(255,255,255,.6);letter-spacing:.5px}
+
+.cta-box{margin:16px 0 12px;padding:18px 20px;background:linear-gradient(135deg,rgba(232,100,26,.15),rgba(232,100,26,.05));border:1px solid rgba(232,100,26,.3);border-radius:10px;text-align:center}
+.cta-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px}
+.cta-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6}
+
 @media(max-width:900px){
   .ed-layout{grid-template-columns:1fr!important;display:block}
   .form-panel{max-height:none;border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
@@ -301,6 +319,18 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 <div class="ed-layout">
 <div class="form-panel">
+
+  <div class="fs" style="background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.25);border-radius:8px;padding:14px">
+    <div class="fs-title" style="color:var(--or)">Tipo de Sistema <span style="font-size:9px;color:rgba(232,100,26,.5);font-weight:400">Define o que aparece na proposta</span></div>
+    <div class="frg" style="gap:6px">
+      <label class="frl" style="flex:1;justify-content:center;padding:8px;border:1px solid var(--uib);border-radius:6px;cursor:pointer"><input type="radio" name="sistTipo" value="solar" checked onchange="onSistTipo()"> Solar Fotovoltaico</label>
+      <label class="frl" style="flex:1;justify-content:center;padding:8px;border:1px solid rgba(232,100,26,.4);border-radius:6px;cursor:pointer;background:rgba(232,100,26,.05)"><input type="radio" name="sistTipo" value="hibrido" onchange="onSistTipo()"> Sistema Híbrido + Baterias</label>
+      <label class="frl" style="flex:1;justify-content:center;padding:8px;border:1px solid var(--uib);border-radius:6px;cursor:pointer"><input type="radio" name="sistTipo" value="isencao" onchange="onSistTipo()"> Placas / Isenção Fiscal</label>
+    </div>
+    <div style="font-size:9px;color:var(--uimuted);margin-top:8px;padding:6px 10px;background:rgba(0,0,0,.2);border-radius:4px">
+      ⚡ <strong>Híbrido:</strong> exibe autonomia de bateria, sem texto de economia de conta &nbsp;|&nbsp; <strong>Isenção Fiscal:</strong> oculta economia de energia
+    </div>
+  </div>
 
   <div class="fs">
     <div class="fs-title">Cliente</div>
@@ -435,7 +465,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Valor Total do Projeto (R$)</label>
     <input class="fi" type="number" id="projectValue" placeholder="Ex: 45000">
     <div class="frow">
-      <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="15"></div>
+      <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="7"></div>
       <div><label class="fl">Prazo instalação (dias úteis)</label><input class="fi" type="number" id="prazoDias" value="20"></div>
     </div>
   </div>
@@ -456,10 +486,32 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     </div>
   </div>
 
+  <div class="fs" id="autonomySection" style="display:none">
+    <div class="fs-title" style="color:var(--or)">Autonomia da Bateria <span style="font-size:9px;color:rgba(232,100,26,.5);font-weight:400">Selecione os equipamentos do cliente</span></div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:11px">
+        <thead>
+          <tr style="background:rgba(255,255,255,.04)">
+            <th style="padding:6px 8px;text-align:left;width:30px"></th>
+            <th style="padding:6px 8px;text-align:left">Equipamento</th>
+            <th style="padding:6px 8px;text-align:center">Potência (W)</th>
+            <th style="padding:6px 8px;text-align:center">Qtd</th>
+            <th style="padding:6px 8px;text-align:center">Uso</th>
+            <th style="padding:6px 8px;text-align:center">Horas/bat.</th>
+          </tr>
+        </thead>
+        <tbody id="autoBody"></tbody>
+      </table>
+    </div>
+    <div id="autoResult"></div>
+    <div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:6px">* Autonomia calculada com base no kWh de bateria informado acima</div>
+  </div>
+
   <div class="fs">
-    <div class="fs-title">Consultor</div>
+    <div class="fs-title">Consultor <span style="font-size:9px;color:rgba(232,100,26,.6);font-weight:400">Selecione quem está atendendo</span></div>
     <div class="frg">
-      <label class="frl"><input type="radio" name="vendedora" value="default" checked>Lumen Grid</label>
+      <label class="frl"><input type="radio" name="vendedora" value="lucas" checked>Lucas Vieira</label>
+      <label class="frl"><input type="radio" name="vendedora" value="hingrid">Hingrid Oliveira</label>
       <label class="frl"><input type="radio" name="vendedora" value="custom">Personalizado</label>
     </div>
     <div id="vendCustom" style="display:none">
@@ -505,6 +557,92 @@ const PARC_RATES=[
   {n:24, acrescimo:0.2105,taxa:0.0343},
 ];
 
+// ══ APPLIANCE AUTONOMY TABLE ══
+const APPLIANCES=[
+  {name:'Chuveiro Elétrico',power:7500,duty:100},
+  {name:'Ar Condicionado 12.000 BTU',power:1085,duty:60},
+  {name:'Ar Condicionado 18.000 BTU',power:1625,duty:60},
+  {name:'Cooktop (1 boca)',power:2500,duty:100},
+  {name:'Forno e Fryer',power:1700,duty:100},
+  {name:'Máquina de Lavar',power:1500,duty:70},
+  {name:'Aquecedor Elétrico',power:600,duty:100},
+  {name:'Bomba Pressurizadora',power:120,duty:50},
+  {name:'Geladeira Duplex',power:300,duty:35},
+  {name:'Geladeira',power:260,duty:35},
+  {name:'Freezer',power:200,duty:35},
+  {name:'Tomadas de Uso Geral',power:960,duty:100},
+  {name:'Aparelho de TV',power:100,duty:100},
+  {name:'Roteador WiFi',power:6,duty:100},
+  {name:'Iluminação LED (25 un)',power:180,duty:100},
+  {name:'Refletor 50W',power:50,duty:100},
+];
+
+function renderAutonomyTable(){
+  const tbody=document.getElementById('autoBody');
+  if(!tbody)return;
+  tbody.innerHTML=APPLIANCES.map((a,i)=>
+    `<tr>
+      <td><input type="checkbox" id="ap${i}" onchange="calcAutonomy()"></td>
+      <td style="font-size:12px">${a.name}</td>
+      <td><input type="number" class="fi" style="width:70px;padding:4px 6px;font-size:11px" id="apP${i}" value="${a.power}" onchange="calcAutonomy()"></td>
+      <td><input type="number" class="fi" style="width:50px;padding:4px 6px;font-size:11px" id="apQ${i}" value="0" onchange="calcAutonomy()"></td>
+      <td><input type="number" class="fi" style="width:55px;padding:4px 6px;font-size:11px" id="apD${i}" value="${a.duty}" min="0" max="100" onchange="calcAutonomy()">%</td>
+      <td id="apH${i}" style="font-size:11px;font-weight:600;color:var(--or)">—</td>
+    </tr>`
+  ).join('');
+  calcAutonomy();
+}
+
+function calcAutonomy(){
+  const batEl=document.getElementById('batteryKwh');
+  const batKwh=batEl?parseFloat(batEl.value)||0:0;
+  let totalW=0;
+  APPLIANCES.forEach((a,i)=>{
+    const cb=document.getElementById('ap'+i);
+    if(!cb||!cb.checked)return;
+    const p=parseFloat(document.getElementById('apP'+i).value)||a.power;
+    const q=parseFloat(document.getElementById('apQ'+i).value)||0;
+    const d=parseFloat(document.getElementById('apD'+i).value)||a.duty;
+    totalW+=p*q*(d/100);
+  });
+  const totalKw=totalW/1000;
+  const hAll=totalKw>0&&batKwh?(batKwh/totalKw).toFixed(1):'—';
+  const hAlt=totalKw>0&&batKwh?(batKwh/(totalKw*0.5)).toFixed(1):'—';
+  const res=document.getElementById('autoResult');
+  if(res){
+    res.innerHTML=totalKw>0?
+      `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+        <div style="padding:12px;background:rgba(232,100,26,.1);border:1px solid rgba(232,100,26,.3);border-radius:8px;text-align:center">
+          <div style="font-size:9px;color:rgba(232,100,26,.7);margin-bottom:4px">TODOS LIGADOS (${(totalKw).toFixed(2)} kW)</div>
+          <div style="font-size:22px;font-weight:900;color:var(--or)">${hAll}h</div>
+        </div>
+        <div style="padding:12px;background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.15);border-radius:8px;text-align:center">
+          <div style="font-size:9px;color:rgba(232,100,26,.7);margin-bottom:4px">USO ALTERNADO (50%)</div>
+          <div style="font-size:22px;font-weight:900;color:var(--or)">${hAlt}h</div>
+        </div>
+      </div>`:'<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:8px">Selecione equipamentos e informe as quantidades acima</div>';
+  }
+}
+
+function getAutonomyForProposal(){
+  const batEl=document.getElementById('batteryKwh');
+  const batKwh=batEl?parseFloat(batEl.value)||0:0;
+  const selected=[];let totalW=0;
+  APPLIANCES.forEach((a,i)=>{
+    const cb=document.getElementById('ap'+i);
+    if(!cb||!cb.checked)return;
+    const p=parseFloat(document.getElementById('apP'+i).value)||a.power;
+    const q=parseFloat(document.getElementById('apQ'+i).value)||0;
+    const d=parseFloat(document.getElementById('apD'+i).value)||a.duty;
+    if(q>0){selected.push({name:a.name,power:p,qty:q,duty:d,totalW:p*q*(d/100)});totalW+=p*q*(d/100);}
+  });
+  const totalKw=totalW/1000;
+  const hAll=totalKw>0&&batKwh?(batKwh/totalKw).toFixed(1):null;
+  const hAlt=totalKw>0&&batKwh?(batKwh/(totalKw*0.5)).toFixed(1):null;
+  return{selected,totalKw,hAll,hAlt,batKwh};
+}
+
+
 let equipmentList=[];
 const DEFAULT_EQUIPMENT=[
   {name:'Geladeira',qty:1,power:150,dutyCycle:40,hoursPerDay:9.6},
@@ -534,6 +672,7 @@ function renderEquipmentTable(){
 function addEquipRow(){
   equipmentList.push({name:'Equipamento',qty:1,power:100,dutyCycle:50,hoursPerDay:6});
   renderEquipmentTable();
+renderAutonomyTable();
 }
 function recalcAutonomy(){
   const kwh=parseFloat(document.getElementById('batteryKwh').value)||0;
@@ -559,7 +698,7 @@ function toggleUrgency(){urgencyActive=!urgencyActive;document.getElementById('u
 function togglePayback(){showPayback=!showPayback;document.getElementById('paybackToggle').style.opacity=showPayback?'1':'0.4';}
 function resetForm(){
   document.querySelectorAll('.fi,.fta').forEach(i=>{if(i.type!=='radio'&&i.type!=='checkbox')i.value='';});
-  ['validityDays','prazoDias'].forEach((id,i)=>document.getElementById(id).value=[15,20][i]);
+  ['validityDays','prazoDias'].forEach((id,i)=>document.getElementById(id).value=[7,20][i]);
   ['warPainel','warMicroinv','warInvStr','warBateria','warInstalacao'].forEach((id,i)=>document.getElementById(id).value=[25,15,10,10,1][i]);
   document.getElementById('warAssistencia').value='Inclusa';
   document.getElementById('batQty').value='1';
@@ -573,9 +712,10 @@ function resetForm(){
   autoFilled={totalPower:false,monthlyGen:false};
   equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
   renderEquipmentTable();
+renderAutonomyTable();
 }
 
-function lbar(n,t){return'<div class="lbar"><div class="ll"><img class="limg" src="'+LOGOIMG+'" onerror="this.style.display=\'none\'"/><div><div class="ltext">LUMEN<span>GRID</span></div><div class="lsub">ENERGIA INTELIGENTE</div></div></div><span class="pnum">0'+n+' / 0'+t+'</span></div>';}
+function lbar(n,t){return'<div class="lbar"><div class="ll"><div><div class="ltext">LUMEN<span>GRID</span></div><div class="lsub">ENERGIA INTELIGENTE</div></div></div><span class="pnum">0'+n+' / 0'+t+'</span></div>';}
 function corners(){return'<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>';}
 function pfooter(today){return'<div class="pfooter"><span class="fbrand">LUMEN GRID &nbsp;&middot;&nbsp; ENERGIA INTELIGENTE</span><span class="flegal">Gerado em '+today+'</span><span class="fsite">lumengridbrasil.com.br</span></div>';}
 
@@ -636,6 +776,8 @@ function generateProposal(){
   const invPower  =getN('invPower');
   const invModel  =get('invModel')||'';
   const hasBat    =document.getElementById('hasBattery').checked;
+  const sistTipo  =document.querySelector('input[name=sistTipo]:checked').value; // solar|hibrido|isencao
+  const isEcoMode =sistTipo==='solar'; // show economy only for pure solar
   const batKwh    =getN('batteryKwh');
   const batModel  =get('batModel');
   const batDesc   =get('batDesc');
@@ -657,8 +799,12 @@ function generateProposal(){
   const wallboxNote=get('wallboxNote');
 
   const vendRad=document.querySelector('input[name=vendedora]:checked');
-  let vendNome='Lumen Grid',vendFone='(00) 0000-0000';
-  if(vendRad&&vendRad.value==='custom'){vendNome=get('vendNomeCustom')||'Consultor';vendFone=get('vendFoneCustom')||'';}
+  let vendNome='Lumen Grid',vendFone='';
+  if(vendRad){
+    if(vendRad.value==='lucas'){vendNome='Lucas Vieira';vendFone='(11) 94556-0188';}
+    else if(vendRad.value==='hingrid'){vendNome='Hingrid Oliveira';vendFone='(11) 99817-9824';}
+    else if(vendRad.value==='custom'){vendNome=get('vendNomeCustom')||'Consultor';vendFone=get('vendFoneCustom')||'';}
+  }
 
   const kVp=modQty&&modPower?(modQty*modPower/1000).toFixed(2)+' kVp':null;
   const genKwh=get('monthlyGen')||(modQty?Math.round(modQty*modPower/1000*130)+' kWh':'');
@@ -745,9 +891,9 @@ function generateProposal(){
       '<span class="seg-chip">\ud83d\ude97 Mobilidade El\u00e9trica</span>'+
     '</div>'+
     '<div class="valor-strip">'+
-      '<div class="vs-item"><div class="vs-num">01</div><div class="vs-title">Diagn\u00f3stico Preciso</div><div class="vs-desc">An\u00e1lise detalhada do perfil de consumo antes de qualquer proposta. Sem solu\u00e7\u00f5es gen\u00e9ricas.</div></div>'+
-      '<div class="vs-item"><div class="vs-num">02</div><div class="vs-title">Tecnologia de Ponta</div><div class="vs-desc">M\u00f3dulos, inversores e baterias das melhores marcas do mercado, com certifica\u00e7\u00e3o Inmetro.</div></div>'+
-      '<div class="vs-item"><div class="vs-num">03</div><div class="vs-title">Suporte Vitalício</div><div class="vs-desc">Monitoramento remoto, manuten\u00e7\u00e3o preventiva e assist\u00eancia t\u00e9cnica p\u00f3s-instala\u00e7\u00e3o.</div></div>'+
+      '<div class="vs-item"><div class="vs-num">01</div><div class="vs-title">Experiência Comprovada</div><div class="vs-desc">+8 anos no mercado de energia solar, com mais de 700 projetos homologados em residências, empresas, indústrias, propriedades rurais e condomínios.</div></div>'+
+      '<div class="vs-item"><div class="vs-num">02</div><div class="vs-title">Soluções Personalizadas</div><div class="vs-desc">Desenvolvemos cada projeto sob medida para a realidade do cliente, com agilidade na execução e foco em economia real desde o primeiro mês.</div></div>'+
+      '<div class="vs-item"><div class="vs-num">03</div><div class="vs-title">Suporte do Início ao Pós-Venda</div><div class="vs-desc">Da vistoria à homologação, cuidamos de tudo. Monitoramento online e assistência técnica sempre que precisar.</div></div>'+
     '</div>'+
     pfooter(today)+
   '</div>';
@@ -761,7 +907,7 @@ function generateProposal(){
     '<div class="spec-card"><div class="sc-num">\ud83d\udccd</div><div class="sc-val" style="font-size:18px">'+instType+'</div><div class="sc-lbl">Tipo de Instala\u00e7\u00e3o</div><div class="sc-sub">'+conexao+(bill?' &middot; '+fmtBRL(bill)+'/m\u00eas':'')+'</div></div>',
   ].filter(Boolean).join('');
 
-  const ecoRow=(ecoMonthly||bill)?
+  const ecoRow=isEcoMode&&(ecoMonthly||bill)?
     '<div class="eco-row">'+
       (ecoMonthly?'<div class="eco-card"><div class="eco-lbl">Economia Mensal</div><div class="eco-val">'+fmtBRL(ecoMonthly)+'</div><div class="eco-sub">redu\u00e7\u00e3o imediata</div></div>':'')+
       (ecoAnual?'<div class="eco-card"><div class="eco-lbl">Economia Anual</div><div class="eco-val">'+fmtBRL(ecoAnual)+'</div><div class="eco-sub">em 12 meses</div></div>':'')+
@@ -777,16 +923,16 @@ function generateProposal(){
       '<h2 class="sec-h2">Sistema Solar + Armazenamento <span style="color:var(--or)">sob medida</span></h2>'+
       '<div class="sec-rule"></div>'+
       '<div class="cstrip">'+
-        '<div class="cstrip-item"><div class="csv">+300</div><div class="csl">Projetos entregues</div></div>'+
+        '<div class="cstrip-item"><div class="csv">+8 anos</div><div class="csl">De experiência</div></div>'+
         '<div class="cstrip-sep"></div>'+
-        '<div class="cstrip-item"><div class="csv">+2 MW</div><div class="csl">Instalados</div></div>'+
+        '<div class="cstrip-item"><div class="csv">+700</div><div class="csl">Projetos homologados</div></div>'+
         '<div class="cstrip-sep"></div>'+
-        '<div class="cstrip-item"><div class="csv">5 anos</div><div class="csl">No mercado</div></div>'+
+        '<div class="cstrip-item"><div class="csv">Equipe</div><div class="csl">Especializada</div></div>'+
       '</div>'+
       '<p class="lead">'+leadText+'</p>'+
       '<div class="spec-grid">'+specCards+'</div>'+
       ecoRow+
-      (bill&&ecoMonthly?buildChart(bill,ecoMonthly,projectVal):'')+
+      (isEcoMode&&bill&&ecoMonthly?buildChart(bill,ecoMonthly,projectVal):'')+
       (urgencyActive?'<div class="urg-banner vis"><div><div class="urg-t">\u26a0 Oferta por Tempo Limitado</div><div class="urg-s">Condi\u00e7\u00f5es v\u00e1lidas por '+validity+' dias. Pre\u00e7os e estoque sujeitos a altera\u00e7\u00e3o.</div></div></div>':'')+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
@@ -822,6 +968,41 @@ function generateProposal(){
       '</div>'+
       '<div class="hyb-tagline">Com a Lumen Grid, voc\u00ea tem <strong>controle total sobre sua energia.</strong></div>'+
       '<img src="imagens/hibrido.png" style="width:100%;border-radius:8px;display:block;margin-top:24px">'+
+      (()=>{const aut=getAutonomyForProposal();if(!aut.selected.length||!aut.hAll)return'';
+      return'<div style="margin-top:20px">'+
+        '<div style="font-size:11px;font-weight:700;color:var(--or);letter-spacing:1px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(232,100,26,.2)">AUTONOMIA ESTIMADA DA BATERIA — '+aut.batKwh+' kWh</div>'+
+        '<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px">'+
+          '<thead><tr style="background:rgba(232,100,26,.08)">'+
+            '<th style="padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.5px">EQUIPAMENTO</th>'+
+            '<th style="padding:7px 10px;text-align:center;font-size:9px;font-weight:700">QTD</th>'+
+            '<th style="padding:7px 10px;text-align:center;font-size:9px;font-weight:700">POT. (W)</th>'+
+            '<th style="padding:7px 10px;text-align:center;font-size:9px;font-weight:700">USO (%)</th>'+
+            '<th style="padding:7px 10px;text-align:center;font-size:9px;font-weight:700">CONSUMO</th>'+
+          '</tr></thead>'+
+          '<tbody>'+aut.selected.map(eq=>
+            '<tr style="border-bottom:1px solid rgba(255,255,255,.05)">'+
+            '<td style="padding:6px 10px;color:#333">'+eq.name+'</td>'+
+            '<td style="padding:6px 10px;text-align:center">'+eq.qty+'</td>'+
+            '<td style="padding:6px 10px;text-align:center">'+eq.power+'</td>'+
+            '<td style="padding:6px 10px;text-align:center">'+eq.duty+'%</td>'+
+            '<td style="padding:6px 10px;text-align:center;font-weight:600">'+(eq.totalW).toFixed(0)+' W</td>'+
+            '</tr>'
+          ).join('')+'</tbody>'+
+        '</table>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+          '<div style="padding:14px;background:rgba(232,100,26,.1);border:2px solid rgba(232,100,26,.3);border-radius:10px;text-align:center">'+
+            '<div style="font-size:9px;font-weight:700;color:rgba(232,100,26,.8);margin-bottom:4px">TODOS OS EQUIPAMENTOS LIGADOS</div>'+
+            '<div style="font-size:28px;font-weight:900;color:var(--or)">'+aut.hAll+'h</div>'+
+            '<div style="font-size:9px;color:#666">'+aut.totalKw.toFixed(2)+' kW consumo total</div>'+
+          '</div>'+
+          '<div style="padding:14px;background:rgba(232,100,26,.05);border:1px solid rgba(232,100,26,.15);border-radius:10px;text-align:center">'+
+            '<div style="font-size:9px;font-weight:700;color:rgba(232,100,26,.6);margin-bottom:4px">USO ALTERNADO (50% da carga)</div>'+
+            '<div style="font-size:28px;font-weight:900;color:var(--or)">'+aut.hAlt+'h</div>'+
+            '<div style="font-size:9px;color:#666">equipamentos em uso intercalado</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+      })()+
       (hasBat&&hasEquip?buildEquipSection(hasBat,batKwh):'')+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
@@ -882,7 +1063,29 @@ function generateProposal(){
           '<div class="prazo-card"><div class="prazo-val">'+prazo+'</div><div class="prazo-lbl">Dias \u00fateis</div><div class="prazo-sub">Instala\u00e7\u00e3o completa</div></div>'+
           '<div class="prazo-card"><div class="prazo-val">'+validity+'</div><div class="prazo-lbl">Dias</div><div class="prazo-sub">Validade da proposta</div></div>'+
         '</div>'+
-        (projectVal?buildInstallmentTable(projectVal):'')+
+        '<div class="pay-header"><div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:4px">SOLUÇÕES DE PAGAMENTO PARA</div><div style="font-size:18px;font-weight:900;color:#fff">SEU PROJETO <span style="color:var(--or)">LUMEN GRID</span></div></div>'+
+        '<div class="pay-cards">'+
+          '<div class="pay-card">'+
+            '<div class="pay-num" style="background:var(--or)">01</div>'+
+            '<div class="pay-title">CARTÃO DE CRÉDITO</div>'+
+            '<div class="pay-highlight">PARCELE EM ATÉ 24X</div>'+
+            '<div class="pay-sub">(Consulte bandeiras e condições)</div>'+
+            '<div class="pay-badge">ATÉ<br><span class="pay-big">24x</span></div>'+
+          '</div>'+
+          '<div class="pay-card pay-card-main">'+
+            '<div class="pay-num" style="background:#1a6b3a">02</div>'+
+            '<div class="pay-title" style="color:#2ecc71">FINANCIAMENTO BANCÁRIO</div>'+
+            '<div class="pay-desc">Troque sua conta de luz por um investimento que se paga.</div>'+
+            '<div class="pay-info"><div style="font-size:9px;margin-bottom:6px">Necessário para simulação:</div><div style="font-size:11px">&#x2022; CPF/CNPJ</div><div style="font-size:11px">&#x2022; Data de nascimento</div></div>'+
+          '</div>'+
+          '<div class="pay-card">'+
+            '<div class="pay-num" style="background:#2d6a2d">03</div>'+
+            '<div class="pay-title">À VISTA (PIX / BOLETO)</div>'+
+            '<div class="pay-desc">Pague com desconto e aproveite os benefícios imediatos.</div>'+
+            '<div class="pay-badge" style="background:rgba(46,204,113,.1);color:#2ecc71;border-color:#2ecc71"><span style="font-size:22px">%</span><div style="font-size:9px">desconto</div></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="pay-footer">RESULTADO FINAL &mdash; AMBAS AS OPÇÕES CHEGAM NO MESMO FIM: <strong style="color:var(--or)">ECONOMIA REAL NO SEU BOLSO.</strong></div>'+
       '</div>'+
       '<div>'+
         '<div class="stitle">Garantias</div>'+
@@ -904,11 +1107,26 @@ function generateProposal(){
       '<h2 class="sec-h2">Da aprova\u00e7\u00e3o \u00e0 <span style="color:var(--or)">gera\u00e7\u00e3o</span></h2>'+
       '<div class="sec-rule"></div>'+
       '<div class="steps-wrap">'+
-        '<div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Aprova\u00e7\u00e3o da Proposta</div><div class="step-desc">Confirma\u00e7\u00e3o do projeto e assinatura do contrato. Iniciamos o processo junto \u00e0 concession\u00e1ria.</div></div></div>'+
-        '<div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Vistoria T\u00e9cnica</div><div class="step-desc">Nossa equipe visita o local para confirmar as condi\u00e7\u00f5es de instala\u00e7\u00e3o e especifica\u00e7\u00f5es t\u00e9cnicas finais.</div></div></div>'+
-        '<div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Instala\u00e7\u00e3o</div><div class="step-desc">Execu\u00e7\u00e3o completa em at\u00e9 '+prazo+' dias \u00fateis — estrutura, cabeamento, inversores e pain\u00e9is.</div></div></div>'+
-        '<div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Homologa\u00e7\u00e3o e Ativa\u00e7\u00e3o</div><div class="step-desc">Vistoria da concession\u00e1ria, liga\u00e7\u00e3o \u00e0 rede e ativa\u00e7\u00e3o do monitoramento online em tempo real.</div></div></div>'+
-        '<div class="step-item"><div class="step-num">5</div><div class="step-body"><div class="step-title">In\u00edcio da Gera\u00e7\u00e3o \ud83c\udf1e</div><div class="step-desc">Seu sistema entra em opera\u00e7\u00e3o e voc\u00ea come\u00e7a a economizar imediatamente.</div></div></div>'+
+        '<div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Aprovação da Proposta</div><div class="step-desc">Após a aprovação da proposta, realizamos a assinatura do contrato e damos início ao planejamento do seu projeto.</div></div></div>'+
+        '<div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Vistoria Técnica</div><div class="step-desc">Nossa equipe técnica visita o imóvel para validar as condições de instalação, realizar as medições necessárias e confirmar as especificações finais do sistema.</div></div></div>'+
+        '<div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Recebimento dos Equipamentos</div><div class="step-desc">Os equipamentos são entregues e conferidos, garantindo que todos os componentes estejam prontos para uma instalação segura e dentro dos padrões de qualidade.</div></div></div>'+
+        '<div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Instalação do Sistema</div><div class="step-desc">Nossa equipe especializada realiza a instalação completa dos painéis solares, inversores e demais equipamentos, com prazo de conclusão de até '+prazo+' dias úteis.</div></div></div>'+
+        '<div class="step-item"><div class="step-num">5</div><div class="step-body"><div class="step-title">Homologação e Ativação</div><div class="step-desc">Cuidamos de todo o processo junto à concessionária de energia, incluindo vistoria, homologação, conexão à rede e ativação do monitoramento online em tempo real.</div></div></div>'+
+      '</div>'+
+      ''+
+      (isEcoMode&&ecoMonthly?'<div style="margin:18px 0 10px;padding:16px;background:rgba(232,100,26,.08);border:1px solid rgba(232,100,26,.2);border-radius:8px">'+
+        '<div style="font-size:10px;font-weight:700;color:var(--or);letter-spacing:1px;margin-bottom:10px">PROJEÇÃO DE ECONOMIA &mdash; '+name+'</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'+
+          '<div style="text-align:center;padding:10px;background:rgba(255,255,255,.04);border-radius:6px"><div style="font-size:9px;color:rgba(255,255,255,.5)">Em 1 ano</div><div style="font-size:16px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*12)):'—')+'</div></div>'+
+          '<div style="text-align:center;padding:10px;background:rgba(255,255,255,.04);border-radius:6px"><div style="font-size:9px;color:rgba(255,255,255,.5)">Em 5 anos</div><div style="font-size:16px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*60)):'—')+'</div></div>'+
+          '<div style="text-align:center;padding:10px;background:rgba(255,255,255,.04);border-radius:6px"><div style="font-size:9px;color:rgba(255,255,255,.5)">Em 25 anos</div><div style="font-size:16px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*300)):'—')+'</div></div>'+
+        '</div>'+
+      '</div>':'')+
+      '<div class="cta-box">'+
+        '<div class="cta-name">Vamos lá, <strong>'+name+'</strong>!</div>'+
+        (sistTipo==='hibrido'?
+          '<p class="cta-text">'+name+', não fique mais no escuro. Garanta a sua independência energética com a Lumen Grid.</p>':
+          '<p class="cta-text">Você está pronto para investir em um patrimônio que gera economia todos os meses, valoriza seu imóvel e aproxima você da sua independência energética? Conte com a Lumen Grid.</p>')+
       '</div>'+
       '<div class="vend-card">'+
         '<div class="vc-avatar">'+vendNome.charAt(0).toUpperCase()+'</div>'+
@@ -935,10 +1153,23 @@ function generateProposal(){
 
 // Init listeners
 document.getElementById('hasBattery').addEventListener('change',function(){document.getElementById('batteryField').style.display=this.checked?'':'none';recalcAutonomy();});
+document.getElementById('batteryKwh').addEventListener('input',calcAutonomy);
+
+function onSistTipo(){
+  const t=document.querySelector('input[name=sistTipo]:checked').value;
+  const isHib=t==='hibrido';
+  // Auto-check battery for hybrid mode
+  const batCb=document.getElementById('hasBattery');
+  if(isHib&&!batCb.checked){batCb.checked=true;document.getElementById('batteryField').style.display='';recalcAutonomy();}
+  // Show/hide autonomy section
+  const autSec=document.getElementById('autonomySection');
+  if(autSec)autSec.style.display=isHib?'':'none';
+}
 document.getElementById('hasWallbox').addEventListener('change',function(){document.getElementById('wallboxField').style.display=this.checked?'':'none';});
 document.querySelectorAll('input[name=vendedora]').forEach(r=>r.addEventListener('change',function(){document.getElementById('vendCustom').style.display=this.value==='custom'?'':'none';}));
 ['totalPower','monthlyGen'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{autoFilled[id]=false;}));
 renderEquipmentTable();
+renderAutonomyTable();
 </script>
 </body>
 </html>
