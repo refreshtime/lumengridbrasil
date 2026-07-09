@@ -11,7 +11,7 @@
 :root{
   --or:#E8641A;--or-l:#FF8040;--or-pale:#FFF0E6;--or-d:#C04F10;
   --ink:#0F0F0F;--white:#F8F8F8;--wdim:rgba(248,248,248,.8);
-  --ui:#0e1117;--uic:#16191f;--uib:#2a2d35;--uit:#e8eaf0;--uim:#7a8090;
+  --ui:#f0f2f5;--uic:#ffffff;--uib:#dde1e7;--uit:#1a1a2e;--uim:#555566;
   --lbg:#f4f6f9;--lcard:#fff;--ltext:#1a1a2e;--lmuted:#666;--lborder:#dde1e7;
 }
 body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:var(--uit);min-height:100vh}
@@ -25,7 +25,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .fs:last-of-type{border-bottom:none}
 .fs-title{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:14px;padding-left:9px;border-left:3px solid var(--or)}
 .fl{display:block;font-size:9px;font-weight:700;color:var(--uim);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.fi,.fsel,.fta{width:100%;padding:8px 11px;background:#0a0c10;border:1.5px solid var(--uib);border-radius:6px;font-size:13px;color:var(--uit);font-family:inherit;transition:border-color .2s;margin-bottom:10px}
+.fi,.fsel,.fta{width:100%;padding:8px 11px;background:#f8f9fc;border:1.5px solid var(--uib);border-radius:6px;font-size:13px;color:var(--uit);font-family:inherit;transition:border-color .2s;margin-bottom:10px}
 .fi:focus,.fsel:focus,.fta:focus{outline:none;border-color:var(--or);background:#0d1015}
 .fi::placeholder{color:#3a3f4a}
 .fta{resize:vertical;min-height:68px}
@@ -46,7 +46,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .etbl{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px}
 .etbl th{background:#0a0c10;color:var(--or);padding:6px 7px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.8px}
 .etbl td{padding:4px 7px;border-bottom:1px solid var(--uib);vertical-align:middle}
-.etbl input[type=number],.etbl input[type=text]{width:100%;padding:3px 5px;border:1px solid var(--uib);border-radius:4px;font-size:11px;background:#0a0c10;color:var(--uit)}
+.etbl input[type=number],.etbl input[type=text]{width:100%;padding:3px 5px;border:1px solid var(--uib);border-radius:4px;font-size:11px;background:#f8f9fc;color:var(--uit)}
 .etbl input[type=checkbox]{width:13px;height:13px;accent-color:var(--or);cursor:pointer}
 .edel{background:none;border:none;cursor:pointer;color:#444;font-size:13px;padding:1px 4px}
 .edel:hover{color:#e55}
@@ -631,6 +631,25 @@ function calcAutonomy(){
   }
 }
 
+function getAutonomyFromEquipList(){
+  // Usa equipmentList (tabela editável) para calcular autonomia na proposta
+  const batEl=document.getElementById('batteryKwh');
+  const batKwh=batEl?parseFloat(batEl.value)||0:0;
+  const selected=[];let totalW=0;
+  equipmentList.forEach(e=>{
+    if(e.qty>0&&e.power>0){
+      const dc=e.dutyCycle||50;
+      const eff=e.power*e.qty*(dc/100);
+      selected.push({name:e.name,power:e.power,qty:e.qty,duty:dc,totalW:eff});
+      totalW+=eff;
+    }
+  });
+  const totalKw=totalW/1000;
+  const hAll=totalKw>0&&batKwh?(batKwh/totalKw).toFixed(1):null;
+  const hAlt=totalKw>0&&batKwh?(batKwh/(totalKw*0.5)).toFixed(1):null;
+  return{selected,totalKw,hAll,hAlt,batKwh};
+}
+
 function getAutonomyForProposal(){
   const batEl=document.getElementById('batteryKwh');
   const batKwh=batEl?parseFloat(batEl.value)||0:0;
@@ -946,7 +965,7 @@ function generateProposal(){
       '</div>'+
       '<div class="hyb-tagline">Com a Lumen Grid, voc\u00ea tem <strong>controle total sobre sua energia.</strong></div>'+
       '<img src="imagens/hibrido.png" style="width:100%;border-radius:8px;display:block;margin-top:24px">'+
-      (()=>{const aut=getAutonomyForProposal();if(!aut.selected.length||!aut.hAll)return'';
+      (()=>{const aut=getAutonomyFromEquipList();if(!aut.selected.length||!aut.hAll)return'';
       return'<div style="margin-top:20px">'+
         '<div style="font-size:11px;font-weight:700;color:var(--or);letter-spacing:1px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(232,100,26,.2)">AUTONOMIA ESTIMADA DA BATERIA — '+aut.batKwh+' kWh</div>'+
         '<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px">'+
@@ -1062,7 +1081,7 @@ function generateProposal(){
             '<thead><tr style="background:rgba(232,100,26,.08)"><th style="padding:9px 14px;text-align:left;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">ITEM</th><th style="padding:9px 14px;text-align:right;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">ESPECIFICA\u00c7\u00c3O</th></tr></thead>'+
             '<tbody>'+specRows+'</tbody>'+
           '</table>'+
-          (hasBat&&hasEquip?buildEquipSection(hasBat,batKwh):'')+
+          (sistTipo==='hibrido'?buildEquipSection(hasBat,batKwh):'')+
         '</div>'+
         '<div>'+
           '<div class="stitle">Garantias Inclu\u00eddas</div>'+
@@ -1188,91 +1207,125 @@ async function importSupplierPDF(input){
   const file=input.files[0];
   if(!file)return;
   const label=input.parentElement;
+  const origHTML=label.innerHTML;
   label.textContent='Lendo PDF...';
 
   try{
     pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     const ab=await file.arrayBuffer();
     const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-    let fullText='';
+    let lines=[];
     for(let i=1;i<=pdf.numPages;i++){
       const page=await pdf.getPage(i);
       const tc=await page.getTextContent();
-      fullText+=tc.items.map(t=>t.str).join(' ')+' ';
+      // Agrupar itens por linha (mesmo y aproximado)
+      const items=tc.items;
+      let lineMap={};
+      items.forEach(it=>{
+        const y=Math.round(it.transform[5]);
+        if(!lineMap[y])lineMap[y]='';
+        lineMap[y]+=' '+it.str;
+      });
+      Object.keys(lineMap).sort((a,b)=>b-a).forEach(y=>lines.push(lineMap[y].trim()));
     }
-
-    // Extrai potência dos módulos (ex: "410 W", "545Wp", "555 Wp")
-    const modPwM=fullText.match(/\b(\d{3,4})\s*[Ww][Pp]?\b/g);
-    // Extrai quantidade de módulos (ex: "12 módulos", "12 placas")
-    const modQtyM=fullText.match(/\b(\d{1,3})\s*(?:m[oó]dulos?|placas?|painéis?)\b/i);
-    // Extrai kWp total (ex: "7,2 kWp", "5.4kWp")
-    const kwpM=fullText.match(/([\d,\.]+)\s*kWp/i);
-    // Extrai modelo inversor (ex: "Deye 8K", "Growatt 6000TL")
-    const invM=fullText.match(/\b(Deye|Growatt|SMA|Fronius|ABB|Huawei|WEG|GoodWe|Sungrow|Canadian|Sofar|Delta|SAJ|Sofar|Hoymiles|Enphase)[\s\-]?([\w\.\-]+)?/i);
-    // Extrai kWh de bateria (ex: "5,12 kWh", "10.24kWh")
-    const batM=fullText.match(/([\d,\.]+)\s*kWh/i);
-    // Extrai modelo de módulo/painel
-    const modBrandM=fullText.match(/\b(Jinko|Canadian|LONGi|Risen|JA Solar|BYD|Trina|Suntech|Amerisolar|DAH|Bifacial)[\s\-]?([\w\.\-]+)?/i);
-    // Extrai geração mensal (ex: "850 kWh/mês")
-    const genM=fullText.match(/([\d,\.]+)\s*kWh\s*\/\s*m[eê]s/i);
-    // Extrai valor total (ex: "R$ 25.000", "R$25000")
-    const valM=fullText.match(/R\$\s*([\d\.]+(?:,\d{2})?)/);
+    const fullText=lines.join('\n');
+    console.log('[PDF Import] Texto extraído:\n'+fullText.substring(0,2000));
 
     let filled=[];
 
+    // ── Potência total do sistema ──
+    const kwpM=fullText.match(/Pot[eê]ncia do sistema[:\s]+([\d,\.]+)\s*kWp/i)
+               ||fullText.match(/([\d,\.]+)\s*kWp/i);
     if(kwpM){
-      const kwp=kwpM[1].replace(',','.');
-      const kw=parseFloat(kwp);
-      document.getElementById('totalPower').value=kw.toFixed(2)+' kWp';
-      filled.push('Potência: '+kw.toFixed(2)+' kWp');
+      const kwp=parseFloat(kwpM[1].replace(',','.'));
+      document.getElementById('totalPower').value=kwp.toFixed(2)+' kWp';
+      filled.push('Potência total: '+kwp.toFixed(2)+' kWp');
     }
-    if(modPwM&&modPwM.length){
-      const pw=parseInt(modPwM[0]);
-      document.getElementById('modPower').value=pw;
-      filled.push('Módulo: '+pw+'W');
+
+    // ── Módulos: detectar linha com MODULO/PAINEL e potência W ──
+    // Ex: "MODULO BIFACIAL 144 CEL N TYPE 590W BLACK FRAME... 34 PC"
+    const modLines=lines.filter(l=>/\bM[OÓ]DULO\b|\bPAINEL\b|\bPANEL\b/i.test(l));
+    if(modLines.length){
+      const ml=modLines[0];
+      // Potência do módulo (ex: 590W, 545W, 410W)
+      const mpwM=ml.match(/\b(\d{3,4})\s*W(?:p)?\b/i);
+      if(mpwM){document.getElementById('modPower').value=parseInt(mpwM[1]);filled.push('Módulo: '+mpwM[1]+'W');}
+      // Modelo resumido (primeira parte antes de detalhes)
+      const modNameM=ml.match(/M[OÓ]DULO[\s\w]+?(?=(\s+\d{3,4}W|\s*\d+\s*PC))/i);
+      if(modNameM)document.getElementById('modModel').value=modNameM[0].trim().substring(0,60);
     }
+
+    // ── Quantidade de módulos (linha com "X PC" após nome do módulo) ──
+    const modQtyM=fullText.match(/M[OÓ]DULO[^\n]+?(\d{1,3})\s*PC/i)
+                  ||fullText.match(/(\d{1,3})\s*(?:m[oó]dulos?|placas?|painéis?)/i);
     if(modQtyM){
-      document.getElementById('modQty').value=parseInt(modQtyM[1]);
-      filled.push('Qty módulos: '+modQtyM[1]);
+      const qty=parseInt(modQtyM[1]);
+      document.getElementById('modQty').value=qty;
+      filled.push('Qtd módulos: '+qty);
     }
-    if(invM){
-      const invName=invM[0].trim();
-      document.getElementById('invModel').value=invName;
-      filled.push('Inversor: '+invName);
+
+    // ── Inversores: MICROINVERSOR, INVERSOR STRING ──
+    const invLines=lines.filter(l=>/\bINVERSOR\b/i.test(l));
+    if(invLines.length){
+      const il=invLines[0];
+      // Potência kW (ex: 2.5KW, 8K, 6000TL)
+      const invkwM=il.match(/([\d,\.]+)\s*KW/i)||il.match(/([\d]{4,5})W/i);
+      if(invkwM){
+        const kw=parseFloat(invkwM[1].replace(',','.'))<100?parseFloat(invkwM[1]):parseFloat(invkwM[1])/1000;
+        document.getElementById('invPower').value=kw.toFixed(1);
+        filled.push('Inversor: '+kw.toFixed(1)+' kW');
+      }
+      // Marca/modelo: Deye, Growatt, Foxess, Fronius, etc.
+      const invBrandM=il.match(/\b(Deye|Growatt|SMA|Fronius|ABB|Huawei|WEG|GoodWe|Sungrow|Sofar|Delta|SAJ|Hoymiles|Enphase|Foxess|Fox|Solax|Risen)[\s\-]?([\w\.\-]*)/i);
+      if(invBrandM)document.getElementById('invModel').value=invBrandM[0].trim().substring(0,40);
     }
-    if(modBrandM){
-      document.getElementById('modModel').value=modBrandM[0].trim();
-      filled.push('Módulo: '+modBrandM[0].trim());
+    // Qtd inversores
+    const invQtyLine=invLines[0]||'';
+    const invQtyM=invQtyLine.match(/(\d{1,2})\s*PC/i)||fullText.match(/MICROINVERSOR[^\n]+?(\d{1,2})\s*PC/i);
+    if(invQtyM){
+      const qty=parseInt(invQtyM[1]);
+      document.getElementById('invQty').value=qty;
+      filled.push('Qtd inversores: '+qty);
     }
-    if(batM){
-      const kwh=parseFloat(batM[1].replace(',','.'));
-      document.getElementById('batKwh').value=kwh;
-      document.getElementById('hasBattery').checked=true;
-      document.getElementById('batteryField').style.display='';
-      filled.push('Bateria: '+kwh+' kWh');
+
+    // ── Bateria ──
+    const batLines=lines.filter(l=>/\bBATER[IAL]|\bACUMULADOR|\bSTORAGE/i.test(l));
+    if(batLines.length){
+      const bl=batLines[0];
+      const kwhM=bl.match(/([\d,\.]+)\s*kWh/i);
+      if(kwhM){
+        const kwh=parseFloat(kwhM[1].replace(',','.'));
+        document.getElementById('batteryKwh').value=kwh;
+        document.getElementById('hasBattery').checked=true;
+        document.getElementById('batteryField').style.display='';
+        filled.push('Bateria: '+kwh+' kWh');
+      }
     }
-    if(genM){
-      const gen=parseFloat(genM[1].replace(',','.'));
-      document.getElementById('monthlyGen').value=Math.round(gen);
-      filled.push('Geração: '+Math.round(gen)+' kWh/mês');
-    }
+
+    // ── Valor Total ──
+    // Ex: "Valor Total: R$ 58.994,86" ou "Valor Total: 58.994,86"
+    const valM=fullText.match(/Valor Total[:\s\n]*R?\$?\s*([\d\.]+(?:,\d{2})?)/i);
     if(valM){
-      const v=valM[1].replace('.','');
-      document.getElementById('projectVal').value=v;
-      filled.push('Valor: R$ '+valM[1]);
+      const raw=valM[1].replace(/\./g,'').replace(',','.');
+      document.getElementById('projectVal').value=Math.round(parseFloat(raw));
+      filled.push('Valor total: R$ '+valM[1]);
     }
 
     if(filled.length){
-      alert('✅ PDF importado! Campos preenchidos:\n• '+filled.join('\n• ')+'\n\nRevise e ajuste o que precisar.');
+      alert('\u2705 PDF importado! Campos preenchidos:\n\u2022 '+filled.join('\n\u2022')+'\n\nRevise e ajuste conforme necessário antes de gerar a proposta.');
     } else {
-      alert('⚠️ PDF lido mas não foi possível extrair dados automaticamente.\nO formato deste PDF pode ser diferente do esperado.\nPreencha os campos manualmente.');
+      alert('\u26a0\ufe0f PDF lido, mas os dados não foram reconhecidos automaticamente.\n\nConsole do navegador (F12) tem o texto extraído para diagnóstico.\nPreencha os campos manualmente.');
     }
   }catch(e){
+    console.error('[PDF Import]',e);
     alert('Erro ao ler PDF: '+e.message);
   }finally{
-    label.innerHTML='📄 Importar PDF\n<input type="file" id="pdfImport" accept=".pdf" style="display:none" onchange="importSupplierPDF(this)">';
+    label.innerHTML=origHTML;
+    // Resetar input para permitir reimport do mesmo arquivo
+    input.value='';
   }
 }
+
 
 async function downloadPDF(){
   const btn=document.getElementById('btnGerar');
