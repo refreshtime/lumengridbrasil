@@ -292,13 +292,14 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 }
 
 @media print{
-  body{background:#fff}
+  body{background:#fff!important}
   .ed-header,.form-panel,.btn-bar,.prev-empty{display:none!important}
-  .ed-layout{display:block}
-  .prev-panel{background:#fff;padding:0}
-  .page{margin-bottom:0;page-break-after:always}
-  .page:last-child{page-break-after:auto}
-  @page{size:1000px auto;margin:0}
+  .ed-layout{display:block!important}
+  .prev-panel{background:#fff!important;padding:0!important;overflow:visible!important}
+  #preview{display:block!important}
+  .page{margin-bottom:0!important;break-after:page;page-break-after:always;box-shadow:none!important}
+  .page:last-child{break-after:auto;page-break-after:auto}
+  @page{size:A4 portrait;margin:0}
 }
 </style>
 </head>
@@ -828,7 +829,7 @@ function generateProposal(){
   let pg=1;
   let pageCount=5;
   if(hasWallbox)pageCount++;
-  if(hasBat&&hasEquip)pageCount++;
+  if(hasBat)pageCount++;
 
   const pctEco=bill&&ecoMonthly?Math.round((ecoMonthly/bill)*100):0;
   const leadText=mensagem||(
@@ -861,79 +862,50 @@ function generateProposal(){
     '</div>'+
   '</div>';
 
-  // PAGE 2: EMPRESA (storytelling - dark)
-  const p2='<div class="page story-dark">'+
-    '<div class="grid-ov"></div>'+
-    lbar(pg++,pageCount)+
-    '<div class="story-hero">'+
-      '<div class="story-left">'+
-        '<span class="story-tag">Nossa Hist\u00f3ria</span>'+
-        '<h2 class="story-h1">Energia que <span>transforma</span> vidas e neg\u00f3cios</h2>'+
-        '<p class="story-desc">Somos um time com 8 anos de experiência no setor de energia solar, especializado em desenvolver projetos personalizados para residências, empresas, indústrias, propriedades rurais e condomínios.</p>'+
-        '<p class="story-desc">Nosso compromisso é entregar a solução ideal para a sua realidade, com agilidade na execução para que sua economia e independência energética começem o quanto antes.</p>'+
-      '</div>'+
-      '<div class="story-right">'+
-        '<div class="story-nums">'+
-          '<div class="sn-item"><div class="sn-val">+8</div><div class="sn-lbl">Anos de experiência</div></div>'+
-          '<div class="sn-item"><div class="sn-val">+700</div><div class="sn-lbl">Projetos homologados</div></div>'+
-          '<div class="sn-item"><div class="sn-val">Equipe</div><div class="sn-lbl">Especializada</div></div>'+
-          '<div class="sn-item"><div class="sn-val">100%</div><div class="sn-lbl">Satisfação</div></div>'+
-        '</div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="segs">'+
-      '<span class="seg-chip">\ud83c\udfe0 Residencial</span>'+
-      '<span class="seg-chip">\ud83c\udfe2 Comercial</span>'+
-      '<span class="seg-chip">\ud83c\dfed Industrial</span>'+
-      '<span class="seg-chip">\ud83c\udf3e Rural / Agroneg\u00f3cio</span>'+
-      '<span class="seg-chip">\ud83c\udfd8 Condom\u00ednios</span>'+
-      '<span class="seg-chip">\u26a1 Sistemas H\u00edbridos</span>'+
-      '<span class="seg-chip">\ud83d\ude97 Mobilidade El\u00e9trica</span>'+
-    '</div>'+
-    '<div class="valor-strip">'+
-      '<div class="vs-item"><div class="vs-num">01</div><div class="vs-title">Experiência Comprovada</div><div class="vs-desc">+8 anos no mercado de energia solar, com mais de 700 projetos homologados em residências, empresas, indústrias, propriedades rurais e condomínios.</div></div>'+
-      '<div class="vs-item"><div class="vs-num">02</div><div class="vs-title">Soluções Personalizadas</div><div class="vs-desc">Desenvolvemos cada projeto sob medida para a realidade do cliente, com agilidade na execução e foco em economia real desde o primeiro mês.</div></div>'+
-      '<div class="vs-item"><div class="vs-num">03</div><div class="vs-title">Suporte do Início ao Pós-Venda</div><div class="vs-desc">Da vistoria à homologação, cuidamos de tudo. Monitoramento online e assistência técnica sempre que precisar.</div></div>'+
-    '</div>'+
-    pfooter(today)+
-  '</div>';
-
-  // PAGE 3: A SOLUÇÃO
-  const specCards=[
-    totalPwDisp?'<div class="spec-card"><div class="sc-num">01</div><div class="sc-val">'+totalPwDisp+'</div><div class="sc-lbl">Pot\u00eancia Solar</div>'+(modQty?'<div class="sc-sub">'+modQty+' m\u00f3dulos \u00d7 '+modPower+' W</div>':'')+'</div>':'',
-    genKwh?'<div class="spec-card"><div class="sc-num">02</div><div class="sc-val">'+genKwh+'</div><div class="sc-lbl">Gera\u00e7\u00e3o Mensal</div><div class="sc-sub">estimativa mensal</div></div>':'',
-    invQty?'<div class="spec-card"><div class="sc-num">03</div><div class="sc-val">'+(invQty>1?invQty+' un.':invQty)+'</div><div class="sc-lbl">'+(invQty>1?'Inversores':'Inversor H\u00edbrido')+'</div><div class="sc-sub">'+(invModel?invModel.substring(0,28):'')+(invPower?' &middot; '+invPower+' kW':'')+'</div></div>':'',
-    hasBat&&batKwh?'<div class="spec-card" style="border-left-color:#E8641A;background:#fff8f5"><div class="sc-num">\ud83d\udd0b</div><div class="sc-val">'+batKwh+' kWh</div><div class="sc-lbl">Armazenamento</div><div class="sc-sub">'+(batModel||'Sistema de Bateria')+'</div></div>':'',
-    '<div class="spec-card"><div class="sc-num">\ud83d\udccd</div><div class="sc-val" style="font-size:18px">'+instType+'</div><div class="sc-lbl">Tipo de Instala\u00e7\u00e3o</div><div class="sc-sub">'+conexao+(bill?' &middot; '+fmtBRL(bill)+'/m\u00eas':'')+'</div></div>',
-  ].filter(Boolean).join('');
-
-  const ecoRow=isEcoMode&&(ecoMonthly||bill)?
-    '<div class="eco-row">'+
-      (ecoMonthly?'<div class="eco-card"><div class="eco-lbl">Economia Mensal</div><div class="eco-val">'+fmtBRL(ecoMonthly)+'</div><div class="eco-sub">redu\u00e7\u00e3o imediata</div></div>':'')+
-      (ecoAnual?'<div class="eco-card"><div class="eco-lbl">Economia Anual</div><div class="eco-val">'+fmtBRL(ecoAnual)+'</div><div class="eco-sub">em 12 meses</div></div>':'')+
-      (paybackStr?'<div class="eco-card"><div class="eco-lbl">Retorno do Investimento</div><div class="eco-val" style="font-size:18px">'+paybackStr+'</div><div class="eco-sub">payback estimado</div></div>':'')+
-    '</div>':'';
-
-  const p3='<div class="page page-light">'+
+  // PAGE 2: EMPRESA — light (fusão Nossa História + stats)
+  const p2='<div class="page page-light">'+
     '<div class="grid-ov"></div>'+
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
     '<div class="plc">'+
-      '<div class="sec-eyebrow">A Solu\u00e7\u00e3o Lumen Grid</div>'+
-      '<h2 class="sec-h2">Sistema Solar + Armazenamento <span style="color:var(--or)">sob medida</span></h2>'+
+      '<div class="sec-eyebrow">Nossa Hist\u00f3ria</div>'+
+      '<h2 class="sec-h2">Energia que <span style="color:var(--or)">transforma</span> vidas e neg\u00f3cios</h2>'+
       '<div class="sec-rule"></div>'+
       '<div class="cstrip">'+
-        '<div class="cstrip-item"><div class="csv">+8 anos</div><div class="csl">De experiência</div></div>'+
+        '<div class="cstrip-item"><div class="csv">+8 anos</div><div class="csl">De experi\u00eancia</div></div>'+
         '<div class="cstrip-sep"></div>'+
         '<div class="cstrip-item"><div class="csv">+700</div><div class="csl">Projetos homologados</div></div>'+
         '<div class="cstrip-sep"></div>'+
         '<div class="cstrip-item"><div class="csv">Equipe</div><div class="csl">Especializada</div></div>'+
       '</div>'+
-      '<p class="lead">'+leadText+'</p>'+
-      '<div class="spec-grid">'+specCards+'</div>'+
-      ecoRow+
-      (isEcoMode&&bill&&ecoMonthly?buildChart(bill,ecoMonthly,projectVal):'')+
-      (urgencyActive?'<div class="urg-banner vis"><div><div class="urg-t">\u26a0 Oferta por Tempo Limitado</div><div class="urg-s">Condi\u00e7\u00f5es v\u00e1lidas por '+validity+' dias. Pre\u00e7os e estoque sujeitos a altera\u00e7\u00e3o.</div></div></div>':'')+
+      '<p class="lead">Somos um time com 8 anos de experi\u00eancia no setor de energia solar, especializado em desenvolver projetos personalizados para resid\u00eancias, empresas, ind\u00fastrias, propriedades rurais e condom\u00ednios.</p>'+
+      '<p class="lead" style="margin-top:-10px">Nosso compromisso \u00e9 entregar a solu\u00e7\u00e3o ideal para a sua realidade, com agilidade na execu\u00e7\u00e3o para que sua economia e independ\u00eancia energ\u00e9tica come\u00e7em o quanto antes.</p>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 22px">'+
+        '<span class="seg-chip">\ud83c\udfe0 Residencial</span>'+
+        '<span class="seg-chip">\ud83c\udfe2 Comercial</span>'+
+        '<span class="seg-chip">\ud83c\dfed Industrial</span>'+
+        '<span class="seg-chip">\ud83c\udf3e Rural / Agroneg\u00f3cio</span>'+
+        '<span class="seg-chip">\ud83c\udfd8 Condom\u00ednios</span>'+
+        '<span class="seg-chip">\u26a1 Sistemas H\u00edbridos</span>'+
+        '<span class="seg-chip">\ud83d\ude97 Mobilidade El\u00e9trica</span>'+
+      '</div>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">'+
+        '<div style="background:var(--lbg);border:1.5px solid var(--lborder);border-left:3px solid var(--or);border-radius:10px;padding:18px 16px">'+
+          '<div style="font-size:11px;font-weight:800;color:var(--or);margin-bottom:10px">01</div>'+
+          '<div style="font-size:13px;font-weight:700;color:var(--ltext);margin-bottom:6px">Experi\u00eancia Comprovada</div>'+
+          '<div style="font-size:11px;color:var(--lmuted);line-height:1.6">+8 anos no mercado solar, com mais de 700 projetos homologados em todo o Brasil.</div>'+
+        '</div>'+
+        '<div style="background:var(--lbg);border:1.5px solid var(--lborder);border-left:3px solid var(--or);border-radius:10px;padding:18px 16px">'+
+          '<div style="font-size:11px;font-weight:800;color:var(--or);margin-bottom:10px">02</div>'+
+          '<div style="font-size:13px;font-weight:700;color:var(--ltext);margin-bottom:6px">Solu\u00e7\u00f5es Personalizadas</div>'+
+          '<div style="font-size:11px;color:var(--lmuted);line-height:1.6">Cada projeto \u00e9 desenvolvido sob medida, com foco em economia real desde o primeiro m\u00eas.</div>'+
+        '</div>'+
+        '<div style="background:var(--lbg);border:1.5px solid var(--lborder);border-left:3px solid var(--or);border-radius:10px;padding:18px 16px">'+
+          '<div style="font-size:11px;font-weight:800;color:var(--or);margin-bottom:10px">03</div>'+
+          '<div style="font-size:13px;font-weight:700;color:var(--ltext);margin-bottom:6px">Suporte Completo</div>'+
+          '<div style="font-size:11px;color:var(--lmuted);line-height:1.6">Da vistoria \u00e0 homologa\u00e7\u00e3o, cuidamos de tudo. Monitoramento online e assist\u00eancia t\u00e9cnica sempre.</div>'+
+        '</div>'+
+      '</div>'+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
@@ -1003,7 +975,6 @@ function generateProposal(){
         '</div>'+
       '</div>';
       })()+
-      (hasBat&&hasEquip?buildEquipSection(hasBat,batKwh):'')+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
@@ -1037,8 +1008,16 @@ function generateProposal(){
     pfooter(today)+
   '</div>':'';
 
-  // PAGE INVESTIMENTO
-  const warRows=[
+  // PAGE GARANTIAS + EQUIPAMENTOS
+  const specCards=[
+    totalPwDisp?'<div class="spec-card"><div class="sc-num">01</div><div class="sc-val">'+totalPwDisp+'</div><div class="sc-lbl">Pot\u00eancia Solar</div>'+(modQty?'<div class="sc-sub">'+modQty+' m\u00f3dulos \u00d7 '+modPower+' W</div>':'')+'</div>':'',
+    genKwh?'<div class="spec-card"><div class="sc-num">02</div><div class="sc-val">'+genKwh+'</div><div class="sc-lbl">Gera\u00e7\u00e3o Mensal</div><div class="sc-sub">estimativa mensal</div></div>':'',
+    invQty?'<div class="spec-card"><div class="sc-num">03</div><div class="sc-val">'+(invQty>1?invQty+' un.':invQty)+'</div><div class="sc-lbl">'+(invQty>1?'Inversores':'Inversor H\u00edbrido')+'</div><div class="sc-sub">'+(invModel?invModel.substring(0,28):'')+(invPower?' &middot; '+invPower+' kW':'')+'</div></div>':'',
+    hasBat&&batKwh?'<div class="spec-card" style="border-left-color:#E8641A;background:#fff8f5"><div class="sc-num">\ud83d\udd0b</div><div class="sc-val">'+batKwh+' kWh</div><div class="sc-lbl">Armazenamento</div><div class="sc-sub">'+(batModel||'Sistema de Bateria')+'</div></div>':'',
+    '<div class="spec-card"><div class="sc-num">\ud83d\udccd</div><div class="sc-val" style="font-size:18px">'+instType+'</div><div class="sc-lbl">Tipo de Instala\u00e7\u00e3o</div><div class="sc-sub">'+conexao+(bill?' &middot; '+fmtBRL(bill)+'/m\u00eas':'')+'</div></div>',
+  ].filter(Boolean).join('');
+
+  const warRowsGar=[
     {n:'M\u00f3dulos Fotovoltaicos',v:warPainel+' anos'},
     {n:'Microinversores',v:warMicroinv+' anos'},
     {n:'Inversor String',v:warInvStr+' anos'},
@@ -1047,32 +1026,54 @@ function generateProposal(){
     {n:'Assist\u00eancia T\u00e9cnica',v:warAss},
   ].filter(Boolean).map(w=>'<div class="war-item"><span class="war-name">'+w.n+'</span><span class="war-val">'+w.v+'</span></div>').join('');
 
-  const pInv='<div class="page page-light">'+
+  const pGar='<div class="page page-light">'+
     '<div class="grid-ov"></div>'+
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
-    '<div class="inv-hero">'+
-      '<div class="inv-total-lbl">Investimento Total</div>'+
-      '<div class="inv-total">'+(projectVal?fmtBRL(projectVal):'A consultar')+'</div>'+
-      '<div class="inv-sub">Proposta v\u00e1lida at\u00e9 '+validUntil+' &nbsp;&middot;&nbsp; '+instType+' &nbsp;&middot;&nbsp; '+conexao+'</div>'+
-    '</div>'+
-    '<div class="inv-grid">'+
-      '<div>'+
-        '<div class="stitle">Prazos</div>'+
-        '<div class="prazo-cards">'+
-          '<div class="prazo-card"><div class="prazo-val">'+prazo+'</div><div class="prazo-lbl">Dias \u00fateis</div><div class="prazo-sub">Instala\u00e7\u00e3o completa</div></div>'+
-          '<div class="prazo-card"><div class="prazo-val">'+validity+'</div><div class="prazo-lbl">Dias</div><div class="prazo-sub">Validade da proposta</div></div>'+
-        '</div>'+
-        '<div style="text-align:center;margin:0 -20px"><img src="imagens/Formas de pagamento LumenGrid.png" style="width:calc(100% + 40px);max-width:none;display:block"></div>'+
+    '<div class="plc">'+
+      '<div class="sec-eyebrow">Prazos, Garantias &amp; Equipamentos</div>'+
+      '<h2 class="sec-h2">Tudo o que voc\u00ea <span style="color:var(--or)">recebe</span></h2>'+
+      '<div class="sec-rule"></div>'+
+      '<div class="prazo-cards" style="margin-bottom:24px">'+
+        '<div class="prazo-card"><div class="prazo-val">'+prazo+'</div><div class="prazo-lbl">Dias \u00fateis</div><div class="prazo-sub">Instala\u00e7\u00e3o completa</div></div>'+
+        '<div class="prazo-card"><div class="prazo-val">'+validity+'</div><div class="prazo-lbl">Dias</div><div class="prazo-sub">Validade da proposta</div></div>'+
       '</div>'+
-      '<div>'+
-        '<div class="stitle">Garantias</div>'+
-        '<div class="war-list">'+warRows+'</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">'+
+        '<div>'+
+          '<div class="stitle">Equipamentos do Sistema</div>'+
+          '<div class="spec-grid" style="grid-template-columns:1fr 1fr;gap:10px">'+specCards+'</div>'+
+          (hasBat&&hasEquip?buildEquipSection(hasBat,batKwh):'')+
+        '</div>'+
+        '<div>'+
+          '<div class="stitle">Garantias Inclu\u00eddas</div>'+
+          '<div class="war-list">'+warRowsGar+'</div>'+
+        '</div>'+
       '</div>'+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
   '</div>';
+
+  // PAGE INVESTIMENTO
+  const pInv='<div class="page page-light">'+
+    '<div class="grid-ov"></div>'+
+    '<div class="corner tl"></div><div class="corner tr"></div>'+
+    lbar(pg++,pageCount)+
+    '<div class="plc">'+
+      '<div class="sec-eyebrow">Investimento</div>'+
+      '<div style="text-align:center;padding:32px 0 20px">'+
+        '<div style="font-size:11px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:10px">Investimento Total</div>'+
+        '<div style="font-size:56px;font-weight:900;color:var(--ltext);line-height:1;font-family:Montserrat,sans-serif">'+(projectVal?fmtBRL(projectVal):'<span style="font-size:28px">A consultar</span>')+'</div>'+
+        '<div style="font-size:11px;color:var(--lmuted);margin-top:10px">Proposta v\u00e1lida at\u00e9 '+validUntil+' &middot; '+instType+'</div>'+
+      '</div>'+
+      '<div class="sec-rule" style="margin:0 auto 24px"></div>'+
+      '<div class="stitle">Formas de Pagamento</div>'+
+      '<div style="text-align:center;margin:0 -52px"><img src="imagens/Formas de pagamento LumenGrid.png" style="width:calc(100% + 104px);max-width:none;display:block"></div>'+
+    '</div>'+
+    '<div class="corner bl"></div><div class="corner br"></div>'+
+    pfooter(today)+
+  '</div>';
+
 
   // PAGE PRÓXIMOS PASSOS
   const pSteps='<div class="page page-light" style="position:relative;overflow:hidden">'+
@@ -1123,10 +1124,12 @@ function generateProposal(){
     pfooter(today)+
   '</div>';
 
-  const html=p1+p2+p3+p4+pWallbox+pInv+pSteps;
+  const html=p1+p2+p4+pWallbox+pGar+pInv+pSteps;
   document.getElementById('preview').innerHTML=html;
   document.getElementById('preview').style.display='';
   document.getElementById('previewEmpty').style.display='none';
+  // Auto-print (salvar como PDF)
+  setTimeout(()=>window.print(),600);
 }
 
 // Init listeners
@@ -1136,10 +1139,13 @@ document.getElementById('batteryKwh').addEventListener('input',calcAutonomy);
 function onSistTipo(){
   const t=document.querySelector('input[name=sistTipo]:checked').value;
   const isHib=t==='hibrido';
-  // Auto-check battery for hybrid mode
   const batCb=document.getElementById('hasBattery');
-  if(isHib&&!batCb.checked){batCb.checked=true;document.getElementById('batteryField').style.display='';recalcAutonomy();}
-  // Show/hide autonomy section
+  if(isHib){
+    if(!batCb.checked){batCb.checked=true;document.getElementById('batteryField').style.display='';recalcAutonomy();}
+  } else {
+    batCb.checked=false;
+    document.getElementById('batteryField').style.display='none';
+  }
   const autSec=document.getElementById('autonomySection');
   if(autSec)autSec.style.display=isHib?'':'none';
 }
