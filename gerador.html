@@ -303,6 +303,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -524,6 +525,9 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="btn-bar">
+    <label class="bpdf btn" style="cursor:pointer" title="Importar PDF do fornecedor para preencher automaticamente">📄 Importar PDF
+      <input type="file" id="pdfImport" accept=".pdf" style="display:none" onchange="importSupplierPDF(this)">
+    </label>
     <button class="bp btn" id="btnGerar" onclick="generateProposal()">⚡ Gerar Proposta</button>
     <button class="bpdf btn" id="btnPdf" onclick="downloadPDF()">⬇ Baixar PDF</button>
     <button class="bo btn" onclick="resetForm()">Limpar</button>
@@ -1011,13 +1015,14 @@ function generateProposal(){
   '</div>':'';
 
   // PAGE GARANTIAS + EQUIPAMENTOS
-  const specCards=[
-    totalPwDisp?'<div class="spec-card"><div class="sc-num">01</div><div class="sc-val">'+totalPwDisp+'</div><div class="sc-lbl">Pot\u00eancia Solar</div>'+(modQty?'<div class="sc-sub">'+modQty+' m\u00f3dulos \u00d7 '+modPower+' W</div>':'')+'</div>':'',
-    genKwh?'<div class="spec-card"><div class="sc-num">02</div><div class="sc-val">'+genKwh+'</div><div class="sc-lbl">Gera\u00e7\u00e3o Mensal</div><div class="sc-sub">estimativa mensal</div></div>':'',
-    invQty?'<div class="spec-card"><div class="sc-num">03</div><div class="sc-val">'+(invQty>1?invQty+' un.':invQty)+'</div><div class="sc-lbl">'+(invQty>1?'Inversores':'Inversor H\u00edbrido')+'</div><div class="sc-sub">'+(invModel?invModel.substring(0,28):'')+(invPower?' &middot; '+invPower+' kW':'')+'</div></div>':'',
-    hasBat&&batKwh?'<div class="spec-card" style="border-left-color:#E8641A;background:#fff8f5"><div class="sc-num">\ud83d\udd0b</div><div class="sc-val">'+batKwh+' kWh</div><div class="sc-lbl">Armazenamento</div><div class="sc-sub">'+(batModel||'Sistema de Bateria')+'</div></div>':'',
-    '<div class="spec-card"><div class="sc-num">\ud83d\udccd</div><div class="sc-val" style="font-size:18px">'+instType+'</div><div class="sc-lbl">Tipo de Instala\u00e7\u00e3o</div><div class="sc-sub">'+conexao+(bill?' &middot; '+fmtBRL(bill)+'/m\u00eas':'')+'</div></div>',
-  ].filter(Boolean).join('');
+  // spec table rows from form values
+  const specRows=[
+    totalPwDisp?{l:'Pot\u00eancia do Sistema',v:totalPwDisp+(modQty?' ('+modQty+' m\u00f3dulos \u00d7 '+modPower+' W)':'')}:null,
+    genKwh?{l:'Gera\u00e7\u00e3o Mensal Estimada',v:genKwh}:null,
+    invQty?{l:(invQty>1?'Inversores':'Inversor')+(invModel?' '+invModel:''),v:(invQty>1?invQty+' un.':invQty+' un.')+(invPower?' &middot; '+invPower+' kW':'')}:null,
+    hasBat&&batKwh?{l:'Sistema de Bateria'+(batModel?' '+batModel:''),v:batKwh+' kWh'}:null,
+    {l:'Tipo de Instala\u00e7\u00e3o',v:instType+' &middot; '+conexao},
+  ].filter(Boolean).map(r=>'<tr><td style="padding:9px 14px;font-size:12px;color:#444;border-bottom:1px solid #f0f0f0">'+r.l+'</td><td style="padding:9px 14px;font-size:12px;font-weight:700;color:var(--or);text-align:right;border-bottom:1px solid #f0f0f0">'+r.v+'</td></tr>').join('');
 
   const warRowsGar=[
     {n:'M\u00f3dulos Fotovoltaicos',v:warPainel+' anos'},
@@ -1033,17 +1038,30 @@ function generateProposal(){
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
     '<div class="plc">'+
-      '<div class="sec-eyebrow">Prazos, Garantias &amp; Equipamentos</div>'+
+      '<div class="sec-eyebrow">Garantias &amp; Equipamentos</div>'+
       '<h2 class="sec-h2">Tudo o que voc\u00ea <span style="color:var(--or)">recebe</span></h2>'+
       '<div class="sec-rule"></div>'+
-      '<div class="prazo-cards" style="margin-bottom:24px">'+
-        '<div class="prazo-card"><div class="prazo-val">'+prazo+'</div><div class="prazo-lbl">Dias \u00fateis</div><div class="prazo-sub">Instala\u00e7\u00e3o completa</div></div>'+
-        '<div class="prazo-card"><div class="prazo-val">'+validity+'</div><div class="prazo-lbl">Dias</div><div class="prazo-sub">Validade da proposta</div></div>'+
+      // Prazos
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">'+
+        '<div style="border:2px solid rgba(232,100,26,.3);border-top:4px solid var(--or);border-radius:10px;padding:20px;text-align:center;background:var(--lbg)">'+
+          '<div style="font-size:40px;font-weight:900;color:var(--or);line-height:1">'+prazo+'</div>'+
+          '<div style="font-size:11px;font-weight:700;color:var(--ltext);margin-top:4px">Dias \u00fateis</div>'+
+          '<div style="font-size:10px;color:var(--lmuted);margin-top:2px">Instala\u00e7\u00e3o completa</div>'+
+        '</div>'+
+        '<div style="border:2px solid rgba(232,100,26,.3);border-top:4px solid var(--or);border-radius:10px;padding:20px;text-align:center;background:var(--lbg)">'+
+          '<div style="font-size:40px;font-weight:900;color:var(--or);line-height:1">'+validity+'</div>'+
+          '<div style="font-size:11px;font-weight:700;color:var(--ltext);margin-top:4px">Dias</div>'+
+          '<div style="font-size:10px;color:var(--lmuted);margin-top:2px">Validade da proposta</div>'+
+        '</div>'+
       '</div>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">'+
+      // Equipamentos + Garantias lado a lado
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">'+
         '<div>'+
           '<div class="stitle">Equipamentos do Sistema</div>'+
-          '<div class="spec-grid" style="grid-template-columns:1fr 1fr;gap:10px">'+specCards+'</div>'+
+          '<table style="width:100%;border-collapse:collapse;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden">'+
+            '<thead><tr style="background:rgba(232,100,26,.08)"><th style="padding:9px 14px;text-align:left;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">ITEM</th><th style="padding:9px 14px;text-align:right;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">ESPECIFICA\u00c7\u00c3O</th></tr></thead>'+
+            '<tbody>'+specRows+'</tbody>'+
+          '</table>'+
           (hasBat&&hasEquip?buildEquipSection(hasBat,batKwh):'')+
         '</div>'+
         '<div>'+
@@ -1051,10 +1069,27 @@ function generateProposal(){
           '<div class="war-list">'+warRowsGar+'</div>'+
         '</div>'+
       '</div>'+
+      // Responsabilidades
+      '<div class="stitle" style="margin-bottom:14px">Responsabilidades</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
+        '<div style="background:var(--lbg);border:1.5px solid var(--lborder);border-radius:10px;padding:18px 20px">'+
+          '<div style="font-size:13px;font-weight:800;color:var(--ltext);margin-bottom:12px">Lumen Grid</div>'+
+          '<div style="display:flex;flex-direction:column;gap:0">'+
+            ['Projeto t\u00e9cnico e el\u00e9trico','Fornecimento e instala\u00e7\u00e3o dos equipamentos','Homologa\u00e7\u00e3o junto \u00e0 concession\u00e1ria','Suporte t\u00e9cnico p\u00f3s-instala\u00e7\u00e3o'].map(r=>'<div style="padding:8px 0;font-size:11px;color:#555;border-bottom:1px solid #ebebeb">'+r+'</div>').join('')+
+          '</div>'+
+        '</div>'+
+        '<div style="background:var(--lbg);border:1.5px solid var(--lborder);border-radius:10px;padding:18px 20px">'+
+          '<div style="font-size:13px;font-weight:800;color:var(--ltext);margin-bottom:12px">Cliente</div>'+
+          '<div style="display:flex;flex-direction:column;gap:0">'+
+            ['Acesso ao local de instala\u00e7\u00e3o','Documentos do titular da fatura (para homologa\u00e7\u00e3o)','Conta de energia atualizada','Infraestrutura civil, se necess\u00e1ria'].map(r=>'<div style="padding:8px 0;font-size:11px;color:#555;border-bottom:1px solid #ebebeb">'+r+'</div>').join('')+
+          '</div>'+
+        '</div>'+
+      '</div>'+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
   '</div>';
+
 
   // PAGE INVESTIMENTO
   const pInv='<div class="page page-light">'+
@@ -1077,33 +1112,40 @@ function generateProposal(){
   '</div>';
 
 
-  // PAGE PRÓXIMOS PASSOS
-  const pSteps='<div class="page page-light" style="position:relative;overflow:hidden">'+
-    '<div style="position:absolute;inset:0;background-image:url(\'imagens/handshake.png\');background-size:cover;background-position:center;z-index:0;opacity:.18"></div>'+
+  // PAGE PRÓXIMOS PASSOS — dark com foto estilo cards
+  const stepIcon=n=>'<div style="width:44px;height:44px;border:2px solid var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--or);flex-shrink:0;background:rgba(232,100,26,.1)">'+n+'</div>';
+  const stepRow=(n,t,d)=>'<div style="display:flex;align-items:flex-start;gap:0;padding:22px 0;border-bottom:1px solid rgba(255,255,255,.06)">'+
+    '<div style="width:4px;background:var(--or);border-radius:2px;margin-right:20px;align-self:stretch;min-height:50px"></div>'+
+    stepIcon(n)+
+    '<div style="margin-left:20px">'+
+      '<div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:5px">'+t+'</div>'+
+      '<div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.6">'+d+'</div>'+
+    '</div>'+
+  '</div>';
+
+  const pSteps='<div class="page" style="background:#0a0a0c;min-height:1000px;display:flex;flex-direction:column;position:relative;overflow:hidden">'+
+    '<div style="position:absolute;inset:0;background-image:url(\'imagens/instalador.png\');background-size:cover;background-position:center top;opacity:.22;z-index:0"></div>'+
+    '<div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(10,10,12,.95) 48%,rgba(10,10,12,.6) 100%);z-index:1"></div>'+
     '<div class="grid-ov"></div>'+
-    '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
-    '<div class="plc">'+
-      '<div class="sec-eyebrow">Pr\u00f3ximos Passos</div>'+
-      '<h2 class="sec-h2">Da aprova\u00e7\u00e3o \u00e0 <span style="color:var(--or)">gera\u00e7\u00e3o</span></h2>'+
-      '<div class="sec-rule"></div>'+
-      '<div class="steps-wrap">'+
-        '<div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Aprovação da Proposta</div><div class="step-desc">Após a aprovação da proposta, realizamos a assinatura do contrato e damos início ao planejamento do seu projeto.</div></div></div>'+
-        '<div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Vistoria Técnica</div><div class="step-desc">Nossa equipe técnica visita o imóvel para validar as condições de instalação, realizar as medições necessárias e confirmar as especificações finais do sistema.</div></div></div>'+
-        '<div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Recebimento dos Equipamentos</div><div class="step-desc">Os equipamentos são entregues e conferidos, garantindo que todos os componentes estejam prontos para uma instalação segura e dentro dos padrões de qualidade.</div></div></div>'+
-        '<div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Instalação do Sistema</div><div class="step-desc">Nossa equipe especializada realiza a instalação completa dos painéis solares, inversores e demais equipamentos, com prazo de conclusão de até '+prazo+' dias úteis.</div></div></div>'+
-        '<div class="step-item"><div class="step-num">5</div><div class="step-body"><div class="step-title">Homologação e Ativação</div><div class="step-desc">Cuidamos de todo o processo junto à concessionária de energia, incluindo vistoria, homologação, conexão à rede e ativação do monitoramento online em tempo real.</div></div></div>'+
-      '</div>'+
-      (isEcoMode&&ecoMonthly?'<div style="margin:18px 0 10px;padding:16px;background:rgba(232,100,26,.08);border:1px solid rgba(232,100,26,.2);border-radius:8px">'+
-        '<div style="font-size:10px;font-weight:700;color:var(--or);letter-spacing:1px;margin-bottom:10px">PROJEÇÃO DE ECONOMIA — '+name+'</div>'+
-        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'+
-          '<div style="text-align:center;padding:10px;background:rgba(255,255,255,.04);border-radius:6px"><div style="font-size:9px;color:rgba(255,255,255,.5)">Em 1 ano</div><div style="font-size:16px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*12)):'—')+'</div></div>'+
-          '<div style="text-align:center;padding:10px;background:rgba(255,255,255,.04);border-radius:6px"><div style="font-size:9px;color:rgba(255,255,255,.5)">Em 5 anos</div><div style="font-size:16px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*60)):'—')+'</div></div>'+
-          '<div style="text-align:center;padding:10px;background:rgba(255,255,255,.04);border-radius:6px"><div style="font-size:9px;color:rgba(255,255,255,.5)">Em 25 anos</div><div style="font-size:16px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*300)):'—')+'</div></div>'+
+    '<div style="padding:36px 60px;position:relative;z-index:2;flex:1">'+
+      '<div style="font-size:9px;font-weight:800;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:10px">Processo</div>'+
+      '<h2 style="font-family:Montserrat,sans-serif;font-size:32px;font-weight:900;color:#fff;line-height:1.15;margin-bottom:6px">Da aprova\u00e7\u00e3o \u00e0 <span style="color:var(--or)">gera\u00e7\u00e3o</span></h2>'+
+      '<div style="width:48px;height:3px;background:var(--or);border-radius:2px;margin-bottom:28px"></div>'+
+      stepRow(1,'Aprova\u00e7\u00e3o da Proposta','Ap\u00f3s a aprova\u00e7\u00e3o, realizamos a assinatura do contrato e damos in\u00edcio ao planejamento do seu projeto.')+
+      stepRow(2,'Vistoria T\u00e9cnica','Nossa equipe visita o im\u00f3vel para validar as condi\u00e7\u00f5es de instala\u00e7\u00e3o, realizar medi\u00e7\u00f5es e confirmar as especifica\u00e7\u00f5es finais.')+
+      stepRow(3,'Recebimento dos Equipamentos','Os equipamentos s\u00e3o entregues e conferidos, garantindo que tudo esteja pronto para uma instala\u00e7\u00e3o segura e de qualidade.')+
+      stepRow(4,'Instala\u00e7\u00e3o do Sistema','Instala\u00e7\u00e3o completa em at\u00e9 '+prazo+' dias \u00fateis, incluindo pain\u00e9is, inversores e toda a infraestrutura el\u00e9trica.')+
+      stepRow(5,'Homologa\u00e7\u00e3o e Ativa\u00e7\u00e3o','Cuidamos de todo o processo junto \u00e0 concession\u00e1ria: vistoria, homologa\u00e7\u00e3o, conex\u00e3o \u00e0 rede e ativa\u00e7\u00e3o do monitoramento online.')+
+      (isEcoMode&&ecoMonthly?'<div style="margin-top:24px;padding:18px 20px;background:rgba(232,100,26,.1);border:1px solid rgba(232,100,26,.25);border-radius:10px">'+
+        '<div style="font-size:9px;font-weight:700;color:var(--or);letter-spacing:2px;margin-bottom:12px">PROJE\u00c7\u00c3O DE ECONOMIA &mdash; '+name+'</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">'+
+          '<div style="text-align:center;padding:12px;background:rgba(255,255,255,.04);border-radius:8px"><div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">Em 1 ano</div><div style="font-size:18px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*12)):'\u2014')+'</div></div>'+
+          '<div style="text-align:center;padding:12px;background:rgba(255,255,255,.04);border-radius:8px"><div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">Em 5 anos</div><div style="font-size:18px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*60)):'\u2014')+'</div></div>'+
+          '<div style="text-align:center;padding:12px;background:rgba(255,255,255,.04);border-radius:8px"><div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">Em 25 anos</div><div style="font-size:18px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*300)):'\u2014')+'</div></div>'+
         '</div>'+
       '</div>':'')+
     '</div>'+
-    '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
   '</div>';
 
@@ -1140,6 +1182,96 @@ function generateProposal(){
   document.getElementById('preview').innerHTML=html;
   document.getElementById('preview').style.display='';
   document.getElementById('previewEmpty').style.display='none';
+}
+
+async function importSupplierPDF(input){
+  const file=input.files[0];
+  if(!file)return;
+  const label=input.parentElement;
+  label.textContent='Lendo PDF...';
+
+  try{
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const ab=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+    let fullText='';
+    for(let i=1;i<=pdf.numPages;i++){
+      const page=await pdf.getPage(i);
+      const tc=await page.getTextContent();
+      fullText+=tc.items.map(t=>t.str).join(' ')+' ';
+    }
+
+    // Extrai potência dos módulos (ex: "410 W", "545Wp", "555 Wp")
+    const modPwM=fullText.match(/\b(\d{3,4})\s*[Ww][Pp]?\b/g);
+    // Extrai quantidade de módulos (ex: "12 módulos", "12 placas")
+    const modQtyM=fullText.match(/\b(\d{1,3})\s*(?:m[oó]dulos?|placas?|painéis?)\b/i);
+    // Extrai kWp total (ex: "7,2 kWp", "5.4kWp")
+    const kwpM=fullText.match(/([\d,\.]+)\s*kWp/i);
+    // Extrai modelo inversor (ex: "Deye 8K", "Growatt 6000TL")
+    const invM=fullText.match(/\b(Deye|Growatt|SMA|Fronius|ABB|Huawei|WEG|GoodWe|Sungrow|Canadian|Sofar|Delta|SAJ|Sofar|Hoymiles|Enphase)[\s\-]?([\w\.\-]+)?/i);
+    // Extrai kWh de bateria (ex: "5,12 kWh", "10.24kWh")
+    const batM=fullText.match(/([\d,\.]+)\s*kWh/i);
+    // Extrai modelo de módulo/painel
+    const modBrandM=fullText.match(/\b(Jinko|Canadian|LONGi|Risen|JA Solar|BYD|Trina|Suntech|Amerisolar|DAH|Bifacial)[\s\-]?([\w\.\-]+)?/i);
+    // Extrai geração mensal (ex: "850 kWh/mês")
+    const genM=fullText.match(/([\d,\.]+)\s*kWh\s*\/\s*m[eê]s/i);
+    // Extrai valor total (ex: "R$ 25.000", "R$25000")
+    const valM=fullText.match(/R\$\s*([\d\.]+(?:,\d{2})?)/);
+
+    let filled=[];
+
+    if(kwpM){
+      const kwp=kwpM[1].replace(',','.');
+      const kw=parseFloat(kwp);
+      document.getElementById('totalPower').value=kw.toFixed(2)+' kWp';
+      filled.push('Potência: '+kw.toFixed(2)+' kWp');
+    }
+    if(modPwM&&modPwM.length){
+      const pw=parseInt(modPwM[0]);
+      document.getElementById('modPower').value=pw;
+      filled.push('Módulo: '+pw+'W');
+    }
+    if(modQtyM){
+      document.getElementById('modQty').value=parseInt(modQtyM[1]);
+      filled.push('Qty módulos: '+modQtyM[1]);
+    }
+    if(invM){
+      const invName=invM[0].trim();
+      document.getElementById('invModel').value=invName;
+      filled.push('Inversor: '+invName);
+    }
+    if(modBrandM){
+      document.getElementById('modModel').value=modBrandM[0].trim();
+      filled.push('Módulo: '+modBrandM[0].trim());
+    }
+    if(batM){
+      const kwh=parseFloat(batM[1].replace(',','.'));
+      document.getElementById('batKwh').value=kwh;
+      document.getElementById('hasBattery').checked=true;
+      document.getElementById('batteryField').style.display='';
+      filled.push('Bateria: '+kwh+' kWh');
+    }
+    if(genM){
+      const gen=parseFloat(genM[1].replace(',','.'));
+      document.getElementById('monthlyGen').value=Math.round(gen);
+      filled.push('Geração: '+Math.round(gen)+' kWh/mês');
+    }
+    if(valM){
+      const v=valM[1].replace('.','');
+      document.getElementById('projectVal').value=v;
+      filled.push('Valor: R$ '+valM[1]);
+    }
+
+    if(filled.length){
+      alert('✅ PDF importado! Campos preenchidos:\n• '+filled.join('\n• ')+'\n\nRevise e ajuste o que precisar.');
+    } else {
+      alert('⚠️ PDF lido mas não foi possível extrair dados automaticamente.\nO formato deste PDF pode ser diferente do esperado.\nPreencha os campos manualmente.');
+    }
+  }catch(e){
+    alert('Erro ao ler PDF: '+e.message);
+  }finally{
+    label.innerHTML='📄 Importar PDF\n<input type="file" id="pdfImport" accept=".pdf" style="display:none" onchange="importSupplierPDF(this)">';
+  }
 }
 
 async function downloadPDF(){
