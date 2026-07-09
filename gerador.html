@@ -117,6 +117,23 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .sc-val{font-size:24px;font-weight:900;color:var(--ltext);line-height:1;margin-bottom:4px}
 .sc-lbl{font-size:10px;color:var(--lmuted)}
 .sc-sub{font-size:10px;color:var(--lmuted);margin-top:4px}
+/* Spec hierarchy — hero + secondary row */
+.spec-block{margin-bottom:20px}
+.spec-hero{background:var(--lcard);border:2px solid rgba(232,100,26,.35);border-radius:12px;padding:24px 28px;display:flex;align-items:center;gap:28px;margin-bottom:12px;position:relative;overflow:hidden}
+.spec-hero::before{content:'';position:absolute;top:0;left:0;width:5px;height:100%;background:var(--or)}
+.sh-badge{font-size:9px;font-weight:800;letter-spacing:2.5px;color:var(--or);text-transform:uppercase;margin-bottom:6px}
+.sh-val{font-size:48px;font-weight:900;color:var(--ltext);line-height:1;font-family:Montserrat,sans-serif}
+.sh-unit{font-size:18px;font-weight:700;color:var(--or);margin-left:4px}
+.sh-sub{font-size:12px;color:var(--lmuted);margin-top:6px;font-weight:500}
+.sh-right{flex:1;border-left:1px solid var(--lborder);padding-left:28px}
+.sh-right-title{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--lmuted);text-transform:uppercase;margin-bottom:8px}
+.sh-right-val{font-size:22px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif;line-height:1}
+.sh-right-sub{font-size:10px;color:var(--lmuted);margin-top:4px}
+.spec-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.spec-sm{background:var(--lcard);border:1px solid var(--lborder);border-radius:10px;padding:14px 16px}
+.ssm-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--lmuted);text-transform:uppercase;margin-bottom:6px}
+.ssm-val{font-size:18px;font-weight:900;color:var(--ltext);line-height:1;margin-bottom:4px;font-family:Montserrat,sans-serif}
+.ssm-sub{font-size:10px;color:var(--lmuted)}
 .eco-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
 .eco-card{background:var(--lbg);border:1px solid var(--lborder);border-radius:8px;padding:16px;text-align:center}
 .eco-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--lmuted);margin-bottom:6px}
@@ -745,22 +762,80 @@ function corners(){return'<div class="corner tl"></div><div class="corner tr"></
 function pfooter(today){return'<div class="pfooter"><span class="fbrand">LUMEN GRID &nbsp;&middot;&nbsp; ENERGIA INTELIGENTE</span><span class="flegal">Gerado em '+today+'</span><span class="fsite">lumengridbrasil.com.br</span></div>';}
 
 function buildChart(bill,eco,pv){
-  if(!bill)return'';if(!eco)eco=bill*.85;
-  const YR=25,GR=.08,bws=Math.max(0,bill-eco),inv=pv||0;
-  let cs=0,cc=inv;const ps=[],pc=[];
-  for(let y=0;y<=YR;y++){ps.push(cs);pc.push(cc);const f=Math.pow(1+GR,y);cs+=bill*12*f;cc+=bws*12*f;}
-  const mx=ps[YR],W=860,H=190,pL=70,pR=16,pT=18,pB=36,cW=W-pL-pR,cH=H-pT-pB;
-  const tx=y=>pL+(y/YR)*cW,ty=v=>pT+cH-(v/mx)*cH;
-  const ls=ps.map((v,i)=>(i?'L':'M')+tx(i).toFixed(1)+','+ty(v).toFixed(1)).join(' ');
-  const lc=pc.map((v,i)=>(i?'L':'M')+tx(i).toFixed(1)+','+ty(v).toFixed(1)).join(' ');
-  const as=ls+' L'+tx(YR).toFixed(1)+','+(pT+cH).toFixed(1)+' L'+pL+','+(pT+cH).toFixed(1)+' Z';
-  const ac=lc+' L'+tx(YR).toFixed(1)+','+(pT+cH).toFixed(1)+' L'+pL+','+(pT+cH).toFixed(1)+' Z';
-  const fmt=v=>'R$ '+Number(v).toLocaleString('pt-BR',{maximumFractionDigits:0});
-  const eco25=ps[YR]-pc[YR];
-  const yL=[0,.5,1].map(f=>{const v=mx*f,yp=ty(v),lb=f===0?'R$0':(v>=1e6?(v/1e6).toFixed(1)+'M':(v/1e3).toFixed(0)+'k');return'<text x="'+(pL-5)+'" y="'+(yp+4)+'" text-anchor="end" font-size="9" fill="#888">'+lb+'</text><line x1="'+pL+'" y1="'+yp+'" x2="'+(W-pR)+'" y2="'+yp+'" stroke="#ddd" stroke-width="1"/>';}).join('');
-  const xL=[0,5,10,15,20,25].map(y=>'<text x="'+tx(y).toFixed(1)+'" y="'+(pT+cH+15)+'" text-anchor="middle" font-size="9" fill="#888">'+(y===0?'Hoje':y+'a')+'</text>').join('');
-  let pm='';if(inv>0){for(let y=1;y<=YR;y++){if(pc[y]<=ps[y]&&pc[y-1]>ps[y-1]){const px=tx(y);pm='<line x1="'+px+'" y1="'+pT+'" x2="'+px+'" y2="'+(pT+cH)+'" stroke="#E8641A" stroke-width="1.5" stroke-dasharray="4,3"/><text x="'+(px+4)+'" y="'+(pT+11)+'" font-size="8" fill="#E8641A" font-weight="700">Payback</text>';break;}}}
-  return '<div class="chart-wrap"><div class="chart-title">&#128202; Economia Projetada — 25 anos</div><svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block"><defs><linearGradient id="gS" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e74c3c" stop-opacity=".18"/><stop offset="100%" stop-color="#e74c3c" stop-opacity=".02"/></linearGradient><linearGradient id="gC" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8641A" stop-opacity=".22"/><stop offset="100%" stop-color="#E8641A" stop-opacity=".02"/></linearGradient></defs>'+yL+xL+'<path d="'+as+'" fill="url(#gS)"/><path d="'+ac+'" fill="url(#gC)"/><path d="'+ls+'" fill="none" stroke="#e74c3c" stroke-width="2.5" stroke-linejoin="round"/><path d="'+lc+'" fill="none" stroke="#E8641A" stroke-width="2.5" stroke-linejoin="round"/>'+pm+'<text x="'+(tx(YR)+4).toFixed(1)+'" y="'+ty(ps[YR]).toFixed(1)+'" font-size="8" fill="#e74c3c" font-weight="700">'+fmt(ps[YR])+'</text><text x="'+(tx(YR)+4).toFixed(1)+'" y="'+(ty(pc[YR])+4).toFixed(1)+'" font-size="8" fill="#E8641A" font-weight="700">'+fmt(pc[YR])+'</text></svg><div class="chart-legend"><div class="cleg"><div class="cleg-dot" style="background:#e74c3c"></div>Sem solar (conta crescendo)</div><div class="cleg"><div class="cleg-dot" style="background:#E8641A"></div>Com Lumen Grid (custo total)</div></div><div class="chart-summary"><div class="csumitem"><div class="csum-val red">'+fmt(ps[YR])+'</div><div class="csum-lbl">Sem solar em 25 anos</div></div><div class="csumitem"><div class="csum-val">'+fmt(pc[YR])+'</div><div class="csum-lbl">Com solar em 25 anos</div></div><div class="csumitem"><div class="csum-val green">'+fmt(eco25)+'</div><div class="csum-lbl">Economia total projetada</div></div></div></div>';
+  if(!bill)return'';
+  if(!eco)eco=bill*.85;
+  const YR=25,GR=.08,inv=pv||0;
+  // Annual spend arrays: sem solar vs com solar
+  const semA=[],comA=[];
+  for(let y=0;y<=YR;y++){const f=Math.pow(1+GR,y);semA.push(bill*12*f);comA.push((bill-eco)*12*f);}
+  const W=860,H=250,pL=80,pR=28,pT=28,pB=44,cW=W-pL-pR,cH=H-pT-pB;
+  const maxV=semA[YR]*1.08;
+  const tx=y=>pL+(y/YR)*cW,ty=v=>pT+cH-(v/maxV)*cH;
+  const pSem=semA.map((v,i)=>(i?'L':'M')+tx(i).toFixed(1)+','+ty(v).toFixed(1)).join(' ');
+  const pCom=comA.map((v,i)=>(i?'L':'M')+tx(i).toFixed(1)+','+ty(v).toFixed(1)).join(' ');
+  // Savings zone: area between the two curves
+  const savPath=pSem+' '+[...comA].reverse().map((v,i)=>'L'+tx(YR-i).toFixed(1)+','+ty(v).toFixed(1)).join(' ')+' Z';
+  // Area under com solar
+  const areaCom=pCom+' L'+tx(YR).toFixed(1)+','+(pT+cH)+' L'+pL+','+(pT+cH)+' Z';
+  const fmt=v=>'R$\u00a0'+Number(v).toLocaleString('pt-BR',{maximumFractionDigits:0});
+  // Grid lines
+  const yTicks=[0,.25,.5,.75,1].map(f=>{
+    const v=maxV*f,yp=ty(v),lb=v===0?'R$0':v>=1e6?'R$'+(v/1e6).toFixed(1)+'M':'R$'+(v/1e3).toFixed(0)+'k';
+    return'<text x="'+(pL-7)+'" y="'+(yp+4)+'" text-anchor="end" font-size="9" fill="#aaa">'+lb+'</text>'
+      +'<line x1="'+pL+'" y1="'+yp.toFixed(1)+'" x2="'+(W-pR)+'" y2="'+yp.toFixed(1)+'" stroke="#e8e8e8" stroke-width="0.8" stroke-dasharray="3,4"/>';
+  }).join('');
+  const xTicks=[0,5,10,15,20,25].map(y=>'<text x="'+tx(y).toFixed(1)+'" y="'+(pT+cH+18).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#aaa">'+(y===0?'Hoje':y+'a')+'</text>').join('');
+  // Payback marker
+  let pbMark='';
+  if(inv>0){
+    let cum=0;
+    for(let y=1;y<=YR;y++){cum+=eco*12*Math.pow(1+GR,y-1);
+      if(cum>=inv){const px=tx(y);
+        pbMark='<line x1="'+px.toFixed(1)+'" y1="'+pT+'" x2="'+px.toFixed(1)+'" y2="'+(pT+cH)+'" stroke="#E8641A" stroke-width="2" stroke-dasharray="5,3"/>'
+          +'<rect x="'+(px-34).toFixed(1)+'" y="'+(pT+5).toFixed(1)+'" width="68" height="17" rx="4" fill="#E8641A"/>'
+          +'<text x="'+px.toFixed(1)+'" y="'+(pT+17).toFixed(1)+'" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="800">PAYBACK '+y+'a</text>';
+        break;}}
+  }
+  // End-of-chart dots + value labels
+  const dS='<circle cx="'+tx(YR).toFixed(1)+'" cy="'+ty(semA[YR]).toFixed(1)+'" r="5" fill="#e74c3c" stroke="#fff" stroke-width="2"/>';
+  const dC='<circle cx="'+tx(YR).toFixed(1)+'" cy="'+ty(comA[YR]).toFixed(1)+'" r="5" fill="#E8641A" stroke="#fff" stroke-width="2"/>';
+  const lS='<text x="'+(tx(YR)-10).toFixed(1)+'" y="'+(ty(semA[YR])-10).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#e74c3c" font-weight="800">'+fmt(semA[YR])+'/ano</text>';
+  const lC='<text x="'+(tx(YR)-10).toFixed(1)+'" y="'+(ty(comA[YR])-10).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#E8641A" font-weight="800">'+fmt(comA[YR])+'/ano</text>';
+  // Inline curve labels at year 7
+  const ly=7;
+  const iS='<rect x="'+(tx(ly)+6).toFixed(1)+'" y="'+(ty(semA[ly])-13).toFixed(1)+'" width="74" height="15" rx="3" fill="#e74c3c"/>'
+    +'<text x="'+(tx(ly)+43).toFixed(1)+'" y="'+(ty(semA[ly])-2).toFixed(1)+'" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="800">SEM SOLAR \u2191</text>';
+  const iC='<rect x="'+(tx(ly)+6).toFixed(1)+'" y="'+(ty(comA[ly])+3).toFixed(1)+'" width="74" height="15" rx="3" fill="#E8641A"/>'
+    +'<text x="'+(tx(ly)+43).toFixed(1)+'" y="'+(ty(comA[ly])+14).toFixed(1)+'" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="800">COM SOLAR \u2193</text>';
+  // Total savings
+  let totalSav=0;
+  for(let y=0;y<=YR;y++)totalSav+=eco*12*Math.pow(1+GR,y);
+  const netSav=totalSav-inv;
+  return'<div class="chart-wrap">'
+    +'<div class="chart-title">Custo Anual com Energia &mdash; Compara\u00e7\u00e3o 25 Anos</div>'
+    +'<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block">'
+      +'<defs>'
+        +'<linearGradient id="gSav" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#27ae60" stop-opacity=".2"/><stop offset="100%" stop-color="#27ae60" stop-opacity=".03"/></linearGradient>'
+        +'<linearGradient id="gCom" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8641A" stop-opacity=".14"/><stop offset="100%" stop-color="#E8641A" stop-opacity=".02"/></linearGradient>'
+      +'</defs>'
+      +yTicks+xTicks
+      +'<path d="'+savPath+'" fill="url(#gSav)"/>'
+      +'<path d="'+areaCom+'" fill="url(#gCom)"/>'
+      +'<path d="'+pSem+'" fill="none" stroke="#e74c3c" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>'
+      +'<path d="'+pCom+'" fill="none" stroke="#E8641A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>'
+      +pbMark+dS+dC+lS+lC+iS+iC
+    +'</svg>'
+    +'<div class="chart-legend">'
+      +'<div class="cleg"><div class="cleg-dot" style="background:#e74c3c"></div><strong>Sem Solar</strong> &mdash; conta crescendo com infla\u00e7\u00e3o energ\u00e9tica (+8%/ano)</div>'
+      +'<div class="cleg"><div class="cleg-dot" style="background:#E8641A"></div><strong>Com Lumen Grid</strong> &mdash; custo residual muito reduzido</div>'
+      +'<div class="cleg"><div class="cleg-dot" style="background:#27ae60"></div>Zona de economia acumulada</div>'
+    +'</div>'
+    +'<div class="chart-summary">'
+      +'<div class="csumitem"><div class="csum-val red">'+fmt(semA[YR])+'/ano</div><div class="csum-lbl">Sem solar &mdash; custo no ano 25</div></div>'
+      +'<div class="csumitem"><div class="csum-val">'+fmt(comA[YR])+'/ano</div><div class="csum-lbl">Com solar &mdash; custo no ano 25</div></div>'
+      +'<div class="csumitem"><div class="csum-val green">'+fmt(netSav>0?netSav:totalSav)+'</div><div class="csum-lbl">Economia l\u00edquida em 25 anos</div></div>'
+    +'</div>'
+  +'</div>';
 }
 
 function buildEquipSection(hasBat,batKwh){
@@ -943,25 +1018,30 @@ function generateProposal(){
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
     '<div class="plc">'+
-      '<div class="sec-eyebrow">Tecnologia</div>'+
-      '<h2 class="sec-h2">Por que solar + bateria \u00e9 a escolha <span style="color:var(--or)">inteligente</span></h2>'+
+      '<div style="display:inline-flex;align-items:center;gap:10px;background:rgba(232,100,26,.12);border:1.5px solid rgba(232,100,26,.35);border-radius:20px;padding:6px 16px;margin-bottom:18px">'+
+        '<span style="font-size:14px">\u26a1</span>'+
+        '<span style="font-size:9px;font-weight:800;letter-spacing:2.5px;color:var(--or);text-transform:uppercase">Sistema H\u00edbrido</span>'+
+      '</div>'+
+      '<h2 class="sec-h2">Por que <span style="color:var(--or)">Bateria</span> e n\u00e3o Gerador?</h2>'+
       '<div class="sec-rule"></div>'+
       '<div class="hyb-grid">'+
         '<div class="hyb-card hyb-gen">'+
-          '<div class="hyb-head">\u26a1 Apenas Solar (sem bateria)</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Energia gerada somente durante o dia, sem uso noturno</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Queda de energia = zero prote\u00e7\u00e3o, depende da rede</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Excedente injetado na rede com compensa\u00e7\u00e3o limitada</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Sem controle sobre hor\u00e1rios de pico tarifário</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Depend\u00eancia total da concession\u00e1ria</div>'+
+          '<div class="hyb-head">\ud83d\udd34 Gerador</div>'+
+          '<div class="hyb-item"><span class="dot-red"></span>Alto ru\u00eddo, vibra\u00e7\u00e3o e inc\u00f4modo constante</div>'+
+          '<div class="hyb-item"><span class="dot-red"></span>Manuten\u00e7\u00e3o cont\u00ednua: \u00f3leo, filtros e combust\u00edvel</div>'+
+          '<div class="hyb-item"><span class="dot-red"></span>Demora na partida e troca manual</div>'+
+          '<div class="hyb-item"><span class="dot-red"></span>Alto custo de opera\u00e7\u00e3o e abastecimento</div>'+
+          '<div class="hyb-item"><span class="dot-red"></span>Energia limitada ao combust\u00edvel estocado</div>'+
+          '<div class="hyb-item"><span class="dot-red"></span>Equipamento volumoso que compromete o espa\u00e7o e a est\u00e9tica</div>'+
         '</div>'+
         '<div class="hyb-card hyb-bat">'+
-          '<div class="hyb-head">\ud83d\udd0b Solar + Bateria (Sistema H\u00edbrido)</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Energia armazenada dispon\u00edvel 24h por dia</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Transi\u00e7\u00e3o autom\u00e1tica em caso de queda de energia</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Uso inteligente do excedente gerado</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>M\u00e1xima economia com gest\u00e3o de picos tarifários</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Independ\u00eancia energ\u00e9tica real</div>'+
+          '<div class="hyb-head">\ud83d\udd0b Bateria Solar</div>'+
+          '<div class="hyb-item"><span class="dot-or"></span>Opera\u00e7\u00e3o completamente silenciosa</div>'+
+          '<div class="hyb-item"><span class="dot-or"></span>Zero manuten\u00e7\u00e3o</div>'+
+          '<div class="hyb-item"><span class="dot-or"></span>Transi\u00e7\u00e3o instant\u00e2nea e autom\u00e1tica</div>'+
+          '<div class="hyb-item"><span class="dot-or"></span>Otimiza\u00e7\u00e3o inteligente do uso de energia</div>'+
+          '<div class="hyb-item"><span class="dot-or"></span>Energia cont\u00ednua e expans\u00edvel (solar + rede)</div>'+
+          '<div class="hyb-item"><span class="dot-or"></span>Solu\u00e7\u00e3o discreta, moderna e de alto padr\u00e3o</div>'+
         '</div>'+
       '</div>'+
       '<div class="hyb-tagline">Com a Lumen Grid, voc\u00ea tem <strong>controle total sobre sua energia.</strong></div>'+
@@ -1035,12 +1115,39 @@ function generateProposal(){
   '</div>':'';
 
   // PAGE SOLUÇÃO SOLAR — specs + projeção visual + chart
-  const specCards2=[
-    totalPwDisp?'<div class="spec-card"><div class="sc-num">01</div><div class="sc-val">'+totalPwDisp+'</div><div class="sc-lbl">Pot\u00eancia Solar</div>'+(modQty?'<div class="sc-sub">'+modQty+' m\u00f3dulos \u00d7 '+modPower+' W</div>':'')+'</div>':'',
-    genKwh?'<div class="spec-card"><div class="sc-num">02</div><div class="sc-val">'+genKwh+'</div><div class="sc-lbl">Gera\u00e7\u00e3o Mensal</div><div class="sc-sub">estimativa</div></div>':'',
-    invQty?'<div class="spec-card"><div class="sc-num">03</div><div class="sc-val">'+(invQty>1?invQty+' un.':invQty+' un.')+'</div><div class="sc-lbl">'+(invQty>1?'Inversores':'Inversor')+'</div><div class="sc-sub">'+(invModel||'')+(invPower?' · '+invPower+' kW':'')+'</div></div>':'',
-    '<div class="spec-card"><div class="sc-num">\ud83d\udccd</div><div class="sc-val" style="font-size:18px">'+instType+'</div><div class="sc-lbl">Instala\u00e7\u00e3o</div><div class="sc-sub">'+conexao+(bill?' · '+fmtBRL(bill)+'/m\u00eas':'')+'</div></div>',
-  ].filter(Boolean).join('');
+  // Spec hierarchy: hero (kWp) + secondary row
+  const kVpNum=modQty&&modPower?(modQty*modPower/1000).toFixed(2):'';
+  const kVpUnt=kVpNum?'kWp':'';
+  const heroVal=kVpNum||totalPwDisp||'—';
+  const heroUnit=kVpNum?'kWp':'';
+  const heroSub=modQty&&modPower?modQty+' módulos × '+modPower+' W':'';
+  const heroBill=bill?'Conta atual: '+fmtBRL(bill)+'/mês':'';
+  const specHeroHtml=
+    '<div class="spec-hero">'+
+      '<div>'+
+        '<div class="sh-badge">Potência do Sistema</div>'+
+        '<div class="sh-val">'+(kVpNum||totalPwDisp||'—')+(kVpNum?'<span class="sh-unit">kWp</span>':'')+'</div>'+
+        (heroSub?'<div class="sh-sub">'+heroSub+'</div>':'')+
+      '</div>'+
+      (genKwh?
+        '<div class="sh-right">'+
+          '<div class="sh-right-title">Geração Mensal</div>'+
+          '<div class="sh-right-val">'+genKwh+'</div>'+
+          '<div class="sh-right-sub">estimativa mensal</div>'+
+        '</div>':'')+
+      (ecoMonthly?
+        '<div class="sh-right">'+
+          '<div class="sh-right-title">Economia Mensal</div>'+
+          '<div class="sh-right-val" style="color:var(--or)">'+fmtBRL(ecoMonthly)+'</div>'+
+          '<div class="sh-right-sub">'+(heroBill||'redução imediata')+'</div>'+
+        '</div>':'')+
+    '</div>';
+  const specRowHtml=
+    '<div class="spec-row">'+
+      (invQty?'<div class="spec-sm"><div class="ssm-lbl">Inversor</div><div class="ssm-val">'+(invPower?invPower+' kW':'')+'</div><div class="ssm-sub">'+(invModel||'')+(invQty>1?' · '+invQty+' un.':'')+'</div></div>':'')+
+      '<div class="spec-sm"><div class="ssm-lbl">Instalação</div><div class="ssm-val">'+instType+'</div><div class="ssm-sub">'+conexao+'</div></div>'+
+      (paybackStr?'<div class="spec-sm"><div class="ssm-lbl">Retorno Estimado</div><div class="ssm-val" style="color:var(--or);font-size:15px">'+paybackStr+'</div><div class="ssm-sub">payback do investimento</div></div>':'<div class="spec-sm"><div class="ssm-lbl">Vida Útil</div><div class="ssm-val">25 anos</div><div class="ssm-sub">garantia dos painéis</div></div>')+
+    '</div>';
 
   const eco1=ecoMonthly?Math.round(ecoMonthly*12):0;
   const eco5=ecoMonthly?Math.round(ecoMonthly*60):0;
@@ -1055,7 +1162,7 @@ function generateProposal(){
       '<h2 class="sec-h2">O que a Lumen Grid vai <span style="color:var(--or)">economizar para voc\u00ea</span></h2>'+
       '<div class="sec-rule"></div>'+
       // Spec cards compactos
-      '<div class="spec-grid" style="margin-bottom:20px">'+specCards2+'</div>'+
+      '<div class="spec-block">'+specHeroHtml+specRowHtml+'</div>'+
       // Projeção big numbers
       (ecoMonthly?
         '<div style="background:var(--lbg);border:1.5px solid var(--lborder);border-radius:12px;padding:20px 24px;margin-bottom:20px">'+
@@ -1292,14 +1399,6 @@ function generateProposal(){
       stepRow(3,'Recebimento dos Equipamentos','Os equipamentos s\u00e3o entregues e conferidos, garantindo que tudo esteja pronto para uma instala\u00e7\u00e3o segura e de qualidade.')+
       stepRow(4,'Instala\u00e7\u00e3o do Sistema','Instala\u00e7\u00e3o completa em at\u00e9 '+prazo+' dias \u00fateis, incluindo pain\u00e9is, inversores e toda a infraestrutura el\u00e9trica.')+
       stepRow(5,'Homologa\u00e7\u00e3o e Ativa\u00e7\u00e3o','Cuidamos de todo o processo junto \u00e0 concession\u00e1ria: vistoria, homologa\u00e7\u00e3o, conex\u00e3o \u00e0 rede e ativa\u00e7\u00e3o do monitoramento online.')+
-      (isEcoMode&&ecoMonthly?'<div style="margin-top:24px;padding:18px 20px;background:rgba(232,100,26,.1);border:1px solid rgba(232,100,26,.25);border-radius:10px">'+
-        '<div style="font-size:9px;font-weight:700;color:var(--or);letter-spacing:2px;margin-bottom:12px">PROJE\u00c7\u00c3O DE ECONOMIA &mdash; '+name+'</div>'+
-        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">'+
-          '<div style="text-align:center;padding:12px;background:rgba(255,255,255,.04);border-radius:8px"><div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">Em 1 ano</div><div style="font-size:18px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*12)):'\u2014')+'</div></div>'+
-          '<div style="text-align:center;padding:12px;background:rgba(255,255,255,.04);border-radius:8px"><div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">Em 5 anos</div><div style="font-size:18px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*60)):'\u2014')+'</div></div>'+
-          '<div style="text-align:center;padding:12px;background:rgba(255,255,255,.04);border-radius:8px"><div style="font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px">Em 25 anos</div><div style="font-size:18px;font-weight:800;color:var(--or)">'+(ecoMonthly?fmtBRL(Math.round(ecoMonthly*300)):'\u2014')+'</div></div>'+
-        '</div>'+
-      '</div>':'')+
     '</div>'+
     pfooter(today)+
   '</div>';
