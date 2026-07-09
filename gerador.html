@@ -302,6 +302,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   @page{size:A4 portrait;margin:0}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -522,8 +524,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="btn-bar">
-    <button class="bp btn" onclick="generateProposal()">⚡ Gerar Proposta</button>
-    <button class="bpdf btn" onclick="window.print()">🖨 PDF</button>
+    <button class="bp btn" id="btnGerar" onclick="gerarEBaixar()">⚡ Gerar e Baixar PDF</button>
     <button class="bo btn" onclick="resetForm()">Limpar</button>
   </div>
 </div>
@@ -1128,8 +1129,52 @@ function generateProposal(){
   document.getElementById('preview').innerHTML=html;
   document.getElementById('preview').style.display='';
   document.getElementById('previewEmpty').style.display='none';
-  // Auto-print (salvar como PDF)
-  setTimeout(()=>window.print(),600);
+}
+
+async function downloadPDF(){
+  const btn=document.getElementById('btnGerar');
+  const name=(document.getElementById('clientName').value||'Cliente').trim();
+  const safeName=name.replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_')||'Cliente';
+  const filename='LUMENGRID_'+safeName+'.pdf';
+  const pages=document.querySelectorAll('#preview .page');
+  if(!pages.length)return;
+
+  btn.disabled=true;
+  btn.textContent='Gerando PDF...';
+
+  try{
+    const {jsPDF}=window.jspdf;
+    let pdf=null;
+
+    for(let i=0;i<pages.length;i++){
+      btn.textContent='Renderizando p.'+( i+1)+'/'+pages.length+'...';
+      const canvas=await html2canvas(pages[i],{
+        scale:1.5,useCORS:true,logging:false,
+        backgroundColor:'#ffffff',
+        allowTaint:false
+      });
+      const w=canvas.width;
+      const h=canvas.height;
+      if(!pdf){
+        pdf=new jsPDF({unit:'px',format:[w,h],orientation:'portrait'});
+      }else{
+        pdf.addPage([w,h],'portrait');
+      }
+      pdf.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',0,0,w,h);
+    }
+
+    pdf.save(filename);
+  }catch(e){
+    alert('Erro ao gerar PDF: '+e.message);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='⚡ Gerar e Baixar PDF';
+  }
+}
+
+function gerarEBaixar(){
+  generateProposal();
+  setTimeout(downloadPDF,400);
 }
 
 // Init listeners
