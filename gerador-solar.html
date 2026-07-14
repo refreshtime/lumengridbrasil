@@ -27,7 +27,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .fs-title{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:14px;padding-left:9px;border-left:3px solid var(--or)}
 .fl{display:block;font-size:9px;font-weight:700;color:var(--uim);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
 .fi,.fsel,.fta{width:100%;padding:8px 11px;background:#f8f9fc;border:1.5px solid var(--uib);border-radius:6px;font-size:13px;color:var(--uit);font-family:inherit;transition:border-color .2s;margin-bottom:10px}
-.fi:focus,.fsel:focus,.fta:focus{outline:none;border-color:var(--or);background:#0d1015}
+.fi:focus,.fsel:focus,.fta:focus{outline:none;border-color:var(--or);background:#0d1015;color:#f4f4f5}
 .fi::placeholder{color:#3a3f4a}
 .fta{resize:vertical;min-height:68px}
 .fsel option{background:#0e1117}
@@ -444,8 +444,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
   <div class="fs">
     <div class="fs-title">Investimento</div>
-    <label class="fl">Valor Total do Projeto (R$) <span class="req-star">*</span></label>
-    <input class="fi" type="number" id="projectValue" placeholder="Ex: 45000">
+    <div class="frow">
+      <div><label class="fl">Preço por kVp (R$) <span class="auto-tag">R$3.000–R$3.500</span></label><input class="fi" type="number" id="precoKvp" value="3500" min="2000" max="6000" step="100"></div>
+      <div><label class="fl">Valor Total do Projeto (R$) <span class="req-star">*</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
+    </div>
     <div class="frow">
       <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="7"></div>
       <div><label class="fl">Prazo instalação (dias úteis)</label><input class="fi" type="number" id="prazoDias" value="20"></div>
@@ -872,7 +874,7 @@ function generateProposal(){
   }
 
   const kVp=modQty&&modPower?(modQty*modPower/1000).toFixed(2)+' kVp':null;
-  const genKwh=get('monthlyGen')||(modQty?Math.round(modQty*modPower/1000*130)+' kWh':'');
+  const genKwh=get('monthlyGen')||(modQty?Math.round(modQty*65)+' kWh':'');
   const totalPwDisp=get('totalPower')||kVp||'';
 
   const minKwhMap={'Monofásico':30,'Bifásico':50,'Trifásico':100};
@@ -1244,13 +1246,18 @@ function generateProposal(){
 
     // PAGE GARANTIAS + EQUIPAMENTOS
   // spec table rows from form values
-  const specRows=[
-    totalPwDisp?{l:'Pot\u00eancia do Sistema',v:totalPwDisp+(modQty?' ('+modQty+' m\u00f3dulos \u00d7 '+modPower+' W)':'')}:null,
-    genKwh?{l:'Gera\u00e7\u00e3o Mensal Estimada',v:genKwh}:null,
-    invQty?{l:(invQty>1?'Inversores':'Inversor')+(invModel?' '+invModel:''),v:(invQty>1?invQty+' un.':invQty+' un.')+(invPower?' &middot; '+invPower+' kW':'')}:null,
-    hasBat&&batKwh?{l:'Sistema de Bateria'+(batModel?' '+batModel:''),v:batKwh+' kWh'}:null,
-    {l:'Tipo de Instala\u00e7\u00e3o',v:instType+' &middot; '+conexao},
-  ].filter(Boolean).map(r=>'<tr><td style="padding:9px 14px;font-size:12px;color:#444;border-bottom:1px solid #f0f0f0">'+r.l+'</td><td style="padding:9px 14px;font-size:12px;font-weight:700;color:var(--or);text-align:right;border-bottom:1px solid #f0f0f0">'+r.v+'</td></tr>').join('');
+  const td=(txt,bold)=>'<td style="padding:8px 12px;font-size:11px;'+(bold?'font-weight:700;color:var(--ltext)':'color:var(--lmuted)')+';border-bottom:1px solid #f0f0f0">'+txt+'</td>';
+  const tr3=(a,b,c)=>'<tr>'+td(a)+td(b)+td(c,true)+'</tr>';
+  const specRows=
+    
+    (modQty&&modModel?tr3('Módulos Fotovoltaicos',modQty+' un.',modModel+(modPower?' · '+modPower+' W':'')):'')+
+    (invQty?tr3(invQty>1?'Inversores On-Grid':'Inversor On-Grid',invQty+' un.',(invModel||'Inversor String')+(invPower?' · '+invPower+' kW':'')):'')+
+    tr3('Estrutura de Fixação','1 un.','Alumínio anodizado — conforme projeto')+
+    tr3('Cabeamento CC / CA','conforme projeto','Fio solar 6mm² certificado ABNT')+
+    tr3('String Box CC','1 un.','Proteção com DPS e fusíveis')+
+    tr3('Sistema de Monitoramento','1 un.','App em tempo real (geração/consumo)')+
+    tr3('ART / RRT','1 un.','Engenheiro responsável CREA')+
+    tr3('Homologação','1 un.','Processo completo junto à concessionária');
 
   const warRowsGar=[
     {n:'M\u00f3dulos Fotovoltaicos',v:warPainel+' anos'},
@@ -1287,7 +1294,7 @@ function generateProposal(){
         '<div>'+
           '<div class="stitle">Equipamentos do Sistema</div>'+
           '<table style="width:100%;border-collapse:collapse;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden">'+
-            '<thead><tr style="background:rgba(232,100,26,.08)"><th style="padding:9px 14px;text-align:left;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">ITEM</th><th style="padding:9px 14px;text-align:right;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">ESPECIFICA\u00c7\u00c3O</th></tr></thead>'+
+            '<thead><tr style="background:rgba(232,100,26,.08)"><th style="padding:9px 14px;text-align:left;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">COMPONENTE</th><th style="padding:9px 14px;text-align:center;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">QTD</th><th style="padding:9px 14px;text-align:right;font-size:9px;font-weight:800;letter-spacing:1px;color:var(--or)">ESPECIFICA\u00c7\u00c3O</th></tr></thead>'+
             '<tbody>'+specRows+'</tbody>'+
           '</table>'+
         '</div>'+
@@ -1700,20 +1707,21 @@ async function downloadPDF(){
 
 
 // ══ Auto-cálculo Solar: 65 kWh/placa · R$ 3.500/kVp ══
-const PRECO_POR_KVP = 3500;
 function autoCalcSolar(){
   const qty=parseFloat(document.getElementById('modQty').value)||0;
   const pwr=parseFloat(document.getElementById('modPower').value)||0;
+  const precoKvp=parseFloat(document.getElementById('precoKvp').value)||3500;
   const genEl=document.getElementById('monthlyGen');
   if(!genEl.dataset.manual&&qty>0){genEl.value=Math.round(qty*65);}
   const projEl=document.getElementById('projectValue');
   if(!projEl.dataset.manual&&qty>0&&pwr>0){
     const kVp=qty*pwr/1000;
-    projEl.value=Math.round(kVp*PRECO_POR_KVP);
+    projEl.value=Math.round(kVp*precoKvp);
   }
 }
 document.getElementById('modQty').addEventListener('input',autoCalcSolar);
 document.getElementById('modPower').addEventListener('input',autoCalcSolar);
+document.getElementById('precoKvp').addEventListener('input',autoCalcSolar);
 document.getElementById('monthlyGen').addEventListener('input',function(){this.dataset.manual='1';});
 document.getElementById('projectValue').addEventListener('input',function(){this.dataset.manual='1';});
 
