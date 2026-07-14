@@ -347,16 +347,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 <div class="ed-layout">
 <div class="form-panel">
 
-  <div class="fs" style="background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.25);border-radius:8px;padding:14px">
-    <div class="fs-title" style="color:var(--or)">Tipo de Sistema <span style="font-size:9px;color:rgba(232,100,26,.5);font-weight:400">Define o que aparece na proposta</span></div>
-    <div class="frg" style="gap:6px">
-      <label class="frl" style="flex:1;justify-content:center;padding:8px;border:1px solid var(--uib);border-radius:6px;cursor:pointer"><input type="radio" name="sistTipo" value="solar" checked onchange="onSistTipo()"> Solar Fotovoltaico</label>
-      <label class="frl" style="flex:1;justify-content:center;padding:8px;border:1px solid var(--uib);border-radius:6px;cursor:pointer"><input type="radio" name="sistTipo" value="isencao" onchange="onSistTipo()"> Placas / Isenção Fiscal</label>
-    </div>
-    <div style="font-size:9px;color:var(--uimuted);margin-top:8px;padding:6px 10px;background:rgba(0,0,0,.2);border-radius:4px">
-      ⚡ <strong>Híbrido:</strong> exibe autonomia de bateria, sem texto de economia de conta &nbsp;|&nbsp; <strong>Isenção Fiscal:</strong> oculta economia de energia
-    </div>
-  </div>
+
 
   <div class="fs">
     <div class="fs-title">Cliente</div>
@@ -477,7 +468,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     </div>
     <div class="frow">
       <div><label class="fl">Inversor String (anos)</label><input class="fi" type="number" id="warInvStr" value="10"></div>
-      <div><label class="fl">Bateria (anos)</label><input class="fi" type="number" id="warBateria" value="10"></div>
+
     </div>
     <div class="frow">
       <div><label class="fl">Instalação (anos)</label><input class="fi" type="number" id="warInstalacao" value="1"></div>
@@ -826,7 +817,7 @@ function generateProposal(){
   const invPower  =getN('invPower');
   const invModel  =get('invModel')||'';
   const hasBat    =false; // solar on-grid — sem bateria
-  const sistTipo  =document.querySelector('input[name=sistTipo]:checked').value; // solar|hibrido|isencao
+  const sistTipo  ='solar'; // solar on-grid — hardcoded
   const isEcoMode =sistTipo==='solar'; // show economy only for pure solar
   const batKwh    =getN('batteryKwh');
   const batModel  =get('batModel');
