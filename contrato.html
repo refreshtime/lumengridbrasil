@@ -118,6 +118,13 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
   #previewArea{display:none}
   .ed-layout{display:block}
 }
+
+.fs-toggle{cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between}
+.fs-arrow{font-size:10px;color:rgba(255,255,255,.3);transition:.2s}
+.fs-body{overflow:hidden;transition:max-height .3s ease,opacity .3s}
+.fs-body.collapsed{max-height:0!important;opacity:0;pointer-events:none}
+.fs-body.expanded{max-height:2000px;opacity:1}
+
 </style>
 </head>
 <body>
@@ -156,7 +163,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 
   <div class="fs">
     <div class="fs-title">CONTRATANTE (Cliente)</div>
-    <label class="fl">Nome Completo / Razão Social</label>
+    <label class="fl">Nome Completo / Razão Social <span style="color:#E8641A;font-weight:900">*</span></label>
     <input class="fi" id="cliNome" placeholder="Ex: João da Silva">
     <div class="frow">
       <div><label class="fl">CPF / CNPJ</label><input class="fi" id="cliDoc" placeholder="000.000.000-00"></div>
@@ -221,8 +228,8 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
     <label class="fl">Modelo da Bateria (deixe vazio se não houver)</label>
     <input class="fi" id="eqBatModel" placeholder="Ex: Growatt ARK 10kWh">
     <div class="frow">
-      <div><label class="fl">Potência Total (kVp)</label><input class="fi" id="eqKvp" placeholder="5.50 kVp"></div>
-      <div><label class="fl">Geração Estimada/mês</label><input class="fi" id="eqGen" placeholder="720 kWh"></div>
+      <div><label class="fl">Potência Total (kVp) <span title="Quilowatt-pico: medida da capacidade de geração do sistema solar" style="cursor:help;color:rgba(255,255,255,.3);font-size:10px">ℹ️</span></label><input class="fi" id="eqKvp" placeholder="5.50 kVp"></div>
+      <div><label class="fl">Geração Estimada/mês <span title="Energia que o sistema irá produzir por mês em condições normais de irradiação solar" style="cursor:help;color:rgba(255,255,255,.3);font-size:10px">ℹ️</span></label><input class="fi" id="eqGen" placeholder="720 kWh"></div>
     </div>
     <label class="fl">Estrutura de Fixação</label>
     <select class="fsel" id="eqEstrutura">
@@ -239,7 +246,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 
   <div class="fs">
     <div class="fs-title">Valor e Pagamento</div>
-    <label class="fl">Valor Total do Contrato (R$)</label>
+    <label class="fl">Valor Total do Contrato (R$) <span style="color:#E8641A;font-weight:900">*</span></label>
     <input class="fi" type="number" id="payTotal" placeholder="45000" step="0.01">
     <label class="fl">Modalidade de Pagamento</label>
     <select class="fsel" id="payModo" onchange="togglePayModo()">
@@ -365,6 +372,17 @@ function fmtBRL(v){return'R$ '+Number(v).toLocaleString('pt-BR',{minimumFraction
 function fmtDate(d){if(!d)return'__/__/____';const p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function ext(id){return document.getElementById(id).value.trim();}
 function exN(id){return parseFloat(document.getElementById(id).value)||0;}
+
+
+function toggleSection(el){
+  var body=el.parentElement.querySelector('.fs-body');
+  var arrow=el.querySelector('.fs-arrow');
+  if(!body)return;
+  var col=body.classList.contains('collapsed');
+  body.classList.toggle('collapsed',!col);
+  body.classList.toggle('expanded',col);
+  if(arrow)arrow.textContent=col?'▲':'▼';
+}
 
 function escapeHTML(s){
   if(!s)return'';
