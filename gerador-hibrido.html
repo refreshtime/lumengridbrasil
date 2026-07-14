@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<script>(function(){var t=sessionStorage.getItem('lg_auth');if(!t){location.replace('login.html');return;}try{var d=atob(t).split(':'),age=Date.now()-parseInt(d[1]);if(age>28800000)throw 1;}catch(e){sessionStorage.clear();location.replace('login.html');}})();</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Lumen Grid — Proposta Híbrida</title>
@@ -1623,8 +1624,41 @@ async function importSupplierPDF(input){
 }
 
 
+
+// ── HISTÓRICO + BRIDGE PARA CONTRATO ────────────────────────────────────────
+function salvarHistoricoEBridge(tipo){
+  // Coleta dados do formulário
+  const clientName=document.getElementById('clientName')&&document.getElementById('clientName').value||'';
+  const projectValue=parseFloat(document.getElementById('projectValue')&&document.getElementById('projectValue').value)||0;
+  const modQty=parseInt(document.getElementById('modQty')&&document.getElementById('modQty').value)||0;
+  const modPower=parseFloat(document.getElementById('modPower')&&document.getElementById('modPower').value)||0;
+  const modBrand=document.getElementById('modBrand')&&document.getElementById('modBrand').value||'';
+  const monthlyGen=document.getElementById('monthlyGen')&&document.getElementById('monthlyGen').value||'';
+  const clientAddr=document.getElementById('clientAddr')&&document.getElementById('clientAddr').value||'';
+  const vendedora=(document.querySelector('input[name=vendedora]:checked')||{}).value||'lucas';
+  const vendMap={lucas:'Lucas Vieira',hingrid:'Hingrid Oliveira'};
+
+  // 1. Salvar no histórico (localStorage - persiste entre sessões)
+  var hist=[];try{hist=JSON.parse(localStorage.getItem('lg_hist')||'[]');}catch(e){}
+  hist.unshift({tipo,clientName,projectValue,modQty,modPower,date:new Date().toLocaleDateString('pt-BR'),ts:Date.now()});
+  localStorage.setItem('lg_hist',JSON.stringify(hist.slice(0,50)));
+
+  // 2. Bridge para contrato (sessionStorage - disponível na mesma sessão)
+  var bridge={
+    tipo,clientName,clientAddr,
+    modQty,modPower,modBrand,monthlyGen,
+    projectValue,
+    vendedora:vendMap[vendedora]||vendedora,
+    kvp:modQty&&modPower?(modQty*modPower/1000).toFixed(2)+' kVp':'',
+    gen:monthlyGen?monthlyGen+' kWh/mês':'',
+    ts:Date.now()
+  };
+  sessionStorage.setItem('lg_bridge',JSON.stringify(bridge));
+}
+// ────────────────────────────────────────────────────────────────────────────
 async function downloadPDF(){
   const btn=document.getElementById('btnGerar');
+  salvarHistoricoEBridge('hibrido');
   const name=(document.getElementById('clientName').value||'Cliente').trim();
   const safeName=name.replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_')||'Cliente';
   const filename='LUMENGRID_'+safeName+'.pdf';

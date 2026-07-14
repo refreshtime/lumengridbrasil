@@ -4,7 +4,11 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Lumen Grid — Gerador de Contrato</title>
-<script>if(!sessionStorage.getItem('lg_auth')){location.replace('login.html');}</script>
+<script>(function(){
+  var t=sessionStorage.getItem('lg_auth');
+  if(!t){location.replace('login.html');return;}
+  try{var d=atob(t).split(':'),age=Date.now()-parseInt(d[1]);if(age>28800000)throw 1;}catch(e){sessionStorage.clear();location.replace('login.html');}
+})();</script>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -65,6 +69,16 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 .equip-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#E8641A;margin-bottom:8px;font-family:'Montserrat',sans-serif}
 .etrow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eee}
 .etrow:last-child{border-bottom:none}
+
+.import-banner{background:linear-gradient(135deg,rgba(232,100,26,.12),rgba(232,100,26,.05));border:1.5px solid rgba(232,100,26,.4);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.import-banner-icon{font-size:22px;flex-shrink:0}
+.import-banner-text{flex:1;font-size:11px;color:rgba(255,255,255,.75);line-height:1.5}
+.import-banner-text strong{color:#E8641A;font-size:12px}
+.import-banner-btn{padding:7px 13px;background:#E8641A;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.import-banner-btn:hover{background:#d45a16}
+.import-banner-close{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:16px;padding:4px;line-height:1}
+
 .pay-summary{background:#f0f7ff;border:1.5px solid #3a7bd5;border-radius:8px;padding:14px 18px;margin:12px 0 16px 0;}
 .pay-summary-title{font-weight:700;color:#3a7bd5;font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
 .ps-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #dde8f8;font-size:12px;}
@@ -554,6 +568,54 @@ function numPorExtensoInt(n){return numInt(n);}
   const el=document.getElementById('cNum');
   if(el&&!el.value)el.value='LG-'+y+'-'+n;
 })();
+
+
+// ── BRIDGE: Importar dados do gerador ───────────────────────────────────────
+(function(){
+  var raw=sessionStorage.getItem('lg_bridge');
+  if(!raw)return;
+  var b;try{b=JSON.parse(raw);}catch(e){return;}
+  var age=Date.now()-b.ts;
+  if(age>3600000)return; // bridge expira em 1h
+
+  var panel=document.querySelector('.form-panel');
+  var banner=document.createElement('div');
+  banner.className='import-banner';
+  banner.id='importBanner';
+  banner.innerHTML='<div class="import-banner-icon">⚡</div>'
+    +'<div class="import-banner-text"><strong>Proposta '+b.tipo.toUpperCase()+' encontrada</strong><br>'
+    +(b.clientName?'Cliente: '+b.clientName+' &nbsp;·&nbsp; ':'')
+    +(b.projectValue?'Valor: R$ '+b.projectValue.toLocaleString('pt-BR'):'')
+    +'</div>'
+    +'<button class="import-banner-btn" onclick="importarBridge()">↓ Importar</button>'
+    +'<button class="import-banner-close" onclick="document.getElementById(\'importBanner\').remove()">✕</button>';
+  panel.insertBefore(banner, panel.firstChild);
+})();
+
+function importarBridge(){
+  var raw=sessionStorage.getItem('lg_bridge');
+  if(!raw)return;
+  var b;try{b=JSON.parse(raw);}catch(e){return;}
+  function set(id,val){var el=document.getElementById(id);if(el&&val)el.value=val;}
+  set('cliNome',b.clientName);
+  set('cliEnder',b.clientAddr);
+  set('instEnder',b.clientAddr);
+  set('eqModelo',b.modBrand);
+  set('eqQty',b.modQty);
+  set('eqPotencia',b.modPower&&b.modPower+'W');
+  set('eqKvp',b.kvp);
+  set('eqGen',b.gen);
+  set('payTotal',b.projectValue);
+  set('vendNome',b.vendedora);
+  if(b.tipo==='solar_bateria'||b.tipo==='hibrido'){
+    var ts=document.getElementById('tipoSistema');
+    if(ts)ts.value='solar_bateria';
+  }
+  autoCalcPayment();
+  document.getElementById('importBanner').remove();
+  setTimeout(generateContract,100);
+}
+// ────────────────────────────────────────────────────────────────────────────
 
 // ── LIVE PREVIEW ─────────────────────────────────────────────────────────────
 (function(){
