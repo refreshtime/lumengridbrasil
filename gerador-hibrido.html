@@ -702,11 +702,29 @@ function getAutonomyForProposal(){
 
 let equipmentList=[];
 const DEFAULT_EQUIPMENT=[
-  {name:'Geladeira',qty:1,power:150,dutyCycle:40,hoursPerDay:9.6},
-  {name:'TV 55"',qty:1,power:120,dutyCycle:50,hoursPerDay:6},
-  {name:'Ar-condicionado 9000 BTU',qty:1,power:900,dutyCycle:60,hoursPerDay:8},
-  {name:'Iluminação LED',qty:10,power:9,dutyCycle:80,hoursPerDay:8},
-  {name:'Roteador Wi-Fi',qty:1,power:10,dutyCycle:100,hoursPerDay:24},
+  // Climatização
+  {name:'Ar-Condicionado 9.000 BTU',   qty:0,power:900,  dutyCycle:60, hoursPerDay:8},
+  {name:'Ar-Condicionado 12.000 BTU',  qty:0,power:1085, dutyCycle:60, hoursPerDay:8},
+  {name:'Ar-Condicionado 18.000 BTU',  qty:0,power:1625, dutyCycle:60, hoursPerDay:8},
+  {name:'Aquecedor Elétrico',          qty:0,power:600,  dutyCycle:100,hoursPerDay:4},
+  // Cozinha
+  {name:'Geladeira',                   qty:1,power:260,  dutyCycle:35, hoursPerDay:8.4},
+  {name:'Geladeira Duplex',            qty:0,power:300,  dutyCycle:35, hoursPerDay:8.4},
+  {name:'Freezer',                     qty:0,power:200,  dutyCycle:35, hoursPerDay:8.4},
+  {name:'Cooktop Elétrico (1 boca)',   qty:0,power:2500, dutyCycle:100,hoursPerDay:1},
+  {name:'Forno Elétrico / Air Fryer',  qty:0,power:1700, dutyCycle:100,hoursPerDay:0.5},
+  {name:'Máquina de Lavar',            qty:0,power:1500, dutyCycle:70, hoursPerDay:1},
+  {name:'Chuveiro Elétrico',           qty:0,power:3800, dutyCycle:100,hoursPerDay:0.3},
+  // Utilidades
+  {name:'Bomba Pressurizadora',        qty:0,power:120,  dutyCycle:50, hoursPerDay:4},
+  {name:'Tomadas de Uso Geral',        qty:0,power:960,  dutyCycle:100,hoursPerDay:4},
+  // Entretenimento / TI
+  {name:'Aparelho de TV',              qty:1,power:100,  dutyCycle:100,hoursPerDay:6},
+  {name:'Roteador Wi-Fi',              qty:1,power:10,   dutyCycle:100,hoursPerDay:24},
+  {name:'Computador / Notebook',       qty:0,power:80,   dutyCycle:100,hoursPerDay:8},
+  // Iluminação
+  {name:'Iluminação LED (conjunto)',   qty:1,power:180,  dutyCycle:100,hoursPerDay:6},
+  {name:'Refletor Externo 50W',        qty:0,power:50,   dutyCycle:100,hoursPerDay:8},
 ];
 equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
 
