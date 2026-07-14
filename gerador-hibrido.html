@@ -996,13 +996,11 @@ function generateProposal(){
       '<span class="ctag">Proposta Comercial &nbsp;&middot;&nbsp; '+instType+'</span>'+
       '<h1 class="cheadline">'+name+'<br><span class="acc" style="font-size:.45em;font-weight:400;letter-spacing:4px">ENERGIA INTELIGENTE</span></h1>'+
       '<div class="cgline"></div>'+
-      '<p class="csub">'+(addr?addr+' &mdash; ':'')+'Solução personalizada de energia solar com armazenamento, elaborada pela equipe Lumen Grid.</p>'+
+      '<p class="csub">'+(addr?addr+' &mdash; ':'')+'Solução personalizada de energia solar híbrida com armazenamento em bateria, elaborada pela equipe Lumen Grid.</p>'+
       '<div class="cmeta">'+
         '<div><span class="ml">Cliente</span><span class="mv">'+name+'</span></div>'+
         '<div><span class="ml">Consultor</span><span class="mv">'+vendNome+'</span></div>'+
-        '<div><span class="ml">Emitida em</span><span class="mv">'+today+'</span></div>'+
-        '<div><span class="ml">Validade</span><span class="mv">'+validity+' dias</span></div>'+
-        (projectVal?'<div><span class="ml">Investimento</span><span class="mv gold">'+fmtBRL(projectVal)+'</span></div>':'')+
+        '<div><span class="ml">Válida até</span><span class="mv">'+validUntil+'</span></div>'+
       '</div>'+
     '</div>'+
   '</div>';
