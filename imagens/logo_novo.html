@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Nova Logo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  background:#1a1a1a;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:60px;
+  padding:60px 40px;
+  font-family:'Space Grotesk',sans-serif;
+}
+
+.bloco{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+.rotulo{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(255,255,255,0.25);
+}
+
+/* ══ LOGO PRINCIPAL ══ */
+.logo{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0;
+  line-height:1;
+}
+
+/* Linha com LUMEN + GRID */
+.logo-nome{
+  display:flex;
+  align-items:baseline;
+  gap:0;
+}
+
+.lumen{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:800;
+  text-transform:uppercase;
+  color:#F26522;
+  /* Sem contorno, sem outline — apenas fill sólido */
+  -webkit-text-stroke:0;
+  text-shadow:none;
+}
+.grid{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:800;
+  text-transform:uppercase;
+  color:#FFFFFF;
+  /* Sem contorno, sem outline — apenas fill sólido */
+  -webkit-text-stroke:0;
+  text-shadow:none;
+}
+
+/* Tagline ENERGIA INTELIGENTE */
+.tagline{
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  text-transform:uppercase;
+  color:rgba(242,101,34,0.80);
+  letter-spacing:0.35em;
+  text-align:center;
+}
+
+/* ── TAMANHO GRANDE (para captura/export) ── */
+.lg .lumen{ font-size:88px; }
+.lg .grid{  font-size:88px; }
+.lg .tagline{ font-size:16px; margin-top:6px; }
+
+/* ── TAMANHO MÉDIO (posts/capa) ── */
+.md .lumen{ font-size:56px; }
+.md .grid{  font-size:56px; }
+.md .tagline{ font-size:11px; margin-top:4px; }
+
+/* ── TAMANHO PEQUENO (avatar/perfil) ── */
+.sm .lumen{ font-size:36px; }
+.sm .grid{  font-size:36px; }
+.sm .tagline{ font-size:7.5px; margin-top:3px; }
+
+
+/* ══ PREVIEW EM FUNDO BRANCO ══ */
+.fundo-branco{
+  background:#fff;
+  padding:40px 60px;
+  border-radius:4px;
+}
+.fundo-branco .lumen{ color:#F26522; }
+.fundo-branco .grid{  color:#1a1a1a; }
+.fundo-branco .tagline{ color:rgba(242,101,34,0.75); }
+
+/* ══ PREVIEW EM FUNDO LARANJA ══ */
+.fundo-laranja{
+  background:#F26522;
+  padding:40px 60px;
+  border-radius:4px;
+}
+.fundo-laranja .lumen{ color:#FFFFFF; }
+.fundo-laranja .grid{  color:#1a1a1a; }
+.fundo-laranja .tagline{ color:rgba(255,255,255,0.85); }
+
+/* ══ SEPARADOR ══ */
+hr{
+  width:100%;max-width:900px;
+  border:none;border-top:1px solid rgba(255,255,255,0.08);
+}
+</style>
+</head>
+<body>
+
+<!-- ── GRANDE — para captura de tela ── -->
+<div class="bloco">
+  <span class="rotulo">Grande — fundo escuro — captura de tela</span>
+  <div class="logo lg">
+    <div class="logo-nome">
+      <span class="lumen">LUMEN</span><span class="grid">GRID</span>
+    </div>
+    <span class="tagline">Energia Inteligente</span>
+  </div>
+</div>
+
+<hr>
+
+<!-- ── MÉDIO ── -->
+<div class="bloco">
+  <span class="rotulo">Médio — posts e capa</span>
+  <div class="logo md">
+    <div class="logo-nome">
+      <span class="lumen">LUMEN</span><span class="grid">GRID</span>
+    </div>
+    <span class="tagline">Energia Inteligente</span>
+  </div>
+</div>
+
+<hr>
+
+<!-- ── PEQUENO ── -->
+<div class="bloco">
+  <span class="rotulo">Pequeno — avatar / ícone</span>
+  <div class="logo sm">
+    <div class="logo-nome">
+      <span class="lumen">LUMEN</span><span class="grid">GRID</span>
+    </div>
+    <span class="tagline">Energia Inteligente</span>
+  </div>
+</div>
+
+<hr>
+
+<!-- ── FUNDO BRANCO ── -->
+<div class="bloco">
+  <span class="rotulo">Fundo branco</span>
+  <div class="fundo-branco">
+    <div class="logo lg fundo-branco">
+      <div class="logo-nome">
+        <span class="lumen">LUMEN</span><span class="grid">GRID</span>
+      </div>
+      <span class="tagline">Energia Inteligente</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

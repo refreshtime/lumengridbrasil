@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Foto de Perfil Facebook 800×800</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#1a1a1a;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  gap:32px;
+  padding:40px;
+}
+.label{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:11px;letter-spacing:3px;
+  color:rgba(255,255,255,0.30);
+  text-transform:uppercase;
+}
+
+/* ── Frame 800×800 ── */
+.frame{
+  width:800px;height:800px;
+  position:relative;
+  overflow:hidden;
+  flex-shrink:0;
+}
+
+/* Preview circular + anel laranja DESTACADO */
+.frame.circular{
+  border-radius:50%;
+  /* Anel laranja proeminente — 10px sólido + brilho externo */
+  box-shadow:
+    0 0 0 10px #F26522,
+    0 0 0 14px rgba(242,101,34,0.30),
+    0 0 48px rgba(242,101,34,0.45);
+}
+
+/* Fundo escuro com glow laranja */
+.bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 45%,
+      rgba(242,101,34,0.14) 0%,
+      rgba(14,14,14,0) 65%
+    ),
+    linear-gradient(160deg, #161616 0%, #090909 100%);
+}
+
+/* Textura grade sutil */
+.grid-tex{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(242,101,34,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242,101,34,0.04) 1px, transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(ellipse 68% 68% at 50% 50%, black 20%, transparent 72%);
+}
+
+/* Arco decorativo interno (decoração suave) */
+.arc{
+  position:absolute;inset:48px;border-radius:50%;
+  border:2px solid transparent;
+  border-top-color:rgba(242,101,34,0.35);
+  border-right-color:rgba(242,101,34,0.12);
+  transform:rotate(-40deg);
+  pointer-events:none;
+}
+
+/* Conteúdo centralizado */
+.logo-wrap{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:0;
+}
+
+/* ── LOGO CSS ──
+   Layout:
+     ENERGIA INTELIGENTE  ← topo (como a logo anterior)
+     [ícone]  LUMENGRID
+     ──────────────────
+*/
+.logo-css{
+  display:flex;flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+/* "ENERGIA INTELIGENTE" — topo, alinhado com LUMENGRID */
+.logo-css .ei{
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  font-size:13.5px;
+  text-transform:uppercase;
+  letter-spacing:0.42em;
+  color:rgba(242,101,34,0.88);
+  /* Compensa o espaço extra do letter-spacing no último char */
+  padding-left:0.42em;
+  text-align:center;
+  text-shadow:0 1px 8px rgba(0,0,0,0.9);
+}
+
+/* Linha com ícone + LUMENGRID */
+.logo-row{
+  display:flex;align-items:center;
+  gap:14px;
+}
+.logo-icon{
+  height:110px;width:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 20px rgba(0,0,0,0.7));
+}
+.logo-nome{display:flex;align-items:baseline;}
+.logo-css .lm{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:800;font-size:86px;
+  text-transform:uppercase;color:#F26522;
+  letter-spacing:-2px;
+  text-shadow:0 0 50px rgba(242,101,34,0.25),0 4px 28px rgba(0,0,0,0.95);
+}
+.logo-css .gr{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:800;font-size:86px;
+  text-transform:uppercase;color:#FFFFFF;
+  letter-spacing:-2px;
+  text-shadow:0 4px 28px rgba(0,0,0,0.95);
+}
+
+/* Linha separadora */
+.divider{
+  width:100%;height:1.5px;
+  background:linear-gradient(to right, transparent, rgba(242,101,34,0.60), transparent);
+  margin-top:2px;
+}
+</style>
+</head>
+<body>
+
+<span class="label">Foto de Perfil — 800 × 800 px — Upload no Facebook</span>
+
+<!-- QUADRADO (arquivo a ser exportado) -->
+<div class="frame">
+  <div class="bg"></div>
+  <div class="grid-tex"></div>
+  <div class="arc"></div>
+  <div class="logo-wrap">
+    <div class="logo-css">
+      <div class="logo-row">
+        <img class="logo-icon" src="../imagens/logo - icone da logo.png" alt="">
+        <div>
+          <div class="logo-nome"><span class="lm">LUMEN</span><span class="gr">GRID</span></div>
+          <div class="divider"></div>
+        </div>
+      </div>
+      <span class="ei">Energia Inteligente</span>
+    </div>
+  </div>
+</div>
+
+<span class="label">Preview circular — como aparece no Facebook</span>
+
+<!-- CIRCULAR (preview) -->
+<div class="frame circular">
+  <div class="bg"></div>
+  <div class="grid-tex"></div>
+  <div class="arc"></div>
+  <div class="logo-wrap">
+    <div class="logo-css">
+      <div class="logo-row">
+        <img class="logo-icon" src="../imagens/logo - icone da logo.png" alt="">
+        <div>
+          <div class="logo-nome"><span class="lm">LUMEN</span><span class="gr">GRID</span></div>
+          <div class="divider"></div>
+        </div>
+      </div>
+      <span class="ei">Energia Inteligente</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

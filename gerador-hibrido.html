@@ -285,7 +285,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 @media(max-width:900px){
   .ed-layout{grid-template-columns:1fr!important;display:block}
   .form-panel{max-height:none;border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
-  .preview-panel{display:none}
+  .preview-panel{display:block}
   .btn-bar{flex-wrap:wrap;gap:6px;padding:10px 16px}
   .btn-bar .bp{flex:1;min-width:140px;font-size:12px;padding:10px 12px}
   .ed-header{padding:10px 16px}
@@ -319,6 +319,13 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   .page:last-child{break-after:auto;page-break-after:auto}
   @page{size:A4 portrait;margin:0}
 }
+
+.pdf-toast{position:fixed;bottom:24px;right:24px;background:#1a1d25;border:1.5px solid #E8641A;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:12px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;opacity:0;transform:translateY(16px);transition:.3s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.pdf-toast.show{opacity:1;transform:translateY(0)}
+.pdf-toast-icon{font-size:20px}
+.pdf-toast-text{line-height:1.4}
+.pdf-toast-sub{font-size:10px;font-weight:400;color:rgba(255,255,255,.5);margin-top:2px}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -1656,6 +1663,21 @@ function salvarHistoricoEBridge(tipo){
   sessionStorage.setItem('lg_bridge',JSON.stringify(bridge));
 }
 // ────────────────────────────────────────────────────────────────────────────
+
+function showToast(filename){
+  var t=document.getElementById('pdfToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='pdfToast';t.className='pdf-toast';
+    t.innerHTML='<div class="pdf-toast-icon">✅</div><div class="pdf-toast-text">PDF gerado com sucesso!<div class="pdf-toast-sub" id="pdfToastFile"></div></div>';
+    document.body.appendChild(t);
+  }
+  document.getElementById('pdfToastFile').textContent=filename||'';
+  t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT=setTimeout(function(){t.classList.remove('show');},3500);
+}
+
 async function downloadPDF(){
   const btn=document.getElementById('btnGerar');
   salvarHistoricoEBridge('hibrido');
@@ -1689,7 +1711,7 @@ async function downloadPDF(){
       pdf.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',0,0,w,h);
     }
 
-    pdf.save(filename);
+    pdf.save(filename); showToast(filename);
   }catch(e){
     alert('Erro ao gerar PDF: '+e.message);
   }finally{

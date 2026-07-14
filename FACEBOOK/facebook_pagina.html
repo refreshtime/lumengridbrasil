@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Design Facebook</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#1e1e1e;font-family:'DM Sans',sans-serif;padding:60px;display:flex;flex-direction:column;align-items:center;gap:60px;}
+
+/* ── LABEL ── */
+.label{
+  font-family:'DM Sans',sans-serif;
+  font-size:11px;letter-spacing:5px;text-transform:uppercase;
+  color:rgba(242,101,34,0.70);font-weight:600;
+  margin-bottom:10px;text-align:center;
+}
+.sublabel{
+  font-size:11px;color:rgba(255,255,255,0.30);
+  letter-spacing:2px;text-align:center;margin-top:6px;
+}
+.section{display:flex;flex-direction:column;align-items:center;}
+
+/* ══════════════════════════════════════
+   CAPA DO FACEBOOK  820 × 360 px
+══════════════════════════════════════ */
+.cover{
+  width:820px;height:360px;
+  position:relative;overflow:hidden;
+  box-shadow:0 8px 48px rgba(0,0,0,0.6);
+}
+
+/* fundo foto */
+.cover .bg{
+  position:absolute;inset:0;
+  background:url('../imagens/Familia lumen.png') 30% 45%/cover no-repeat;
+}
+
+/* overlay: escuro à esquerda, translúcido à direita */
+.cover .ov{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right,
+      rgba(10,10,10,0.94) 0%,
+      rgba(10,10,10,0.80) 38%,
+      rgba(10,10,10,0.35) 65%,
+      rgba(10,10,10,0.10) 100%
+    ),
+    linear-gradient(to bottom,
+      rgba(10,10,10,0.40) 0%,
+      rgba(10,10,10,0.10) 40%,
+      rgba(10,10,10,0.55) 100%
+    );
+}
+
+/* faixa laranja no topo */
+.cover .top-bar{
+  position:absolute;top:0;left:0;right:0;height:5px;z-index:20;
+  background:linear-gradient(to right,#C94E0F,#F26522,#C94E0F);
+}
+/* faixa laranja no rodapé */
+.cover .foot-bar{
+  position:absolute;bottom:0;left:0;right:0;height:5px;z-index:20;
+  background:linear-gradient(to right,#C94E0F,#F26522,#C94E0F);
+}
+
+/* conteúdo esquerdo */
+.cover .content{
+  position:absolute;inset:0;z-index:10;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:36px 48px;
+}
+
+/* logo */
+.cover .logo{height:54px;object-fit:contain;margin-bottom:18px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.8));}
+
+/* divisor */
+.cover .rule{width:44px;height:3px;background:linear-gradient(to right,#C94E0F,#F26522);margin-bottom:16px;}
+
+/* headline */
+.cover .headline{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:28px;font-weight:700;
+  color:#FAFAFA;line-height:1.15;
+  letter-spacing:-0.5px;
+  text-shadow:0 2px 16px rgba(0,0,0,0.9);
+  margin-bottom:6px;
+  max-width:380px;
+}
+.cover .headline span{color:#F26522;}
+
+/* subtítulo */
+.cover .sub{
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:300;
+  color:rgba(250,250,250,0.72);
+  letter-spacing:0.5px;
+  text-shadow:0 1px 8px rgba(0,0,0,0.9);
+  margin-bottom:22px;
+  max-width:360px;
+  line-height:1.6;
+}
+
+/* pills de atributos */
+.cover .pills{display:flex;gap:10px;flex-wrap:wrap;}
+.cover .tag{
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:#F26522;
+  border:1px solid rgba(242,101,34,0.50);
+  padding:5px 14px;
+}
+
+/* marcador de zona segura (guia visual — remova ao exportar) */
+.safe-zone{
+  position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:640px;height:100%;
+  border-left:1px dashed rgba(255,255,255,0.08);
+  border-right:1px dashed rgba(255,255,255,0.08);
+  z-index:5;pointer-events:none;
+}
+
+
+/* ══════════════════════════════════════
+   FOTO DE PERFIL  170 × 170 px
+══════════════════════════════════════ */
+.profile-wrap{display:flex;gap:32px;align-items:flex-end;}
+
+/* quadrado (como o Facebook salva) */
+.profile-sq{
+  width:170px;height:170px;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,0.6);
+  background:#111;
+  display:flex;align-items:center;justify-content:center;
+}
+.profile-sq img{width:90%;height:90%;object-fit:contain;}
+
+/* preview circular (como aparece no Facebook) */
+.profile-circle{
+  width:160px;height:160px;
+  position:relative;overflow:hidden;
+  border-radius:50%;
+  box-shadow:0 4px 24px rgba(0,0,0,0.6);
+  background:#111;
+  display:flex;align-items:center;justify-content:center;
+  border:3px solid #F26522;
+}
+.profile-circle img{width:88%;height:88%;object-fit:contain;}
+
+.profile-info{display:flex;flex-direction:column;gap:14px;}
+.pi-label{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;}
+.pi-val{font-family:'Space Grotesk',sans-serif;font-size:14px;color:#F26522;font-weight:600;}
+
+/* ══════════════════════════════════════
+   MOCKUP DA PÁGINA (preview visual)
+══════════════════════════════════════ */
+.fb-mockup{
+  width:820px;
+  background:#f0f2f5;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 8px 48px rgba(0,0,0,0.5);
+  font-family:'DM Sans',sans-serif;
+}
+
+/* área da capa */
+.fb-cover-area{position:relative;width:100%;height:270px;overflow:hidden;}
+.fb-cover-area .bg{position:absolute;inset:0;background:url('../imagens/Familia lumen.png') 30% 45%/cover no-repeat;}
+.fb-cover-area .ov{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(10,10,10,0.92) 0%,rgba(10,10,10,0.76) 36%,rgba(10,10,10,0.28) 65%,rgba(10,10,10,0.05) 100%),
+  linear-gradient(to bottom,rgba(10,10,10,0.35) 0%,rgba(10,10,10,0.08) 40%,rgba(10,10,10,0.50) 100%);
+}
+.fb-cover-area .top-bar{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(to right,#C94E0F,#F26522,#C94E0F);z-index:5;}
+.fb-cover-area .foot-bar{position:absolute;bottom:0;left:0;right:0;height:5px;background:linear-gradient(to right,#C94E0F,#F26522,#C94E0F);z-index:5;}
+.fb-cover-area .content{
+  position:absolute;inset:0;z-index:4;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:28px 40px;
+}
+.fb-cover-area .logo{height:44px;object-fit:contain;margin-bottom:12px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.8));}
+.fb-cover-area .rule{width:36px;height:3px;background:linear-gradient(to right,#C94E0F,#F26522);margin-bottom:12px;}
+.fb-cover-area .headline{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#FAFAFA;line-height:1.15;letter-spacing:-0.3px;text-shadow:0 2px 12px rgba(0,0,0,0.9);margin-bottom:6px;max-width:320px;}
+.fb-cover-area .headline span{color:#F26522;}
+.fb-cover-area .sub{font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:300;color:rgba(250,250,250,0.70);text-shadow:0 1px 8px rgba(0,0,0,0.9);margin-bottom:16px;max-width:300px;line-height:1.6;}
+.fb-cover-area .pills{display:flex;gap:8px;flex-wrap:wrap;}
+.fb-cover-area .tag{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#F26522;border:1px solid rgba(242,101,34,0.50);padding:4px 12px;}
+
+/* área info da página */
+.fb-info{background:#fff;padding:0 20px 16px;display:flex;align-items:flex-end;gap:16px;position:relative;}
+.fb-avatar{
+  width:96px;height:96px;border-radius:50%;
+  background:#111;border:4px solid #fff;
+  margin-top:-36px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+.fb-avatar img{width:86%;height:86%;object-fit:contain;}
+.fb-page-info{padding-top:12px;flex:1;}
+.fb-page-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#1c1e21;}
+.fb-page-cat{font-size:12px;color:#65676b;margin-top:2px;}
+.fb-btn{
+  margin-bottom:4px;
+  background:#F26522;color:#fff;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:600;
+  border:none;padding:8px 20px;border-radius:6px;
+  cursor:pointer;flex-shrink:0;
+}
+
+/* nav da página */
+.fb-nav{
+  background:#fff;border-top:1px solid #e4e6eb;
+  display:flex;gap:0;padding:0 20px;
+}
+.fb-nav-item{
+  font-size:13px;font-weight:600;color:#65676b;
+  padding:12px 16px;border-bottom:3px solid transparent;cursor:pointer;
+}
+.fb-nav-item.active{color:#F26522;border-bottom-color:#F26522;}
+</style>
+</head>
+<body>
+
+<!-- ══ 1. CAPA ISOLADA (para exportar) ══ -->
+<div class="section">
+  <p class="label">Foto de Capa — 820 × 360 px</p>
+  <p class="sublabel">Salve como imagem para usar no Facebook</p>
+
+  <div class="cover" style="margin-top:16px;">
+    <div class="bg"></div>
+    <div class="ov"></div>
+    <div class="top-bar"></div>
+    <div class="foot-bar"></div>
+    <div class="safe-zone"></div>
+
+    <div class="content">
+      <img class="logo" src="../imagens/Fundo%20transparenet%20LUMENGRID.png" alt="LumenGrid">
+      <div class="rule"></div>
+      <p class="headline">Energia solar com<br><span>inteligência</span> e qualidade.</p>
+      <p class="sub">Reduzimos seus custos, aumentamos sua autonomia<br>e garantimos segurança energética para sua casa ou empresa.</p>
+      <div class="pills">
+        <span class="tag">Energia Solar</span>
+        <span class="tag">Híbrido com Baterias</span>
+        <span class="tag">Carregador p/ Carro Elétrico</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. FOTO DE PERFIL ══ -->
+<div class="section">
+  <p class="label">Foto de Perfil — 170 × 170 px</p>
+  <p class="sublabel">Esquerda: arquivo original &nbsp;|&nbsp; Direita: como aparece no Facebook (círculo)</p>
+
+  <div class="profile-wrap" style="margin-top:16px;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div class="profile-sq">
+        <img src="../imagens/Fundo%20transparenet%20LUMENGRID.png" alt="LumenGrid">
+      </div>
+      <span style="font-size:10px;color:rgba(255,255,255,0.30);letter-spacing:2px;">ARQUIVO (170×170)</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div class="profile-circle">
+        <img src="../imagens/Fundo%20transparenet%20LUMENGRID.png" alt="LumenGrid">
+      </div>
+      <span style="font-size:10px;color:rgba(255,255,255,0.30);letter-spacing:2px;">PREVIEW CÍRCULO</span>
+    </div>
+
+    <div class="profile-info">
+      <div>
+        <p class="pi-label">Nome da Página</p>
+        <p class="pi-val">LumenGrid</p>
+      </div>
+      <div>
+        <p class="pi-label">Categoria</p>
+        <p class="pi-val">Energia Solar / Empresa de Tecnologia</p>
+      </div>
+      <div>
+        <p class="pi-label">Tagline</p>
+        <p class="pi-val">Energia Inteligente</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3. MOCKUP DA PÁGINA ══ -->
+<div class="section">
+  <p class="label">Preview — Como ficará a página no Facebook</p>
+  <p class="sublabel">Visualização aproximada do layout da página</p>
+
+  <div class="fb-mockup" style="margin-top:16px;">
+
+    <!-- capa -->
+    <div class="fb-cover-area">
+      <div class="bg"></div>
+      <div class="ov"></div>
+      <div class="top-bar"></div>
+      <div class="foot-bar"></div>
+      <div class="content">
+        <img class="logo" src="../imagens/Fundo%20transparenet%20LUMENGRID.png" alt="LumenGrid">
+        <div class="rule"></div>
+        <p class="headline">Energia solar com<br><span>inteligência</span> e qualidade.</p>
+        <p class="sub">Reduzimos seus custos, aumentamos sua autonomia<br>e garantimos segurança energética.</p>
+        <div class="pills">
+          <span class="tag">On-grid</span>
+          <span class="tag">Híbrido</span>
+          <span class="tag">Baterias</span>
+          <span class="tag">Wallbox</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- info da página -->
+    <div class="fb-info">
+      <div class="fb-avatar">
+        <img src="../imagens/Fundo%20transparenet%20LUMENGRID.png" alt="LumenGrid">
+      </div>
+      <div class="fb-page-info">
+        <div class="fb-page-name">LumenGrid</div>
+        <div class="fb-page-cat">Empresa de energia solar · Energia Inteligente</div>
+      </div>
+      <button class="fb-btn">+ Seguir Página</button>
+    </div>
+
+    <!-- nav -->
+    <div class="fb-nav">
+      <div class="fb-nav-item active">Inicio</div>
+      <div class="fb-nav-item">Sobre</div>
+      <div class="fb-nav-item">Fotos</div>
+      <div class="fb-nav-item">Videos</div>
+      <div class="fb-nav-item">Mais ▾</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

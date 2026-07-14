@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Guia de Design para Posts Instagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#111;font-family:'DM Sans',sans-serif;color:#fafafa;padding:60px 80px;line-height:1.6;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;color:#F26522;margin-bottom:8px;}
+h2{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:#fafafa;margin:48px 0 16px;border-left:4px solid #F26522;padding-left:16px;}
+h3{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;color:#F26522;margin:24px 0 8px;}
+p,li{font-size:16px;font-weight:300;color:rgba(250,250,250,0.80);margin-bottom:8px;}
+ul{padding-left:20px;}
+code{font-family:'Courier New',monospace;background:rgba(242,101,34,0.12);border:1px solid rgba(242,101,34,0.25);padding:2px 8px;font-size:14px;color:#F26522;}
+.block{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.10);padding:24px 28px;margin:12px 0;border-left:3px solid #F26522;}
+.rule{width:100%;height:1px;background:rgba(242,101,34,0.20);margin:40px 0;}
+.tag{display:inline-block;background:rgba(242,101,34,0.15);border:1px solid rgba(242,101,34,0.35);color:#F26522;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;padding:4px 14px;margin:4px 4px 4px 0;}
+pre{background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);padding:20px;font-size:13px;color:rgba(250,250,250,0.75);overflow-x:auto;line-height:1.8;white-space:pre-wrap;}
+</style>
+</head>
+<body>
+
+<h1>LumenGrid</h1>
+<p style="font-size:13px;letter-spacing:4px;color:#F26522;text-transform:uppercase;margin-bottom:48px;">Guia de Design — Posts Instagram</p>
+
+<div class="rule"></div>
+
+<!-- IDENTIDADE -->
+<h2>Identidade da Marca</h2>
+
+<h3>Nome e Tagline</h3>
+<div class="block">
+  <p><strong style="color:#fafafa;">Nome:</strong> LumenGrid</p>
+  <p><strong style="color:#fafafa;">Tagline:</strong> Energia Inteligente</p>
+  <p><strong style="color:#fafafa;">Segmento:</strong> Energia solar — sistemas on-grid e híbrido</p>
+  <p><strong style="color:#fafafa;">Tom de voz:</strong> Técnico mas acessível, confiante, direto, humano</p>
+</div>
+
+<h3>Paleta de Cores</h3>
+<div class="block">
+  <p><code>--orange: #F26522</code> — Laranja principal (CTAs, destaques, bordas, ícones)</p>
+  <p><code>--orange-dark: #C94E0F</code> — Laranja escuro (gradientes, hover)</p>
+  <p><code>--black: #111111</code> — Fundo principal</p>
+  <p><code>--white: #FAFAFA</code> — Texto principal sobre escuro</p>
+  <p><code>--dim: rgba(250,250,250,0.90)</code> — Texto secundário</p>
+  <p><code>rgba(242,101,34,0.12)</code> — Fundo de cards/badges laranja translúcido</p>
+  <p><code>rgba(0,0,0,0.42)</code> — Fundo de cards sobre foto</p>
+</div>
+
+<h3>Tipografia</h3>
+<div class="block">
+  <p><strong style="color:#fafafa;">Títulos e headlines:</strong> <code>Space Grotesk</code> — peso 700<br>
+  Geométrica, tech, marcante. Usar em headlines grandes, badges, nomes de seções.</p>
+  <br>
+  <p><strong style="color:#fafafa;">Corpo e descrições:</strong> <code>DM Sans</code> — peso 300 / 400 / 600<br>
+  Neutra, muito legível em tamanho pequeno. Usar em subtítulos, descrições, rodapé.</p>
+</div>
+
+<div class="rule"></div>
+
+<!-- DIMENSÕES -->
+<h2>Dimensões e Estrutura</h2>
+
+<div class="block">
+  <p><strong style="color:#fafafa;">Tamanho do post:</strong> <code>1080 × 1350px</code> (Instagram retrato)</p>
+  <p><strong style="color:#fafafa;">Fundo padrão:</strong> foto com overlay escuro</p>
+  <p><strong style="color:#fafafa;">Zona segura lateral:</strong> 60–80px de margem</p>
+  <p><strong style="color:#fafafa;">Zona segura topo:</strong> 140–160px (logo + cantos)</p>
+  <p><strong style="color:#fafafa;">Zona segura base:</strong> 64–80px (hint + faixa)</p>
+</div>
+
+<div class="rule"></div>
+
+<!-- ELEMENTOS FIXOS -->
+<h2>Elementos Fixos em Todo Post</h2>
+
+<h3>1. Logo (topo esquerdo)</h3>
+<div class="block">
+  <p>Arquivo: <code>imagens/Fundo transparenet LUMENGRID.png</code></p>
+  <p>Altura: <code>48–52px</code> | <code>object-fit: contain</code></p>
+  <p>Filter: <code>drop-shadow(0 2px 8px rgba(0,0,0,0.7))</code></p>
+</div>
+
+<h3>2. Tagline (topo direito)</h3>
+<div class="block">
+  <p>Texto: <strong style="color:#fafafa;">Energia Inteligente</strong></p>
+  <p>Font: DM Sans | 10px | letter-spacing: 4px | cor: <code>rgba(242,101,34,0.85)</code></p>
+</div>
+
+<h3>3. Cantos decorativos</h3>
+<div class="block">
+  <p>4 cantos | 28×28px | border: 2px | cor: <code>rgba(242,101,34,0.75)</code></p>
+  <p>Posição topo: <code>top:32px; left/right:32px</code></p>
+  <p>Posição base: <code>bottom:24px; left/right:32px</code></p>
+</div>
+
+<h3>4. Faixa laranja no rodapé</h3>
+<div class="block">
+  <p>Altura: <code>7px</code> | z-index: 30</p>
+  <p>Background: <code>linear-gradient(to right, #C94E0F, #F26522, #C94E0F)</code></p>
+</div>
+
+<h3>5. Hint "deslize"</h3>
+<div class="block">
+  <p>Texto: <em>deslize para continuar</em> (ou variação)</p>
+  <p>Font: DM Sans | 10px | letter-spacing: 4px | cor: <code>rgba(242,101,34,0.60)</code></p>
+  <p>Flanqueado por linhas de 32px | bottom: 30px</p>
+</div>
+
+<div class="rule"></div>
+
+<!-- OVERLAYS -->
+<h2>Overlays sobre Fotos</h2>
+
+<div class="block">
+  <h3 style="margin:0 0 12px;">Overlay padrão (escuro equilibrado)</h3>
+  <pre>background: linear-gradient(to bottom,
+  rgba(10,10,10,0.82) 0%,
+  rgba(10,10,10,0.30) 30%,
+  rgba(10,10,10,0.30) 55%,
+  rgba(10,10,10,0.92) 100%
+);</pre>
+</div>
+
+<div class="block">
+  <h3 style="margin:0 0 12px;">Overlay capa (tudo escuro, destaca texto central)</h3>
+  <pre>background: linear-gradient(to bottom,
+  rgba(10,10,10,0.55) 0%,
+  rgba(10,10,10,0.20) 35%,
+  rgba(10,10,10,0.45) 65%,
+  rgba(10,10,10,0.88) 100%
+);</pre>
+</div>
+
+<div class="rule"></div>
+
+<!-- COMPONENTES -->
+<h2>Componentes Reutilizáveis</h2>
+
+<h3>Badge / Pill</h3>
+<pre>&lt;div class="pill"&gt;
+  &lt;span class="pill-dot"&gt;&lt;/span&gt;
+  Texto do Badge
+  &lt;span class="pill-dot"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+/* CSS */
+.pill { border: 1px solid rgba(242,101,34,0.75); color: #F26522;
+  font-family: 'DM Sans'; font-size: 10px; font-weight: 600;
+  letter-spacing: 5px; text-transform: uppercase; padding: 8px 28px;
+  display: inline-flex; align-items: center; gap: 10px; }
+.pill-dot { width:5px; height:5px; border-radius:50%; background:#F26522; }</pre>
+
+<h3>Pilar / Card com ícone</h3>
+<pre>&lt;div class="pillar"&gt;
+  &lt;div class="pillar-icon"&gt;&lt;svg ...&gt;&lt;/svg&gt;&lt;/div&gt;
+  &lt;div class="pillar-text"&gt;
+    &lt;span class="pillar-title"&gt;Título&lt;/span&gt;
+    &lt;span class="pillar-desc"&gt;Descrição curta.&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+/* CSS */
+.pillar { display:flex; align-items:center; gap:20px;
+  background: rgba(0,0,0,0.42); border-left: 4px solid #F26522;
+  padding: 22px 28px; }
+.pillar-icon { width:44px; height:44px; border-radius:50%;
+  background: rgba(242,101,34,0.18); border: 1.5px solid rgba(242,101,34,0.5);
+  display:flex; align-items:center; justify-content:center; }
+.pillar-icon svg { width:22px; height:22px; stroke:#F26522; fill:none;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.pillar-title { font-family:'Space Grotesk'; font-size:22px; font-weight:700; color:#FAFAFA; }
+.pillar-desc { font-family:'DM Sans'; font-size:17px; font-weight:300;
+  color:rgba(250,250,250,0.72); line-height:1.4; }</pre>
+
+<h3>Card diferencial (2 colunas)</h3>
+<pre>&lt;div class="dif"&gt;
+  &lt;span class="dif-label"&gt;Título&lt;/span&gt;
+  &lt;span class="dif-desc"&gt;Descrição.&lt;/span&gt;
+&lt;/div&gt;
+
+/* CSS */
+.dif { flex:1; display:flex; flex-direction:column; align-items:center; gap:8px;
+  background: rgba(242,101,34,0.12); border: 1px solid rgba(242,101,34,0.35);
+  padding: 18px 16px; }
+.dif-label { font-family:'Space Grotesk'; font-size:18px; font-weight:700;
+  color:#F26522; letter-spacing:1px; text-transform:uppercase; }
+.dif-desc { font-family:'DM Sans'; font-size:14px; font-weight:300;
+  color:rgba(250,250,250,0.65); text-align:center; line-height:1.4; }</pre>
+
+<h3>Divisor laranja</h3>
+<pre>.rule { width:52px; height:3px;
+  background: linear-gradient(to right, #C94E0F, #F26522);
+  margin: 0 auto 44px; }</pre>
+
+<div class="rule"></div>
+
+<!-- IMAGENS DISPONÍVEIS -->
+<h2>Imagens Disponíveis</h2>
+
+<div class="block">
+  <p><code>imagens/Fundo transparenet LUMENGRID.png</code> — Logo oficial (fundo transparente) ✅ usar em todos os posts</p>
+  <p><code>imagens/familia.png</code> — Família feliz em frente à casa com painéis solares</p>
+  <p><code>imagens/instalador.png</code> — Técnico instalando painel no telhado</p>
+  <p><code>imagens/Negocio hingrid fechado lumen.png</code> — Aperto de mão, técnico LumenGrid + cliente</p>
+  <p><code>imagens/handshake.png</code> — Mesma cena do negócio (variação)</p>
+  <p><code>imagens/hibrido.png</code> — Infográfico do sistema híbrido (já diagramado)</p>
+  <p><code>imagens/Inversor lumen grid e wallbox.png</code> — Inversor e wallbox LumenGrid</p>
+  <p><code>imagens/lumen grid placas.png</code> — Template fundo branco com textura de placas</p>
+  <p><code>imagens/lumengrid_logo_bateria.png</code> — Logo alternativa com bateria (fundo branco)</p>
+</div>
+
+<div class="rule"></div>
+
+<!-- MAPA DOS 12 POSTS -->
+<h2>Mapa dos 12 Posts</h2>
+
+<div class="block">
+  <p><span class="tag">Post 01</span> Bem-vindo à marca — <code>post01_bemvindo.html</code> ✅</p>
+  <p><span class="tag">Post 02</span> Nossa missão — <code>post02_missao.html</code> ✅</p>
+  <p><span class="tag">Post 03</span> Por que confiar em nós</p>
+  <p><span class="tag">Post 04</span> Como a energia solar funciona</p>
+  <p><span class="tag">Post 05</span> O que é um sistema on-grid</p>
+  <p><span class="tag">Post 06</span> O que é um sistema híbrido</p>
+  <p><span class="tag">Post 07</span> Quando vale a pena ter baterias</p>
+  <p><span class="tag">Post 08</span> Quanto você pode economizar</p>
+  <p><span class="tag">Post 09</span> Nosso processo de atendimento</p>
+  <p><span class="tag">Post 10</span> A qualidade dos equipamentos</p>
+  <p><span class="tag">Post 11</span> Dúvidas frequentes respondidas</p>
+  <p><span class="tag">Post 12</span> Chamada para solicitar um projeto</p>
+</div>
+
+<div class="rule"></div>
+
+<!-- PROMPT PADRÃO -->
+<h2>Prompt Padrão para Novos Posts</h2>
+
+<div class="block">
+  <p style="color:#fafafa;font-weight:600;margin-bottom:12px;">Copie e adapte este prompt ao pedir um novo post:</p>
+  <pre>Crie um post Instagram para a LumenGrid seguindo o guia de design em
+GUIA_DESIGN_LUMENGRID.html.
+
+Post: [número] — [tema]
+Foto de fundo: imagens/[arquivo.png]
+Copy:
+  - Badge: [texto do badge]
+  - Headline: [título principal]
+  - Subtítulo: [frase de apoio]
+  - Pilares ou cards: [lista de conteúdo]
+  - Hint: [texto do deslize]
+
+Salvar em: /Users/Hingrid/Documents/LUMENGRID/post[XX]_[nome].html
+
+Regras obrigatórias:
+- Fontes: Space Grotesk (títulos) + DM Sans (corpo)
+- Cores: #F26522 laranja, #111111 fundo, #FAFAFA texto
+- Logo: imagens/Fundo transparenet LUMENGRID.png (topo esquerdo, h=48px)
+- Tagline topo direito: "Energia Inteligente"
+- 4 cantos decorativos laranja
+- Faixa laranja 7px no rodapé
+- Hint "deslize para continuar" no rodapé
+- Dimensões: 1080 × 1350px</pre>
+</div>
+
+</body>
+</html>

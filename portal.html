@@ -104,9 +104,9 @@ function logout(){sessionStorage.clear();location.replace('login.html');}
 
 const user=sessionStorage.getItem('lg_user')||'';
 const hour=new Date().getHours();
-const greetWord=hour<12?'Bom dia':'hour<18?Boa tarde':'Boa noite';
-const greetFinal=hour<12?'Bom dia':'Boa tarde';
-document.getElementById('greet').textContent=(hour<12?'Bom dia, ':hour<18?'Boa tarde, ':'Boa noite, ')+(user||'');
+const greetWord=hour<12?'Bom dia':(hour<18?'Boa tarde':'Boa noite');
+const greetFinal=hour<12?'Bom dia':(hour<18?'Boa tarde':'Boa noite');
+document.getElementById('greet').textContent=(hour<12?'Bom dia, ':(hour<18?'Boa tarde, ':'Boa noite, '))+(user||'');
 </script>
 </body>
 </html>
