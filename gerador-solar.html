@@ -1545,8 +1545,8 @@ async function importSupplierPDF(input){
       if(kwhM){
         const kwh=parseFloat(kwhM[1].replace(',','.'));
         document.getElementById('batteryKwh').value=kwh;
-        document.getElementById('hasBattery').checked=true;
-        document.getElementById('batteryField').style.display='';
+        const _hbEl=document.getElementById('hasBattery'); if(_hbEl)_hbEl.checked=true;
+        const _bfEl=document.getElementById('batteryField'); if(_bfEl)_bfEl.style.display='';
         filled.push('Bateria: '+kwh+' kWh');
       }
     }
@@ -1555,7 +1555,7 @@ async function importSupplierPDF(input){
     const valM=fullText.match(/Valor Total[:\s\n]*R?\$?\s*([\d\.]+(?:,\d{2})?)/i);
     if(valM){
       const raw=valM[1].replace(/\./g,'').replace(',','.');
-      document.getElementById('projectVal').value=Math.round(parseFloat(raw));
+      document.getElementById('projectValue').value=Math.round(parseFloat(raw));
       filled.push('Valor total: R$ '+valM[1]);
     }
 

@@ -1605,7 +1605,7 @@ async function importSupplierPDF(input){
     const valM=fullText.match(/Valor Total[:\s\n]*R?\$?\s*([\d\.]+(?:,\d{2})?)/i);
     if(valM){
       const raw=valM[1].replace(/\./g,'').replace(',','.');
-      document.getElementById('projectVal').value=Math.round(parseFloat(raw));
+      document.getElementById('projectValue').value=Math.round(parseFloat(raw));
       filled.push('Valor total: R$ '+valM[1]);
     }
 

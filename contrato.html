@@ -387,7 +387,7 @@ function generateContract(){
     if(payModo==='cartao'){
       return '<div class="pay-box"><div class="etrow"><span><strong>Cartão de Crédito — '+payParcelas+'x de '+parcelVal+'</strong></span><span style="color:#E8641A;font-weight:700">'+payJuros+'</span></div></div>';
     } else if(payModo==='parcelado'){
-      return payBoxHtml();
+      return '<div class="pay-box"><div class="etrow"><span><strong>Entrada — 70% (ato da assinatura)</strong></span><span style="color:#E8641A;font-weight:700">'+fmtBRL(payEntrada)+'</span></div><div class="etrow"><span><strong>Entrega dos Equipamentos — 15%</strong></span><span style="color:#E8641A;font-weight:700">'+fmtBRL(payEquip)+'</span></div><div class="etrow"><span><strong>Instalação — 15%</strong></span><span style="color:#E8641A;font-weight:700">'+fmtBRL(payInst)+'</span></div></div>';
     } else {
       return payPersonalizado?'<div class="pay-box"><div style="padding:6px 0;font-size:12px">'+payPersonalizado+'</div></div>':'';
     }
