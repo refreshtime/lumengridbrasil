@@ -401,10 +401,9 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Módulo</label>
     <select class="fsel" onchange="onModModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="Canadian Solar 550W" data-power="550">Canadian Solar 550W</option>
-      <option value="Risen Energy 580W" data-power="580">Risen Energy 580W</option>
-      <option value="Jinko 545W" data-power="545">Jinko 545W</option>
-      <option value="BYD 560W" data-power="560">BYD 560W</option>
+      <option value="Maxeon Bifacial PERC 535W" data-power="535">Maxeon Bifacial PERC 535W (115 cel.)</option>
+      <option value="Maxeon Bifacial PERC 550W" data-power="550">Maxeon Bifacial PERC 550W (115 cel.)</option>
+      <option value="Ronma Solar N-Type 590W Black Frame" data-power="590">Ronma Solar N-Type 590W Black Frame (144 cel.)</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="modModel" placeholder="Modelo personalizado" style="display:none">
@@ -415,11 +414,9 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Inversor</label>
     <select class="fsel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="Growatt SPH 8000TL3 BH" data-power="8">Growatt SPH 8000TL3 BH</option>
-      <option value="Deye SUN-8K-SG04LP3" data-power="8">Deye SUN-8K-SG04LP3</option>
-      <option value="Huawei SUN2000-10KTL" data-power="10">Huawei SUN2000-10KTL</option>
-      <option value="WEG SIW200H M105" data-power="10">WEG SIW200H M105</option>
-      <option value="Growatt MIN 5000TL-X" data-power="5">Growatt MIN 5000TL-X</option>
+      <option value="FoxESS Híbrido Bifásico 3MPPT 127/220V 11.4kW" data-power="11.4" data-bat="foxess">FoxESS Híbrido Bifásico 3MPPT 127/220V 11.4kW</option>
+      <option value="FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW" data-power="5.7" data-bat="foxess">FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW</option>
+      <option value="Sofar HYD-5K-LSP1 Híbrido Bifásico 127/220V 5kW" data-power="5" data-bat="sofar">Sofar HYD-5K-LSP1 Híbrido Bifásico 127/220V 5kW</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none">
@@ -443,11 +440,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <label class="fl">Modelo da Bateria</label>
       <select class="fsel" id="batModelSel" onchange="onBatModelChange(this)">
         <option value="">— Selecionar —</option>
-        <option value="Growatt ARK 10kWh" data-kwh="10">Growatt ARK 10kWh</option>
-        <option value="BYD Battery-Box Premium 10.2" data-kwh="10.2">BYD Battery-Box Premium 10.2</option>
-        <option value="WEG + Bateria 5kWh" data-kwh="5">WEG + Bateria 5kWh</option>
-        <option value="Deye BOS-G Pro 5kWh" data-kwh="5">Deye BOS-G Pro 5kWh</option>
-        <option value="Pylontech US5000 4.8kWh" data-kwh="4.8">Pylontech US5000 4.8kWh</option>
+        <option value="Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh" data-kwh="5.1" data-bat-brand="sofar">Unipower UPLFP48-100 IW 5.1kWh — Baixa Tensão (Sofar)</option>
+        <option value="FoxESS Bateria 5.2kWh" data-kwh="5.2" data-bat-brand="foxess">FoxESS Bateria 5.2kWh (para Inversores FoxESS)</option>
         <option value="custom">Outro (digitar)</option>
       </select>
       <input class="fi" id="batModel" placeholder="Modelo personalizado" style="display:none">
@@ -790,6 +784,21 @@ function resetForm(){
   equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
   renderEquipmentTable();
 renderAutonomyTable();
+
+  // Auto-selecionar bateria compatível com o inversor
+  const batBrand=sel.options[sel.selectedIndex]&&sel.options[sel.selectedIndex].dataset.bat;
+  if(batBrand){
+    const batSel=document.getElementById('batModelSel');
+    if(batSel){
+      for(let i=0;i<batSel.options.length;i++){
+        if(batSel.options[i].dataset&&batSel.options[i].dataset.batBrand===batBrand){
+          batSel.selectedIndex=i;
+          onBatModelChange(batSel);
+          break;
+        }
+      }
+    }
+  }
 }
 
 function lbar(n,t){return'<div class="lbar"><div class="ll"><div><div class="ltext">LUMEN<span>GRID</span></div><div class="lsub">ENERGIA INTELIGENTE</div></div></div><span class="pnum">0'+n+' / 0'+t+'</span></div>';}

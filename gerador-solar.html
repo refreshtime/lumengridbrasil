@@ -378,15 +378,41 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="fs">
-    <div class="fs-title">Consumo & Economia</div>
+    <div class="fs-title">Sistema Solar</div>
     <div class="frow">
-      <div><label class="fl">Conta Atual (R$) <span style="color:var(--or);font-size:9px">★ gráfico</span></label><input class="fi" type="number" id="billValue" placeholder="Ex: 800"></div>
-      <div><label class="fl">Consumo (kWh/mês)</label><input class="fi" type="number" id="consumoAtual" placeholder="Ex: 500"></div>
+      <div><label class="fl">Qtd Módulos</label><input class="fi" type="number" id="modQty" placeholder="Ex: 10" min="0"></div>
+      <div><label class="fl">Potência (W)</label><input class="fi" type="number" id="modPower" placeholder="Ex: 550" min="0"></div>
     </div>
+    <label class="fl">Modelo do Módulo</label>
+    <select class="fsel" onchange="onModModelChange(this)">
+      <option value="">— Selecionar —</option>
+      <option value="Maxeon Bifacial PERC 535W" data-power="535">Maxeon Bifacial PERC 535W (115 cel.)</option>
+      <option value="Maxeon Bifacial PERC 550W" data-power="550">Maxeon Bifacial PERC 550W (115 cel.)</option>
+      <option value="Ronma Solar N-Type 590W Black Frame" data-power="590">Ronma Solar N-Type 590W Black Frame (144 cel.)</option>
+      <option value="custom">Outro (digitar)</option>
+    </select>
+    <input class="fi" id="modModel" placeholder="Modelo personalizado" style="display:none">
     <div class="frow">
-      <div><label class="fl">Tarifa (R$/kWh)</label><input class="fi" type="number" id="tarifa" placeholder="Ex: 0.95" step="0.01"></div>
-      <div><label class="fl">Eco Mensal Override (R$)</label><input class="fi" type="number" id="ecoOverride" placeholder="Calculado automaticamente"></div>
+      <div><label class="fl">Qtd Inversores</label><input class="fi" type="number" id="invQty" placeholder="1" min="0"></div>
+      <div><label class="fl">Potência (kW)</label><input class="fi" type="number" id="invPower" placeholder="Ex: 8" min="0"></div>
     </div>
+    <label class="fl">Modelo do Inversor</label>
+    <select class="fsel" onchange="onInvModelChange(this)">
+      <option value="">— Selecionar —</option>
+      <option value="Huawei SUN2000-3KTL-L1 2MPPT 220V" data-power="3">Huawei SUN2000-3KTL-L1 Monofásico 3kW</option>
+      <option value="Huawei SUN2000-5KTL-L1 2MPPT 220V" data-power="5">Huawei SUN2000-5KTL-L1 Monofásico 5kW</option>
+      <option value="Huawei SUN2000-6KTL-L1 2MPPT 220V" data-power="6">Huawei SUN2000-6KTL-L1 Monofásico 6kW</option>
+      <option value="Huawei SUN2000-8KTL 3MPPT 220V" data-power="8">Huawei SUN2000-8KTL Monofásico 8kW</option>
+      <option value="Hoymiles MI-2250 Microinversor 2MPPT 220V" data-power="2.25">Hoymiles MI-2250 Microinversor 2.25kW</option>
+      <option value="FoxESS Microinversor 4MPPT 220V 2.5kW" data-power="2.5">FoxESS Microinversor 4MPPT 220V 2.5kW</option>
+      <option value="Auxsol Monofásico 2MPPT 220V 5kW" data-power="5">Auxsol Monofásico 2MPPT 220V 5kW</option>
+      <option value="custom">Outro (digitar)</option>
+    </select>
+    <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none">
+    <label class="fl">Potência Total (kVp) <span class="auto-tag">calculado automaticamente</span></label>
+    <input class="fi" id="totalPower" placeholder="Ex: 5.50 kVp">
+    <label class="fl">Geração Mensal (kWh) <span class="auto-tag">calculado automaticamente</span></label>
+    <input class="fi" id="monthlyGen" placeholder="Ex: 720 kWh">
   </div>
 
   <div class="fs">
@@ -406,40 +432,15 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="fs">
-    <div class="fs-title">Sistema Solar</div>
+    <div class="fs-title">Consumo & Economia</div>
     <div class="frow">
-      <div><label class="fl">Qtd Módulos</label><input class="fi" type="number" id="modQty" placeholder="Ex: 10" min="0"></div>
-      <div><label class="fl">Potência (W)</label><input class="fi" type="number" id="modPower" placeholder="Ex: 550" min="0"></div>
+      <div><label class="fl">Conta Atual (R$) <span style="color:var(--or);font-size:9px">★ gráfico</span></label><input class="fi" type="number" id="billValue" placeholder="Ex: 800"></div>
+      <div><label class="fl">Consumo (kWh/mês)</label><input class="fi" type="number" id="consumoAtual" placeholder="Ex: 500"></div>
     </div>
-    <label class="fl">Modelo do Módulo</label>
-    <select class="fsel" onchange="onModModelChange(this)">
-      <option value="">— Selecionar —</option>
-      <option value="Canadian Solar 550W" data-power="550">Canadian Solar 550W</option>
-      <option value="Risen Energy 580W" data-power="580">Risen Energy 580W</option>
-      <option value="Jinko 545W" data-power="545">Jinko 545W</option>
-      <option value="BYD 560W" data-power="560">BYD 560W</option>
-      <option value="custom">Outro (digitar)</option>
-    </select>
-    <input class="fi" id="modModel" placeholder="Modelo personalizado" style="display:none">
     <div class="frow">
-      <div><label class="fl">Qtd Inversores</label><input class="fi" type="number" id="invQty" placeholder="1" min="0"></div>
-      <div><label class="fl">Potência (kW)</label><input class="fi" type="number" id="invPower" placeholder="Ex: 8" min="0"></div>
+      <div><label class="fl">Tarifa (R$/kWh)</label><input class="fi" type="number" id="tarifa" placeholder="Ex: 0.95" step="0.01"></div>
+      <div><label class="fl">Eco Mensal Override (R$)</label><input class="fi" type="number" id="ecoOverride" placeholder="Calculado automaticamente"></div>
     </div>
-    <label class="fl">Modelo do Inversor</label>
-    <select class="fsel" onchange="onInvModelChange(this)">
-      <option value="">— Selecionar —</option>
-      <option value="Growatt SPH 8000TL3 BH" data-power="8">Growatt SPH 8000TL3 BH</option>
-      <option value="Deye SUN-8K-SG04LP3" data-power="8">Deye SUN-8K-SG04LP3</option>
-      <option value="Huawei SUN2000-10KTL" data-power="10">Huawei SUN2000-10KTL</option>
-      <option value="WEG SIW200H M105" data-power="10">WEG SIW200H M105</option>
-      <option value="Growatt MIN 5000TL-X" data-power="5">Growatt MIN 5000TL-X</option>
-      <option value="custom">Outro (digitar)</option>
-    </select>
-    <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none">
-    <label class="fl">Potência Total (kVp) <span class="auto-tag">calculado automaticamente</span></label>
-    <input class="fi" id="totalPower" placeholder="Ex: 5.50 kVp">
-    <label class="fl">Geração Mensal (kWh) <span class="auto-tag">calculado automaticamente</span></label>
-    <input class="fi" id="monthlyGen" placeholder="Ex: 720 kWh">
   </div>
 
   <div class="fs">
@@ -830,8 +831,8 @@ function buildInstallmentTable(baseVal){
 // GENERATE PROPOSAL
 // ═══════════════════════════════════════════
 function generateProposal(){
-  const get=id=>document.getElementById(id).value.trim();
-  const getN=id=>parseFloat(document.getElementById(id).value)||0;
+  const get=id=>{const el=document.getElementById(id);return el?el.value.trim():'';}
+  const getN=id=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:0;}
 
   const name      =get('clientName')||'Cliente';
   const addr      =get('clientAddr');
