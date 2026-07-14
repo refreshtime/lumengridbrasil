@@ -1338,7 +1338,7 @@ function generateProposal(){
       '</div>'+
       '<div class="sec-rule" style="margin:0 auto 24px"></div>'+
       '<div class="stitle">Formas de Pagamento</div>'+
-      '<div style="text-align:center;margin:0 -52px"><img src="imagens/Formas de pagamento LumenGrid.png" style="width:calc(100% + 104px);max-width:none;display:block"></div>'+
+      '<div style="text-align:center;margin:0 -52px"><img src="imagens/formas_pagamento.png" style="width:calc(100% + 104px);max-width:none;display:block"></div>'+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
@@ -1665,7 +1665,7 @@ async function downloadPDF(){
   const btn=document.getElementById('btnGerar');
   salvarHistoricoEBridge('solar');
   const name=(document.getElementById('clientName').value||'Cliente').trim();
-  const safeName=name.replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_')||'Cliente';
+  const safeName=(name.normalize('NFD').replace(/[\u0300-\u036f]/g,'')).replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_')||'Cliente';
   const filename='LUMENGRID_'+safeName+'.pdf';
   const pages=document.querySelectorAll('#preview .page');
   if(!pages.length)return;
