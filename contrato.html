@@ -531,6 +531,16 @@ function numPorExtensoInt(n){return numInt(n);}
   const el=document.getElementById('cNum');
   if(el&&!el.value)el.value='LG-'+y+'-'+n;
 })();
+
+// ── LIVE PREVIEW ─────────────────────────────────────────────────────────────
+(function(){
+  togglePayModo(); toggleTipoSistema();
+  let _lp;
+  function _regen(){ clearTimeout(_lp); _lp=setTimeout(generateContract,250); }
+  document.querySelector('.form-panel').addEventListener('input',_regen);
+  document.querySelector('.form-panel').addEventListener('change',_regen);
+})();
+// ─────────────────────────────────────────────────────────────────────────────
 </script>
 </body>
 </html>

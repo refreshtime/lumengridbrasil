@@ -1696,6 +1696,16 @@ document.querySelectorAll('input[name=vendedora]').forEach(r=>r.addEventListener
 document.getElementById('autonomySection').style.display='';
 renderEquipmentTable();
 renderAutonomyTable();
+
+// ── LIVE PREVIEW ─────────────────────────────────────────────────────────────
+(function(){
+  
+  let _lp;
+  function _regen(){ clearTimeout(_lp); _lp=setTimeout(generateProposal,250); }
+  document.querySelector('.form-panel').addEventListener('input',_regen);
+  document.querySelector('.form-panel').addEventListener('change',_regen);
+})();
+// ─────────────────────────────────────────────────────────────────────────────
 </script>
 </body>
 </html>
