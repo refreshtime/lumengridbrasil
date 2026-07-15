@@ -86,7 +86,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 /* PAGE 1: CAPA */
 .capa-pg{background:#111;min-height:1300px;display:flex;flex-direction:column;position:relative}
-.capa-bg{position:absolute;inset:0;z-index:0;background-image:url('imagens/familia.png');background-size:cover;background-position:center top}
+.capa-bg{position:absolute;inset:0;z-index:0;background-image:url('imagens/familia.jpg');background-size:cover;background-position:center top}
 .capa-ov{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(5,5,5,.5) 0%,rgba(5,5,5,.2) 20%,rgba(10,10,10,.7) 55%,rgba(10,10,10,.97) 78%,#0a0a0a 100%)}
 .capa-body{position:absolute;left:0;right:0;bottom:0;z-index:10;padding:0 60px 60px;display:flex;flex-direction:column}
 .ctag{display:inline-flex;align-self:flex-start;background:var(--or);color:#fff;font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:6px 16px;margin-bottom:28px}
@@ -570,7 +570,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 <script>
 const LOGOIMG='imagens/logo.png';
-const WALLBOXIMG='imagens/wallbox.png';
+const WALLBOXIMG='imagens/wallbox.jpg';
 
 const PARC_RATES=[
   {n:1,  acrescimo:0.0287,taxa:0.0287},
@@ -1088,7 +1088,7 @@ function generateProposal(){
         '</div>'+
       '</div>'+
       '<div class="hyb-tagline">Com a Lumen Grid, voc\u00ea tem <strong>controle total sobre sua energia.</strong></div>'+
-      '<img src="imagens/hibrido.png" style="width:100%;border-radius:8px;display:block;margin-top:24px">'+
+      '<img src="imagens/hibrido.jpg" style="width:100%;border-radius:8px;display:block;margin-top:24px">'+
       (()=>{const aut=getAutonomyFromEquipList();if(!aut.selected.length||!aut.hAll)return'';
       return'<div style="margin-top:20px">'+
         '<div style="font-size:11px;font-weight:700;color:var(--or);letter-spacing:1px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(232,100,26,.2)">AUTONOMIA ESTIMADA DA BATERIA — '+aut.batKwh+' kWh</div>'+
@@ -1428,7 +1428,7 @@ function generateProposal(){
     lbar(pg++,pageCount)+
     '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:20px 40px">'+
       '<div style="font-size:9px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:16px;text-align:center">FORMAS DE PAGAMENTO</div>'+
-      '<img src="imagens/formas_pagamento.png" style="width:100%;height:auto;display:block;object-fit:contain;max-height:900px">'+
+      '<img src="imagens/formas_pagamento.jpg" style="width:100%;height:auto;display:block;object-fit:contain;max-height:900px">'+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
@@ -1446,7 +1446,7 @@ function generateProposal(){
   '</div>';
 
   const pSteps='<div class="page" style="background:#0a0a0c;min-height:1000px;display:flex;flex-direction:column;position:relative;overflow:hidden">'+
-    '<div style="position:absolute;inset:0;background-image:url(\'imagens/instalador.png\');background-size:cover;background-position:center top;opacity:.22;z-index:0"></div>'+
+    '<div style="position:absolute;inset:0;background-image:url(\'imagens/instalador.jpg\');background-size:cover;background-position:center top;opacity:.22;z-index:0"></div>'+
     '<div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(10,10,12,.95) 48%,rgba(10,10,12,.6) 100%);z-index:1"></div>'+
     '<div class="grid-ov"></div>'+
     lbar(pg++,pageCount)+
