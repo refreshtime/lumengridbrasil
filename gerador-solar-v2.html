@@ -709,7 +709,8 @@ function addEquipRow(){
 renderAutonomyTable();
 }
 function recalcAutonomy(){
-  const kwh=parseFloat(document.getElementById('batteryKwh').value)||0;
+  const batEl=document.getElementById('batteryKwh');
+  const kwh=batEl?parseFloat(batEl.value)||0:0;
   const active=equipmentList.filter(e=>e.qty>0);
   const totS=active.reduce((s,e)=>s+e.power*e.qty,0);
   const badge=document.getElementById('equipAutonomyBadge');
@@ -720,7 +721,7 @@ function recalcAutonomy(){
 }
 
 let autoFilled={totalPower:false,monthlyGen:false};
-function onModModelChange(sel){const inp=document.getElementById('modModel');if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}else{inp.style.display='none';inp.value=sel.value;const pw=sel.options[sel.selectedIndex].dataset.power;if(pw)document.getElementById('modPower').value=pw;}}
+function onModModelChange(sel){const inp=document.getElementById('modModel');if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}else{inp.style.display='none';inp.value=sel.value;const pw=sel.options[sel.selectedIndex].dataset.power;if(pw){document.getElementById('modPower').value=pw;autoCalcSolar();}}}
 function onInvModelChange(sel){const inp=document.getElementById('invModel');if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}else{inp.style.display='none';inp.value=sel.value;}}
 function onBatModelChange(sel){const inp=document.getElementById('batModel');if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}else{inp.style.display='none';inp.value=sel.value;const kwh=sel.options[sel.selectedIndex]&&sel.options[sel.selectedIndex].dataset.kwh;if(kwh){const qty=parseInt(document.getElementById('batQty').value)||1;document.getElementById('batteryKwh').value=(parseFloat(kwh)*qty).toFixed(1);recalcAutonomy();}}}
 function onBatQtyChange(){const sel=document.getElementById('batModelSel');const kwh=sel&&sel.options[sel.selectedIndex]&&sel.options[sel.selectedIndex].dataset.kwh;if(kwh){const qty=parseInt(document.getElementById('batQty').value)||1;document.getElementById('batteryKwh').value=(parseFloat(kwh)*qty).toFixed(1);recalcAutonomy();}}
@@ -1324,6 +1325,8 @@ function autoCalcSolar(){
   const qty=parseFloat(document.getElementById('modQty').value)||0;
   const pwr=parseFloat(document.getElementById('modPower').value)||0;
   const precoKvp=parseFloat(document.getElementById('precoKvp').value)||3500;
+  const tpEl=document.getElementById('totalPower');
+  if(qty>0&&pwr>0){tpEl.value=(qty*pwr/1000).toFixed(2)+' kVp';}else{tpEl.value='';}
   const genEl=document.getElementById('monthlyGen');
   if(!genEl.dataset.manual&&qty>0){genEl.value=Math.round(qty*65);}
   const projEl=document.getElementById('projectValue');
