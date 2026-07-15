@@ -355,6 +355,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .fs-body.expanded{max-height:2000px;opacity:1}
 .req-star{color:#E8641A;font-weight:900}
 .auto-tag{font-size:9px;font-weight:400;color:rgba(255,255,255,.3);font-style:italic;text-transform:none;letter-spacing:0}
+.pay-img-wrap{flex:1;display:flex;flex-direction:column;min-height:0}
+@media(max-width:768px){.pay-img-wrap{min-height:unset;flex:none}}
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -749,82 +751,6 @@ function lbar(n,t){return'<div class="lbar"><div class="ll"><div><div class="lte
 function corners(){return'<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>';}
 function pfooter(today){return'<div class="pfooter"><span class="fbrand">LUMEN GRID &nbsp;&middot;&nbsp; ENERGIA INTELIGENTE</span><span class="flegal">Gerado em '+today+'</span><span class="fsite">lumengridbrasil.com.br</span></div>';}
 
-function buildChart(bill,eco,pv){
-  if(!bill)return'';
-  if(!eco)eco=bill*.85;
-  const YR=25,GR=.08,inv=pv||0;
-  // Annual spend arrays: sem solar vs com solar
-  const semA=[],comA=[];
-  for(let y=0;y<=YR;y++){const f=Math.pow(1+GR,y);semA.push(bill*12*f);comA.push((bill-eco)*12*f);}
-  const W=860,H=250,pL=80,pR=28,pT=28,pB=44,cW=W-pL-pR,cH=H-pT-pB;
-  const maxV=semA[YR]*1.08;
-  const tx=y=>pL+(y/YR)*cW,ty=v=>pT+cH-(v/maxV)*cH;
-  const pSem=semA.map((v,i)=>(i?'L':'M')+tx(i).toFixed(1)+','+ty(v).toFixed(1)).join(' ');
-  const pCom=comA.map((v,i)=>(i?'L':'M')+tx(i).toFixed(1)+','+ty(v).toFixed(1)).join(' ');
-  // Savings zone: area between the two curves
-  const savPath=pSem+' '+[...comA].reverse().map((v,i)=>'L'+tx(YR-i).toFixed(1)+','+ty(v).toFixed(1)).join(' ')+' Z';
-  // Area under com solar
-  const areaCom=pCom+' L'+tx(YR).toFixed(1)+','+(pT+cH)+' L'+pL+','+(pT+cH)+' Z';
-  const fmt=v=>'R$\u00a0'+Number(v).toLocaleString('pt-BR',{maximumFractionDigits:0});
-  // Grid lines
-  const yTicks=[0,.25,.5,.75,1].map(f=>{
-    const v=maxV*f,yp=ty(v),lb=v===0?'R$0':v>=1e6?'R$'+(v/1e6).toFixed(1)+'M':'R$'+(v/1e3).toFixed(0)+'k';
-    return'<text x="'+(pL-7)+'" y="'+(yp+4)+'" text-anchor="end" font-size="9" fill="#aaa">'+lb+'</text>'
-      +'<line x1="'+pL+'" y1="'+yp.toFixed(1)+'" x2="'+(W-pR)+'" y2="'+yp.toFixed(1)+'" stroke="#e8e8e8" stroke-width="0.8" stroke-dasharray="3,4"/>';
-  }).join('');
-  const xTicks=[0,5,10,15,20,25].map(y=>'<text x="'+tx(y).toFixed(1)+'" y="'+(pT+cH+18).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#aaa">'+(y===0?'Hoje':y+'a')+'</text>').join('');
-  // Payback marker
-  let pbMark='';
-  if(inv>0){
-    let cum=0;
-    for(let y=1;y<=YR;y++){cum+=eco*12*Math.pow(1+GR,y-1);
-      if(cum>=inv){const px=tx(y);
-        pbMark='<line x1="'+px.toFixed(1)+'" y1="'+pT+'" x2="'+px.toFixed(1)+'" y2="'+(pT+cH)+'" stroke="#E8641A" stroke-width="2" stroke-dasharray="5,3"/>'
-          +'<rect x="'+(px-34).toFixed(1)+'" y="'+(pT+5).toFixed(1)+'" width="68" height="17" rx="4" fill="#E8641A"/>'
-          +'<text x="'+px.toFixed(1)+'" y="'+(pT+17).toFixed(1)+'" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="800">PAYBACK '+y+'a</text>';
-        break;}}
-  }
-  // End-of-chart dots + value labels
-  const dS='<circle cx="'+tx(YR).toFixed(1)+'" cy="'+ty(semA[YR]).toFixed(1)+'" r="5" fill="#e74c3c" stroke="#fff" stroke-width="2"/>';
-  const dC='<circle cx="'+tx(YR).toFixed(1)+'" cy="'+ty(comA[YR]).toFixed(1)+'" r="5" fill="#E8641A" stroke="#fff" stroke-width="2"/>';
-  const lS='<text x="'+(tx(YR)-10).toFixed(1)+'" y="'+(ty(semA[YR])-10).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#e74c3c" font-weight="800">'+fmt(semA[YR])+'/ano</text>';
-  const lC='<text x="'+(tx(YR)-10).toFixed(1)+'" y="'+(ty(comA[YR])-10).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#E8641A" font-weight="800">'+fmt(comA[YR])+'/ano</text>';
-  // Inline curve labels at year 7
-  const ly=7;
-  const iS='<rect x="'+(tx(ly)+6).toFixed(1)+'" y="'+(ty(semA[ly])-13).toFixed(1)+'" width="74" height="15" rx="3" fill="#e74c3c"/>'
-    +'<text x="'+(tx(ly)+43).toFixed(1)+'" y="'+(ty(semA[ly])-2).toFixed(1)+'" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="800">SEM SOLAR \u2191</text>';
-  const iC='<rect x="'+(tx(ly)+6).toFixed(1)+'" y="'+(ty(comA[ly])+3).toFixed(1)+'" width="74" height="15" rx="3" fill="#E8641A"/>'
-    +'<text x="'+(tx(ly)+43).toFixed(1)+'" y="'+(ty(comA[ly])+14).toFixed(1)+'" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="800">COM SOLAR \u2193</text>';
-  // Total savings
-  let totalSav=0;
-  for(let y=0;y<=YR;y++)totalSav+=eco*12*Math.pow(1+GR,y);
-  const netSav=totalSav-inv;
-  return'<div class="chart-wrap">'
-    +'<div class="chart-title">Custo Anual com Energia &mdash; Compara\u00e7\u00e3o 25 Anos</div>'
-    +'<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block">'
-      +'<defs>'
-        +'<linearGradient id="gSav" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#27ae60" stop-opacity=".2"/><stop offset="100%" stop-color="#27ae60" stop-opacity=".03"/></linearGradient>'
-        +'<linearGradient id="gCom" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8641A" stop-opacity=".14"/><stop offset="100%" stop-color="#E8641A" stop-opacity=".02"/></linearGradient>'
-      +'</defs>'
-      +yTicks+xTicks
-      +'<path d="'+savPath+'" fill="url(#gSav)"/>'
-      +'<path d="'+areaCom+'" fill="url(#gCom)"/>'
-      +'<path d="'+pSem+'" fill="none" stroke="#e74c3c" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>'
-      +'<path d="'+pCom+'" fill="none" stroke="#E8641A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>'
-      +pbMark+dS+dC+lS+lC+iS+iC
-    +'</svg>'
-    +'<div class="chart-legend">'
-      +'<div class="cleg"><div class="cleg-dot" style="background:#e74c3c"></div><strong>Sem Solar</strong> &mdash; conta crescendo com infla\u00e7\u00e3o energ\u00e9tica (+8%/ano)</div>'
-      +'<div class="cleg"><div class="cleg-dot" style="background:#E8641A"></div><strong>Com Lumen Grid</strong> &mdash; custo residual muito reduzido</div>'
-      +'<div class="cleg"><div class="cleg-dot" style="background:#27ae60"></div>Zona de economia acumulada</div>'
-    +'</div>'
-    +'<div class="chart-summary">'
-      +'<div class="csumitem"><div class="csum-val red">'+fmt(semA[YR])+'/ano</div><div class="csum-lbl">Sem solar &mdash; custo no ano 25</div></div>'
-      +'<div class="csumitem"><div class="csum-val">'+fmt(comA[YR])+'/ano</div><div class="csum-lbl">Com solar &mdash; custo no ano 25</div></div>'
-      +'<div class="csumitem"><div class="csum-val green">'+fmt(netSav>0?netSav:totalSav)+'</div><div class="csum-lbl">Economia l\u00edquida em 25 anos</div></div>'
-    +'</div>'
-  +'</div>';
-}
 
 function buildEquipSection(hasBat,batKwh){
   const active=equipmentList.filter(e=>e.qty>0);if(active.length===0)return'';
@@ -914,13 +840,7 @@ function generateProposal(){
   const hasEquip=activeEquip.length>0;
 
   let pg=1;
-  let pageCount=6;
-  if(hasWallbox)pageCount++;
-  if(hasBat)pageCount++;
-  if(isEcoMode)pageCount+=2; // pSolucao + pUpgrade for solar
-  if(isEcoMode&&bill&&ecoMonthly)pageCount++; // pChart
-  pageCount++; // pResumo always
-  pageCount++; // pPagamento always
+  const pageCount=5;
 
   const pctEco=bill&&ecoMonthly?Math.round((ecoMonthly/bill)*100):0;
   const leadText=mensagem||(
@@ -1000,297 +920,32 @@ function generateProposal(){
     pfooter(today)+
   '</div>';
 
-  // PAGE 4: SISTEMA HÍBRIDO
-  const p4='<div class="page page-light">'+
-    '<div class="grid-ov"></div>'+
-    '<div class="corner tl"></div><div class="corner tr"></div>'+
-    lbar(pg++,pageCount)+
-    '<div class="plc">'+
-      '<div style="display:inline-flex;align-items:center;gap:10px;background:rgba(232,100,26,.12);border:1.5px solid rgba(232,100,26,.35);border-radius:20px;padding:6px 16px;margin-bottom:18px">'+
-        '<span style="font-size:14px">\u26a1</span>'+
-        '<span style="font-size:9px;font-weight:800;letter-spacing:2.5px;color:var(--or);text-transform:uppercase">Sistema H\u00edbrido</span>'+
-      '</div>'+
-      '<h2 class="sec-h2">Por que <span style="color:var(--or)">Bateria</span> e n\u00e3o Gerador?</h2>'+
-      '<div class="sec-rule"></div>'+
-      '<div class="hyb-grid">'+
-        '<div class="hyb-card hyb-gen">'+
-          '<div class="hyb-head">\ud83d\udd34 Gerador</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Alto ru\u00eddo, vibra\u00e7\u00e3o e inc\u00f4modo constante</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Manuten\u00e7\u00e3o cont\u00ednua: \u00f3leo, filtros e combust\u00edvel</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Demora na partida e troca manual</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Alto custo de opera\u00e7\u00e3o e abastecimento</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Energia limitada ao combust\u00edvel estocado</div>'+
-          '<div class="hyb-item"><span class="dot-red"></span>Equipamento volumoso que compromete o espa\u00e7o e a est\u00e9tica</div>'+
-        '</div>'+
-        '<div class="hyb-card hyb-bat">'+
-          '<div class="hyb-head">\ud83d\udd0b Bateria Solar</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Opera\u00e7\u00e3o completamente silenciosa</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Zero manuten\u00e7\u00e3o</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Transi\u00e7\u00e3o instant\u00e2nea e autom\u00e1tica</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Otimiza\u00e7\u00e3o inteligente do uso de energia</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Energia cont\u00ednua e expans\u00edvel (solar + rede)</div>'+
-          '<div class="hyb-item"><span class="dot-or"></span>Solu\u00e7\u00e3o discreta, moderna e de alto padr\u00e3o</div>'+
-        '</div>'+
-      '</div>'+
-      '<div class="hyb-tagline">Com a Lumen Grid, voc\u00ea tem <strong>controle total sobre sua energia.</strong></div>'+
-      '<img src="imagens/hibrido.jpg" style="width:100%;border-radius:8px;display:block;margin-top:24px">'+
-      (()=>{const aut=getAutonomyFromEquipList();if(!aut.selected.length||!aut.hAll)return'';
-      return'<div style="margin-top:20px">'+
-        '<div style="font-size:11px;font-weight:700;color:var(--or);letter-spacing:1px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(232,100,26,.2)">AUTONOMIA ESTIMADA DA BATERIA — '+aut.batKwh+' kWh</div>'+
-        '<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px">'+
-          '<thead><tr style="background:rgba(232,100,26,.08)">'+
-            '<th style="padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.5px">EQUIPAMENTO</th>'+
-            '<th style="padding:7px 10px;text-align:center;font-size:9px;font-weight:700">QTD</th>'+
-            '<th style="padding:7px 10px;text-align:center;font-size:9px;font-weight:700">POT. (W)</th>'+
-            '<th style="padding:7px 10px;text-align:center;font-size:9px;font-weight:700">USO (%)</th>'+
-            '<th style="padding:7px 10px;text-align:center;font-size:9px;font-weight:700">CONSUMO</th>'+
-          '</tr></thead>'+
-          '<tbody>'+aut.selected.map(eq=>
-            '<tr style="border-bottom:1px solid rgba(255,255,255,.05)">'+
-            '<td style="padding:6px 10px;color:#333">'+eq.name+'</td>'+
-            '<td style="padding:6px 10px;text-align:center">'+eq.qty+'</td>'+
-            '<td style="padding:6px 10px;text-align:center">'+eq.power+'</td>'+
-            '<td style="padding:6px 10px;text-align:center">'+eq.duty+'%</td>'+
-            '<td style="padding:6px 10px;text-align:center;font-weight:600">'+(eq.totalW).toFixed(0)+' W</td>'+
-            '</tr>'
-          ).join('')+'</tbody>'+
-        '</table>'+
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
-          '<div style="padding:14px;background:rgba(232,100,26,.1);border:2px solid rgba(232,100,26,.3);border-radius:10px;text-align:center">'+
-            '<div style="font-size:9px;font-weight:700;color:rgba(232,100,26,.8);margin-bottom:4px">TODOS OS EQUIPAMENTOS LIGADOS</div>'+
-            '<div style="font-size:28px;font-weight:900;color:var(--or)">'+aut.hAll+'h</div>'+
-            '<div style="font-size:9px;color:#666">'+aut.totalKw.toFixed(2)+' kW consumo total</div>'+
-          '</div>'+
-          '<div style="padding:14px;background:rgba(232,100,26,.05);border:1px solid rgba(232,100,26,.15);border-radius:10px;text-align:center">'+
-            '<div style="font-size:9px;font-weight:700;color:rgba(232,100,26,.6);margin-bottom:4px">USO ALTERNADO (50% da carga)</div>'+
-            '<div style="font-size:28px;font-weight:900;color:var(--or)">'+aut.hAlt+'h</div>'+
-            '<div style="font-size:9px;color:#666">equipamentos em uso intercalado</div>'+
-          '</div>'+
-        '</div>'+
-      '</div>';
-      })()+
-    '</div>'+
-    '<div class="corner bl"></div><div class="corner br"></div>'+
-    pfooter(today)+
-  '</div>';
-
-  // PAGE WALLBOX (optional)
-  const pWallbox=hasWallbox?'<div class="page upsell-pg">'+
-    '<div class="grid-ov"></div>'+
-    '<div class="corner tl"></div><div class="corner tr"></div>'+
-    lbar(pg++,pageCount)+
-    '<div class="upsell-hero">'+
-      '<div class="upsell-left">'+
-        '<span class="upsell-tag">Upgrade</span>'+
-        '<h2 class="upsell-h1">Torne sua solu\u00e7\u00e3o ainda mais <span>completa</span></h2>'+
-        '<p class="upsell-sub">Aproveite a instala\u00e7\u00e3o do sistema solar para adicionar um carregador el\u00e9trico veicular. Carregue seu carro com a energia que voc\u00ea mesmo gera — <strong>custo zero.</strong></p>'+
-        '<div style="display:flex;gap:12px;flex-wrap:wrap">'+
-          '<div style="background:rgba(232,100,26,.15);border:1px solid rgba(232,100,26,.3);border-radius:8px;padding:12px 16px">'+
-            '<div style="font-size:10px;color:rgba(232,100,26,.8);font-weight:700;letter-spacing:1px;margin-bottom:4px">CARREGADOR</div>'+
-            '<div style="font-size:22px;font-weight:900;color:#fff">'+wallboxPower+'</div>'+
-          '</div>'+
-          (wallboxPrice?'<div style="background:rgba(232,100,26,.15);border:1px solid rgba(232,100,26,.3);border-radius:8px;padding:12px 16px"><div style="font-size:10px;color:rgba(232,100,26,.8);font-weight:700;letter-spacing:1px;margin-bottom:4px">POR APENAS</div><div style="font-size:22px;font-weight:900;color:#E8641A">'+fmtBRL(wallboxPrice)+'</div>'+(wallboxNote?'<div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:4px">'+wallboxNote+'</div>':'')+'</div>':'')+
-        '</div>'+
-      '</div>'+
-      '<div class="upsell-right"><img src="'+WALLBOXIMG+'" alt="Inversor e Wallbox Lumen Grid"/></div>'+
-    '</div>'+
-    '<div class="upsell-cards">'+
-      '<div class="upsell-card"><div class="uc-icon">\u26a1</div><div class="uc-title">Carga Inteligente</div><div class="uc-desc">O sistema gerencia a carga do ve\u00edculo priorizando a energia solar gerada — carregamento gratuito durante o dia.</div></div>'+
-      '<div class="upsell-card" style="border-right:none"><div class="uc-icon">\ud83d\udc9a</div><div class="uc-title">Zero Emiss\u00f5es</div><div class="uc-desc">Combine energia solar com mobilidade el\u00e9trica e elimine completamente a depend\u00eancia de combust\u00edveis f\u00f3sseis.</div></div>'+
-    '</div>'+
-    '<div class="corner bl"></div><div class="corner br"></div>'+
-    pfooter(today)+
-  '</div>':'';
-
-  // PAGE SOLUÇÃO SOLAR — specs + projeção visual + chart
-  // Spec hierarchy: hero (kWp) + secondary row
+  // PAGE GARANTIAS + EQUIPAMENTOS
   const kVpNum=modQty&&modPower?(modQty*modPower/1000).toFixed(2):'';
-  const kVpUnt=kVpNum?'kWp':'';
-  const heroVal=kVpNum||totalPwDisp||'—';
-  const heroUnit=kVpNum?'kWp':'';
-  const heroSub=modQty&&modPower?modQty+' módulos × '+modPower+' W':'';
-  const heroBill=bill?'Conta atual: '+fmtBRL(bill)+'/mês':'';
-  const specHeroHtml=
-    '<div class="spec-hero">'+
-      '<div>'+
-        '<div class="sh-badge">Potência do Sistema</div>'+
-        '<div class="sh-val">'+(kVpNum||totalPwDisp||'—')+(kVpNum?'<span class="sh-unit">kWp</span>':'')+'</div>'+
-        (heroSub?'<div class="sh-sub">'+heroSub+'</div>':'')+
-      '</div>'+
-      (genKwh?
-        '<div class="sh-right">'+
-          '<div class="sh-right-title">Geração Mensal</div>'+
-          '<div class="sh-right-val">'+genKwh+'</div>'+
-          '<div class="sh-right-sub">estimativa mensal</div>'+
-        '</div>':'')+
-      (ecoMonthly?
-        '<div class="sh-right">'+
-          '<div class="sh-right-title">Economia Mensal</div>'+
-          '<div class="sh-right-val" style="color:var(--or)">'+fmtBRL(ecoMonthly)+'</div>'+
-          '<div class="sh-right-sub">'+(heroBill||'redução imediata')+'</div>'+
-        '</div>':'')+
-    '</div>';
-  const specRowHtml=
-    '<div class="spec-row">'+
-      (invQty?'<div class="spec-sm"><div class="ssm-lbl">Inversor</div><div class="ssm-val">'+(invPower?invPower+' kW':'')+'</div><div class="ssm-sub">'+(invModel||'')+(invQty>1?' · '+invQty+' un.':'')+'</div></div>':'')+
-      '<div class="spec-sm"><div class="ssm-lbl">Instalação</div><div class="ssm-val">'+instType+'</div><div class="ssm-sub">'+conexao+'</div></div>'+
-      (paybackStr?'<div class="spec-sm"><div class="ssm-lbl">Retorno Estimado</div><div class="ssm-val" style="color:var(--or);font-size:15px">'+paybackStr+'</div><div class="ssm-sub">payback do investimento</div></div>':'<div class="spec-sm"><div class="ssm-lbl">Vida Útil</div><div class="ssm-val">25 anos</div><div class="ssm-sub">garantia dos painéis</div></div>')+
-    '</div>';
-
-  const eco1=ecoMonthly?Math.round(ecoMonthly*12):0;
-  const eco5=ecoMonthly?Math.round(ecoMonthly*60):0;
-  const eco25=ecoMonthly?Math.round(ecoMonthly*300):0;
-
-  const pSolucao=isEcoMode?'<div class="page page-light">'+
-    '<div class="grid-ov"></div>'+
-    '<div class="corner tl"></div><div class="corner tr"></div>'+
-    lbar(pg++,pageCount)+
-    '<div class="plc">'+
-      '<div class="sec-eyebrow">Sua Economia com Energia Solar</div>'+
-      '<h2 class="sec-h2">O que a Lumen Grid vai <span style="color:var(--or)">economizar para voc\u00ea</span></h2>'+
-      '<div class="sec-rule"></div>'+
-      // Spec cards compactos
-      '<div class="spec-block">'+specHeroHtml+specRowHtml+'</div>'+
-      // Projeção big numbers
-      (ecoMonthly?
-        '<div style="background:var(--lbg);border:1.5px solid var(--lborder);border-radius:12px;padding:20px 24px;margin-bottom:20px">'+
-          '<div style="font-size:9px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:16px">Proje\u00e7\u00e3o de Economia &mdash; '+name+'</div>'+
-          '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0">'+
-            '<div style="padding:0 16px 0 0;border-right:1px solid var(--lborder)">'+
-              '<div style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Por M\u00eas</div>'+
-              '<div style="font-size:24px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">'+fmtBRL(ecoMonthly)+'</div>'+
-              '<div style="font-size:9px;color:var(--lmuted);margin-top:4px">redu\u00e7\u00e3o imediata</div>'+
-            '</div>'+
-            '<div style="padding:0 16px;border-right:1px solid var(--lborder)">'+
-              '<div style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Em 1 Ano</div>'+
-              '<div style="font-size:24px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">'+fmtBRL(eco1)+'</div>'+
-              '<div style="font-size:9px;color:var(--lmuted);margin-top:4px">em 12 meses</div>'+
-            '</div>'+
-            '<div style="padding:0 16px;border-right:1px solid var(--lborder)">'+
-              '<div style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Em 5 Anos</div>'+
-              '<div style="font-size:24px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">'+fmtBRL(eco5)+'</div>'+
-              '<div style="font-size:9px;color:var(--lmuted);margin-top:4px">acumulado</div>'+
-            '</div>'+
-            '<div style="padding:0 0 0 16px">'+
-              '<div style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Em 25 Anos</div>'+
-              '<div style="font-size:24px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">'+fmtBRL(eco25)+'</div>'+
-              '<div style="font-size:9px;color:var(--lmuted);margin-top:4px">vida \u00fatil do sistema</div>'+
-            '</div>'+
-          '</div>'+
-          (paybackStr?'<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--lborder);display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--lmuted)">Retorno do investimento estimado:</span><span style="font-size:14px;font-weight:900;color:var(--or)">'+paybackStr+'</span></div>':'')+
-        '</div>':'')+ 
-    '</div>'+
-    '<div class="corner bl"></div><div class="corner br"></div>'+
-    pfooter(today)+
-  '</div>':'';
-
-  // PAGE GRÁFICO — projeção 25 anos (só quando há dados suficientes)
-  const pChart=(isEcoMode&&bill&&ecoMonthly)?'<div class="page page-light">'+
-    '<div class="grid-ov"></div>'+
-    '<div class="corner tl"></div><div class="corner tr"></div>'+
-    lbar(pg++,pageCount)+
-    '<div class="plc">'+
-      '<div class="sec-eyebrow">Proje\u00e7\u00e3o de Economia</div>'+
-      '<h2 class="sec-h2">25 anos de <span style="color:var(--or)">economia projetada</span></h2>'+
-      '<div class="sec-rule"></div>'+
-      buildChart(bill,ecoMonthly,projectVal)+
-    '</div>'+
-    '<div class="corner bl"></div><div class="corner br"></div>'+
-    pfooter(today)+
-  '</div>':'';
-
-  // PAGE UPGRADE — upsell bateria para propostas solar
-  const pUpgrade=isEcoMode?'<div class="page page-light" style="min-height:1100px">'+
-    '<div class="grid-ov"></div>'+
-    '<div class="corner tl"></div><div class="corner tr"></div>'+
-    lbar(pg++,pageCount)+
-    '<div class="plc">'+
-      // Título impactante
-      '<div style="text-align:center;padding:8px 0 24px">'+
-        '<div style="font-size:11px;font-weight:800;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:12px">Deixe Sua Solu\u00e7\u00e3o</div>'+
-        '<div style="font-family:Montserrat,sans-serif;font-size:46px;font-weight:900;color:var(--ltext);line-height:1;text-transform:uppercase;margin-bottom:4px">Ainda Mais</div>'+
-        '<div style="font-family:Montserrat,sans-serif;font-size:52px;font-weight:900;color:var(--or);line-height:1;text-transform:uppercase;font-style:italic">Completa</div>'+
-      '</div>'+
-      '<div style="width:60px;height:3px;background:var(--or);border-radius:2px;margin:0 auto 28px"></div>'+
-      // Card principal da oferta
-      '<div style="border:2px solid rgba(232,100,26,.4);border-radius:14px;overflow:hidden;margin-bottom:20px">'+
-        // Header do card
-        '<div style="background:rgba(232,100,26,.08);border-bottom:1px solid rgba(232,100,26,.2);padding:16px 24px;display:flex;align-items:center;gap:12px">'+
-          '<div style="width:36px;height:36px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0">+</div>'+
-          '<div>'+
-            '<div style="font-size:14px;font-weight:800;color:var(--ltext)">Adi\u00e7\u00e3o de Baterias para Sistema H\u00edbrido</div>'+
-            '<div style="font-size:11px;color:var(--lmuted)">backup de energia para sua casa</div>'+
-          '</div>'+
-        '</div>'+
-        // Corpo do card
-        '<div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
-          // Esquerda: preço
-          '<div style="border-right:1px solid rgba(232,100,26,.15);padding-right:24px">'+
-            '<div style="font-size:11px;font-weight:700;color:var(--lmuted);letter-spacing:1px;margin-bottom:6px">POR APENAS</div>'+
-            '<div style="font-size:38px;font-weight:900;color:var(--or);line-height:1;font-family:Montserrat,sans-serif">A partir de</div>'+
-            '<div style="font-size:34px;font-weight:900;color:var(--or);line-height:1.1;font-family:Montserrat,sans-serif">R$ 29.000,00<sup style="font-size:16px">*</sup></div>'+
-            '<div style="margin-top:14px;padding:10px 14px;background:rgba(232,100,26,.06);border-radius:8px;font-size:11px;color:var(--lmuted);line-height:1.5">'+
-              '<strong style="color:var(--ltext)">Inclui:</strong><br>'+
-              '&#x2022; Substitui\u00e7\u00e3o pelo Inversor H\u00edbrido<br>'+
-              '&#x2022; Bateria de L\u00edtio 5 kWh<sup style="font-size:8px">**</sup><br>'+
-              '&#x2022; Instala\u00e7\u00e3o completa'+
-            '</div>'+
-          '</div>'+
-          // Direita: benefícios
-          '<div>'+
-            '<div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--or);text-transform:uppercase;margin-bottom:12px">Benef\u00edcios</div>'+
-            [
-              ['\u26a1','Autonomia de 6 a 12 horas','Para cargas essenciais durante quedas de energia.'],
-              ['\ud83c\udfe0','Equipamentos Protegidos','Geladeira, ilumina\u00e7\u00e3o, Wi-Fi, alarme e c\u00e2meras funcionando.'],
-              ['\ud83d\udee1','Independ\u00eancia Real','Sem depender 100% da concession\u00e1ria de energia.'],
-            ].map(([ic,t,d])=>
-              '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px">'+
-                '<div style="font-size:16px;flex-shrink:0;margin-top:1px">'+ic+'</div>'+
-                '<div><div style="font-size:12px;font-weight:700;color:var(--ltext);margin-bottom:2px">'+t+'</div>'+
-                '<div style="font-size:10px;color:var(--lmuted);line-height:1.5">'+d+'</div></div>'+
-              '</div>'
-            ).join('')+
-          '</div>'+
-        '</div>'+
-      '</div>'+
-      // Precisa de mais autonomia
-      '<div style="padding:18px 22px;border:1.5px solid var(--lborder);border-radius:12px;display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;background:var(--lbg)">'+
-        '<div style="font-size:22px;flex-shrink:0">\ud83d\udca1</div>'+
-        '<div>'+
-          '<div style="font-size:13px;font-weight:800;color:var(--ltext);margin-bottom:4px">Precisa de mais autonomia?</div>'+
-          '<div style="font-size:11px;color:var(--lmuted);line-height:1.6">Desenvolvemos uma solu\u00e7\u00e3o personalizada de acordo com suas cargas, tempo de backup desejado e necessidades espec\u00edficas. Consulte nossa equipe para dimensionar o sistema ideal para voc\u00ea.</div>'+
-        '</div>'+
-      '</div>'+
-      // CTA pill
-      '<div style="text-align:center;margin-bottom:18px">'+
-        '<div style="display:inline-block;background:var(--ltext);color:#fff;padding:14px 28px;border-radius:30px;font-size:12px;font-weight:700;line-height:1.4;text-align:center">'+
-          'Para uma proposta mais detalhada ou mais informa\u00e7\u00f5es<br>envie sua necessidade ao consultor: <span style="color:var(--or)">'+vendFone+'</span>'+
-        '</div>'+
-      '</div>'+
-      // Disclaimers
-      '<div style="font-size:9px;color:var(--lmuted);line-height:1.6;padding:12px;background:var(--lbg);border-radius:8px;border:1px solid var(--lborder)">'+
-        '* Adquirindo em conjunto com o sistema fotovolt\u00e1ico. Pre\u00e7o sujeito a altera\u00e7\u00e3o conforme configura\u00e7\u00e3o do sistema.<br>'+
-        '** A autonomia pode variar de acordo com o consumo e os equipamentos conectados ao sistema.'+
-      '</div>'+
-    '</div>'+
-    '<div class="corner bl"></div><div class="corner br"></div>'+
-    pfooter(today)+
-  '</div>':'';
-
-    // PAGE GARANTIAS + EQUIPAMENTOS
   // spec table rows from form values
   const td=(txt,bold)=>'<td style="padding:8px 12px;font-size:11px;'+(bold?'font-weight:700;color:var(--ltext)':'color:var(--lmuted)')+';border-bottom:1px solid #f0f0f0">'+txt+'</td>';
   const tr3=(a,b,c)=>'<tr>'+td(a)+td(b)+td(c,true)+'</tr>';
+  const trc=(a,c)=>'<tr>'+
+    '<td style="padding:8px 12px;font-size:11px;color:var(--lmuted);border-bottom:1px solid #f0f0f0">'+a+'</td>'+
+    '<td style="padding:8px 12px;font-size:13px;color:#27ae60;text-align:center;font-weight:700;border-bottom:1px solid #f0f0f0">&#10003;</td>'+
+    '<td style="padding:8px 12px;font-size:11px;font-weight:700;color:var(--ltext);border-bottom:1px solid #f0f0f0">'+c+'</td>'+
+  '</tr>';
+  const kVpHeroRow=kVpNum?
+    '<tr style="background:rgba(232,100,26,.07)">'+
+      '<td style="padding:10px 12px;font-size:11px;font-weight:800;color:var(--or);border-bottom:2px solid rgba(232,100,26,.18)">Sistema Fotovoltaico</td>'+
+      '<td style="padding:10px 12px;font-size:13px;font-weight:900;color:var(--or);text-align:center;border-bottom:2px solid rgba(232,100,26,.18)">'+kVpNum+' kWp</td>'+
+      '<td style="padding:10px 12px;font-size:11px;font-weight:700;color:var(--or);border-bottom:2px solid rgba(232,100,26,.18)">'+(modQty&&modPower?modQty+' m\u00f3dulos \u00d7 '+modPower+' W':'')+'</td>'+
+    '</tr>':'';
   const specRows=
-    
-    (modQty&&modModel?tr3('Módulos Fotovoltaicos',modQty+' un.',modModel+(modPower?' · '+modPower+' W':'')):'')+
-    (invQty?tr3(invQty>1?'Inversores On-Grid':'Inversor On-Grid',invQty+' un.',(invModel||'Inversor String')+(invPower?' · '+invPower+' kW':'')):'')+
-    tr3('Estrutura de Fixação','1 un.','Alumínio anodizado — conforme projeto')+
-    tr3('Cabeamento CC / CA','conforme projeto','Fio solar 6mm² certificado ABNT')+
-    tr3('String Box CC','1 un.','Proteção com DPS e fusíveis')+
-    tr3('Sistema de Monitoramento','1 un.','App em tempo real (geração/consumo)')+
-    tr3('ART / RRT','1 un.','Engenheiro responsável CREA')+
-    tr3('Homologação','1 un.','Processo completo junto à concessionária');
+    kVpHeroRow+
+    (modQty&&modModel?tr3('M\u00f3dulos Fotovoltaicos',modQty+' un.',modModel+(modPower?' \u00b7 '+modPower+' W':'')):'')+
+    (invQty?tr3(invQty>1?'Inversores On-Grid':'Inversor On-Grid',invQty+' un.',(invModel||'Inversor String')+(invPower?' \u00b7 '+invPower+' kW':'')):'')+
+    trc('Estrutura de Fixa\u00e7\u00e3o','Alum\u00ednio anodizado \u2014 conforme projeto')+
+    trc('Cabeamento CC / CA','Fio solar 6mm\u00b2 certificado ABNT')+
+    trc('String Box CC','Prote\u00e7\u00e3o com DPS e fus\u00edveis')+
+    trc('Sistema de Monitoramento','App em tempo real (gera\u00e7\u00e3o/consumo)')+
+    trc('ART / RRT','Engenheiro respons\u00e1vel CREA')+
+    trc('Homologa\u00e7\u00e3o','Processo completo junto \u00e0 concession\u00e1ria');
 
   const isMicro=/micro|hoymiles|mi-/i.test(invModel);
   const warRowsGar=[
@@ -1359,192 +1014,78 @@ function generateProposal(){
   '</div>';
 
 
-  // PAGE INVESTIMENTO
-  const pInv='<div class="page page-light" style="display:flex;flex-direction:column">'+
+  // PAGE INVESTIMENTO + FORMAS DE PAGAMENTO (combinada)
+  const pInvPag='<div class="page page-light" style="display:flex;flex-direction:column">'+
     '<div class="grid-ov"></div>'+
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
-    '<div class="plc" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:36px">'+
+    '<div class="plc" style="flex:1;display:flex;flex-direction:column;gap:18px">'+
       '<div>'+
         '<div class="sec-eyebrow">Investimento</div>'+
         '<h2 class="sec-h2">Seu investimento em <span style="color:var(--or)">energia solar</span></h2>'+
         '<div class="sec-rule"></div>'+
       '</div>'+
-      '<div style="text-align:center;padding:38px 24px;border:2px solid rgba(232,100,26,.2);border-radius:16px;background:linear-gradient(135deg,rgba(232,100,26,.04),rgba(232,100,26,.08));position:relative;overflow:hidden">'+
+      '<div style="text-align:center;padding:28px 24px;border:2px solid rgba(232,100,26,.2);border-radius:16px;background:linear-gradient(135deg,rgba(232,100,26,.04),rgba(232,100,26,.08));position:relative;overflow:hidden">'+
         '<div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(232,100,26,.07)"></div>'+
-        '<div style="position:absolute;bottom:-50px;left:-50px;width:180px;height:180px;border-radius:50%;background:rgba(232,100,26,.05)"></div>'+
-        '<div style="font-size:10px;font-weight:800;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:12px;position:relative;z-index:1">Investimento Total</div>'+
-        '<div style="font-size:62px;font-weight:900;color:var(--ltext);line-height:1;font-family:Montserrat,sans-serif;position:relative;z-index:1">'+(projectVal?fmtBRL(projectVal):'<span style="font-size:30px;color:var(--lmuted)">A consultar</span>')+'</div>'+
-        (paybackStr?'<div style="margin-top:16px;display:inline-flex;align-items:center;gap:10px;background:rgba(232,100,26,.12);border:1.5px solid rgba(232,100,26,.35);border-radius:30px;padding:8px 22px;position:relative;z-index:1"><span style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase">Retorno do investimento em</span><span style="font-size:18px;font-weight:900;color:var(--or)">'+paybackStr+'</span></div>':'')+
-        '<div style="font-size:10px;color:var(--lmuted);margin-top:14px;position:relative;z-index:1">Proposta v\u00e1lida at\u00e9 <strong style="color:var(--ltext)">'+validUntil+'</strong> &middot; '+instType+'</div>'+
+        '<div style="font-size:10px;font-weight:800;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:10px;position:relative;z-index:1">Investimento Total</div>'+
+        '<div style="font-size:54px;font-weight:900;color:var(--ltext);line-height:1;font-family:Montserrat,sans-serif;position:relative;z-index:1">'+(projectVal?fmtBRL(projectVal):'<span style="font-size:28px;color:var(--lmuted)">A consultar</span>')+'</div>'+
+        (paybackStr?'<div style="margin-top:12px;display:inline-flex;align-items:center;gap:10px;background:rgba(232,100,26,.12);border:1.5px solid rgba(232,100,26,.35);border-radius:30px;padding:7px 20px;position:relative;z-index:1"><span style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase">Retorno do investimento em</span><span style="font-size:16px;font-weight:900;color:var(--or)">'+paybackStr+'</span></div>':'')+
+        '<div style="font-size:10px;color:var(--lmuted);margin-top:10px;position:relative;z-index:1">Proposta v\u00e1lida at\u00e9 <strong style="color:var(--ltext)">'+validUntil+'</strong> \u00b7 '+instType+'</div>'+
       '</div>'+
-      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">'+
-        '<div style="text-align:center;padding:24px 12px;background:var(--lbg);border:1.5px solid var(--lborder);border-top:4px solid var(--or);border-radius:12px">'+
-          '<div style="font-size:21px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif;line-height:1">'+(ecoMonthly?fmtBRL(ecoMonthly):'—')+'</div>'+
-          '<div style="font-size:9px;font-weight:700;color:var(--lmuted);margin-top:7px;text-transform:uppercase;letter-spacing:1px">Economia / m\u00eas</div>'+
-        '</div>'+
-        '<div style="text-align:center;padding:24px 12px;background:var(--lbg);border:1.5px solid var(--lborder);border-top:4px solid var(--or);border-radius:12px">'+
-          '<div style="font-size:21px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif;line-height:1">'+(totalPwDisp||kVp||'—')+'</div>'+
-          '<div style="font-size:9px;font-weight:700;color:var(--lmuted);margin-top:7px;text-transform:uppercase;letter-spacing:1px">Pot\u00eancia instalada</div>'+
-        '</div>'+
-        '<div style="text-align:center;padding:24px 12px;background:var(--lbg);border:1.5px solid var(--lborder);border-top:4px solid var(--or);border-radius:12px">'+
-          '<div style="font-size:21px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif;line-height:1">'+(genKwh||'—')+'</div>'+
-          '<div style="font-size:9px;font-weight:700;color:var(--lmuted);margin-top:7px;text-transform:uppercase;letter-spacing:1px">Gera\u00e7\u00e3o / m\u00eas</div>'+
-        '</div>'+
-      '</div>'+
-      '<div style="padding:22px 28px;background:var(--ltext);border-radius:12px;text-align:center">'+
-        '<div style="font-size:15px;font-weight:800;color:#fff;line-height:1.5;margin-bottom:6px">\u201cEnergia solar n\u00e3o \u00e9 um gasto.<br><span style="color:var(--or)">\u00c9 o melhor investimento que voc\u00ea far\u00e1.\u201d</span></div>'+
-        '<div style="font-size:9px;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase">Lumen Grid &middot; Energia Inteligente</div>'+
+      '<div class="pay-img-wrap">'+
+        '<div style="font-size:9px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:10px;text-align:center">FORMAS DE PAGAMENTO</div>'+
+        '<img src="imagens/formas_pagamento.jpg" style="width:100%;height:auto;display:block;object-fit:contain;flex:1;min-height:0">'+
       '</div>'+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
   '</div>';
 
+  // PAGE PROCESSO + CTA (5 etapas em grid horizontal + consultor)
+  const stepCard=(n,t,d)=>
+    '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(232,100,26,.2);border-top:3px solid var(--or);border-radius:10px;padding:16px 14px;display:flex;flex-direction:column;gap:8px">'+
+      '<div style="width:32px;height:32px;border:2px solid var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--or)">'+n+'</div>'+
+      '<div style="font-size:12px;font-weight:800;color:#fff;line-height:1.3">'+t+'</div>'+
+      '<div style="font-size:10px;color:rgba(255,255,255,.5);line-height:1.5">'+d+'</div>'+
+    '</div>';
 
-
-  // PAGE FORMAS DE PAGAMENTO — imagem completa
-  const pPagamento='<div class="page" style="background:#fff;display:flex;flex-direction:column">'+
-    '<div class="corner tl"></div><div class="corner tr"></div>'+
-    lbar(pg++,pageCount)+
-    '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:20px 40px">'+
-      '<div style="font-size:9px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:16px;text-align:center">FORMAS DE PAGAMENTO</div>'+
-      '<img src="imagens/formas_pagamento.jpg" style="width:100%;height:auto;display:block;object-fit:contain;max-height:900px">'+
-    '</div>'+
-    '<div class="corner bl"></div><div class="corner br"></div>'+
-    pfooter(today)+
-  '</div>';
-
-  // PAGE PRÓXIMOS PASSOS — dark com foto estilo cards
-  const stepIcon=n=>'<div style="width:44px;height:44px;border:2px solid var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--or);flex-shrink:0;background:rgba(232,100,26,.1)">'+n+'</div>';
-  const stepRow=(n,t,d)=>'<div style="display:flex;align-items:flex-start;gap:0;padding:22px 0;border-bottom:1px solid rgba(255,255,255,.06)">'+
-    '<div style="width:4px;background:var(--or);border-radius:2px;margin-right:20px;align-self:stretch;min-height:50px"></div>'+
-    stepIcon(n)+
-    '<div style="margin-left:20px">'+
-      '<div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:5px">'+t+'</div>'+
-      '<div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.6">'+d+'</div>'+
-    '</div>'+
-  '</div>';
-
-  const pSteps='<div class="page" style="background:#0a0a0c;min-height:1000px;display:flex;flex-direction:column;position:relative;overflow:hidden">'+
-    '<div style="position:absolute;inset:0;background-image:url(\'imagens/instalador.jpg\');background-size:cover;background-position:center top;opacity:.22;z-index:0"></div>'+
-    '<div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(10,10,12,.95) 48%,rgba(10,10,12,.6) 100%);z-index:1"></div>'+
+  const pStepsCTA='<div class="page" style="background:#0a0a0c;display:flex;flex-direction:column;position:relative;overflow:hidden">'+
+    '<div style="position:absolute;inset:0;background-image:url(\'imagens/instalador.jpg\');background-size:cover;background-position:center top;opacity:.15;z-index:0"></div>'+
+    '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,12,.9) 0%,rgba(10,10,12,.97) 100%);z-index:1"></div>'+
     '<div class="grid-ov"></div>'+
     lbar(pg++,pageCount)+
-    '<div style="padding:36px 60px;position:relative;z-index:2;flex:1">'+
-      '<div style="font-size:9px;font-weight:800;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:10px">Processo</div>'+
-      '<h2 style="font-family:Montserrat,sans-serif;font-size:32px;font-weight:900;color:#fff;line-height:1.15;margin-bottom:6px">Da aprova\u00e7\u00e3o \u00e0 <span style="color:var(--or)">gera\u00e7\u00e3o</span></h2>'+
-      '<div style="width:48px;height:3px;background:var(--or);border-radius:2px;margin-bottom:28px"></div>'+
-      stepRow(1,'Aprova\u00e7\u00e3o da Proposta','Ap\u00f3s a aprova\u00e7\u00e3o, realizamos a assinatura do contrato e damos in\u00edcio ao planejamento do seu projeto.')+
-      stepRow(2,'Vistoria T\u00e9cnica','Nossa equipe visita o im\u00f3vel para validar as condi\u00e7\u00f5es de instala\u00e7\u00e3o, realizar medi\u00e7\u00f5es e confirmar as especifica\u00e7\u00f5es finais.')+
-      stepRow(3,'Recebimento dos Equipamentos','Os equipamentos s\u00e3o entregues e conferidos, garantindo que tudo esteja pronto para uma instala\u00e7\u00e3o segura e de qualidade.')+
-      stepRow(4,'Instala\u00e7\u00e3o do Sistema','Instala\u00e7\u00e3o completa em at\u00e9 '+prazo+' dias \u00fateis, incluindo pain\u00e9is, inversores e toda a infraestrutura el\u00e9trica.')+
-      stepRow(5,'Homologa\u00e7\u00e3o e Ativa\u00e7\u00e3o','Cuidamos de todo o processo junto \u00e0 concession\u00e1ria: vistoria, homologa\u00e7\u00e3o, conex\u00e3o \u00e0 rede e ativa\u00e7\u00e3o do monitoramento online.')+
-    '</div>'+
-    pfooter(today)+
-  '</div>';
-
-  // PAGE RESUMO — snapshot para o vendedor enviar ao cliente
-  const resumoRows=[
-    totalPwDisp?{l:'Pot\u00eancia do Sistema',v:totalPwDisp+(modQty?' ('+modQty+' m\u00f3dulos)':'')}:null,
-    genKwh?{l:'Gera\u00e7\u00e3o Mensal Estimada',v:genKwh}:null,
-    invQty?{l:'Inversor'+(invModel?' — '+invModel:''),v:(invQty>1?invQty+'×':'')+' '+(invPower?invPower+' kW':'')}:null,
-    hasBat&&batKwh?{l:'Armazenamento',v:batKwh+' kWh'+(batModel?' — '+batModel:'')}:null,
-    {l:'Tipo de Instala\u00e7\u00e3o',v:instType+' · '+conexao},
-    projectVal?{l:'Investimento',v:fmtBRL(projectVal)}:null,
-    ecoMonthly?{l:'Economia Mensal',v:fmtBRL(ecoMonthly)+'/m\u00eas'}:null,
-    paybackStr?{l:'Retorno do Investimento',v:paybackStr}:null,
-  ].filter(Boolean);
-
-  const pResumo='<div class="page page-light" style="min-height:900px">'+
-    '<div class="grid-ov"></div>'+
-    '<div class="corner tl"></div><div class="corner tr"></div>'+
-    lbar(pg++,pageCount)+
-    '<div class="plc">'+
-      '<div class="sec-eyebrow">Resumo da Proposta</div>'+
-      '<h2 class="sec-h2">Proposta para <span style="color:var(--or)">'+name+'</span></h2>'+
-      '<div class="sec-rule"></div>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">'+
-        // Coluna 1: dados do sistema
-        '<div>'+
-          '<div class="stitle" style="margin-bottom:12px">Sistema</div>'+
-          resumoRows.map(r=>'<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--lborder)">'+
-            '<span style="font-size:12px;color:var(--lmuted)">'+r.l+'</span>'+
-            '<span style="font-size:12px;font-weight:700;color:var(--ltext)">'+r.v+'</span>'+
-          '</div>').join('')+
-        '</div>'+
-        // Coluna 2: economia destaque
-        '<div>'+
-          '<div class="stitle" style="margin-bottom:12px">Economia Projetada</div>'+
-          (ecoMonthly?
-            '<div style="display:flex;flex-direction:column;gap:10px">'+
-              [['Por M\u00eas',fmtBRL(ecoMonthly)],['Em 1 Ano',fmtBRL(eco1||Math.round(ecoMonthly*12))],['Em 5 Anos',fmtBRL(eco5||Math.round(ecoMonthly*60))],['Em 25 Anos',fmtBRL(eco25||Math.round(ecoMonthly*300))]].map(([l,v])=>
-                '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--lbg);border:1.5px solid var(--lborder);border-left:3px solid var(--or);border-radius:8px">'+
-                  '<span style="font-size:11px;font-weight:600;color:var(--ltext)">'+l+'</span>'+
-                  '<span style="font-size:15px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif">'+v+'</span>'+
-                '</div>'
-              ).join('')+
-            '</div>':
-            '<div style="padding:20px;text-align:center;background:var(--lbg);border-radius:8px;font-size:11px;color:var(--lmuted)">Preencha conta de energia para calcular economia</div>'
-          )+
+    '<div class="plc" style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:space-between">'+
+      '<div>'+
+        '<div class="sec-eyebrow" style="color:var(--or)">Processo</div>'+
+        '<h2 style="font-family:Montserrat,sans-serif;font-size:28px;font-weight:900;color:#fff;line-height:1.15;margin-bottom:6px">Da aprova\u00e7\u00e3o \u00e0 <span style="color:var(--or)">gera\u00e7\u00e3o</span></h2>'+
+        '<div style="width:40px;height:3px;background:var(--or);border-radius:2px;margin-bottom:24px"></div>'+
+        '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:28px">'+
+          stepCard(1,'Aprova\u00e7\u00e3o','Assinatura do contrato e in\u00edcio do planejamento.')+
+          stepCard(2,'Vistoria T\u00e9cnica','Visita ao im\u00f3vel, medi\u00e7\u00f5es e especifica\u00e7\u00f5es finais.')+
+          stepCard(3,'Equipamentos','Entrega e confer\u00eancia de todos os itens.')+
+          stepCard(4,'Instala\u00e7\u00e3o','Completa em at\u00e9 '+prazo+' dias \u00fateis.')+
+          stepCard(5,'Homologa\u00e7\u00e3o','Processo junto \u00e0 concession\u00e1ria e ativa\u00e7\u00e3o.')+
         '</div>'+
       '</div>'+
-      // Investimento destaque
-      (projectVal?
-        '<div style="padding:20px 24px;background:rgba(232,100,26,.06);border:2px solid rgba(232,100,26,.3);border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">'+
-          '<div><div style="font-size:10px;font-weight:700;color:var(--or);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Investimento Total</div>'+
-          '<div style="font-size:32px;font-weight:900;color:var(--ltext);font-family:Montserrat,sans-serif">'+fmtBRL(projectVal)+'</div></div>'+
-          (paybackStr?'<div style="text-align:right"><div style="font-size:9px;color:var(--lmuted);margin-bottom:4px">Retorno estimado</div><div style="font-size:20px;font-weight:900;color:var(--or)">'+paybackStr+'</div></div>':'')+
-        '</div>':'')+ 
-      // Card consultor compacto
-      '<div style="background:var(--ltext);border-radius:12px;padding:18px 24px;display:flex;align-items:center;gap:16px">'+
-        '<div style="width:48px;height:48px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0">'+vendNome.charAt(0).toUpperCase()+'</div>'+
+      '<div style="border:1px solid rgba(232,100,26,.35);border-radius:14px;padding:22px 28px;display:flex;align-items:center;gap:20px;background:rgba(255,255,255,.03)">'+
+        '<div style="width:56px;height:56px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;flex-shrink:0">'+vendNome.charAt(0).toUpperCase()+'</div>'+
         '<div>'+
-          '<div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:2px;margin-bottom:3px">CONSULTOR RESPONS\u00c1VEL</div>'+
-          '<div style="font-size:16px;font-weight:800;color:#fff">'+vendNome+'</div>'+
-          '<div style="font-size:10px;color:rgba(255,255,255,.4)">Especialista em Energia Renov\u00e1vel</div>'+
+          '<div style="font-size:9px;font-weight:700;letter-spacing:3px;color:rgba(232,100,26,.7);text-transform:uppercase;margin-bottom:4px">Consultor Respons\u00e1vel</div>'+
+          '<div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px">'+vendNome+'</div>'+
+          '<div style="font-size:11px;color:rgba(255,255,255,.45)">Especialista em Energia Renov\u00e1vel</div>'+
         '</div>'+
         '<div style="margin-left:auto;text-align:right">'+
-          '<a href="https://wa.me/55'+vendFone.replace(/\D/g,'')+'?text=Olá+'+encodeURIComponent(vendNome)+',+tenho+interesse+na+proposta+Lumen+Grid" style="font-size:16px;font-weight:700;color:var(--or);text-decoration:none;display:inline-flex;align-items:center;gap:6px" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>'+vendFone+'</a>'+
-          '<div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px">lumengridbrasil.com.br</div>'+
-        '</div>'+
-      '</div>'+
-      '<div style="text-align:center;margin-top:12px;font-size:9px;color:var(--lmuted)">Emitida em '+today+' · V\u00e1lida at\u00e9 '+validUntil+'</div>'+
-    '</div>'+
-    '<div class="corner bl"></div><div class="corner br"></div>'+
-    pfooter(today)+
-  '</div>';
-
-    // PAGE FINAL — fechamento impactante (dark)
-  const ctaTitulo=sistTipo==='hibrido'?
-    'Estamos prontos para garantir a independ\u00eancia energ\u00e9tica de <span style="color:var(--or)">'+name+'</span>':
-    'Estamos prontos para colocar <span style="color:var(--or)">'+name+'</span> na frente da energia solar';
-  const pFinal='<div class="page" style="background:#0a0a0c;min-height:900px;display:flex;flex-direction:column;position:relative">'+
-    '<div class="grid-ov"></div>'+
-    '<div style="position:absolute;inset:0;background-image:url(\'imagens/handshake.png\');background-size:cover;background-position:center;opacity:.12;z-index:0"></div>'+
-    lbar(pg++,pageCount)+
-    '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 80px;position:relative;z-index:2;text-align:center">'+
-      '<div style="font-size:10px;font-weight:800;letter-spacing:5px;color:var(--or);text-transform:uppercase;margin-bottom:24px">Vamos Avan\u00e7ar?</div>'+
-      '<h2 style="font-family:Montserrat,sans-serif;font-size:44px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:24px">'+ctaTitulo+'</h2>'+
-      '<p style="font-size:15px;color:rgba(255,255,255,.65);line-height:1.7;max-width:560px;margin:0 auto 48px">Fale com seu consultor para tirar d\u00favidas, ajustar condi\u00e7\u00f5es de pagamento ou confirmar o in\u00edcio do projeto.</p>'+
-      '<div style="width:100%;max-width:580px;border:1px solid rgba(232,100,26,.35);border-radius:14px;padding:28px 32px;display:flex;align-items:center;gap:24px;background:rgba(255,255,255,.04)">'+
-        '<div style="width:64px;height:64px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex-shrink:0">'+vendNome.charAt(0).toUpperCase()+'</div>'+
-        '<div style="text-align:left">'+
-          '<div style="font-size:9px;font-weight:700;letter-spacing:3px;color:rgba(232,100,26,.7);text-transform:uppercase;margin-bottom:6px">Consultor Respons\u00e1vel</div>'+
-          '<div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px">'+vendNome+'</div>'+
-          '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:8px">Especialista em Energia Renov\u00e1vel</div>'+
-          '<a href="https://wa.me/55'+vendFone.replace(/\D/g,'')+'?text=Olá+'+encodeURIComponent(vendNome)+',+tenho+interesse+na+proposta+Lumen+Grid" style="font-size:16px;font-weight:700;color:var(--or);text-decoration:none;display:inline-flex;align-items:center;gap:6px" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>'+vendFone+'</a>'+
-        '</div>'+
-        '<div style="margin-left:auto;text-align:right">'+
-          '<div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:6px">LUMEN GRID</div>'+
-          '<div style="font-size:11px;color:rgba(232,100,26,.7);font-weight:700">lumengridbrasil.com.br</div>'+
+          '<a href="https://wa.me/55'+vendFone.replace(/\D/g,'')+'?text=Ol\u00e1+'+encodeURIComponent(vendNome)+',+tenho+interesse+na+proposta+Lumen+Grid" style="font-size:16px;font-weight:700;color:var(--or);text-decoration:none;display:inline-flex;align-items:center;gap:6px" target="_blank">'+
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>'+
+            vendFone+
+          '</a>'+
         '</div>'+
       '</div>'+
     '</div>'+
     pfooter(today)+
   '</div>';
 
-  const html=p1+p2+(isEcoMode?pSolucao:'')+pChart+(isEcoMode?pUpgrade:'')+pWallbox+pGar+pInv+pPagamento+pResumo+pSteps+pFinal;
+  const html=p1+p2+pGar+pInvPag+pStepsCTA;
   document.getElementById('preview').innerHTML=html;
   document.getElementById('preview').style.display='';
   document.getElementById('previewEmpty').style.display='none';
