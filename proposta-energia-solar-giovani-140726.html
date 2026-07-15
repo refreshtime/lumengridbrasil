@@ -119,6 +119,67 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:#222;color:var(--
 @media screen{
   .pw{padding:20px 0}
 }
+
+@media (max-width:768px){
+  /* Base */
+  .pw{width:100%;padding:0}
+  .page{width:100%}
+
+  /* Header & Footer */
+  .lbar{padding:12px 16px}
+  .pfooter{padding:10px 16px;flex-wrap:wrap;gap:3px}
+  .fbrand{font-size:8px}
+  .flegal,.fsite{font-size:7px}
+
+  /* Capa */
+  .capa-pg{min-height:100svh}
+  .capa-body{padding:0 20px 36px}
+  .cheadline{font-size:32px}
+  .csub{font-size:13px;max-width:100%}
+  .cmeta{gap:16px}
+  .mv{font-size:13px}
+
+  /* Light pages */
+  .plc{padding:20px 16px}
+  .sec-h2{font-size:20px}
+
+  /* Stats strip */
+  .cstrip{flex-direction:column}
+  .cstrip-sep{width:100%;height:1px}
+  .cstrip-item{padding:10px 16px}
+
+  /* Spec hero */
+  .spec-hero{flex-direction:column;gap:12px}
+  .sh-right{border-left:none;border-top:1px solid var(--lborder);padding-left:0;padding-top:12px;width:100%}
+  .sh-val{font-size:36px}
+  .spec-row{grid-template-columns:1fr}
+
+  /* Chart */
+  .chart-summary{grid-template-columns:1fr;gap:6px}
+
+  /* Override ALL inline grid layouts */
+  .page [style*="grid-template-columns"]{grid-template-columns:1fr!important}
+
+  /* Remove side borders that look broken in single-column */
+  .page [style*="border-right:1px solid rgba(232,100,26"]{border-right:none!important;padding-right:0!important;padding-bottom:16px!important;border-bottom:1px solid rgba(232,100,26,.15)!important}
+
+  /* Reduce large inline font sizes */
+  .page [style*="font-size:56px"]{font-size:30px!important}
+  .page [style*="font-size:52px"]{font-size:28px!important}
+  .page [style*="font-size:46px"]{font-size:26px!important}
+  .page [style*="font-size:44px"]{font-size:26px!important}
+  .page [style*="font-size:38px"]{font-size:22px!important}
+  .page [style*="font-size:34px"]{font-size:20px!important}
+  .page [style*="font-size:32px"]{font-size:20px!important}
+
+  /* Reduce large inline paddings on dark pages */
+  .page [style*="padding:36px 60px"]{padding:20px 16px!important}
+  .page [style*="padding:60px 80px"]{padding:32px 20px!important}
+
+  /* CTA card full width */
+  .page [style*="max-width:580px"]{max-width:100%!important}
+  .page [style*="max-width:560px"]{max-width:100%!important}
+}
 </style>
 </head>
 <body>
