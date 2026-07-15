@@ -1300,7 +1300,7 @@ async function downloadPDF(){
         'min-height:0!important;max-height:'+PAGE_H+'px!important;overflow:hidden!important';
       await new Promise(r=>setTimeout(r,60));
       const canvas=await html2canvas(pg,{
-        scale:2,useCORS:true,allowTaint:true,logging:false,
+        scale:1.5,useCORS:true,allowTaint:true,logging:false,
         backgroundColor:'#ffffff',imageTimeout:15000,
         windowWidth:PAGE_W,width:PAGE_W,height:PAGE_H
       });

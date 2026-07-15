@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<script>(function(){var t=sessionStorage.getItem('lg_auth');if(!t){location.replace('login.html');return;}try{var d=atob(t).split(':'),age=Date.now()-parseInt(d[1]);if(age>28800000)throw 1;}catch(e){sessionStorage.clear();location.replace('login.html');}})();</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Lumen Grid — Proposta Híbrida</title>
@@ -1517,7 +1516,7 @@ async function downloadPDF(){
         'min-height:0!important;max-height:'+PAGE_H+'px!important;overflow:hidden!important';
       await new Promise(r=>setTimeout(r,60));
       const canvas=await html2canvas(pg,{
-        scale:2,useCORS:true,allowTaint:true,logging:false,
+        scale:1.5,useCORS:true,allowTaint:true,logging:false,
         backgroundColor:'#ffffff',imageTimeout:15000,
         windowWidth:PAGE_W,width:PAGE_W,height:PAGE_H
       });

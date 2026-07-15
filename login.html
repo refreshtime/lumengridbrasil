@@ -163,7 +163,7 @@ const USERS = {
 };
 
 // Onde ir após login bem-sucedido
-const REDIRECT = 'portal.html';
+const REDIRECT = new URLSearchParams(location.search).get('next') || 'portal.html';
 
 // ══════════════════════════════════════════════════════
 
