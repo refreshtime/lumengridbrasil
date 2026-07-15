@@ -179,6 +179,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:#222;color:var(--
   /* CTA card full width */
   .page [style*="max-width:580px"]{max-width:100%!important}
   .page [style*="max-width:560px"]{max-width:100%!important}
+
+  /* Página investimento + pagamento: sem espaço excessivo na imagem */
+  .pay-img-wrap{flex:0!important;padding:0 16px 20px!important}
+  .page [style*="min-height:1123px"]{min-height:auto!important}
 }
 </style>
 </head>
@@ -359,7 +363,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:#222;color:var(--
     <div style="font-size:52px;font-weight:900;color:var(--ltext);line-height:1;font-family:Montserrat,sans-serif">R$&nbsp;17.900,00</div>
     <div style="font-size:11px;color:var(--lmuted);margin-top:8px">Proposta válida até 21/07/2026 &middot; Residencial</div>
   </div>
-  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 40px 20px">
+  <div class="pay-img-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 40px 20px">
     <img src="imagens/formas_pagamento.jpg" alt="Soluções de Pagamento LumenGrid" style="max-width:600px;width:100%;object-fit:contain;display:block">
   </div>
   <div class="corner bl"></div><div class="corner br"></div>
