@@ -1762,31 +1762,49 @@ async function downloadPDF(){
   btn.disabled=true;
   btn.textContent='Gerando PDF...';
 
+  const preview=document.getElementById('preview');
+  const prevStyle=preview.getAttribute('style')||'';
+  preview.style.cssText='display:block;position:fixed;top:0;left:0;width:1000px;z-index:-9999;overflow:visible';
+  await new Promise(r=>setTimeout(r,200));
+
   try{
     const {jsPDF}=window.jspdf;
     let pdf=null;
+    const PAGE_W=1000;
 
     for(let i=0;i<pages.length;i++){
-      btn.textContent='Renderizando p.'+( i+1)+'/'+pages.length+'...';
-      const canvas=await html2canvas(pages[i],{
-        scale:2,useCORS:true,logging:false,
+      btn.textContent='Renderizando '+(i+1)+'/'+pages.length+'...';
+      const el=pages[i];
+      const elH=el.scrollHeight||el.offsetHeight;
+
+      const canvas=await html2canvas(el,{
+        scale:2,
+        useCORS:true,
+        allowTaint:true,
+        logging:false,
         backgroundColor:'#ffffff',
-        allowTaint:true
+        imageTimeout:15000,
+        windowWidth:1000,
+        width:PAGE_W,
+        height:elH
       });
-      const w=canvas.width;
-      const h=canvas.height;
+
+      const pW=PAGE_W*2;
+      const pH=elH*2;
+
       if(!pdf){
-        pdf=new jsPDF({unit:'px',format:[w,h],orientation:'portrait'});
+        pdf=new jsPDF({unit:'px',format:[pW,pH],orientation:'portrait'});
       }else{
-        pdf.addPage([w,h],'portrait');
+        pdf.addPage([pW,pH],'portrait');
       }
-      pdf.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',0,0,w,h);
+      pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',0,0,pW,pH);
     }
 
     pdf.save(filename); showToast(filename);
   }catch(e){
     alert('Erro ao gerar PDF: '+e.message);
   }finally{
+    preview.setAttribute('style',prevStyle);
     btn.disabled=false;
     btn.textContent='⚡ Gerar e Baixar PDF';
   }
