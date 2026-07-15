@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<script>(function(){var t=sessionStorage.getItem('lg_auth');if(!t){location.replace('login.html');return;}try{var d=atob(t).split(':'),age=Date.now()-parseInt(d[1]);if(age>28800000)throw 1;}catch(e){sessionStorage.clear();location.replace('login.html');}})();</script>
+
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Lumen Grid — Proposta Híbrida</title>
+<title>Lumen Grid — Proposta Solar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 <style>
@@ -86,8 +86,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 /* PAGE 1: CAPA */
 .capa-pg{background:#111;min-height:1300px;display:flex;flex-direction:column;position:relative}
-.capa-bg{position:absolute;inset:0;z-index:0;background-image:url('imagens/familia.jpg');background-size:cover;background-position:center top}
-.capa-ov{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(5,5,5,.5) 0%,rgba(5,5,5,.2) 20%,rgba(10,10,10,.7) 55%,rgba(10,10,10,.97) 78%,#0a0a0a 100%)}
+.capa-bg{position:absolute;inset:0;z-index:0;background-image:url('imagens/instalador.jpg');background-size:cover;background-position:center top}
+.capa-ov{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(5,5,5,.3) 0%,rgba(5,5,5,.1) 25%,rgba(10,10,10,.65) 58%,rgba(10,10,10,.97) 72%,#0a0a0a 84%)}
 .capa-body{position:absolute;left:0;right:0;bottom:0;z-index:10;padding:0 60px 60px;display:flex;flex-direction:column}
 .ctag{display:inline-flex;align-self:flex-start;background:var(--or);color:#fff;font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:6px 16px;margin-bottom:28px}
 .cheadline{font-family:'Montserrat',sans-serif;font-weight:900;font-size:62px;line-height:1.06;color:var(--white);margin-bottom:14px;letter-spacing:-.5px;text-shadow:0 4px 30px rgba(0,0,0,.8)}
@@ -310,13 +310,33 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 }
 
 @media print{
-  body{background:#fff!important}
-  .ed-header,.form-panel,.btn-bar,.prev-empty{display:none!important}
-  .ed-layout{display:block!important}
-  .prev-panel{background:#fff!important;padding:0!important;overflow:visible!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{margin:0!important;padding:0!important;background:transparent!important}
+  .ed-header,.form-panel,.btn-bar,.prev-empty,.pdf-toast{display:none!important}
+  .ed-layout{display:block!important;margin:0!important;padding:0!important}
+  .prev-panel{padding:0!important;background:transparent!important;overflow:visible!important}
+  .pw{width:210mm!important;margin:0 auto!important}
   #preview{display:block!important}
-  .page{margin-bottom:0!important;break-after:page;page-break-after:always;box-shadow:none!important}
-  .page:last-child{break-after:auto;page-break-after:auto}
+  .page{
+    width:210mm!important;
+    height:297mm!important;
+    min-height:0!important;
+    max-height:297mm!important;
+    margin:0!important;
+    padding:0!important;
+    box-shadow:none!important;
+    break-before:page!important;
+    page-break-before:always!important;
+    break-inside:avoid!important;
+    overflow:hidden!important;
+    position:relative!important;
+    display:block!important;
+  }
+  .page:first-child{break-before:auto!important;page-break-before:auto!important}
+  .lbar{padding:13px 40px 11px!important}
+  .pfooter{padding:9px 40px!important}
+  .plc{padding:22px 40px!important}
+  .sec-rule{margin:10px 0 20px!important}
   @page{size:A4 portrait;margin:0}
 }
 
@@ -346,7 +366,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 <div class="ed-header">
   <div>
     <div class="ed-logo">LUMEN<span>GRID</span></div>
-    <div class="ed-sub">ENERGIA INTELIGENTE — PROPOSTA HÍBRIDA + BATERIAS</div>
+    <div class="ed-sub">ENERGIA INTELIGENTE — PROPOSTA SOLAR ON-GRID</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <a href="portal.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);text-decoration:none">&#8592; Portal</a>
@@ -358,12 +378,13 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <input type="file" id="pdfImport" accept=".pdf" style="display:none" onchange="importSupplierPDF(this)">
     </label>
     <button class="bp btn" id="btnGerar" onclick="generateProposal()" style="white-space:nowrap">⚡ Gerar Proposta</button>
-    <button style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border:1.5px solid var(--or);border-radius:6px;font-size:12px;font-weight:700;color:var(--or);background:transparent;cursor:pointer;font-family:inherit;white-space:nowrap" id="btnPdf" onclick="downloadPDF()">⬇ Baixar PDF</button>
+    <button style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border:1.5px solid var(--or);border-radius:6px;font-size:12px;font-weight:700;color:var(--or);background:transparent;cursor:pointer;font-family:inherit;white-space:nowrap" id="btnPdf" onclick="downloadPDF()">🖨 Imprimir / Salvar PDF</button>
   </div>
 </div>
 
 <div class="ed-layout">
 <div class="form-panel">
+
 
 
   <div class="fs">
@@ -374,22 +395,6 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <input class="fi" id="clientAddr" placeholder="São Paulo, SP">
     <label class="fl">Frase personalizada (opcional)</label>
     <textarea class="fta" id="mensagemCliente" placeholder="Ex: Sua empresa já gasta mais de R$ 30 mil por ano em energia..."></textarea>
-  </div>
-
-  <div class="fs">
-    <div class="fs-title">Tipo de Instalação</div>
-    <div class="frg">
-      <label class="frl"><input type="radio" name="installType" value="Residencial" checked>🏠 Residencial</label>
-      <label class="frl"><input type="radio" name="installType" value="Comercial">🏢 Comercial</label>
-      <label class="frl"><input type="radio" name="installType" value="Industrial">🏭 Industrial</label>
-      <label class="frl"><input type="radio" name="installType" value="Rural/Agro">🌾 Rural/Agro</label>
-      <label class="frl"><input type="radio" name="installType" value="Condomínio">🏘 Condomínio</label>
-    </div>
-    <div class="frg">
-      <label class="frl"><input type="radio" name="conexaoType" value="Monofásico" checked>1F Monofásico</label>
-      <label class="frl"><input type="radio" name="conexaoType" value="Bifásico">2F Bifásico</label>
-      <label class="frl"><input type="radio" name="conexaoType" value="Trifásico">3F Trifásico</label>
-    </div>
   </div>
 
   <div class="fs">
@@ -414,9 +419,13 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Inversor</label>
     <select class="fsel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="FoxESS Híbrido Bifásico 3MPPT 127/220V 11.4kW" data-power="11.4" data-bat="foxess">FoxESS Híbrido Bifásico 3MPPT 127/220V 11.4kW</option>
-      <option value="FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW" data-power="5.7" data-bat="foxess">FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW</option>
-      <option value="Sofar HYD-5K-LSP1 Híbrido Bifásico 127/220V 5kW" data-power="5" data-bat="sofar">Sofar HYD-5K-LSP1 Híbrido Bifásico 127/220V 5kW</option>
+      <option value="Huawei SUN2000-3KTL-L1 2MPPT 220V" data-power="3">Huawei SUN2000-3KTL-L1 Monofásico 3kW</option>
+      <option value="Huawei SUN2000-5KTL-L1 2MPPT 220V" data-power="5">Huawei SUN2000-5KTL-L1 Monofásico 5kW</option>
+      <option value="Huawei SUN2000-6KTL-L1 2MPPT 220V" data-power="6">Huawei SUN2000-6KTL-L1 Monofásico 6kW</option>
+      <option value="Huawei SUN2000-8KTL 3MPPT 220V" data-power="8">Huawei SUN2000-8KTL Monofásico 8kW</option>
+      <option value="Hoymiles MI-2250 Microinversor 2MPPT 220V" data-power="2.25">Hoymiles MI-2250 Microinversor 2.25kW</option>
+      <option value="FoxESS Microinversor 4MPPT 220V 2.5kW" data-power="2.5">FoxESS Microinversor 4MPPT 220V 2.5kW</option>
+      <option value="Auxsol Monofásico 2MPPT 220V 5kW" data-power="5">Auxsol Monofásico 2MPPT 220V 5kW</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none">
@@ -427,26 +436,42 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="fs">
-    <div class="fs-title">Bateria / Sistema Híbrido</div>
-    <div class="ftw">
-      <label class="ftog"><input type="checkbox" id="hasBattery" checked><span class="sl"></span></label>
-      <span class="ftl">Incluir Bateria na Proposta</span>
+    <div class="fs-title">Tipo de Instalação</div>
+    <div class="frg">
+      <label class="frl"><input type="radio" name="installType" value="Residencial" checked>🏠 Residencial</label>
+      <label class="frl"><input type="radio" name="installType" value="Comercial">🏢 Comercial</label>
+      <label class="frl"><input type="radio" name="installType" value="Industrial">🏭 Industrial</label>
+      <label class="frl"><input type="radio" name="installType" value="Rural/Agro">🌾 Rural/Agro</label>
+      <label class="frl"><input type="radio" name="installType" value="Condomínio">🏘 Condomínio</label>
     </div>
-    <div id="batteryField">
-      <div class="frow">
-        <div><label class="fl">Qtd Baterias</label><input class="fi" type="number" id="batQty" value="1" min="1" onchange="onBatQtyChange()"></div>
-        <div><label class="fl">Capacidade Total (kWh)</label><input class="fi" type="number" id="batteryKwh" placeholder="Ex: 10" min="0"></div>
-      </div>
-      <label class="fl">Modelo da Bateria</label>
-      <select class="fsel" id="batModelSel" onchange="onBatModelChange(this)">
-        <option value="">— Selecionar —</option>
-        <option value="Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh" data-kwh="5.1" data-bat-brand="sofar">Unipower UPLFP48-100 IW 5.1kWh — Baixa Tensão (Sofar)</option>
-        <option value="FoxESS Bateria 5.2kWh" data-kwh="5.2" data-bat-brand="foxess">FoxESS Bateria 5.2kWh (para Inversores FoxESS)</option>
-        <option value="custom">Outro (digitar)</option>
-      </select>
-      <input class="fi" id="batModel" placeholder="Modelo personalizado" style="display:none">
-      <label class="fl">Descrição (autonomia, cargas essenciais etc.)</label>
-      <input class="fi" id="batDesc" placeholder="Ex: Backup — ~8h de autonomia para cargas essenciais">
+    <div class="frg">
+      <label class="frl"><input type="radio" name="conexaoType" value="Monofásico" checked>1F Monofásico</label>
+      <label class="frl"><input type="radio" name="conexaoType" value="Bifásico">2F Bifásico</label>
+      <label class="frl"><input type="radio" name="conexaoType" value="Trifásico">3F Trifásico</label>
+    </div>
+  </div>
+
+  <div class="fs">
+    <div class="fs-title">Consumo & Economia</div>
+    <div class="frow">
+      <div><label class="fl">Conta Atual (R$) <span style="color:var(--or);font-size:9px">★ gráfico</span></label><input class="fi" type="number" id="billValue" placeholder="Ex: 800"></div>
+      <div><label class="fl">Consumo (kWh/mês)</label><input class="fi" type="number" id="consumoAtual" placeholder="Ex: 500"></div>
+    </div>
+    <div class="frow">
+      <div><label class="fl">Tarifa (R$/kWh)</label><input class="fi" type="number" id="tarifa" placeholder="Ex: 0.95" step="0.01"></div>
+      <div><label class="fl">Eco Mensal Override (R$)</label><input class="fi" type="number" id="ecoOverride" placeholder="Calculado automaticamente"></div>
+    </div>
+  </div>
+
+  <div class="fs">
+    <div class="fs-title">Investimento</div>
+    <div class="frow">
+      <div><label class="fl">Preço por kVp (R$) <span class="auto-tag">R$3.000–R$3.500</span></label><input class="fi" type="number" id="precoKvp" value="3500" min="2000" max="6000" step="100"></div>
+      <div><label class="fl">Valor Total do Projeto (R$) <span class="req-star">*</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
+    </div>
+    <div class="frow">
+      <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="7"></div>
+      <div><label class="fl">Prazo instalação (dias úteis)</label><input class="fi" type="number" id="prazoDias" value="20"></div>
     </div>
   </div>
 
@@ -469,18 +494,6 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 </div>
 
   <div class="fs">
-    <div class="fs-title">Consumo & Economia</div>
-    <div class="frow">
-      <div><label class="fl">Conta Atual (R$) <span style="color:var(--or);font-size:9px">★ gráfico</span></label><input class="fi" type="number" id="billValue" placeholder="Ex: 800"></div>
-      <div><label class="fl">Consumo (kWh/mês)</label><input class="fi" type="number" id="consumoAtual" placeholder="Ex: 500"></div>
-    </div>
-    <div class="frow">
-      <div><label class="fl">Tarifa (R$/kWh)</label><input class="fi" type="number" id="tarifa" placeholder="Ex: 0.95" step="0.01"></div>
-      <div><label class="fl">Eco Mensal Override (R$)</label><input class="fi" type="number" id="ecoOverride" placeholder="Calculado automaticamente"></div>
-    </div>
-  </div>
-
-  <div class="fs">
     <div class="fs-toggle" onclick="toggleSection(this)"><div class="fs-title">Equipamentos Protegidos (Autonomia) <span style="font-size:9px;color:rgba(255,255,255,.3);font-weight:400">opcional</span></div><span class="fs-arrow">▼</span></div>
 <div class="fs-body collapsed">
     <table class="etbl" id="equipTable">
@@ -493,18 +506,6 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 </div>
 
   <div class="fs">
-    <div class="fs-title">Investimento</div>
-    <div class="frow">
-      <div><label class="fl">Preço por kVp (R$) <span class="auto-tag">R$4.500–R$5.000</span></label><input class="fi" type="number" id="precoKvp" value="5000" min="3000" max="8000" step="100"></div>
-      <div><label class="fl">Valor Total do Projeto (R$) <span class="req-star">*</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
-    </div>
-    <div class="frow">
-      <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="7"></div>
-      <div><label class="fl">Prazo instalação (dias úteis)</label><input class="fi" type="number" id="prazoDias" value="20"></div>
-    </div>
-  </div>
-
-  <div class="fs">
     <div class="fs-toggle" onclick="toggleSection(this)"><div class="fs-title">Garantias <span style="font-size:9px;color:rgba(255,255,255,.3);font-weight:400">opcional</span></div><span class="fs-arrow">▼</span></div>
 <div class="fs-body collapsed">
     <div class="frow">
@@ -513,33 +514,12 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     </div>
     <div class="frow">
       <div><label class="fl">Inversor String (anos)</label><input class="fi" type="number" id="warInvStr" value="10"></div>
-      <div><label class="fl">Bateria (anos)</label><input class="fi" type="number" id="warBateria" value="10"></div>
+
     </div>
     <div class="frow">
       <div><label class="fl">Instalação (anos)</label><input class="fi" type="number" id="warInstalacao" value="1"></div>
       <div><label class="fl">Assistência</label><input class="fi" id="warAssistencia" value="Inclusa"></div>
     </div>
-  </div>
-
-  <div class="fs" id="autonomySection">
-    <div class="fs-title" style="color:var(--or)">Autonomia da Bateria <span style="font-size:9px;color:rgba(232,100,26,.5);font-weight:400">Selecione os equipamentos do cliente</span></div>
-    <div style="overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse;font-size:11px">
-        <thead>
-          <tr style="background:rgba(255,255,255,.04)">
-            <th style="padding:6px 8px;text-align:left;width:30px"></th>
-            <th style="padding:6px 8px;text-align:left">Equipamento</th>
-            <th style="padding:6px 8px;text-align:center">Potência (W)</th>
-            <th style="padding:6px 8px;text-align:center">Qtd</th>
-            <th style="padding:6px 8px;text-align:center">Uso</th>
-            <th style="padding:6px 8px;text-align:center">Horas/bat.</th>
-          </tr>
-        </thead>
-        <tbody id="autoBody"></tbody>
-      </table>
-    </div>
-    <div id="autoResult"></div>
-    <div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:6px">* Autonomia calculada com base no kWh de bateria informado acima</div>
   </div>
 </div>
 
@@ -570,7 +550,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 <script>
 const LOGOIMG='imagens/logo.png';
-const WALLBOXIMG='imagens/wallbox.jpg';
+const WALLBOXIMG='imagens/wallbox.png';
 
 const PARC_RATES=[
   {n:1,  acrescimo:0.0287,taxa:0.0287},
@@ -696,29 +676,11 @@ function getAutonomyForProposal(){
 
 let equipmentList=[];
 const DEFAULT_EQUIPMENT=[
-  // Climatização
-  {name:'Ar-Condicionado 9.000 BTU',   qty:0,power:900,  dutyCycle:60, hoursPerDay:8},
-  {name:'Ar-Condicionado 12.000 BTU',  qty:0,power:1085, dutyCycle:60, hoursPerDay:8},
-  {name:'Ar-Condicionado 18.000 BTU',  qty:0,power:1625, dutyCycle:60, hoursPerDay:8},
-  {name:'Aquecedor Elétrico',          qty:0,power:600,  dutyCycle:100,hoursPerDay:4},
-  // Cozinha
-  {name:'Geladeira',                   qty:1,power:260,  dutyCycle:35, hoursPerDay:8.4},
-  {name:'Geladeira Duplex',            qty:0,power:300,  dutyCycle:35, hoursPerDay:8.4},
-  {name:'Freezer',                     qty:0,power:200,  dutyCycle:35, hoursPerDay:8.4},
-  {name:'Cooktop Elétrico (1 boca)',   qty:0,power:2500, dutyCycle:100,hoursPerDay:1},
-  {name:'Forno Elétrico / Air Fryer',  qty:0,power:1700, dutyCycle:100,hoursPerDay:0.5},
-  {name:'Máquina de Lavar',            qty:0,power:1500, dutyCycle:70, hoursPerDay:1},
-  {name:'Chuveiro Elétrico',           qty:0,power:3800, dutyCycle:100,hoursPerDay:0.3},
-  // Utilidades
-  {name:'Bomba Pressurizadora',        qty:0,power:120,  dutyCycle:50, hoursPerDay:4},
-  {name:'Tomadas de Uso Geral',        qty:0,power:960,  dutyCycle:100,hoursPerDay:4},
-  // Entretenimento / TI
-  {name:'Aparelho de TV',              qty:1,power:100,  dutyCycle:100,hoursPerDay:6},
-  {name:'Roteador Wi-Fi',              qty:1,power:10,   dutyCycle:100,hoursPerDay:24},
-  {name:'Computador / Notebook',       qty:0,power:80,   dutyCycle:100,hoursPerDay:8},
-  // Iluminação
-  {name:'Iluminação LED (conjunto)',   qty:1,power:180,  dutyCycle:100,hoursPerDay:6},
-  {name:'Refletor Externo 50W',        qty:0,power:50,   dutyCycle:100,hoursPerDay:8},
+  {name:'Geladeira',qty:1,power:150,dutyCycle:40,hoursPerDay:9.6},
+  {name:'TV 55"',qty:1,power:120,dutyCycle:50,hoursPerDay:6},
+  {name:'Ar-condicionado 9000 BTU',qty:1,power:900,dutyCycle:60,hoursPerDay:8},
+  {name:'Iluminação LED',qty:10,power:9,dutyCycle:80,hoursPerDay:8},
+  {name:'Roteador Wi-Fi',qty:1,power:10,dutyCycle:100,hoursPerDay:24},
 ];
 equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
 
@@ -770,9 +732,6 @@ function resetForm(){
   ['validityDays','prazoDias'].forEach((id,i)=>document.getElementById(id).value=[7,20][i]);
   ['warPainel','warMicroinv','warInvStr','warBateria','warInstalacao'].forEach((id,i)=>document.getElementById(id).value=[25,15,10,10,1][i]);
   document.getElementById('warAssistencia').value='Inclusa';
-  document.getElementById('batQty').value='1';
-  document.getElementById('hasBattery').checked=true;
-  document.getElementById('batteryField').style.display='';
   document.getElementById('hasWallbox').checked=false;
   document.getElementById('monthlyGen').removeAttribute('data-manual');
   document.getElementById('projectValue').removeAttribute('data-manual');
@@ -784,21 +743,6 @@ function resetForm(){
   equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
   renderEquipmentTable();
 renderAutonomyTable();
-
-  // Auto-selecionar bateria compatível com o inversor
-  const batBrand=sel.options[sel.selectedIndex]&&sel.options[sel.selectedIndex].dataset.bat;
-  if(batBrand){
-    const batSel=document.getElementById('batModelSel');
-    if(batSel){
-      for(let i=0;i<batSel.options.length;i++){
-        if(batSel.options[i].dataset&&batSel.options[i].dataset.batBrand===batBrand){
-          batSel.selectedIndex=i;
-          onBatModelChange(batSel);
-          break;
-        }
-      }
-    }
-  }
 }
 
 function lbar(n,t){return'<div class="lbar"><div class="ll"><div><div class="ltext">LUMEN<span>GRID</span></div><div class="lsub">ENERGIA INTELIGENTE</div></div></div><span class="pnum">0'+n+' / 0'+t+'</span></div>';}
@@ -907,8 +851,8 @@ function buildInstallmentTable(baseVal){
 // GENERATE PROPOSAL
 // ═══════════════════════════════════════════
 function generateProposal(){
-  const get=id=>document.getElementById(id).value.trim();
-  const getN=id=>parseFloat(document.getElementById(id).value)||0;
+  const get=id=>{const el=document.getElementById(id);return el?el.value.trim():'';}
+  const getN=id=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:0;}
 
   const name      =get('clientName')||'Cliente';
   const addr      =get('clientAddr');
@@ -919,9 +863,9 @@ function generateProposal(){
   const invQty    =getN('invQty');
   const invPower  =getN('invPower');
   const invModel  =get('invModel')||'';
-  const hasBat    =true; // sempre híbrido
-  const sistTipo  ='hibrido'; // gerador híbrido
-  const isEcoMode =true; // híbrido também exibe especificações e economia
+  const hasBat    =false; // solar on-grid — sem bateria
+  const sistTipo  ='solar'; // solar on-grid — hardcoded
+  const isEcoMode =sistTipo==='solar'; // show economy only for pure solar
   const batKwh    =getN('batteryKwh');
   const batModel  =get('batModel');
   const batDesc   =get('batDesc');
@@ -973,7 +917,8 @@ function generateProposal(){
   let pageCount=6;
   if(hasWallbox)pageCount++;
   if(hasBat)pageCount++;
-  if(isEcoMode)pageCount+=1; // pSolucao (híbrido não tem pUpgrade)
+  if(isEcoMode)pageCount+=2; // pSolucao + pUpgrade for solar
+  if(isEcoMode&&bill&&ecoMonthly)pageCount++; // pChart
   pageCount++; // pResumo always
   pageCount++; // pPagamento always
 
@@ -997,7 +942,7 @@ function generateProposal(){
       '<span class="ctag">Proposta Comercial &nbsp;&middot;&nbsp; '+instType+'</span>'+
       '<h1 class="cheadline">'+name+'<br><span class="acc" style="font-size:.45em;font-weight:400;letter-spacing:4px">ENERGIA INTELIGENTE</span></h1>'+
       '<div class="cgline"></div>'+
-      '<p class="csub">'+(addr?addr+' &mdash; ':'')+'Solução personalizada de energia solar híbrida com armazenamento em bateria, elaborada pela equipe Lumen Grid.</p>'+
+      '<p class="csub">'+(addr?addr+' &mdash; ':'')+'Solução personalizada de energia solar fotovoltaica, elaborada pela equipe Lumen Grid.</p>'+
       '<div class="cmeta">'+
         '<div><span class="ml">Cliente</span><span class="mv">'+name+'</span></div>'+
         '<div><span class="ml">Consultor</span><span class="mv">'+vendNome+'</span></div>'+
@@ -1196,7 +1141,7 @@ function generateProposal(){
   const eco5=ecoMonthly?Math.round(ecoMonthly*60):0;
   const eco25=ecoMonthly?Math.round(ecoMonthly*300):0;
 
-  const pSolucao='<div class="page page-light">'+
+  const pSolucao=isEcoMode?'<div class="page page-light">'+
     '<div class="grid-ov"></div>'+
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
@@ -1234,16 +1179,28 @@ function generateProposal(){
           '</div>'+
           (paybackStr?'<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--lborder);display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--lmuted)">Retorno do investimento estimado:</span><span style="font-size:14px;font-weight:900;color:var(--or)">'+paybackStr+'</span></div>':'')+
         '</div>':'')+ 
-      // Gráfico
-      (bill&&ecoMonthly?buildChart(bill,ecoMonthly,projectVal):
-        '<div style="padding:24px;background:var(--lbg);border:1px dashed var(--lborder);border-radius:8px;text-align:center;font-size:11px;color:var(--lmuted)">Preencha Conta de Energia e Economia Mensal para exibir o gr\u00e1fico de proje\u00e7\u00e3o.</div>')+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
-  '</div>';
+  '</div>':'';
+
+  // PAGE GRÁFICO — projeção 25 anos (só quando há dados suficientes)
+  const pChart=(isEcoMode&&bill&&ecoMonthly)?'<div class="page page-light">'+
+    '<div class="grid-ov"></div>'+
+    '<div class="corner tl"></div><div class="corner tr"></div>'+
+    lbar(pg++,pageCount)+
+    '<div class="plc">'+
+      '<div class="sec-eyebrow">Proje\u00e7\u00e3o de Economia</div>'+
+      '<h2 class="sec-h2">25 anos de <span style="color:var(--or)">economia projetada</span></h2>'+
+      '<div class="sec-rule"></div>'+
+      buildChart(bill,ecoMonthly,projectVal)+
+    '</div>'+
+    '<div class="corner bl"></div><div class="corner br"></div>'+
+    pfooter(today)+
+  '</div>':'';
 
   // PAGE UPGRADE — upsell bateria para propostas solar
-  const pUpgrade=(isEcoMode&&sistTipo!=='hibrido')?'<div class="page page-light" style="min-height:1100px">'+
+  const pUpgrade=isEcoMode?'<div class="page page-light" style="min-height:1100px">'+
     '<div class="grid-ov"></div>'+
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
@@ -1327,19 +1284,19 @@ function generateProposal(){
   const specRows=
     
     (modQty&&modModel?tr3('Módulos Fotovoltaicos',modQty+' un.',modModel+(modPower?' · '+modPower+' W':'')):'')+
-    (invQty?tr3(invQty>1?'Inversores Híbridos':'Inversor Híbrido',invQty+' un.',(invModel||'Inversor Híbrido')+(invPower?' · '+invPower+' kW':'')):'')+
-    (hasBat&&batKwh?tr3('Bateria de Lítio',batQty&&batQty>1?batQty+' un.':'1 un.',(batModel||'Sistema de Bateria')+' · '+batKwh+' kWh'):'')+
+    (invQty?tr3(invQty>1?'Inversores On-Grid':'Inversor On-Grid',invQty+' un.',(invModel||'Inversor String')+(invPower?' · '+invPower+' kW':'')):'')+
     tr3('Estrutura de Fixação','1 un.','Alumínio anodizado — conforme projeto')+
     tr3('Cabeamento CC / CA','conforme projeto','Fio solar 6mm² certificado ABNT')+
     tr3('String Box CC','1 un.','Proteção com DPS e fusíveis')+
-    tr3('Sistema de Monitoramento','1 un.','App em tempo real (geração/consumo/bateria)')+
+    tr3('Sistema de Monitoramento','1 un.','App em tempo real (geração/consumo)')+
     tr3('ART / RRT','1 un.','Engenheiro responsável CREA')+
     tr3('Homologação','1 un.','Processo completo junto à concessionária');
 
+  const isMicro=/micro|hoymiles|mi-/i.test(invModel);
   const warRowsGar=[
     {n:'M\u00f3dulos Fotovoltaicos',v:warPainel+' anos'},
-    {n:'Microinversores',v:warMicroinv+' anos'},
-    {n:'Inversor Híbrido',v:warInvStr+' anos'},
+    isMicro?{n:'Microinversores',v:warMicroinv+' anos'}:null,
+    !isMicro?{n:'Inversor String',v:warInvStr+' anos'}:null,
     hasBat?{n:'Sistema de Bateria',v:warBateria+' anos'}:null,
     {n:'Instala\u00e7\u00e3o Civil',v:warInst+' ano(s)'},
     {n:'Assist\u00eancia T\u00e9cnica',v:warAss},
@@ -1403,18 +1360,42 @@ function generateProposal(){
 
 
   // PAGE INVESTIMENTO
-  const pInv='<div class="page page-light">'+
+  const pInv='<div class="page page-light" style="display:flex;flex-direction:column">'+
     '<div class="grid-ov"></div>'+
     '<div class="corner tl"></div><div class="corner tr"></div>'+
     lbar(pg++,pageCount)+
-    '<div class="plc">'+
-      '<div class="sec-eyebrow">Investimento</div>'+
-      '<div style="text-align:center;padding:32px 0 20px">'+
-        '<div style="font-size:11px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:10px">Investimento Total</div>'+
-        '<div style="font-size:56px;font-weight:900;color:var(--ltext);line-height:1;font-family:Montserrat,sans-serif">'+(projectVal?fmtBRL(projectVal):'<span style="font-size:28px">A consultar</span>')+'</div>'+
-        '<div style="font-size:11px;color:var(--lmuted);margin-top:10px">Proposta v\u00e1lida at\u00e9 '+validUntil+' &middot; '+instType+'</div>'+
+    '<div class="plc" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:36px">'+
+      '<div>'+
+        '<div class="sec-eyebrow">Investimento</div>'+
+        '<h2 class="sec-h2">Seu investimento em <span style="color:var(--or)">energia solar</span></h2>'+
+        '<div class="sec-rule"></div>'+
       '</div>'+
-      '<div class="sec-rule" style="margin:0 auto 24px"></div>'+
+      '<div style="text-align:center;padding:38px 24px;border:2px solid rgba(232,100,26,.2);border-radius:16px;background:linear-gradient(135deg,rgba(232,100,26,.04),rgba(232,100,26,.08));position:relative;overflow:hidden">'+
+        '<div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(232,100,26,.07)"></div>'+
+        '<div style="position:absolute;bottom:-50px;left:-50px;width:180px;height:180px;border-radius:50%;background:rgba(232,100,26,.05)"></div>'+
+        '<div style="font-size:10px;font-weight:800;letter-spacing:4px;color:var(--or);text-transform:uppercase;margin-bottom:12px;position:relative;z-index:1">Investimento Total</div>'+
+        '<div style="font-size:62px;font-weight:900;color:var(--ltext);line-height:1;font-family:Montserrat,sans-serif;position:relative;z-index:1">'+(projectVal?fmtBRL(projectVal):'<span style="font-size:30px;color:var(--lmuted)">A consultar</span>')+'</div>'+
+        (paybackStr?'<div style="margin-top:16px;display:inline-flex;align-items:center;gap:10px;background:rgba(232,100,26,.12);border:1.5px solid rgba(232,100,26,.35);border-radius:30px;padding:8px 22px;position:relative;z-index:1"><span style="font-size:9px;font-weight:700;color:var(--lmuted);letter-spacing:1px;text-transform:uppercase">Retorno do investimento em</span><span style="font-size:18px;font-weight:900;color:var(--or)">'+paybackStr+'</span></div>':'')+
+        '<div style="font-size:10px;color:var(--lmuted);margin-top:14px;position:relative;z-index:1">Proposta v\u00e1lida at\u00e9 <strong style="color:var(--ltext)">'+validUntil+'</strong> &middot; '+instType+'</div>'+
+      '</div>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">'+
+        '<div style="text-align:center;padding:24px 12px;background:var(--lbg);border:1.5px solid var(--lborder);border-top:4px solid var(--or);border-radius:12px">'+
+          '<div style="font-size:21px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif;line-height:1">'+(ecoMonthly?fmtBRL(ecoMonthly):'—')+'</div>'+
+          '<div style="font-size:9px;font-weight:700;color:var(--lmuted);margin-top:7px;text-transform:uppercase;letter-spacing:1px">Economia / m\u00eas</div>'+
+        '</div>'+
+        '<div style="text-align:center;padding:24px 12px;background:var(--lbg);border:1.5px solid var(--lborder);border-top:4px solid var(--or);border-radius:12px">'+
+          '<div style="font-size:21px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif;line-height:1">'+(totalPwDisp||kVp||'—')+'</div>'+
+          '<div style="font-size:9px;font-weight:700;color:var(--lmuted);margin-top:7px;text-transform:uppercase;letter-spacing:1px">Pot\u00eancia instalada</div>'+
+        '</div>'+
+        '<div style="text-align:center;padding:24px 12px;background:var(--lbg);border:1.5px solid var(--lborder);border-top:4px solid var(--or);border-radius:12px">'+
+          '<div style="font-size:21px;font-weight:900;color:var(--or);font-family:Montserrat,sans-serif;line-height:1">'+(genKwh||'—')+'</div>'+
+          '<div style="font-size:9px;font-weight:700;color:var(--lmuted);margin-top:7px;text-transform:uppercase;letter-spacing:1px">Gera\u00e7\u00e3o / m\u00eas</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="padding:22px 28px;background:var(--ltext);border-radius:12px;text-align:center">'+
+        '<div style="font-size:15px;font-weight:800;color:#fff;line-height:1.5;margin-bottom:6px">\u201cEnergia solar n\u00e3o \u00e9 um gasto.<br><span style="color:var(--or)">\u00c9 o melhor investimento que voc\u00ea far\u00e1.\u201d</span></div>'+
+        '<div style="font-size:9px;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase">Lumen Grid &middot; Energia Inteligente</div>'+
+      '</div>'+
     '</div>'+
     '<div class="corner bl"></div><div class="corner br"></div>'+
     pfooter(today)+
@@ -1540,7 +1521,7 @@ function generateProposal(){
     'Estamos prontos para colocar <span style="color:var(--or)">'+name+'</span> na frente da energia solar';
   const pFinal='<div class="page" style="background:#0a0a0c;min-height:900px;display:flex;flex-direction:column;position:relative">'+
     '<div class="grid-ov"></div>'+
-    '<div style="position:absolute;inset:0;background-image:url(\'imagens/handshake.jpg\');background-size:cover;background-position:center;opacity:.12;z-index:0"></div>'+
+    '<div style="position:absolute;inset:0;background-image:url(\'imagens/handshake.png\');background-size:cover;background-position:center;opacity:.12;z-index:0"></div>'+
     lbar(pg++,pageCount)+
     '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 80px;position:relative;z-index:2;text-align:center">'+
       '<div style="font-size:10px;font-weight:800;letter-spacing:5px;color:var(--or);text-transform:uppercase;margin-bottom:24px">Vamos Avan\u00e7ar?</div>'+
@@ -1563,7 +1544,7 @@ function generateProposal(){
     pfooter(today)+
   '</div>';
 
-  const html=p1+p2+p4+pSolucao+pWallbox+pGar+pInv+pPagamento+pResumo+pSteps+pFinal;
+  const html=p1+p2+(isEcoMode?pSolucao:'')+pChart+(isEcoMode?pUpgrade:'')+pWallbox+pGar+pInv+pPagamento+pResumo+pSteps+pFinal;
   document.getElementById('preview').innerHTML=html;
   document.getElementById('preview').style.display='';
   document.getElementById('previewEmpty').style.display='none';
@@ -1664,8 +1645,8 @@ async function importSupplierPDF(input){
       if(kwhM){
         const kwh=parseFloat(kwhM[1].replace(',','.'));
         document.getElementById('batteryKwh').value=kwh;
-        document.getElementById('hasBattery').checked=true;
-        document.getElementById('batteryField').style.display='';
+        const _hbEl=document.getElementById('hasBattery'); if(_hbEl)_hbEl.checked=true;
+        const _bfEl=document.getElementById('batteryField'); if(_bfEl)_bfEl.style.display='';
         filled.push('Bateria: '+kwh+' kWh');
       }
     }
@@ -1751,93 +1732,61 @@ function toggleSection(el){
 }
 
 async function downloadPDF(){
-  const btn=document.getElementById('btnGerar');
-  salvarHistoricoEBridge('hibrido');
+  const pages=document.querySelectorAll('#preview .page');
+  if(!pages.length){alert('Gere a proposta antes de imprimir.');return;}
+  salvarHistoricoEBridge('solar');
+  const btn=document.getElementById('btnPdf');
   const name=(document.getElementById('clientName').value||'Cliente').trim();
   const safeName=(name.normalize('NFD').replace(/[\u0300-\u036f]/g,'')).replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_')||'Cliente';
   const filename='LUMENGRID_'+safeName+'.pdf';
-  const pages=document.querySelectorAll('#preview .page');
-  if(!pages.length)return;
-
-  btn.disabled=true;
-  btn.textContent='Gerando PDF...';
-
   const preview=document.getElementById('preview');
   const prevStyle=preview.getAttribute('style')||'';
   preview.style.cssText='display:block;position:fixed;top:0;left:0;width:1000px;z-index:-9999;overflow:visible';
   await new Promise(r=>setTimeout(r,200));
-
+  if(btn){btn.disabled=true;btn.textContent='Gerando PDF...';}
   try{
     const {jsPDF}=window.jspdf;
     let pdf=null;
-    const PAGE_W=1000;
-
     for(let i=0;i<pages.length;i++){
-      btn.textContent='Renderizando '+(i+1)+'/'+pages.length+'...';
-      const el=pages[i];
-      const elH=el.scrollHeight||el.offsetHeight;
-
-      const canvas=await html2canvas(el,{
-        scale:2,
-        useCORS:true,
-        allowTaint:true,
-        logging:false,
-        backgroundColor:'#ffffff',
-        imageTimeout:15000,
-        windowWidth:1000,
-        width:PAGE_W,
-        height:elH
-      });
-
-      if(!pdf){
-        pdf=new jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
-      }else{
-        pdf.addPage('a4','portrait');
-      }
+      if(btn)btn.textContent='Renderizando '+(i+1)+'/'+pages.length+'...';
+      const canvas=await html2canvas(pages[i],{scale:2,useCORS:true,allowTaint:true,logging:false,backgroundColor:'#ffffff',imageTimeout:15000,windowWidth:1000,width:1000});
+      if(!pdf){pdf=new jsPDF({unit:'mm',format:'a4',orientation:'portrait'});}
+      else{pdf.addPage('a4','portrait');}
       pdf.addImage(canvas.toDataURL('image/jpeg',0.85),'JPEG',0,0,210,297);
     }
-
-    pdf.save(filename); showToast(filename);
-  }catch(e){
-    alert('Erro ao gerar PDF: '+e.message);
-  }finally{
+    pdf.save(filename);showToast(filename);
+  }catch(e){alert('Erro ao gerar PDF: '+e.message);}
+  finally{
     preview.setAttribute('style',prevStyle);
-    btn.disabled=false;
-    btn.textContent='⚡ Gerar e Baixar PDF';
+    if(btn){btn.disabled=false;btn.textContent='🖨 Imprimir / Salvar PDF';}
   }
 }
 
 
 
-// ══ Auto-cálculo Híbrido: 65 kWh/placa · R$ 5.000/kVp (mín R$ 28.000) ══
-const VALOR_MINIMO = 28000;
-function autoCalcHibrido(){
+// ══ Auto-cálculo Solar: 65 kWh/placa · R$ 3.500/kVp ══
+function autoCalcSolar(){
   const qty=parseFloat(document.getElementById('modQty').value)||0;
   const pwr=parseFloat(document.getElementById('modPower').value)||0;
-  const precoKvp=parseFloat(document.getElementById('precoKvp').value)||5000;
+  const precoKvp=parseFloat(document.getElementById('precoKvp').value)||3500;
   const genEl=document.getElementById('monthlyGen');
   if(!genEl.dataset.manual&&qty>0){genEl.value=Math.round(qty*65);}
   const projEl=document.getElementById('projectValue');
   if(!projEl.dataset.manual&&qty>0&&pwr>0){
     const kVp=qty*pwr/1000;
-    projEl.value=Math.round(Math.max(VALOR_MINIMO,kVp*precoKvp));
+    projEl.value=Math.round(kVp*precoKvp);
   }
 }
-document.getElementById('modQty').addEventListener('input',autoCalcHibrido);
-document.getElementById('modPower').addEventListener('input',autoCalcHibrido);
-document.getElementById('precoKvp').addEventListener('input',autoCalcHibrido);
+document.getElementById('modQty').addEventListener('input',autoCalcSolar);
+document.getElementById('modPower').addEventListener('input',autoCalcSolar);
+document.getElementById('precoKvp').addEventListener('input',autoCalcSolar);
 document.getElementById('monthlyGen').addEventListener('input',function(){this.dataset.manual='1';});
 document.getElementById('projectValue').addEventListener('input',function(){this.dataset.manual='1';});
 
 // Init listeners
-document.getElementById('hasBattery').addEventListener('change',function(){document.getElementById('batteryField').style.display=this.checked?'':'none';recalcAutonomy();});
-document.getElementById('batteryKwh').addEventListener('input',calcAutonomy);
-function onSistTipo(){}
 document.getElementById('hasWallbox').addEventListener('change',function(){document.getElementById('wallboxField').style.display=this.checked?'':'none';});
 document.querySelectorAll('input[name=vendedora]').forEach(r=>r.addEventListener('change',function(){document.getElementById('vendCustom').style.display=this.value==='custom'?'':'none';}));
 ['totalPower'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{autoFilled[id]=false;}));
-// Exibir seção autonomia por padrão
-document.getElementById('autonomySection').style.display='';
 renderEquipmentTable();
 renderAutonomyTable();
 
