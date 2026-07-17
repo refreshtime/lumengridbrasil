@@ -270,6 +270,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   .cmp-dark-feat-name{font-size:11px}
   .cmp-dark-cell,.cmp-dark-head-feat,.cmp-dark-head-col{padding:12px 10px;font-size:10px}
 }
+@media(max-width:400px){
+  .cmp-dark-head,.cmp-dark-row,.cmp-dark-foot{grid-template-columns:1.4fr 1fr 1fr}
+  .cmp-dark-feat-name{font-size:10px}
+  .cmp-dark-cell,.cmp-dark-head-feat,.cmp-dark-head-col{padding:10px 6px;font-size:9px}
+  .cmp-badge-sim,.cmp-badge-nao{padding:4px 8px;font-size:10px}
+}
 
 /* ── GALLERY ── */
 #projetos{background:var(--ink);padding:100px 6vw}
@@ -416,7 +422,7 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
 .footer-brand{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:900;letter-spacing:3px;color:var(--or)}
 .footer-brand span{color:rgba(241,241,245,.65)}
 .footer-copy{font-size:11px;color:rgba(161,161,170,.7)}
-.footer-links{display:flex;gap:24px}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap}
 .footer-links a{font-size:12px;color:rgba(161,161,170,.75);text-decoration:none;transition:color .15s}
 .footer-links a:hover{color:rgba(241,241,245,.9)}
 
@@ -475,7 +481,7 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
   .compare-table{font-size:12px}
   .test-grid{grid-template-columns:repeat(2,1fr)}
   .test-grid .test-card:last-child{display:none}
-  .hero-photo{width:100%;opacity:.15}
+  .hero-photo{width:100%;opacity:.25}
   .hero-photo::after{background:linear-gradient(to bottom,rgba(255,255,255,.7) 0%,rgba(255,255,255,.5) 100%)}
   .hero-features{grid-template-columns:repeat(2,1fr)}
   #hibrido-infografico .sec-inner>div{grid-template-columns:1fr;gap:40px}
@@ -518,6 +524,7 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
 @media(max-width:600px){
   .stats-inner{gap:24px}
   .seg-grid{grid-template-columns:repeat(2,1fr)}
+  .sobre-difs{grid-template-columns:repeat(2,1fr)}
   .gallery-grid{grid-template-columns:1fr}
   .sim-input-block{padding:24px 20px}
   .sim-chart-block{padding:20px 16px}
