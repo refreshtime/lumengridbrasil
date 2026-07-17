@@ -246,6 +246,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="logo-sub">ENERGIA INTELIGENTE — PROPOSTA SOLAR ON-GRID v3</div>
   </div>
   <div class="header-btns">
+    <a href="https://refreshtime.github.io/gerador-hibrido-lumengrid/" target="_blank" class="btn bo" style="text-decoration:none">Proposta H&iacute;brida &#8594;</a>
     <button class="btn bo" onclick="resetForm()">Limpar</button>
     <button class="btn" id="btnEstoque" onclick="toggleEstoque()" style="background:transparent;border:1.5px solid #e74c3c;color:#e74c3c;padding:9px 16px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Estoque Limitado</button>
     <button class="btn bp" onclick="generateProposal()">Gerar Proposta</button>
@@ -352,7 +353,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   <div class="fs">
     <div class="fs-title">Investimento</div>
     <div class="frow">
-      <div><label class="fl">Preço por kVp (R$)</label><input class="fi" type="number" id="precoKvp" value="3500" min="2000" max="6000" step="100"></div>
+      <div><label class="fl">Preço por kVp (R$) <span id="precoKvpTag" class="auto-tag">mín R$3.100 — string</span></label><input class="fi" type="number" id="precoKvp" value="3500" min="3100" max="6000" step="100"></div>
       <div><label class="fl">Valor Total (R$) *</label><input class="fi" type="number" id="projectValue" placeholder="Calculado auto"></div>
     </div>
     <div class="frow">
@@ -442,18 +443,33 @@ function fmtBRL(v){if(!v&&v!==0)return'—';return'R$\u00a0'+Number(v).toLocaleS
 function fmtN(v){return Number(v).toLocaleString('pt-BR');}
 
 // ── AUTO-CALC ──
+function getPrecoParams(){
+  const isMicroNow=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
+  return isMicroNow?{def:3800,min:3200,label:'mín R$3.200 — micro'}:{def:3500,min:3100,label:'mín R$3.100 — string'};
+}
+function onInvTipoChange(){
+  const p=getPrecoParams();
+  const el=$('precoKvp');
+  el.min=p.min;
+  if(!el.dataset.manual){el.value=p.def;}
+  const tag=$('precoKvpTag');
+  if(tag)tag.textContent=p.label;
+  autoCalc();
+}
 function autoCalc(){
-  const qty=getN('modQty'),pwr=getN('modPower'),precoKvp=getN('precoKvp')||3500;
+  const p=getPrecoParams();
+  const qty=getN('modQty'),pwr=getN('modPower');
+  const precoKvp=Math.max(p.min,getN('precoKvp')||p.def);
   const kVp=qty&&pwr?qty*pwr/1000:0;
   $('totalPower').value=kVp>0?kVp.toFixed(2)+' kVp':'';
   if(!$('monthlyGen').dataset.manual&&qty>0)$('monthlyGen').value=Math.round(qty*65);
-  if(!$('projectValue').dataset.manual&&kVp>0)$('projectValue').value=Math.round(kVp*precoKvp);
+  if(kVp>0)$('projectValue').value=Math.round(kVp*precoKvp);
 }
+document.querySelectorAll('input[name=invTipo]').forEach(r=>r.addEventListener('change',onInvTipoChange));
 $('modQty').addEventListener('input',autoCalc);
 $('modPower').addEventListener('input',autoCalc);
 $('precoKvp').addEventListener('input',autoCalc);
 $('monthlyGen').addEventListener('input',function(){this.dataset.manual='1';});
-$('projectValue').addEventListener('input',function(){this.dataset.manual='1';});
 
 // ── DROPDOWN HANDLERS ──
 function onModModelChange(sel){
@@ -466,6 +482,7 @@ function onInvModelChange(sel){
   const opt=sel.options[sel.selectedIndex];
   const isMicroSel=opt?.dataset?.micro==='1';
   document.querySelector(`input[name=invTipo][value="${isMicroSel?'micro':'string'}"]`).checked=true;
+  onInvTipoChange();
   if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}
   else{inp.style.display='none';inp.value=sel.value;const pw=opt?.dataset?.power;if(pw){$('invPower').value=pw;}}
 }
@@ -475,10 +492,10 @@ document.querySelectorAll('input[name=vend]').forEach(r=>r.addEventListener('cha
 // ── RESET ──
 function resetForm(){
   document.querySelectorAll('.fi,.fta').forEach(i=>{if(i.type!=='radio'&&i.type!=='checkbox')i.value='';});
-  $('validityDays').value=7;$('prazoDias').value=20;$('precoKvp').value=3500;
+  $('validityDays').value=7;$('prazoDias').value=20;$('precoKvp').value=3500;$('precoKvp').removeAttribute('data-manual');delete $('precoKvp').dataset.manual;
   $('warPainel').value=25;$('warMicroinv').value=15;$('warInvStr').value=10;$('warInstalacao').value=1;$('warAssistencia').value='Inclusa';
   $('hasWallbox').checked=false;$('wallboxFields').style.display='none';
-  $('monthlyGen').removeAttribute('data-manual');$('projectValue').removeAttribute('data-manual');
+  $('monthlyGen').removeAttribute('data-manual');
   document.querySelector('input[name=installType][value="Residencial"]').checked=true;
   document.querySelector('input[name=vend][value="lucas"]').checked=true;
   $('vendCustom').style.display='none';
@@ -955,7 +972,11 @@ function toggleEstoque(){
 function printPDF(){
   const pages=document.querySelectorAll('#preview .page');
   if(!pages.length){alert('Gere a proposta antes de imprimir.');return;}
+  const cliente=(get('clientName')||'Cliente').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9\s]/g,'').trim().toUpperCase().replace(/\s+/g,' ');
+  const orig=document.title;
+  document.title='Proposta LumenGrid - '+cliente+' - SOLAR';
   window.print();
+  document.title=orig;
 }
 </script>
 </body>
