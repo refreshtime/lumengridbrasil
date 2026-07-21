@@ -199,18 +199,20 @@ code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7
       <div class="step-num">3</div>
       <div class="step-content">
         <div class="step-title">Clique em Lançar Proposta</div>
-        <div class="step-desc">O registro aparece no histórico do lead e é enviado ao dashboard do parceiro (se a URL do Apps Script estiver configurada na aba Importar).</div>
+        <div class="step-desc">O registro aparece no histórico do lead e é enviado automaticamente ao dashboard do parceiro.</div>
       </div>
     </div>
   </div>
 
-  <!-- IMPORTAR -->
-  <h2>6. Importar e configurar</h2>
-  <p>Na aba <strong>Importar</strong> você pode:</p>
+  <!-- BACKUP -->
+  <h2>6. Backup automático na planilha</h2>
+  <p>O CRM salva todos os leads automaticamente no Google Sheets a cada alteração — você nunca perde dados mesmo que o navegador seja limpo.</p>
+  <div class="alert">
+    <strong>Já está configurado.</strong> Nenhuma ação necessária — o backup acontece em segundo plano sempre que um lead é criado, movido ou editado.
+  </div>
+  <p>Na aba <strong>Importar</strong> você também pode:</p>
   <ul>
-    <li>Conectar o CRM a uma planilha do Google Sheets (leads do Meta)</li>
     <li>Fazer upload de arquivo CSV</li>
-    <li>Configurar a URL do Apps Script dos parceiros</li>
     <li>Exportar backup JSON ou CSV de todos os leads</li>
     <li>Restaurar um backup anterior</li>
   </ul>
@@ -223,7 +225,7 @@ code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7
     <li>Cards com borda amarela indicam leads em negociação há mais de 3 dias</li>
     <li>O badge <strong>NOVO</strong> aparece em leads que ainda não foram vistos pelo responsável</li>
     <li>Use a <strong>busca</strong> no topo para encontrar leads por nome, telefone ou cidade</li>
-    <li>O CRM salva tudo automaticamente no navegador — sem necessidade de internet para funcionar</li>
+    <li>O CRM salva localmente <strong>e</strong> na planilha Google automaticamente — dados seguros mesmo trocando de dispositivo</li>
   </ul>
 
   <div class="footer">
