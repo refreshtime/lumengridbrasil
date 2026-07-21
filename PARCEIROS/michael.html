@@ -530,7 +530,7 @@ tbody td { padding: 14px 16px; font-size: 14px; }
             <th>Valor do Projeto</th>
             <th>Comissão Estimada</th>
             <th>Comissão Paga</th>
-            <th>Observações</th>
+            <th>Arquivo / Obs</th>
           </tr>
         </thead>
         <tbody id="tabelaBody"></tbody>
@@ -560,7 +560,7 @@ tbody td { padding: 14px 16px; font-size: 14px; }
 
 <!-- ══ MODAL NOVA INDICAÇÃO ═══════════════════════════════ -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal">
+  <div class="modal" style="width:540px;max-height:90vh;overflow-y:auto;">
     <div class="modal-header">
       <div>
         <h2>+ Nova Indicação</h2>
@@ -580,19 +580,45 @@ tbody td { padding: 14px 16px; font-size: 14px; }
         <input type="text" id="fTel" placeholder="(11) 99999-9999">
       </div>
       <div class="form-group">
-        <label>Cidade *</label>
-        <input type="text" id="fCidade" placeholder="Ex: São Paulo">
+        <label>E-mail</label>
+        <input type="email" id="fEmail" placeholder="email@exemplo.com">
       </div>
     </div>
 
     <div class="form-group">
+      <label>Endereço</label>
+      <input type="text" id="fEndereco" placeholder="Rua, número, bairro">
+    </div>
+
+    <div class="form-group">
+      <label>Cidade *</label>
+      <input type="text" id="fCidade" placeholder="Ex: São Paulo">
+    </div>
+
+    <div class="form-group">
       <label>Observações</label>
-      <textarea id="fObs" rows="3" placeholder="Tipo de imóvel, consumo estimado, interesse específico..."></textarea>
+      <textarea id="fObs" rows="2" placeholder="Tipo de imóvel, consumo estimado, interesse específico..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Arquivo (conta de luz, foto, documento)</label>
+      <div id="dropZone" style="
+        border:2px dashed rgba(255,255,255,.15);border-radius:8px;
+        padding:20px;text-align:center;cursor:pointer;
+        transition:border-color .2s;background:var(--surface2);"
+        onclick="document.getElementById('fArquivo').click()"
+        ondragover="event.preventDefault();this.style.borderColor='var(--orange)'"
+        ondragleave="this.style.borderColor='rgba(255,255,255,.15)'"
+        ondrop="handleDrop(event)">
+        <div style="font-size:28px;margin-bottom:6px;">📎</div>
+        <div id="dropLabel" style="font-size:13px;color:var(--muted);">Clique ou arraste um arquivo aqui</div>
+      </div>
+      <input type="file" id="fArquivo" style="display:none" onchange="handleFile(this.files[0])">
     </div>
 
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="submitClient()">Enviar Indicação</button>
+      <button class="btn btn-primary" id="btnEnviar" onclick="submitClient()">Enviar Indicação</button>
     </div>
   </div>
 </div>
@@ -667,10 +693,25 @@ async function syncData() {
   }
 
   try {
-    const res = await fetch(CONFIG.APPS_SCRIPT_URL + '?action=getData');
+    const res  = await fetch(CONFIG.APPS_SCRIPT_URL + '?action=getData&parceiro=' + encodeURIComponent(CONFIG.PARCEIRO));
     const json = await res.json();
     if (json.error) throw new Error(json.error);
-    CLIENTES = json.clientes || [];
+    CLIENTES = (json.clientes || []).map(c => ({
+      ...c,
+      nome:              c['Nome']              || c.nome              || '',
+      telefone:          c['Telefone']          || c.telefone          || '',
+      email:             c['E-mail']            || c.email             || '',
+      endereco:          c['Endereço']          || c.endereco          || '',
+      cidade:            c['Cidade']            || c.cidade            || '',
+      dataIndicacao:     c['Data Indicação']    || c.dataIndicacao     || '',
+      status:            c['Status']            || c.status            || '',
+      valorProjeto:      +c['Valor Projeto']    || +c.valorProjeto     || 0,
+      comissaoEstimada:  +c['Comissão Estimada']|| +c.comissaoEstimada || 0,
+      comissaoPaga:      +c['Comissão Paga']    || +c.comissaoPaga     || 0,
+      comissaoPendente:  +c['Comissão Pendente']|| +c.comissaoPendente || 0,
+      arquivo:           c['Arquivo']           || '',
+      obs:               c['Observações']       || c.obs               || '',
+    }));
 
     document.getElementById('demoBanner').classList.add('hidden');
     document.getElementById('syncDot').classList.remove('demo');
@@ -898,7 +939,10 @@ function renderTable(filtro) {
       <td class="td-com" style="color:${paga?'var(--green)':'var(--muted2)'}">
         ${paga ? fmt(paga) : '—'}
       </td>
-      <td style="color:var(--muted);font-size:13px;max-width:200px;">${obs || '—'}</td>
+      <td style="color:var(--muted);font-size:13px;max-width:200px;">
+        ${c.arquivo ? `<a href="${c.arquivo}" target="_blank" style="color:var(--orange);text-decoration:none;">📎 Ver arquivo</a><br>` : ''}
+        ${obs || '—'}
+      </td>
     </tr>`;
   }).join('');
 }
@@ -989,23 +1033,55 @@ function renderProjecao() {
   `;
 }
 
+// ── ARQUIVO ───────────────────────────────────────────────────
+let arquivoSelecionado = null;
+
+function handleFile(file) {
+  if (!file) return;
+  arquivoSelecionado = file;
+  document.getElementById('dropLabel').textContent = '✅ ' + file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+  document.getElementById('dropZone').style.borderColor = 'var(--orange)';
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').style.borderColor = 'rgba(255,255,255,.15)';
+  const file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 // ── MODAL NOVA INDICAÇÃO ──────────────────────────────────────
 function openModal() {
   document.getElementById('modalOverlay').classList.add('open');
 }
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
-  ['fNome','fTel','fCidade','fObs'].forEach(id => document.getElementById(id).value = '');
+  ['fNome','fTel','fEmail','fEndereco','fCidade','fObs'].forEach(id => document.getElementById(id).value = '');
+  arquivoSelecionado = null;
+  document.getElementById('dropLabel').textContent = 'Clique ou arraste um arquivo aqui';
+  document.getElementById('dropZone').style.borderColor = 'rgba(255,255,255,.15)';
+  document.getElementById('fArquivo').value = '';
 }
 function closeModalOutside(e) {
   if (e.target.id === 'modalOverlay') closeModal();
 }
 
 async function submitClient() {
-  const nome   = document.getElementById('fNome').value.trim();
-  const tel    = document.getElementById('fTel').value.trim();
-  const cidade = document.getElementById('fCidade').value.trim();
-  const obs    = document.getElementById('fObs').value.trim();
+  const nome     = document.getElementById('fNome').value.trim();
+  const tel      = document.getElementById('fTel').value.trim();
+  const email    = document.getElementById('fEmail').value.trim();
+  const endereco = document.getElementById('fEndereco').value.trim();
+  const cidade   = document.getElementById('fCidade').value.trim();
+  const obs      = document.getElementById('fObs').value.trim();
 
   if (!nome || !tel || !cidade) {
     showToast('Preencha nome, telefone e cidade.', 'error'); return;
@@ -1014,8 +1090,8 @@ async function submitClient() {
   if (CONFIG.DEMO_MODE || CONFIG.APPS_SCRIPT_URL === 'SUA_URL_AQUI') {
     const novo = {
       id: 'MC' + Math.random().toString(36).substring(2,8).toUpperCase(),
-      nome, telefone: tel, cidade,
-      dataIndicacao: new Date().toLocaleDateString('pt-BR'),
+      nome, telefone: tel, 'E-mail': email, 'Endereço': endereco, cidade,
+      'Data Indicação': new Date().toLocaleDateString('pt-BR'),
       status: 'Indicado', valorProjeto:0,
       comissaoEstimada:0, comissaoPaga:0, comissaoPendente:0, obs
     };
@@ -1026,16 +1102,40 @@ async function submitClient() {
     return;
   }
 
+  const btn = document.getElementById('btnEnviar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
   try {
-    const url = `${CONFIG.APPS_SCRIPT_URL}?action=addClient&nome=${enc(nome)}&telefone=${enc(tel)}&cidade=${enc(cidade)}&obs=${enc(obs)}`;
-    const res  = await fetch(url);
-    const json = await res.json();
-    if (json.error) throw new Error(json.error);
+    const body = {
+      action: 'addClient',
+      parceiro: CONFIG.PARCEIRO,
+      nome, telefone: tel, email, endereco, cidade, obs,
+    };
+
+    if (arquivoSelecionado) {
+      body.arquivo = {
+        base64: await fileToBase64(arquivoSelecionado),
+        nome:   arquivoSelecionado.name,
+        tipo:   arquivoSelecionado.type,
+      };
+    }
+
+    await fetch(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode:   'no-cors',
+      headers:{ 'Content-Type': 'application/json' },
+      body:   JSON.stringify(body),
+    });
+
     closeModal();
     showToast('Indicação enviada com sucesso!', 'success');
-    await syncData();
+    setTimeout(() => syncData(), 2000);
   } catch (err) {
     showToast('Erro: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enviar Indicação';
   }
 }
 
