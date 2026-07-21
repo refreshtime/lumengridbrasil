@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Indicação</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 32px;
+  min-height: 100vh;
+}
+
+/* WRAPPER PARA ESCALA NO BROWSER */
+.scale-wrapper {
+  transform-origin: top center;
+  transform: scale(0.55);
+  margin-bottom: -590px; /* compensar espaço do scale */
+}
+
+/* POST 1080 x 1350 */
+.post {
+  width: 1080px;
+  height: 1350px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── FOTO FUNDO ── */
+.bg {
+  position: absolute;
+  inset: 0;
+  background: url('imagens/PARCERIA .png') center 30% / cover no-repeat;
+}
+
+/* ── OVERLAY ──
+   Topo quase limpo (logo visível), meio livre (foto respira),
+   fundo muito escuro para o texto */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(8,8,8,0.72)  0%,
+    rgba(8,8,8,0.10) 18%,
+    rgba(8,8,8,0.05) 38%,
+    rgba(8,8,8,0.45) 58%,
+    rgba(8,8,8,0.90) 72%,
+    rgba(8,8,8,0.97) 100%
+  );
+}
+
+/* ── CANTOS DECORATIVOS ── */
+.corner {
+  position: absolute;
+  width: 28px; height: 28px;
+  border: 2px solid rgba(242,101,34,0.75);
+  z-index: 20;
+}
+.tl { top:32px;  left:32px;  border-right:none; border-bottom:none; }
+.tr { top:32px;  right:32px; border-left:none;  border-bottom:none; }
+.bl { bottom:24px; left:32px;  border-right:none; border-top:none; }
+.br { bottom:24px; right:32px; border-left:none;  border-top:none; }
+
+/* ── FAIXA RODAPÉ ── */
+.footer-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 7px;
+  background: linear-gradient(to right, #C94E0F, #F26522, #C94E0F);
+  z-index: 30;
+}
+
+/* ── CONTEÚDO ── */
+.content {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TOPO */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 64px 0;
+  flex-shrink: 0;
+}
+.logo img {
+  height: 50px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 10px rgba(0,0,0,0.9));
+}
+.tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(242,101,34,0.85);
+  text-transform: uppercase;
+}
+
+/* ESPAÇO LIVRE — FOTO APARECE AQUI */
+.spacer { flex: 1; }
+
+/* BLOCO INFERIOR */
+.bottom {
+  padding: 0 64px 52px;
+  flex-shrink: 0;
+}
+
+/* BADGE */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(242,101,34,0.70);
+  padding: 8px 24px;
+  margin-bottom: 26px;
+}
+.pill span {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #F26522;
+}
+.dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #F26522;
+  flex-shrink: 0;
+}
+
+/* HEADLINE */
+.headline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: #FAFAFA;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  margin-bottom: 14px;
+}
+.headline em {
+  font-style: normal;
+  color: #F26522;
+}
+
+/* SUBTEXTO */
+.sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  color: rgba(250,250,250,0.72);
+  line-height: 1.5;
+  margin-bottom: 36px;
+}
+
+/* DIVISOR */
+.rule {
+  width: 52px; height: 3px;
+  background: linear-gradient(to right, #C94E0F, #F26522);
+  margin-bottom: 36px;
+}
+
+/* DESTAQUE PIX — HERO */
+.pix-card {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 28px;
+  border-left: 5px solid #F26522;
+}
+.pix-left {
+  background: rgba(242,101,34,0.15);
+  border: 1px solid rgba(242,101,34,0.40);
+  border-left: none;
+  padding: 22px 32px;
+  flex: 1;
+}
+.pix-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(242,101,34,0.80);
+  display: block;
+  margin-bottom: 4px;
+}
+.pix-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  color: #F26522;
+  line-height: 1;
+  letter-spacing: -2px;
+  display: block;
+}
+.pix-after {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(250,250,250,0.55);
+  display: block;
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* STEPS */
+.steps {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+}
+.step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  background: rgba(0,0,0,0.50);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 20px 12px;
+}
+.step + .step { border-left: none; }
+
+.step-num {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid #F26522;
+  background: rgba(242,101,34,0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #F26522;
+}
+.step-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FAFAFA;
+  line-height: 1.2;
+}
+.step-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(250,250,250,0.50);
+}
+
+/* SETA ENTRE STEPS */
+.step-arrow {
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #F26522;
+  font-size: 22px;
+  background: rgba(0,0,0,0.50);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* BENEFÍCIO */
+.benefit {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 22px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 30px;
+}
+.benefit-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(250,250,250,0.75);
+  line-height: 1.45;
+}
+.benefit-text b {
+  font-weight: 600;
+  color: #FAFAFA;
+}
+
+/* CTA */
+.cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #F26522;
+  padding: 22px 40px;
+  width: 100%;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.cta-btn svg {
+  width: 24px; height: 24px;
+  fill: #111;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<div class="scale-wrapper">
+<div class="post">
+
+  <!-- FUNDO -->
+  <div class="bg"></div>
+  <div class="overlay"></div>
+
+  <!-- CANTOS -->
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+
+  <!-- FAIXA RODAPÉ -->
+  <div class="footer-bar"></div>
+
+  <!-- CONTEÚDO -->
+  <div class="content">
+
+    <!-- TOPO -->
+    <div class="top-bar">
+      <div class="logo">
+        <img src="imagens/Fundo transparenet LUMENGRID.png" alt="LumenGrid">
+      </div>
+      <div class="tagline">Energia Inteligente</div>
+    </div>
+
+    <!-- FOTO RESPIRA AQUI -->
+    <div class="spacer"></div>
+
+    <!-- BLOCO INFERIOR -->
+    <div class="bottom">
+
+      <div class="pill">
+        <div class="dot"></div>
+        <span>Programa de Indicação</span>
+        <div class="dot"></div>
+      </div>
+
+      <div class="headline">
+        Energia boa<br><em>se compartilha.</em>
+      </div>
+
+      <div class="sub">
+        Indique alguém para um projeto solar com a LumenGrid<br>
+        e, após a contratação, você recebe:
+      </div>
+
+      <div class="rule"></div>
+
+      <!-- DESTAQUE R$ 500 -->
+      <div class="pix-card">
+        <div class="pix-left">
+          <span class="pix-label">Você recebe</span>
+          <span class="pix-value">R$ 500</span>
+          <span class="pix-after">direto no seu Pix · após a contratação</span>
+        </div>
+      </div>
+
+      <!-- 3 PASSOS -->
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">Você indica</div>
+          <div class="step-desc">pelo WhatsApp</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">Amigo contrata</div>
+          <div class="step-desc">condições exclusivas</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Você recebe</div>
+          <div class="step-desc">R$ 500 no Pix</div>
+        </div>
+      </div>
+
+      <!-- BENEFÍCIO PARA O INDICADO -->
+      <div class="benefit">
+        <div class="dot"></div>
+        <div class="benefit-text">
+          Quem você indicar terá acesso a
+          <b>condições promocionais exclusivas</b>
+          para começar a economizar.
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-btn">
+        <svg viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+        Indique agora pelo WhatsApp
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>

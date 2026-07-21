@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LumenGrid · Portal Michael</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0b0b12;
+  --surface:  #12121c;
+  --surface2: #1a1a28;
+  --border:   rgba(255,255,255,.07);
+  --orange:   #F26522;
+  --orange2:  #C94E0F;
+  --green:    #22C55E;
+  --yellow:   #F59E0B;
+  --blue:     #3B82F6;
+  --purple:   #A855F7;
+  --text:     #FAFAFA;
+  --muted:    rgba(250,250,250,.45);
+  --muted2:   rgba(250,250,250,.22);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(11,11,18,.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800; font-size: 14px; color: #111;
+}
+.logo-text { display: flex; flex-direction: column; gap: 0; }
+.logo-text strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800; font-size: 16px; line-height: 1;
+}
+.logo-text strong span { color: var(--orange); }
+.logo-text small {
+  font-size: 7px; font-weight: 600; letter-spacing: .3em;
+  text-transform: uppercase; color: rgba(242,101,34,.80);
+}
+.header-center {
+  display: flex; flex-direction: column; align-items: center;
+}
+.header-center p {
+  font-size: 11px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 1px;
+}
+.header-center h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px; font-weight: 700; color: var(--text);
+}
+.header-actions { display: flex; gap: 10px; align-items: center; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600;
+  font-size: 13px; border: none; cursor: pointer;
+  padding: 9px 18px; border-radius: 6px; transition: opacity .15s;
+  text-decoration: none;
+}
+.btn:hover { opacity: .85; }
+.btn-primary { background: var(--orange); color: #111; }
+.btn-ghost {
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,.18); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 1280px; margin: 0 auto; padding: 28px 32px 60px; }
+
+/* ── DEMO BANNER ── */
+.demo-banner {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.30);
+  padding: 12px 20px; border-radius: 8px; margin-bottom: 24px;
+  font-size: 13px; color: #F59E0B;
+}
+.demo-banner.hidden { display: none; }
+
+/* ── SECTION ── */
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
+
+/* ── KPI CARDS ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.kpi-card:hover { border-color: rgba(242,101,34,.30); }
+.kpi-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--accent, transparent);
+}
+.kpi-card.orange::before { background: linear-gradient(to right, var(--orange2), var(--orange)); }
+.kpi-card.green::before  { background: var(--green); }
+.kpi-card.yellow::before { background: var(--yellow); }
+.kpi-card.blue::before   { background: var(--blue); }
+
+.kpi-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+}
+.kpi-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px; font-weight: 800; color: var(--text);
+  line-height: 1;
+}
+.kpi-value.orange { color: var(--orange); }
+.kpi-value.green  { color: var(--green); }
+.kpi-value.yellow { color: var(--yellow); }
+.kpi-icon {
+  position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+  opacity: .08; font-size: 48px; line-height: 1;
+}
+.kpi-sub {
+  font-size: 11px; color: var(--muted2); margin-top: 6px;
+}
+
+/* ── MIDDLE ROW: FUNIL + GRÁFICO ── */
+.mid-row {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 24px;
+}
+.panel-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; font-weight: 700; color: var(--text);
+  margin-bottom: 20px;
+}
+
+/* ── FUNIL ── */
+.funnel { display: flex; flex-direction: column; gap: 10px; }
+.funnel-step { display: flex; flex-direction: column; gap: 4px; }
+.funnel-bar-wrap {
+  display: flex; align-items: center; gap: 10px;
+}
+.funnel-bar-bg {
+  flex: 1; height: 36px; background: var(--surface2);
+  border-radius: 4px; overflow: hidden;
+}
+.funnel-bar-fill {
+  height: 100%; border-radius: 4px;
+  display: flex; align-items: center; padding-left: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px; font-weight: 700; color: #111;
+  transition: width .6s ease;
+}
+.funnel-count {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px; font-weight: 800; width: 32px; text-align: right;
+  flex-shrink: 0;
+}
+.funnel-label {
+  font-size: 12px; color: var(--muted);
+  display: flex; justify-content: space-between;
+  padding: 0 2px;
+}
+.funnel-pct {
+  font-size: 11px; font-weight: 600;
+  color: var(--orange);
+}
+
+/* ── GRÁFICO ── */
+.chart-container { position: relative; height: 260px; }
+
+/* ── TABELA ── */
+.table-section { margin-bottom: 28px; }
+.table-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.filter-tabs { display: flex; gap: 6px; }
+.filter-tab {
+  padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted);
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all .15s;
+}
+.filter-tab.active {
+  background: var(--orange); color: #111; border-color: var(--orange);
+}
+.table-wrap {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  padding: 12px 16px; text-align: left;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(255,255,255,.03); }
+tbody td { padding: 14px 16px; font-size: 14px; }
+.td-name { font-weight: 600; color: var(--text); }
+.td-city { color: var(--muted); font-size: 13px; }
+.td-date { color: var(--muted); font-size: 13px; }
+.td-value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+.td-com { font-family: 'Space Grotesk', sans-serif; font-size: 13px; }
+
+/* badges de status */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: .5px;
+  white-space: nowrap;
+}
+.badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.badge-indicado   { background: rgba(148,163,184,.12); color: #94A3B8; }
+.badge-contatado  { background: rgba(245,158,11,.12);  color: #F59E0B; }
+.badge-proposta   { background: rgba(168,85,247,.12);  color: #A855F7; }
+.badge-fechado    { background: rgba(34,197,94,.12);   color: #22C55E; }
+
+/* ── BOTTOM ROW: FINANCEIRO + PROJEÇÃO ── */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Resumo financeiro */
+.fin-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.fin-row:last-child { border-bottom: none; }
+.fin-label { font-size: 14px; color: var(--muted); }
+.fin-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px; font-weight: 700;
+}
+.fin-value.total { font-size: 22px; color: var(--orange); }
+.fin-value.green { color: var(--green); }
+.fin-value.yellow { color: var(--yellow); }
+
+/* Projeção */
+.proj-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: var(--surface2);
+  border-radius: 8px; margin-bottom: 8px;
+}
+.proj-item:last-child { margin-bottom: 0; }
+.proj-label { font-size: 13px; }
+.proj-label small { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+.proj-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px; font-weight: 700;
+}
+.proj-note {
+  font-size: 11px; color: var(--muted2); margin-top: 14px;
+  line-height: 1.5; padding-top: 12px; border-top: 1px solid var(--border);
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.70); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface); border: 1px solid rgba(242,101,34,.25);
+  border-radius: 14px; padding: 32px; width: 480px; max-width: 95vw;
+  transform: translateY(16px); transition: transform .2s;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 24px;
+}
+.modal-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px; font-weight: 700;
+}
+.modal-header p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.btn-close {
+  background: none; border: none; color: var(--muted);
+  font-size: 22px; cursor: pointer; line-height: 1; padding: 2px;
+}
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block; font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%; padding: 11px 14px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  outline: none; transition: border-color .15s; resize: none;
+}
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--orange); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+/* ── NOTIFY MODAL ── */
+.notify-modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 28px; width: 420px;
+  transform: translateY(16px); transition: transform .2s;
+}
+.modal-overlay.open .notify-modal { transform: translateY(0); }
+
+/* ── SYNC STATUS ── */
+.sync-info {
+  font-size: 11px; color: var(--muted2);
+  display: flex; align-items: center; gap: 6px;
+}
+.sync-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+}
+.sync-dot.demo { background: var(--yellow); }
+
+/* ── EMPTY STATE ── */
+.empty {
+  text-align: center; padding: 48px 24px;
+  color: var(--muted);
+}
+.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: .4; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 300;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 20px;
+  font-size: 14px; display: flex; align-items: center; gap: 10px;
+  transform: translateY(80px); opacity: 0;
+  transition: all .3s; pointer-events: none;
+  max-width: 360px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-color: rgba(34,197,94,.40); }
+.toast.error   { border-color: rgba(242,101,34,.40); }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">LG</div>
+    <div class="logo-text">
+      <strong><span>LUMEN</span>GRID</strong>
+      <small>Energia Inteligente</small>
+    </div>
+  </div>
+
+  <div class="header-center">
+    <p>Portal do Parceiro</p>
+    <h1 id="nomeHeader">Michael</h1>
+  </div>
+
+  <div class="header-actions">
+    <div class="sync-info">
+      <div class="sync-dot demo" id="syncDot"></div>
+      <span id="syncLabel">Modo demo</span>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="syncData()">↻ Sincronizar</button>
+    <button class="btn btn-ghost btn-sm" onclick="openNotify()">✉ Notificar</button>
+    <button class="btn btn-primary" onclick="openModal()">+ Nova Indicação</button>
+  </div>
+</header>
+
+<!-- ══ MAIN ════════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- Banner demo -->
+  <div class="demo-banner" id="demoBanner">
+    <span>⚠</span>
+    <div>
+      <strong>Modo demonstração.</strong>
+      Configure o Apps Script URL em <code>CONFIG.APPS_SCRIPT_URL</code> para sincronizar com o Google Sheets.
+    </div>
+  </div>
+
+  <!-- ── 8 KPI CARDS ── -->
+  <p class="section-title">Visão geral</p>
+  <div class="kpi-grid">
+    <div class="kpi-card orange">
+      <div class="kpi-label">Clientes Indicados</div>
+      <div class="kpi-value" id="kpiIndicados">—</div>
+      <div class="kpi-sub">total de indicações</div>
+      <div class="kpi-icon">👥</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Contatos Realizados</div>
+      <div class="kpi-value" id="kpiContatados">—</div>
+      <div class="kpi-sub">abordados pela equipe</div>
+      <div class="kpi-icon">📞</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Propostas Enviadas</div>
+      <div class="kpi-value" id="kpiPropostas">—</div>
+      <div class="kpi-sub">em negociação</div>
+      <div class="kpi-icon">📄</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Contratos Fechados</div>
+      <div class="kpi-value green" id="kpiFechados">—</div>
+      <div class="kpi-sub">projetos confirmados</div>
+      <div class="kpi-icon">✅</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Valor Total Vendido</div>
+      <div class="kpi-value" id="kpiValor" style="font-size:24px;">—</div>
+      <div class="kpi-sub">contratos fechados</div>
+      <div class="kpi-icon">💰</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">Comissão Estimada</div>
+      <div class="kpi-value orange" id="kpiComEstimada" style="font-size:24px;">—</div>
+      <div class="kpi-sub">projeção total</div>
+      <div class="kpi-icon">📊</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Comissão Paga</div>
+      <div class="kpi-value green" id="kpiComPaga" style="font-size:24px;">—</div>
+      <div class="kpi-sub">já depositado</div>
+      <div class="kpi-icon">✅</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Comissão Pendente</div>
+      <div class="kpi-value yellow" id="kpiComPendente" style="font-size:24px;">—</div>
+      <div class="kpi-sub">a receber</div>
+      <div class="kpi-icon">⏳</div>
+    </div>
+  </div>
+
+  <!-- ── FUNIL + GRÁFICO ── -->
+  <p class="section-title">Desempenho</p>
+  <div class="mid-row">
+
+    <!-- Funil -->
+    <div class="panel">
+      <div class="panel-title">Funil de Conversão</div>
+      <div class="funnel" id="funnelContainer"></div>
+    </div>
+
+    <!-- Gráfico mensal -->
+    <div class="panel">
+      <div class="panel-title">Evolução Mensal</div>
+      <div class="chart-container">
+        <canvas id="chartMensal"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── TABELA DE CLIENTES ── -->
+  <div class="table-section">
+    <div class="table-toolbar">
+      <p class="section-title" style="margin-bottom:0;">Clientes Indicados</p>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterTable('todos', this)">Todos</button>
+        <button class="filter-tab" onclick="filterTable('Indicado', this)">Indicado</button>
+        <button class="filter-tab" onclick="filterTable('Contatado', this)">Contatado</button>
+        <button class="filter-tab" onclick="filterTable('Proposta Enviada', this)">Proposta</button>
+        <button class="filter-tab" onclick="filterTable('Contrato Fechado', this)">Fechado</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Valor do Projeto</th>
+            <th>Comissão Estimada</th>
+            <th>Comissão Paga</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── RESUMO FINANCEIRO + PROJEÇÃO ── -->
+  <p class="section-title">Financeiro</p>
+  <div class="bottom-row">
+
+    <!-- Resumo financeiro -->
+    <div class="panel">
+      <div class="panel-title">Resumo Financeiro Consolidado</div>
+      <div id="resumoFinanceiro"></div>
+    </div>
+
+    <!-- Projeção futura -->
+    <div class="panel">
+      <div class="panel-title">Projeção de Comissão Futura</div>
+      <div id="projecaoContainer"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ══ MODAL NOVA INDICAÇÃO ═══════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2>+ Nova Indicação</h2>
+        <p>Preencha os dados do cliente que você está indicando.</p>
+      </div>
+      <button class="btn-close" onclick="closeModal()">×</button>
+    </div>
+
+    <div class="form-group">
+      <label>Nome completo *</label>
+      <input type="text" id="fNome" placeholder="Ex: Ricardo Almeida">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Telefone / WhatsApp *</label>
+        <input type="text" id="fTel" placeholder="(11) 99999-9999">
+      </div>
+      <div class="form-group">
+        <label>Cidade *</label>
+        <input type="text" id="fCidade" placeholder="Ex: São Paulo">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Observações</label>
+      <textarea id="fObs" rows="3" placeholder="Tipo de imóvel, consumo estimado, interesse específico..."></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitClient()">Enviar Indicação</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL NOTIFICAR ════════════════════════════════════ -->
+<div class="modal-overlay" id="notifyOverlay" onclick="closeNotifyOutside(event)">
+  <div class="notify-modal">
+    <div class="modal-header">
+      <div>
+        <h2>✉ Notificar LumenGrid</h2>
+        <p>Envie uma mensagem direto para nossa equipe.</p>
+      </div>
+      <button class="btn-close" onclick="closeNotify()">×</button>
+    </div>
+    <div class="form-group" style="margin-top:0;">
+      <label>Mensagem</label>
+      <textarea id="fNotifyMsg" rows="5" placeholder="Ex: Gostaria de atualizar o status do cliente..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeNotify()">Cancelar</button>
+      <button class="btn btn-primary" onclick="sendNotify()">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  ⚙ CONFIGURAÇÃO — altere antes de publicar no GitHub
+// ════════════════════════════════════════════════════════════
+const CONFIG = {
+  // Cole aqui a URL do Apps Script após implantar como Aplicativo da Web
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycby8FMy4HPUiRCjGjWjyMEdZE7DGFzwNzmACBlI2RxdrC9PlbgyO_Kdh1PuQoQIKHTr-Lg/exec',
+
+  // Nome do parceiro (aparece no cabeçalho)
+  PARCEIRO: 'Michael',
+
+  // true = usa dados de exemplo (sem API)
+  // false = busca dados reais do Google Sheets
+  DEMO_MODE: false,
+};
+// ════════════════════════════════════════════════════════════
+
+// ── DADOS DE EXEMPLO ────────────────────────────────────────
+const SAMPLE = [
+  { id:'MC001', nome:'Ricardo Almeida',  telefone:'(11) 98765-4321', cidade:'São Paulo',   dataIndicacao:'15/02/2026', status:'Contrato Fechado', valorProjeto:45000, comissaoEstimada:2700, comissaoPaga:2700, comissaoPendente:0,    obs:'Residencial 5kWp' },
+  { id:'MC002', nome:'Fernanda Costa',   telefone:'(11) 91234-5678', cidade:'Guarulhos',   dataIndicacao:'28/03/2026', status:'Proposta Enviada', valorProjeto:38000, comissaoEstimada:2280, comissaoPaga:0,    comissaoPendente:2280, obs:'Aguardando financiamento' },
+  { id:'MC003', nome:'Alexandre Souza',  telefone:'(11) 97777-2222', cidade:'São Bernardo',dataIndicacao:'05/05/2026', status:'Contrato Fechado', valorProjeto:62000, comissaoEstimada:3720, comissaoPaga:1860, comissaoPendente:1860, obs:'Sistema híbrido — 2ª parcela em agosto' },
+  { id:'MC004', nome:'Bruno Takahashi',  telefone:'(11) 99876-5432', cidade:'Santo André', dataIndicacao:'10/06/2026', status:'Contatado',        valorProjeto:0,     comissaoEstimada:0,    comissaoPaga:0,    comissaoPendente:0,    obs:'Reunião agendada' },
+  { id:'MC005', nome:'Carla Mendonça',   telefone:'(19) 98888-1111', cidade:'Campinas',    dataIndicacao:'20/06/2026', status:'Proposta Enviada', valorProjeto:29000, comissaoEstimada:1740, comissaoPaga:0,    comissaoPendente:1740, obs:'' },
+  { id:'MC006', nome:'Patricia Lima',    telefone:'(11) 95555-3333', cidade:'Osasco',      dataIndicacao:'03/07/2026', status:'Indicado',         valorProjeto:0,     comissaoEstimada:0,    comissaoPaga:0,    comissaoPendente:0,    obs:'Indicação recente' },
+];
+
+// ── ESTADO ──────────────────────────────────────────────────
+let CLIENTES = [];
+let filtroAtivo = 'todos';
+let chartInstance = null;
+
+// ── INICIALIZAÇÃO ────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('nomeHeader').textContent = CONFIG.PARCEIRO;
+  syncData();
+});
+
+async function syncData() {
+  if (CONFIG.DEMO_MODE || CONFIG.APPS_SCRIPT_URL === 'SUA_URL_AQUI') {
+    CLIENTES = [...SAMPLE];
+    renderAll();
+    return;
+  }
+
+  try {
+    const res = await fetch(CONFIG.APPS_SCRIPT_URL + '?action=getData');
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    CLIENTES = json.clientes || [];
+
+    document.getElementById('demoBanner').classList.add('hidden');
+    document.getElementById('syncDot').classList.remove('demo');
+    document.getElementById('syncLabel').textContent = 'Sincronizado · ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+    renderAll();
+  } catch (err) {
+    showToast('Erro ao sincronizar: ' + err.message, 'error');
+  }
+}
+
+// ── RENDERIZAÇÃO COMPLETA ────────────────────────────────────
+function renderAll() {
+  const r = calcResumo(CLIENTES);
+  renderKPIs(r);
+  renderFunnel(r);
+  renderChart();
+  renderTable(filtroAtivo);
+  renderFinanceiro(r);
+  renderProjecao();
+}
+
+// ── KPIs ─────────────────────────────────────────────────────
+function calcResumo(list) {
+  const ordem = { 'indicado':1, 'contatado':2, 'proposta enviada':3, 'contrato fechado':4 };
+  let ind=0, con=0, prop=0, fec=0;
+  let valor=0, estim=0, paga=0, pend=0;
+
+  list.forEach(c => {
+    const n = ordem[(c.status||'').toLowerCase().trim()] || 0;
+    if (n>=1) ind++;
+    if (n>=2) con++;
+    if (n>=3) prop++;
+    if (n>=4) fec++;
+    valor += +c.valorProjeto     || +c['Valor Projeto']      || 0;
+    estim += +c.comissaoEstimada || +c['Comissão Estimada']  || 0;
+    paga  += +c.comissaoPaga     || +c['Comissão Paga']      || 0;
+    pend  += +c.comissaoPendente || +c['Comissão Pendente']  || 0;
+  });
+
+  return { indicados:ind, contatados:con, propostas:prop, fechados:fec,
+           valorTotal:valor, comEstimada:estim, comPaga:paga, comPendente:pend,
+           total:list.length };
+}
+
+function renderKPIs(r) {
+  set('kpiIndicados',  r.indicados);
+  set('kpiContatados', r.contatados);
+  set('kpiPropostas',  r.propostas);
+  set('kpiFechados',   r.fechados);
+  set('kpiValor',      fmt(r.valorTotal));
+  set('kpiComEstimada',fmt(r.comEstimada));
+  set('kpiComPaga',    fmt(r.comPaga));
+  set('kpiComPendente',fmt(r.comPendente));
+}
+
+// ── FUNIL ─────────────────────────────────────────────────────
+function renderFunnel(r) {
+  const steps = [
+    { label:'Indicados',          n: r.indicados,  color:'#3B82F6' },
+    { label:'Contatados',         n: r.contatados, color:'#F59E0B' },
+    { label:'Propostas Enviadas', n: r.propostas,  color:'#A855F7' },
+    { label:'Contratos Fechados', n: r.fechados,   color:'#22C55E' },
+  ];
+  const max = r.indicados || 1;
+  const el  = document.getElementById('funnelContainer');
+  el.innerHTML = steps.map((s, i) => {
+    const pct     = Math.round((s.n / max) * 100);
+    const cvt     = i === 0 ? null : Math.round((s.n / (steps[i-1].n || 1)) * 100);
+    return `
+      <div class="funnel-step">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-count" style="color:${s.color}">${s.n}</div>
+          <div class="funnel-bar-bg">
+            <div class="funnel-bar-fill" style="width:${pct}%;background:${s.color};min-width:${s.n>0?'36px':'0'}">
+            </div>
+          </div>
+        </div>
+        <div class="funnel-label">
+          <span>${s.label}</span>
+          ${cvt !== null ? `<span class="funnel-pct">${cvt}% conv.</span>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── GRÁFICO MENSAL ────────────────────────────────────────────
+function renderChart() {
+  const meses = last6Months();
+  const vendas = new Array(6).fill(0);
+  const comiss = new Array(6).fill(0);
+
+  CLIENTES.forEach(c => {
+    const raw = c.dataIndicacao || c['Data Indicação'] || '';
+    const parts = raw.split('/');
+    if (parts.length < 3) return;
+    const key = `${parts[1]}/${parts[2]}`;
+    const idx = meses.findIndex(m => m.key === key);
+    if (idx === -1) return;
+    if ((c.status||c['Status']||'').toLowerCase().includes('fechado')) {
+      vendas[idx] += +c.valorProjeto     || +c['Valor Projeto']     || 0;
+      comiss[idx] += +c.comissaoPaga     || +c['Comissão Paga']     || 0;
+    }
+  });
+
+  const ctx = document.getElementById('chartMensal').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: meses.map(m => m.label),
+      datasets: [
+        {
+          label: 'Vendas (R$)',
+          data: vendas,
+          backgroundColor: 'rgba(59,130,246,.25)',
+          borderColor: '#3B82F6',
+          borderWidth: 2,
+          borderRadius: 4,
+          yAxisID: 'yVendas',
+        },
+        {
+          label: 'Comissão Paga (R$)',
+          data: comiss,
+          type: 'line',
+          backgroundColor: 'rgba(242,101,34,.15)',
+          borderColor: '#F26522',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#F26522',
+          pointRadius: 4,
+          tension: .35,
+          yAxisID: 'yCom',
+        },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: { color: 'rgba(250,250,250,.55)', font: { family: 'DM Sans', size: 12 } }
+        },
+        tooltip: {
+          backgroundColor: '#12121c',
+          borderColor: 'rgba(255,255,255,.10)',
+          borderWidth: 1,
+          titleColor: '#FAFAFA',
+          bodyColor: 'rgba(250,250,250,.65)',
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${fmtN(ctx.parsed.y)}`
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: 'rgba(250,250,250,.45)', font:{size:12} }, grid: { color: 'rgba(255,255,255,.05)' } },
+        yVendas: {
+          position: 'left',
+          ticks: { color:'rgba(250,250,250,.45)', font:{size:11},
+                   callback: v => 'R$' + (v>=1000 ? (v/1000).toFixed(0)+'k' : v) },
+          grid: { color: 'rgba(255,255,255,.05)' },
+        },
+        yCom: {
+          position: 'right',
+          ticks: { color:'rgba(242,101,34,.60)', font:{size:11},
+                   callback: v => 'R$' + (v>=1000 ? (v/1000).toFixed(0)+'k' : v) },
+          grid: { display: false },
+        }
+      }
+    }
+  });
+}
+
+function last6Months() {
+  const now = new Date();
+  return Array.from({length:6}, (_,i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - (5-i), 1);
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy = d.getFullYear();
+    return {
+      key:   `${mm}/${yy}`,
+      label: d.toLocaleDateString('pt-BR', {month:'short', year:'2-digit'}).replace('.','\u2019')
+    };
+  });
+}
+
+// ── TABELA ───────────────────────────────────────────────────
+function renderTable(filtro) {
+  filtroAtivo = filtro;
+  const lista = filtro === 'todos'
+    ? CLIENTES
+    : CLIENTES.filter(c => (c.status||c['Status']||'') === filtro);
+
+  const body = document.getElementById('tabelaBody');
+  if (!lista.length) {
+    body.innerHTML = `<tr><td colspan="7">
+      <div class="empty">
+        <div class="empty-icon">📋</div>
+        <p>Nenhum cliente ${filtro !== 'todos' ? 'com status "' + filtro + '"' : 'cadastrado ainda'}.</p>
+      </div>
+    </td></tr>`;
+    return;
+  }
+
+  body.innerHTML = lista.map(c => {
+    const st    = c.status || c['Status'] || '';
+    const val   = +c.valorProjeto     || +c['Valor Projeto']     || 0;
+    const estim = +c.comissaoEstimada || +c['Comissão Estimada'] || 0;
+    const paga  = +c.comissaoPaga     || +c['Comissão Paga']     || 0;
+    const obs   = c.obs || c['Observações'] || '';
+    const data  = c.dataIndicacao || c['Data Indicação'] || '—';
+    const cidade= c.cidade || c['Cidade'] || '';
+    return `<tr>
+      <td>
+        <div class="td-name">${c.nome || c['Nome'] || '—'}</div>
+        <div class="td-city">${cidade} · ${c.telefone || c['Telefone'] || ''}</div>
+      </td>
+      <td class="td-date">${data}</td>
+      <td>${badgeStatus(st)}</td>
+      <td class="td-value" style="color:${val?'var(--text)':'var(--muted2)'}">
+        ${val ? fmt(val) : '—'}
+      </td>
+      <td class="td-com" style="color:${estim?'var(--orange)':'var(--muted2)'}">
+        ${estim ? fmt(estim) : '—'}
+      </td>
+      <td class="td-com" style="color:${paga?'var(--green)':'var(--muted2)'}">
+        ${paga ? fmt(paga) : '—'}
+      </td>
+      <td style="color:var(--muted);font-size:13px;max-width:200px;">${obs || '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTable(filtro, btn) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable(filtro);
+}
+
+function badgeStatus(s) {
+  const m = {
+    'indicado':         ['badge-indicado',  'Indicado'],
+    'contatado':        ['badge-contatado', 'Contatado'],
+    'proposta enviada': ['badge-proposta',  'Proposta Enviada'],
+    'contrato fechado': ['badge-fechado',   'Contrato Fechado'],
+  };
+  const k = (s||'').toLowerCase().trim();
+  const [cls, label] = m[k] || ['badge-indicado', s || '—'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+// ── RESUMO FINANCEIRO ─────────────────────────────────────────
+function renderFinanceiro(r) {
+  document.getElementById('resumoFinanceiro').innerHTML = `
+    <div class="fin-row">
+      <span class="fin-label">Valor total vendido</span>
+      <span class="fin-value">${fmt(r.valorTotal)}</span>
+    </div>
+    <div class="fin-row">
+      <span class="fin-label">Comissão total estimada</span>
+      <span class="fin-value" style="color:var(--orange)">${fmt(r.comEstimada)}</span>
+    </div>
+    <div class="fin-row">
+      <span class="fin-label">✅ Comissão já paga</span>
+      <span class="fin-value green">${fmt(r.comPaga)}</span>
+    </div>
+    <div class="fin-row">
+      <span class="fin-label">⏳ Comissão pendente</span>
+      <span class="fin-value yellow">${fmt(r.comPendente)}</span>
+    </div>
+    <div class="fin-row" style="border-top:1px solid var(--orange);margin-top:4px;padding-top:16px;">
+      <span class="fin-label" style="color:var(--text);font-weight:600;">Saldo a receber</span>
+      <span class="fin-value total">${fmt(r.comPendente)}</span>
+    </div>
+  `;
+}
+
+// ── PROJEÇÃO FUTURA ───────────────────────────────────────────
+function renderProjecao() {
+  const em_proposta = CLIENTES.filter(c =>
+    (c.status||c['Status']||'').toLowerCase() === 'proposta enviada');
+  const em_contato  = CLIENTES.filter(c =>
+    (c.status||c['Status']||'').toLowerCase() === 'contatado');
+
+  const projProposta = em_proposta.reduce((acc, c) =>
+    acc + (+c.comissaoEstimada || +c['Comissão Estimada'] || 0), 0) * 0.65;
+  const projContato  = em_contato.reduce((acc, c) =>
+    acc + (+c.comissaoEstimada || +c['Comissão Estimada'] || 0), 0) * 0.30;
+  const totalProj    = projProposta + projContato;
+
+  document.getElementById('projecaoContainer').innerHTML = `
+    <div class="proj-item">
+      <div class="proj-label">
+        Propostas em aberto (${em_proposta.length})
+        <small>65% de probabilidade de fechamento</small>
+      </div>
+      <div class="proj-value" style="color:var(--purple)">${fmt(projProposta)}</div>
+    </div>
+    <div class="proj-item">
+      <div class="proj-label">
+        Contatos em andamento (${em_contato.length})
+        <small>30% de probabilidade de fechamento</small>
+      </div>
+      <div class="proj-value" style="color:var(--yellow)">${fmt(projContato)}</div>
+    </div>
+    <div class="proj-item" style="background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.20);">
+      <div class="proj-label">
+        <strong>Projeção total futura</strong>
+        <small>estimativa baseada no pipeline atual</small>
+      </div>
+      <div class="proj-value" style="color:var(--orange);font-size:20px;">${fmt(totalProj)}</div>
+    </div>
+    <p class="proj-note">
+      * Os percentuais são estimativas baseadas em taxas médias de conversão.
+      Os valores reais de comissão são definidos pela LumenGrid após confirmação do projeto.
+    </p>
+  `;
+}
+
+// ── MODAL NOVA INDICAÇÃO ──────────────────────────────────────
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  ['fNome','fTel','fCidade','fObs'].forEach(id => document.getElementById(id).value = '');
+}
+function closeModalOutside(e) {
+  if (e.target.id === 'modalOverlay') closeModal();
+}
+
+async function submitClient() {
+  const nome   = document.getElementById('fNome').value.trim();
+  const tel    = document.getElementById('fTel').value.trim();
+  const cidade = document.getElementById('fCidade').value.trim();
+  const obs    = document.getElementById('fObs').value.trim();
+
+  if (!nome || !tel || !cidade) {
+    showToast('Preencha nome, telefone e cidade.', 'error'); return;
+  }
+
+  if (CONFIG.DEMO_MODE || CONFIG.APPS_SCRIPT_URL === 'SUA_URL_AQUI') {
+    const novo = {
+      id: 'MC' + Math.random().toString(36).substring(2,8).toUpperCase(),
+      nome, telefone: tel, cidade,
+      dataIndicacao: new Date().toLocaleDateString('pt-BR'),
+      status: 'Indicado', valorProjeto:0,
+      comissaoEstimada:0, comissaoPaga:0, comissaoPendente:0, obs
+    };
+    CLIENTES.push(novo);
+    renderAll();
+    closeModal();
+    showToast('Indicação adicionada (modo demo)!', 'success');
+    return;
+  }
+
+  try {
+    const url = `${CONFIG.APPS_SCRIPT_URL}?action=addClient&nome=${enc(nome)}&telefone=${enc(tel)}&cidade=${enc(cidade)}&obs=${enc(obs)}`;
+    const res  = await fetch(url);
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    closeModal();
+    showToast('Indicação enviada com sucesso!', 'success');
+    await syncData();
+  } catch (err) {
+    showToast('Erro: ' + err.message, 'error');
+  }
+}
+
+// ── MODAL NOTIFICAR ───────────────────────────────────────────
+function openNotify()  { document.getElementById('notifyOverlay').classList.add('open'); }
+function closeNotify() { document.getElementById('notifyOverlay').classList.remove('open'); document.getElementById('fNotifyMsg').value=''; }
+function closeNotifyOutside(e) { if (e.target.id === 'notifyOverlay') closeNotify(); }
+
+async function sendNotify() {
+  const msg = document.getElementById('fNotifyMsg').value.trim();
+  if (!msg) { showToast('Digite uma mensagem.', 'error'); return; }
+
+  if (CONFIG.DEMO_MODE || CONFIG.APPS_SCRIPT_URL === 'SUA_URL_AQUI') {
+    closeNotify();
+    showToast('Mensagem enviada (modo demo)!', 'success'); return;
+  }
+
+  try {
+    const url = `${CONFIG.APPS_SCRIPT_URL}?action=notify&mensagem=${enc(msg)}`;
+    await fetch(url);
+    closeNotify();
+    showToast('Mensagem enviada para a LumenGrid!', 'success');
+  } catch (err) {
+    showToast('Erro: ' + err.message, 'error');
+  }
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+function fmt(v)  { return Number(v||0).toLocaleString('pt-BR', {style:'currency', currency:'BRL', minimumFractionDigits:0}); }
+function fmtN(v) { return Number(v||0).toLocaleString('pt-BR', {style:'currency', currency:'BRL', minimumFractionDigits:0}); }
+function enc(s)  { return encodeURIComponent(s||''); }
+function set(id, v) { const el = document.getElementById(id); if(el) el.textContent = v; }
+
+let toastTimer;
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = (type==='success' ? '✅ ' : '⚠ ') + msg;
+  t.className   = `toast show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>

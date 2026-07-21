@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LumenGrid — Manual do CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#F8F9FB;color:#1E293B;-webkit-font-smoothing:antialiased;padding:40px 24px 80px}
+.wrap{max-width:680px;margin:0 auto}
+
+/* HEADER */
+.logo{display:flex;align-items:baseline;gap:0;margin-bottom:6px}
+.logo span:first-child{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:28px;color:#F26522;letter-spacing:-1px}
+.logo span:last-child{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:28px;color:#0b0b12;letter-spacing:-1px}
+.manual-tag{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#94A3B8;margin-bottom:32px}
+
+h2{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:#0b0b12;margin:36px 0 14px;padding-bottom:8px;border-bottom:2px solid #F26522}
+h3{font-size:13px;font-weight:700;color:#1E293B;margin:18px 0 8px}
+p,li{font-size:13px;color:#475569;line-height:1.7}
+ul{padding-left:18px;display:flex;flex-direction:column;gap:5px}
+code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7px;font-size:12px;color:#C94E0F;font-family:monospace}
+
+/* Cartões de usuário */
+.user-cards{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.uc{background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px}
+.uc-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:900;color:#fff;flex-shrink:0}
+.uc-info{flex:1}
+.uc-name{font-size:14px;font-weight:700;color:#1E293B;margin-bottom:3px}
+.uc-role{font-size:11px;color:#94A3B8;font-weight:500}
+.uc-pw{font-size:13px;font-weight:700;color:#F26522;background:#FFF7ED;border:1px solid rgba(242,101,34,.3);border-radius:6px;padding:4px 12px}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:12px;margin:14px 0}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;background:#F26522;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-content{flex:1}
+.step-title{font-size:13px;font-weight:700;color:#1E293B;margin-bottom:3px}
+.step-desc{font-size:12px;color:#64748B;line-height:1.6}
+
+/* Alerta */
+.alert{background:#FFF7ED;border:1.5px solid rgba(242,101,34,.3);border-radius:8px;padding:14px 18px;margin:16px 0;font-size:12px;color:#92400E;line-height:1.7}
+.alert strong{color:#C94E0F}
+
+/* Badge admin */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:999px;vertical-align:middle}
+.badge-admin{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.badge-user{background:#F0FDF4;color:#15803D;border:1px solid #BBF7D0}
+
+/* Footer */
+.footer{margin-top:56px;padding-top:20px;border-top:1px solid #E2E8F0;font-size:11px;color:#94A3B8;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="logo"><span>LUMEN</span><span>GRID</span></div>
+  <div class="manual-tag">Manual de Uso — CRM Comercial</div>
+
+  <!-- ACESSO -->
+  <h2>1. Como acessar</h2>
+  <p>O CRM fica disponível pelo <strong>Portal Interno</strong> da LumenGrid. Basta abrir o arquivo <code>portal.html</code> e clicar no card <strong>CRM Comercial</strong>.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Abra o Portal</div>
+        <div class="step-desc">Acesse <code>portal.html</code> pelo link do seu navegador.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Clique em CRM Comercial</div>
+        <div class="step-desc">O card abre o arquivo <code>CRM_LumenGrid.html</code>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Selecione seu usuário e digite a senha</div>
+        <div class="step-desc">Clique no seu card de usuário, digite a senha e clique em <strong>Entrar</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USUÁRIOS -->
+  <h2>2. Usuários e senhas</h2>
+  <p>Cada pessoa tem seu usuário e senha próprios. Os dados do CRM são isolados por usuário — cada vendedor vê apenas seus próprios leads.</p>
+
+  <div class="user-cards">
+    <div class="uc">
+      <div class="uc-av" style="background:linear-gradient(135deg,#F47A3A,#C94E0F)">C</div>
+      <div class="uc-info">
+        <div class="uc-name">Comercial Lumen <span class="badge badge-admin">Admin</span></div>
+        <div class="uc-role">Visão geral de todos os leads da equipe</div>
+      </div>
+      <div class="uc-pw">Lumen@2026</div>
+    </div>
+    <div class="uc">
+      <div class="uc-av" style="background:linear-gradient(135deg,#34D399,#059669)">L</div>
+      <div class="uc-info">
+        <div class="uc-name">Lucas <span class="badge badge-user">Vendedor</span></div>
+        <div class="uc-role">Vê somente seus próprios leads</div>
+      </div>
+      <div class="uc-pw">Lucas@2026</div>
+    </div>
+    <div class="uc">
+      <div class="uc-av" style="background:linear-gradient(135deg,#60A5FA,#2563EB)">G</div>
+      <div class="uc-info">
+        <div class="uc-name">Giovani <span class="badge badge-user">Vendedor</span></div>
+        <div class="uc-role">Vê somente seus próprios leads</div>
+      </div>
+      <div class="uc-pw">Giovani@2026</div>
+    </div>
+    <div class="uc">
+      <div class="uc-av" style="background:linear-gradient(135deg,#A78BFA,#7C3AED)">H</div>
+      <div class="uc-info">
+        <div class="uc-name">Hingrid <span class="badge badge-admin">Admin</span></div>
+        <div class="uc-role">Visão geral de todos os leads da equipe</div>
+      </div>
+      <div class="uc-pw">Lumen@2026</div>
+    </div>
+  </div>
+
+  <div class="alert">
+    <strong>Admins (Comercial Lumen e Hingrid)</strong> enxergam os leads de toda a equipe e podem filtrar por vendedor no Kanban. <strong>Lucas e Giovani</strong> enxergam somente os leads atribuídos a eles.
+  </div>
+
+  <!-- FUNÇÕES PRINCIPAIS -->
+  <h2>3. Funções principais</h2>
+
+  <h3>Dashboard</h3>
+  <p>Mostra seus KPIs pessoais (leads, negociações ativas, valor da carteira), funil de vendas e atividades recentes. Admins também enxergam o total da empresa.</p>
+
+  <h3>Kanban</h3>
+  <p>Quadro visual com todas as etapas do funil, de <em>Lead Novo</em> até <em>Projeto Concluído</em>. Para mover um lead, <strong>arraste o card</strong> para a coluna desejada. Admins têm botões de filtro por vendedor no topo.</p>
+
+  <h3>Todos os Leads</h3>
+  <p>Lista tabular com filtros rápidos (Meus Leads, Lead Novo, por vendedor, por etapa). Clique em qualquer linha para abrir o detalhe do lead.</p>
+
+  <h3>Detalhe do Lead</h3>
+  <ul>
+    <li><strong>Anotações</strong> — registre observações com data e hora</li>
+    <li><strong>Mensagens Sugeridas</strong> — copie scripts de WhatsApp prontos para cada etapa</li>
+    <li><strong>Checklist</strong> — tarefas obrigatórias para avançar na etapa</li>
+    <li><strong>Mover de Etapa</strong> — botões para avançar sem precisar arrastar</li>
+    <li><strong>Reg. FUP</strong> — registra um follow-up com um clique</li>
+    <li><strong>Lançar Proposta ao Parceiro</strong> — envia o valor e comissão para o dashboard do parceiro</li>
+  </ul>
+
+  <!-- ADICIONAR LEAD -->
+  <h2>4. Como adicionar um lead</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Clique em + Novo Lead</div>
+        <div class="step-desc">Botão laranja no canto superior direito (em qualquer tela).</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Preencha os dados</div>
+        <div class="step-desc">Nome e telefone são obrigatórios. Preencha cidade, kWh, tipo de imóvel e origem sempre que possível.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Clique em Criar Lead</div>
+        <div class="step-desc">O lead entra automaticamente na coluna <em>Lead Novo</em> do Kanban.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROPOSTA PARCEIRO -->
+  <h2>5. Lançar Proposta ao Parceiro</h2>
+  <p>Dentro do detalhe de um lead, na seção <strong>Lançar Proposta ao Parceiro</strong>:</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Informe o nome do parceiro</div>
+        <div class="step-desc">Ex: <em>Michael</em></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Preencha os valores</div>
+        <div class="step-desc">Valor Projeto, Instalação, Equipamentos e % de Comissão. Os impostos (10%) e a comissão são calculados automaticamente.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Clique em Lançar Proposta</div>
+        <div class="step-desc">O registro aparece no histórico do lead e é enviado ao dashboard do parceiro (se a URL do Apps Script estiver configurada na aba Importar).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORTAR -->
+  <h2>6. Importar e configurar</h2>
+  <p>Na aba <strong>Importar</strong> você pode:</p>
+  <ul>
+    <li>Conectar o CRM a uma planilha do Google Sheets (leads do Meta)</li>
+    <li>Fazer upload de arquivo CSV</li>
+    <li>Configurar a URL do Apps Script dos parceiros</li>
+    <li>Exportar backup JSON ou CSV de todos os leads</li>
+    <li>Restaurar um backup anterior</li>
+  </ul>
+
+  <!-- DICAS -->
+  <h2>7. Dicas rápidas</h2>
+  <ul>
+    <li>Use <strong>Reg. FUP</strong> no card do Kanban para registrar um contato sem abrir o lead</li>
+    <li>Cards com borda vermelha indicam leads sem contato há mais de 2 dias</li>
+    <li>Cards com borda amarela indicam leads em negociação há mais de 3 dias</li>
+    <li>O badge <strong>NOVO</strong> aparece em leads que ainda não foram vistos pelo responsável</li>
+    <li>Use a <strong>busca</strong> no topo para encontrar leads por nome, telefone ou cidade</li>
+    <li>O CRM salva tudo automaticamente no navegador — sem necessidade de internet para funcionar</li>
+  </ul>
+
+  <div class="footer">
+    LumenGrid &copy; 2026 · Energia Inteligente<br>
+    Manual gerado em julho de 2026
+  </div>
+
+</div>
+</body>
+</html>
