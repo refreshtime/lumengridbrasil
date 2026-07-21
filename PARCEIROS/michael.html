@@ -644,6 +644,59 @@ tbody td { padding: 14px 16px; font-size: 14px; }
   </div>
 </div>
 
+<!-- ══ MODAL DETALHE / STATUS ════════════════════════════ -->
+<div class="modal-overlay" id="detailOverlay" onclick="closeDetailOutside(event)">
+  <div class="modal" style="width:500px;">
+    <div class="modal-header">
+      <div>
+        <h2 id="detailNome">—</h2>
+        <p id="detailInfo" style="color:var(--muted);font-size:13px;margin-top:4px;"></p>
+      </div>
+      <button class="btn-close" onclick="closeDetail()">×</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div style="background:var(--surface2);border-radius:8px;padding:14px;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Endereço</div>
+        <div id="detailEndereco" style="font-size:13px;"></div>
+      </div>
+      <div style="background:var(--surface2);border-radius:8px;padding:14px;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">E-mail</div>
+        <div id="detailEmail" style="font-size:13px;"></div>
+      </div>
+    </div>
+
+    <div id="detailArquivoWrap" style="display:none;margin-bottom:16px;">
+      <a id="detailArquivoLink" href="#" target="_blank"
+         style="display:inline-flex;align-items:center;gap:8px;background:var(--surface2);
+                border:1px solid rgba(242,101,34,.3);border-radius:8px;padding:10px 16px;
+                color:var(--orange);text-decoration:none;font-size:13px;font-weight:600;">
+        📎 Ver arquivo enviado
+      </a>
+    </div>
+
+    <div id="detailObs" style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:20px;
+         font-size:13px;color:var(--muted);min-height:40px;"></div>
+
+    <div class="form-group" style="margin-bottom:8px;">
+      <label>Atualizar Status</label>
+      <select id="detailStatus" style="width:100%;padding:11px 14px;background:var(--surface2);
+              border:1px solid var(--border);border-radius:8px;color:var(--text);
+              font-family:'DM Sans',sans-serif;font-size:14px;outline:none;cursor:pointer;">
+        <option value="Indicado">Indicado</option>
+        <option value="Contatado">Contatado</option>
+        <option value="Proposta Enviada">Proposta Enviada</option>
+        <option value="Contrato Fechado">Contrato Fechado</option>
+      </select>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeDetail()">Fechar</button>
+      <button class="btn btn-primary" id="btnSalvarStatus" onclick="salvarStatus()">Salvar Status</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ TOAST ══ -->
 <div class="toast" id="toast"></div>
 
@@ -915,7 +968,8 @@ function renderTable(filtro) {
     return;
   }
 
-  body.innerHTML = lista.map(c => {
+  body.innerHTML = lista.map((c, i) => {
+    const realIdx = CLIENTES.indexOf(c);
     const st    = c.status || c['Status'] || '';
     const val   = +c.valorProjeto     || +c['Valor Projeto']     || 0;
     const estim = +c.comissaoEstimada || +c['Comissão Estimada'] || 0;
@@ -923,7 +977,7 @@ function renderTable(filtro) {
     const obs   = c.obs || c['Observações'] || '';
     const data  = c.dataIndicacao || c['Data Indicação'] || '—';
     const cidade= c.cidade || c['Cidade'] || '';
-    return `<tr>
+    return `<tr style="cursor:pointer" onclick="openClientDetail(${realIdx})" title="Clique para ver detalhes / atualizar status">
       <td>
         <div class="td-name">${c.nome || c['Nome'] || '—'}</div>
         <div class="td-city">${cidade} · ${c.telefone || c['Telefone'] || ''}</div>
@@ -940,7 +994,7 @@ function renderTable(filtro) {
         ${paga ? fmt(paga) : '—'}
       </td>
       <td style="color:var(--muted);font-size:13px;max-width:200px;">
-        ${c.arquivo ? `<a href="${c.arquivo}" target="_blank" style="color:var(--orange);text-decoration:none;">📎 Ver arquivo</a><br>` : ''}
+        ${c.arquivo ? `<a href="${c.arquivo}" target="_blank" onclick="event.stopPropagation()" style="color:var(--orange);text-decoration:none;">📎 Ver arquivo</a><br>` : ''}
         ${obs || '—'}
       </td>
     </tr>`;
@@ -1128,9 +1182,20 @@ async function submitClient() {
       body:   JSON.stringify(body),
     });
 
+    // Adiciona imediatamente no painel (sem esperar o sync)
+    const novo = {
+      id: 'MC' + Date.now().toString(36).toUpperCase(),
+      nome, telefone: tel, email, endereco, cidade,
+      dataIndicacao: new Date().toLocaleDateString('pt-BR'),
+      status: 'Indicado',
+      valorProjeto: 0, comissaoEstimada: 0, comissaoPaga: 0, comissaoPendente: 0,
+      arquivo: '', obs,
+    };
+    CLIENTES.unshift(novo);
+    renderAll();
     closeModal();
     showToast('Indicação enviada com sucesso!', 'success');
-    setTimeout(() => syncData(), 2000);
+    setTimeout(() => syncData(), 4000);
   } catch (err) {
     showToast('Erro: ' + err.message, 'error');
   } finally {
@@ -1161,6 +1226,78 @@ async function sendNotify() {
   } catch (err) {
     showToast('Erro: ' + err.message, 'error');
   }
+}
+
+// ── MODAL DETALHE / STATUS ────────────────────────────────────
+let detailIdx = -1;
+
+function openClientDetail(idx) {
+  const c = CLIENTES[idx];
+  if (!c) return;
+  detailIdx = idx;
+
+  document.getElementById('detailNome').textContent    = c.nome || '—';
+  document.getElementById('detailInfo').textContent    =
+    (c.telefone || '') + (c.cidade ? ' · ' + c.cidade : '') +
+    (c.dataIndicacao ? ' · ' + c.dataIndicacao : '');
+  document.getElementById('detailEndereco').textContent = c.endereco || '—';
+  document.getElementById('detailEmail').textContent    = c.email    || '—';
+  document.getElementById('detailObs').textContent      = c.obs      || 'Sem observações.';
+  document.getElementById('detailStatus').value         = c.status   || 'Indicado';
+
+  const arqWrap = document.getElementById('detailArquivoWrap');
+  if (c.arquivo) {
+    document.getElementById('detailArquivoLink').href = c.arquivo;
+    arqWrap.style.display = 'block';
+  } else {
+    arqWrap.style.display = 'none';
+  }
+
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  detailIdx = -1;
+}
+
+function closeDetailOutside(e) {
+  if (e.target.id === 'detailOverlay') closeDetail();
+}
+
+async function salvarStatus() {
+  if (detailIdx < 0) return;
+  const c          = CLIENTES[detailIdx];
+  const novoStatus = document.getElementById('detailStatus').value;
+  const btn        = document.getElementById('btnSalvarStatus');
+
+  btn.disabled     = true;
+  btn.textContent  = 'Salvando...';
+
+  // Atualiza localmente de imediato
+  c.status = novoStatus;
+  renderAll();
+
+  if (!(CONFIG.DEMO_MODE || CONFIG.APPS_SCRIPT_URL === 'SUA_URL_AQUI')) {
+    try {
+      await fetch(CONFIG.APPS_SCRIPT_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          action:       'update_status',
+          parceiro:     CONFIG.PARCEIRO,
+          nomeCliente:  c.nome,
+          status:       novoStatus,
+        }),
+      });
+    } catch(_) {}
+  }
+
+  showToast('Status atualizado: ' + novoStatus, 'success');
+  closeDetail();
+  btn.disabled    = false;
+  btn.textContent = 'Salvar Status';
 }
 
 // ── HELPERS ──────────────────────────────────────────────────

@@ -57,8 +57,13 @@ const HEADERS = [
 
 function garantirAba(ss, parceiro) {
   let sheet = ss.getSheetByName(parceiro);
-  if (!sheet) {
-    sheet = ss.insertSheet(parceiro);
+  if (!sheet) sheet = ss.insertSheet(parceiro);
+
+  // Verifica se a primeira célula é o cabeçalho esperado
+  const primeiraCell = sheet.getRange(1, 1).getValue();
+  if (primeiraCell !== 'ID') {
+    // Se já tem dados, empurra tudo para baixo e insere cabeçalho
+    if (sheet.getLastRow() > 0) sheet.insertRowBefore(1);
     sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
     sheet.getRange(1, 1, 1, HEADERS.length)
       .setBackground('#F26522').setFontColor('#FFFFFF').setFontWeight('bold');
