@@ -149,9 +149,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
 
     <div class="fg">
-      <div class="fg-lbl">Link de referência <span style="color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></div>
-      <input class="fg-inp" id="sol-link" placeholder="https://...">
-      <div class="fg-hint">Cole aqui um link de referência, exemplo de arte, lead no CRM, etc.</div>
+      <div class="fg-lbl">Referência <span style="color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></div>
+      <input class="fg-inp" id="sol-link" placeholder="Cole um link (https://...) ou deixe em branco e anexe um arquivo abaixo">
+      <div class="fg-hint">Cole um link OU envie um arquivo — imagem, PDF, arte, etc.</div>
+      <div id="file-area" style="margin-top:8px;border:2px dashed rgba(255,255,255,.1);border-radius:8px;padding:18px;text-align:center;cursor:pointer;transition:all .2s" onclick="document.getElementById('sol-file').click()" ondragover="fileDragOver(event)" ondragleave="fileDragLeave(event)" ondrop="fileDrop(event)">
+        <div id="file-placeholder" style="font-size:12px;color:var(--t3)">Clique ou arraste um arquivo aqui</div>
+        <div id="file-preview" style="display:none;font-size:12px;color:var(--or);font-weight:600"></div>
+        <input type="file" id="sol-file" style="display:none" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" onchange="fileSelected(this)">
+      </div>
     </div>
 
     <div class="fg">
@@ -180,7 +185,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <div id="toast"></div>
 
 <script>
+const CRM_URL = 'https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
 let tipoSelecionado = '';
+let arquivoSelecionado = null;
 
 function selectTipo(el, tipo) {
   document.querySelectorAll('.tipo-card').forEach(c => c.classList.remove('on'));
@@ -188,29 +195,76 @@ function selectTipo(el, tipo) {
   tipoSelecionado = tipo;
 }
 
-function enviar() {
+// ── Arquivo ──
+function fileSelected(input) {
+  const file = input.files[0];
+  if (file) setArquivo(file);
+}
+function setArquivo(file) {
+  arquivoSelecionado = file;
+  document.getElementById('file-placeholder').style.display = 'none';
+  const prev = document.getElementById('file-preview');
+  prev.style.display = 'block';
+  prev.textContent = '📎 ' + file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+  document.getElementById('file-area').style.borderColor = 'rgba(242,101,34,.5)';
+}
+function fileDragOver(e) { e.preventDefault(); document.getElementById('file-area').style.borderColor = '#F26522'; }
+function fileDragLeave(e) { document.getElementById('file-area').style.borderColor = 'rgba(255,255,255,.1)'; }
+function fileDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file) setArquivo(file);
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result.split(',')[1]);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+async function enviar() {
   const nome = document.getElementById('sol-nome').value.trim();
   const desc = document.getElementById('sol-desc').value.trim();
   const link = document.getElementById('sol-link').value.trim();
   const urg  = document.getElementById('sol-urg').value;
+  const btn  = document.getElementById('btn-submit');
 
   if (!nome)           { showToast('Informe seu nome.', true); return; }
   if (!tipoSelecionado){ showToast('Selecione o tipo de solicitação.', true); return; }
   if (!desc)           { showToast('Descreva o que você precisa.', true); return; }
 
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
   const sol = {
     id: Date.now(),
     nome, tipo: tipoSelecionado, desc, link, urg,
-    data: new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+    data: new Date().toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
   };
 
-  // Salvar localmente
+  // Se tem arquivo, converte para base64 e envia junto
+  if (arquivoSelecionado) {
+    try {
+      sol.arquivo = {
+        nome: arquivoSelecionado.name,
+        tipo: arquivoSelecionado.type,
+        base64: await fileToBase64(arquivoSelecionado)
+      };
+    } catch(_) {}
+  }
+
+  // Salvar localmente (sem o base64 para não estourar o localStorage)
+  const solLocal = { ...sol };
+  delete solLocal.arquivo;
+  if (arquivoSelecionado) solLocal.link = solLocal.link || '(arquivo enviado: ' + arquivoSelecionado.name + ')';
   const lista = JSON.parse(localStorage.getItem('lg_solicitacoes') || '[]');
-  lista.unshift(sol);
+  lista.unshift(solLocal);
   localStorage.setItem('lg_solicitacoes', JSON.stringify(lista));
 
-  // Enviar para Google Sheets
-  const CRM_URL = 'https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
+  // Enviar para Apps Script (Drive + Sheets)
   fetch(CRM_URL, {
     method: 'POST',
     mode: 'no-cors',
@@ -218,13 +272,20 @@ function enviar() {
     body: JSON.stringify({ action: 'save_solicitacao', solicitacao: sol })
   }).catch(() => {});
 
-  // Limpar formulário
+  // Limpar
   document.getElementById('sol-nome').value = '';
   document.getElementById('sol-desc').value = '';
   document.getElementById('sol-link').value = '';
   document.getElementById('sol-urg').value = 'Normal';
   document.querySelectorAll('.tipo-card').forEach(c => c.classList.remove('on'));
+  document.getElementById('sol-file').value = '';
+  document.getElementById('file-placeholder').style.display = 'block';
+  document.getElementById('file-preview').style.display = 'none';
+  document.getElementById('file-area').style.borderColor = 'rgba(255,255,255,.1)';
   tipoSelecionado = '';
+  arquivoSelecionado = null;
+  btn.disabled = false;
+  btn.textContent = 'Enviar Solicitação';
 
   renderHist();
   showToast('Solicitação enviada com sucesso!');

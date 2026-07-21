@@ -146,14 +146,29 @@ function gravarTabelaLegivel(sheet, leads) {
 // ────────────────────────────────────────────────
 
 function saveSolicitacao(sol) {
+  // Salvar arquivo no Drive se enviado
+  let linkArquivo = sol.link || '';
+  if (sol.arquivo && sol.arquivo.base64) {
+    try {
+      const pasta = obterPastaSolicitacoes();
+      const bytes = Utilities.base64Decode(sol.arquivo.base64);
+      const blob  = Utilities.newBlob(bytes, sol.arquivo.tipo || 'application/octet-stream', sol.arquivo.nome || 'arquivo');
+      const file  = pasta.createFile(blob);
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      linkArquivo = file.getUrl();
+    } catch(e) {
+      Logger.log('Erro ao salvar arquivo no Drive: ' + e.message);
+    }
+  }
+
   const ss = SpreadsheetApp.openById(SHEET_ID);
   let sheet = ss.getSheetByName('Solicitacoes');
   if (!sheet) {
     sheet = ss.insertSheet('Solicitacoes');
-    sheet.getRange(1, 1, 1, 6).setValues([['Data', 'Nome', 'Tipo', 'Urgência', 'Descrição', 'Link']]);
+    sheet.getRange(1, 1, 1, 6).setValues([['Data', 'Nome', 'Tipo', 'Urgência', 'Descrição', 'Link / Arquivo']]);
     sheet.getRange(1, 1, 1, 6).setBackground('#F26522').setFontColor('#FFFFFF').setFontWeight('bold');
     sheet.setFrozenRows(1);
-    sheet.setColumnWidths(1, 6, [130, 130, 140, 80, 320, 200]);
+    sheet.setColumnWidths(1, 6, [130, 130, 140, 80, 320, 220]);
   }
   sheet.appendRow([
     sol.data || new Date().toLocaleString('pt-BR'),
@@ -161,9 +176,16 @@ function saveSolicitacao(sol) {
     sol.tipo || '',
     sol.urg  || '',
     sol.desc || '',
-    sol.link || ''
+    linkArquivo
   ]);
   return { ok: true };
+}
+
+function obterPastaSolicitacoes() {
+  const nomePasta = 'LumenGrid — Solicitações';
+  const pastas = DriveApp.getFoldersByName(nomePasta);
+  if (pastas.hasNext()) return pastas.next();
+  return DriveApp.createFolder(nomePasta);
 }
 
 // ────────────────────────────────────────────────
