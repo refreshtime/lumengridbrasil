@@ -413,6 +413,11 @@ tbody td { padding: 14px 16px; font-size: 14px; }
   </div>
 
   <div class="header-actions">
+    <span id="adminBadge" style="display:none;font-size:10px;font-weight:700;letter-spacing:1px;
+          text-transform:uppercase;padding:4px 10px;border-radius:20px;
+          background:rgba(242,101,34,.15);color:var(--orange);border:1px solid rgba(242,101,34,.3);">
+      ⚙ Admin
+    </span>
     <div class="sync-info">
       <div class="sync-dot demo" id="syncDot"></div>
       <span id="syncLabel">Modo demo</span>
@@ -678,21 +683,24 @@ tbody td { padding: 14px 16px; font-size: 14px; }
     <div id="detailObs" style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:20px;
          font-size:13px;color:var(--muted);min-height:40px;"></div>
 
-    <div class="form-group" style="margin-bottom:8px;">
-      <label>Atualizar Status</label>
-      <select id="detailStatus" style="width:100%;padding:11px 14px;background:var(--surface2);
-              border:1px solid var(--border);border-radius:8px;color:var(--text);
-              font-family:'DM Sans',sans-serif;font-size:14px;outline:none;cursor:pointer;">
-        <option value="Indicado">Indicado</option>
-        <option value="Contatado">Contatado</option>
-        <option value="Proposta Enviada">Proposta Enviada</option>
-        <option value="Contrato Fechado">Contrato Fechado</option>
-      </select>
+    <!-- Só aparece para admin -->
+    <div id="adminStatusSection" style="display:none;">
+      <div class="form-group" style="margin-bottom:8px;">
+        <label>Atualizar Status</label>
+        <select id="detailStatus" style="width:100%;padding:11px 14px;background:var(--surface2);
+                border:1px solid var(--border);border-radius:8px;color:var(--text);
+                font-family:'DM Sans',sans-serif;font-size:14px;outline:none;cursor:pointer;">
+          <option value="Indicado">Indicado</option>
+          <option value="Contatado">Contatado</option>
+          <option value="Proposta Enviada">Proposta Enviada</option>
+          <option value="Contrato Fechado">Contrato Fechado</option>
+        </select>
+      </div>
     </div>
 
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeDetail()">Fechar</button>
-      <button class="btn btn-primary" id="btnSalvarStatus" onclick="salvarStatus()">Salvar Status</button>
+      <button id="btnSalvarStatus" class="btn btn-primary" style="display:none;" onclick="salvarStatus()">Salvar Status</button>
     </div>
   </div>
 </div>
@@ -727,14 +735,30 @@ const SAMPLE = [
   { id:'MC006', nome:'Patricia Lima',    telefone:'(11) 95555-3333', cidade:'Osasco',      dataIndicacao:'03/07/2026', status:'Indicado',         valorProjeto:0,     comissaoEstimada:0,    comissaoPaga:0,    comissaoPendente:0,    obs:'Indicação recente' },
 ];
 
+// Senha para modo admin (apenas LumenGrid)
+const ADMIN_PASSWORD = 'Lumen@2026';
+
 // ── ESTADO ──────────────────────────────────────────────────
 let CLIENTES = [];
 let filtroAtivo = 'todos';
 let chartInstance = null;
+let isAdmin = false;
 
 // ── INICIALIZAÇÃO ────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('nomeHeader').textContent = CONFIG.PARCEIRO;
+
+  // Verifica se URL tem ?admin=1
+  if (new URLSearchParams(window.location.search).get('admin') === '1') {
+    const pw = prompt('Senha de administrador LumenGrid:');
+    if (pw === ADMIN_PASSWORD) {
+      isAdmin = true;
+      document.getElementById('adminBadge').style.display = 'inline-flex';
+    } else if (pw !== null) {
+      alert('Senha incorreta.');
+    }
+  }
+
   syncData();
 });
 
@@ -1244,6 +1268,8 @@ function openClientDetail(idx) {
   document.getElementById('detailEmail').textContent    = c.email    || '—';
   document.getElementById('detailObs').textContent      = c.obs      || 'Sem observações.';
   document.getElementById('detailStatus').value         = c.status   || 'Indicado';
+  document.getElementById('adminStatusSection').style.display = isAdmin ? 'block' : 'none';
+  document.getElementById('btnSalvarStatus').style.display    = isAdmin ? 'inline-flex' : 'none';
 
   const arqWrap = document.getElementById('detailArquivoWrap');
   if (c.arquivo) {
