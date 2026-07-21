@@ -209,6 +209,15 @@ function enviar() {
   lista.unshift(sol);
   localStorage.setItem('lg_solicitacoes', JSON.stringify(lista));
 
+  // Enviar para Google Sheets
+  const CRM_URL = 'https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
+  fetch(CRM_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'save_solicitacao', solicitacao: sol })
+  }).catch(() => {});
+
   // Limpar formulário
   document.getElementById('sol-nome').value = '';
   document.getElementById('sol-desc').value = '';

@@ -48,8 +48,9 @@ function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
     const action = body.action;
-    if      (action === 'save_leads')  result = saveLeadsCRM(body.leads);
-    else if (action === 'save_lead')   result = saveOneLead(body.lead);
+    if      (action === 'save_leads')       result = saveLeadsCRM(body.leads);
+    else if (action === 'save_lead')        result = saveOneLead(body.lead);
+    else if (action === 'save_solicitacao') result = saveSolicitacao(body.solicitacao);
     else result = { error: 'Ação desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };
@@ -138,6 +139,31 @@ function gravarTabelaLegivel(sheet, leads) {
   } catch(e) {
     Logger.log('Erro ao gravar tabela: ' + e.message);
   }
+}
+
+// ────────────────────────────────────────────────
+// SOLICITAÇÕES INTERNAS
+// ────────────────────────────────────────────────
+
+function saveSolicitacao(sol) {
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  let sheet = ss.getSheetByName('Solicitacoes');
+  if (!sheet) {
+    sheet = ss.insertSheet('Solicitacoes');
+    sheet.getRange(1, 1, 1, 6).setValues([['Data', 'Nome', 'Tipo', 'Urgência', 'Descrição', 'Link']]);
+    sheet.getRange(1, 1, 1, 6).setBackground('#F26522').setFontColor('#FFFFFF').setFontWeight('bold');
+    sheet.setFrozenRows(1);
+    sheet.setColumnWidths(1, 6, [130, 130, 140, 80, 320, 200]);
+  }
+  sheet.appendRow([
+    sol.data || new Date().toLocaleString('pt-BR'),
+    sol.nome || '',
+    sol.tipo || '',
+    sol.urg  || '',
+    sol.desc || '',
+    sol.link || ''
+  ]);
+  return { ok: true };
 }
 
 // ────────────────────────────────────────────────
