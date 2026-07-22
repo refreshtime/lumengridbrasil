@@ -1008,10 +1008,18 @@ async function syncData() {
       cidade:            c['Cidade']            || c.cidade            || '',
       dataIndicacao:     c['Data Indicação']    || c.dataIndicacao     || '',
       status:            c['Status']            || c.status            || '',
+      kwp:               +c['kWp']               || +c.kwp              || 0,
       valorProjeto:      +c['Valor Projeto']    || +c.valorProjeto     || 0,
+      custoInstalacao:   +c['Custo Instalação'] || +c.custoInstalacao  || 0,
+      homologacao:       +c['Homologação']      || +c.homologacao      || 0,
+      instalacao:        +c['Total Instalação'] || +c.instalacao       || 0,
+      impostos:          +c['Impostos']         || +c.impostos         || 0,
+      margem:            +c['Margem Líquida']   || +c.margem           || 0,
+      pctComissao:       +c['% Comissão']       || +c.pctComissao      || 0,
       comissaoEstimada:  +c['Comissão Estimada']|| +c.comissaoEstimada || 0,
       comissaoPaga:      +c['Comissão Paga']    || +c.comissaoPaga     || 0,
       comissaoPendente:  +c['Comissão Pendente']|| +c.comissaoPendente || 0,
+      lucro:             +c['Lucro Empresa']    || +c.lucro            || 0,
       arquivo:           c['Arquivo']           || '',
       obs:               c['Observações']       || c.obs               || '',
     }));
@@ -1547,14 +1555,19 @@ async function salvarStatus() {
   btn.textContent  = 'Salvando...';
 
   // Atualiza localmente de imediato
-  c.status           = novoStatus;
-  c.valorProjeto     = valorProjeto;
-  c.kwp              = kwp;
-  c.instalacao       = instalacao;
-  c.pctComissao      = pctComissao;
-  c.comissaoEstimada = comEstimada;
-  c.comissaoPaga     = comPaga;
-  c.comissaoPendente = comPendente;
+  c.status            = novoStatus;
+  c.valorProjeto      = valorProjeto;
+  c.kwp               = kwp;
+  c.custoInstalacao   = +document.getElementById('detailCustoInst').value   || 0;
+  c.homologacao       = +document.getElementById('detailHomologacao').value  || 0;
+  c.instalacao        = instalacao;
+  c.impostos          = +document.getElementById('detailImpostos').value     || 0;
+  c.margem            = +document.getElementById('detailMargem').value       || 0;
+  c.pctComissao       = pctComissao;
+  c.comissaoEstimada  = comEstimada;
+  c.comissaoPaga      = comPaga;
+  c.comissaoPendente  = comPendente;
+  c.lucro             = +document.getElementById('detailLucro').value        || 0;
   renderAll();
 
   if (!(CONFIG.DEMO_MODE || CONFIG.APPS_SCRIPT_URL === 'SUA_URL_AQUI')) {
@@ -1564,16 +1577,22 @@ async function salvarStatus() {
         mode:    'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({
-          action:           'update_status',
-          parceiro:         CONFIG.PARCEIRO,
-          nomeCliente:      c.nome,
-          status:           novoStatus,
+          action:            'update_status',
+          parceiro:          CONFIG.PARCEIRO,
+          nomeCliente:       c.nome,
+          status:            novoStatus,
+          kwp,
           valorProjeto,
+          custoInstalacao:   c.custoInstalacao || 0,
+          homologacao:       c.homologacao     || 0,
           instalacao,
+          impostos:          c.impostos        || 0,
+          margem:            c.margem          || 0,
           pctComissao,
-          comissaoEstimada: comEstimada,
-          comissaoPaga:     comPaga,
-          comissaoPendente: comPendente,
+          comissaoEstimada:  comEstimada,
+          comissaoPaga:      comPaga,
+          comissaoPendente:  comPendente,
+          lucro:             c.lucro           || 0,
         }),
       });
     } catch(_) {}

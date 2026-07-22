@@ -52,7 +52,9 @@ function doPost(e) {
 const HEADERS = [
   'ID','Nome','Telefone','E-mail','Endereço','Cidade',
   'Data Indicação','Status',
-  'Valor Projeto','Comissão Estimada','Comissão Paga','Comissão Pendente',
+  'kWp','Valor Projeto','Custo Instalação','Homologação','Total Instalação',
+  'Impostos','Margem Líquida','% Comissão',
+  'Comissão Estimada','Comissão Paga','Comissão Pendente','Lucro Empresa',
   'Arquivo','Observações'
 ];
 
@@ -256,18 +258,35 @@ function updateStatus(body) {
   const pagaCol = headers.indexOf('Comissão Paga')     + 1;
   const pendCol = headers.indexOf('Comissão Pendente') + 1;
 
-  const valCol  = headers.indexOf('Valor Projeto')       + 1;
-  const estCol  = headers.indexOf('Comissão Estimada')   + 1;
+  const kwpCol   = headers.indexOf('kWp')               + 1;
+  const valCol   = headers.indexOf('Valor Projeto')     + 1;
+  const instCol  = headers.indexOf('Custo Instalação')  + 1;
+  const homoCol  = headers.indexOf('Homologação')       + 1;
+  const totInstCol = headers.indexOf('Total Instalação')+ 1;
+  const impCol   = headers.indexOf('Impostos')          + 1;
+  const margCol  = headers.indexOf('Margem Líquida')    + 1;
+  const pctCol   = headers.indexOf('% Comissão')        + 1;
+  const estCol   = headers.indexOf('Comissão Estimada') + 1;
+  const lucroCol = headers.indexOf('Lucro Empresa')     + 1;
 
   for (let i = 1; i < data.length; i++) {
     if (String(data[i][nomeCol]||'').toLowerCase().trim() ===
         String(body.nomeCliente||'').toLowerCase().trim()) {
       const row = i + 1;
-      if (statCol > 0 && body.status !== undefined)             sheet.getRange(row, statCol).setValue(body.status);
-      if (valCol  > 0 && body.valorProjeto !== undefined)       sheet.getRange(row, valCol).setValue(body.valorProjeto);
-      if (estCol  > 0 && body.comissaoEstimada !== undefined)   sheet.getRange(row, estCol).setValue(body.comissaoEstimada);
-      if (pagaCol > 0 && body.comissaoPaga !== undefined)       sheet.getRange(row, pagaCol).setValue(body.comissaoPaga);
-      if (pendCol > 0 && body.comissaoPendente !== undefined)   sheet.getRange(row, pendCol).setValue(body.comissaoPendente);
+      const b = body;
+      if (statCol    > 0 && b.status !== undefined)            sheet.getRange(row, statCol).setValue(b.status);
+      if (kwpCol     > 0 && b.kwp !== undefined)               sheet.getRange(row, kwpCol).setValue(b.kwp);
+      if (valCol     > 0 && b.valorProjeto !== undefined)      sheet.getRange(row, valCol).setValue(b.valorProjeto);
+      if (instCol    > 0 && b.custoInstalacao !== undefined)   sheet.getRange(row, instCol).setValue(b.custoInstalacao);
+      if (homoCol    > 0 && b.homologacao !== undefined)       sheet.getRange(row, homoCol).setValue(b.homologacao);
+      if (totInstCol > 0 && b.instalacao !== undefined)        sheet.getRange(row, totInstCol).setValue(b.instalacao);
+      if (impCol     > 0 && b.impostos !== undefined)          sheet.getRange(row, impCol).setValue(b.impostos);
+      if (margCol    > 0 && b.margem !== undefined)            sheet.getRange(row, margCol).setValue(b.margem);
+      if (pctCol     > 0 && b.pctComissao !== undefined)       sheet.getRange(row, pctCol).setValue(b.pctComissao);
+      if (estCol     > 0 && b.comissaoEstimada !== undefined)  sheet.getRange(row, estCol).setValue(b.comissaoEstimada);
+      if (pagaCol    > 0 && b.comissaoPaga !== undefined)      sheet.getRange(row, pagaCol).setValue(b.comissaoPaga);
+      if (pendCol    > 0 && b.comissaoPendente !== undefined)  sheet.getRange(row, pendCol).setValue(b.comissaoPendente);
+      if (lucroCol   > 0 && b.lucro !== undefined)             sheet.getRange(row, lucroCol).setValue(b.lucro);
       return { ok: true };
     }
   }
