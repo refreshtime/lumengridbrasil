@@ -823,7 +823,7 @@ tbody td { padding: 14px 16px; font-size: 14px; }
 
     <!-- Só aparece para admin -->
     <div id="adminStatusSection" style="display:none;">
-      <div class="form-group" style="margin-bottom:8px;">
+      <div class="form-group" style="margin-bottom:12px;">
         <label>Atualizar Status</label>
         <select id="detailStatus" style="width:100%;padding:11px 14px;background:var(--surface2);
                 border:1px solid var(--border);border-radius:8px;color:var(--text);
@@ -833,6 +833,26 @@ tbody td { padding: 14px 16px; font-size: 14px; }
           <option value="Proposta Enviada">Proposta Enviada</option>
           <option value="Contrato Fechado">Contrato Fechado</option>
         </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Valor do Projeto (R$)</label>
+          <input type="number" id="detailValor" placeholder="Ex: 45000" style="width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>% Comissão</label>
+          <input type="number" id="detailPct" placeholder="Ex: 6" min="0" max="100" style="width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Comissão Paga (R$)</label>
+          <input type="number" id="detailComPaga" placeholder="Ex: 1350" style="width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Comissão Estimada (R$)</label>
+          <input type="number" id="detailComEstimada" placeholder="calculado auto" style="width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;" readonly>
+        </div>
       </div>
     </div>
 
@@ -1422,8 +1442,22 @@ function openClientDetail(idx) {
   document.getElementById('detailEmail').textContent    = c.email    || '—';
   document.getElementById('detailObs').textContent      = c.obs      || 'Sem observações.';
   document.getElementById('detailStatus').value         = c.status   || 'Indicado';
+  document.getElementById('detailValor').value          = c.valorProjeto      || '';
+  document.getElementById('detailComPaga').value        = c.comissaoPaga      || '';
+  document.getElementById('detailComEstimada').value    = c.comissaoEstimada  || '';
+  document.getElementById('detailPct').value            = c.valorProjeto && c.comissaoEstimada
+    ? ((c.comissaoEstimada / c.valorProjeto) * 100).toFixed(1) : '';
   document.getElementById('adminStatusSection').style.display = isAdmin ? 'block' : 'none';
   document.getElementById('btnSalvarStatus').style.display    = isAdmin ? 'inline-flex' : 'none';
+
+  // Calcula comissão estimada automaticamente ao digitar valor ou %
+  ['detailValor','detailPct'].forEach(id => {
+    document.getElementById(id).oninput = () => {
+      const val = +document.getElementById('detailValor').value || 0;
+      const pct = +document.getElementById('detailPct').value  || 0;
+      document.getElementById('detailComEstimada').value = val && pct ? Math.round(val * pct / 100) : '';
+    };
+  });
 
   const arqWrap = document.getElementById('detailArquivoWrap');
   if (c.arquivo) {
@@ -1448,14 +1482,22 @@ function closeDetailOutside(e) {
 async function salvarStatus() {
   if (detailIdx < 0) return;
   const c          = CLIENTES[detailIdx];
-  const novoStatus = document.getElementById('detailStatus').value;
-  const btn        = document.getElementById('btnSalvarStatus');
+  const novoStatus    = document.getElementById('detailStatus').value;
+  const valorProjeto  = +document.getElementById('detailValor').value       || 0;
+  const comEstimada   = +document.getElementById('detailComEstimada').value || 0;
+  const comPaga       = +document.getElementById('detailComPaga').value     || 0;
+  const comPendente   = Math.max(0, comEstimada - comPaga);
+  const btn           = document.getElementById('btnSalvarStatus');
 
   btn.disabled     = true;
   btn.textContent  = 'Salvando...';
 
   // Atualiza localmente de imediato
-  c.status = novoStatus;
+  c.status           = novoStatus;
+  c.valorProjeto     = valorProjeto;
+  c.comissaoEstimada = comEstimada;
+  c.comissaoPaga     = comPaga;
+  c.comissaoPendente = comPendente;
   renderAll();
 
   if (!(CONFIG.DEMO_MODE || CONFIG.APPS_SCRIPT_URL === 'SUA_URL_AQUI')) {
@@ -1465,10 +1507,14 @@ async function salvarStatus() {
         mode:    'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({
-          action:       'update_status',
-          parceiro:     CONFIG.PARCEIRO,
-          nomeCliente:  c.nome,
-          status:       novoStatus,
+          action:           'update_status',
+          parceiro:         CONFIG.PARCEIRO,
+          nomeCliente:      c.nome,
+          status:           novoStatus,
+          valorProjeto,
+          comissaoEstimada: comEstimada,
+          comissaoPaga:     comPaga,
+          comissaoPendente: comPendente,
         }),
       });
     } catch(_) {}

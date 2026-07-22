@@ -256,13 +256,18 @@ function updateStatus(body) {
   const pagaCol = headers.indexOf('Comissão Paga')     + 1;
   const pendCol = headers.indexOf('Comissão Pendente') + 1;
 
+  const valCol  = headers.indexOf('Valor Projeto')       + 1;
+  const estCol  = headers.indexOf('Comissão Estimada')   + 1;
+
   for (let i = 1; i < data.length; i++) {
     if (String(data[i][nomeCol]||'').toLowerCase().trim() ===
         String(body.nomeCliente||'').toLowerCase().trim()) {
       const row = i + 1;
-      if (statCol > 0 && body.status !== undefined)            sheet.getRange(row, statCol).setValue(body.status);
-      if (pagaCol > 0 && body.comissaoPaga !== undefined)      sheet.getRange(row, pagaCol).setValue(body.comissaoPaga);
-      if (pendCol > 0 && body.comissaoPendente !== undefined)  sheet.getRange(row, pendCol).setValue(body.comissaoPendente);
+      if (statCol > 0 && body.status !== undefined)             sheet.getRange(row, statCol).setValue(body.status);
+      if (valCol  > 0 && body.valorProjeto !== undefined)       sheet.getRange(row, valCol).setValue(body.valorProjeto);
+      if (estCol  > 0 && body.comissaoEstimada !== undefined)   sheet.getRange(row, estCol).setValue(body.comissaoEstimada);
+      if (pagaCol > 0 && body.comissaoPaga !== undefined)       sheet.getRange(row, pagaCol).setValue(body.comissaoPaga);
+      if (pendCol > 0 && body.comissaoPendente !== undefined)   sheet.getRange(row, pendCol).setValue(body.comissaoPendente);
       return { ok: true };
     }
   }
