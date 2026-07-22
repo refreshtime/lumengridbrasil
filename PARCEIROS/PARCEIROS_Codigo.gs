@@ -297,6 +297,69 @@ function receberNotificacao(body) {
 }
 
 // ────────────────────────────────────────────────
+// IMPORTAÇÃO MANUAL — execute uma vez no editor
+// ────────────────────────────────────────────────
+function importarLeadsMichaelParaCRM() {
+  const ss      = SpreadsheetApp.openById(SHEET_ID_PARCEIROS);
+  const sheet   = ss.getSheetByName('Michael');
+  if (!sheet) { Logger.log('Aba Michael não encontrada.'); return; }
+
+  const data    = sheet.getDataRange().getValues();
+  if (data.length < 2) { Logger.log('Sem dados para importar.'); return; }
+
+  const headers = data[0];
+  const nomeCol = headers.indexOf('Nome');
+  const telCol  = headers.indexOf('Telefone');
+  const emailCol= headers.indexOf('E-mail');
+  const endCol  = headers.indexOf('Endereço');
+  const cidCol  = headers.indexOf('Cidade');
+  const obsCol  = headers.indexOf('Observações');
+
+  const crmSS   = SpreadsheetApp.openById(SHEET_ID_CRM);
+  let crmSheet  = crmSS.getSheetByName('CRM_Dados');
+  if (!crmSheet) crmSheet = crmSS.insertSheet('CRM_Dados');
+
+  const raw     = crmSheet.getRange(1, 1).getValue();
+  const leads   = raw ? JSON.parse(raw) : [];
+  const telsExistentes = new Set(leads.map(l => String(l.telefone||'').replace(/\D/g,'')));
+
+  let adicionados = 0;
+
+  data.slice(1).forEach(row => {
+    const nome = String(row[nomeCol] || '').trim();
+    const tel  = String(row[telCol]  || '').trim();
+    if (!nome) return;
+
+    const telLimpo = tel.replace(/\D/g, '');
+    if (telLimpo && telsExistentes.has(telLimpo)) return; // já existe
+
+    const novoLead = {
+      id:        Utilities.getUuid(),
+      nome,
+      telefone:  tel,
+      email:     emailCol >= 0 ? String(row[emailCol] || '') : '',
+      cidade:    cidCol   >= 0 ? String(row[cidCol]   || '') : '',
+      origem:    'Parceiro — Michael',
+      resp:      'Lucas',
+      stage:     0,
+      subtasks:  {},
+      history:   [{ text: 'Lead importado do portal do parceiro Michael',
+                    user: 'Sistema', ts: Date.now() }],
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      seenBy:    [],
+    };
+
+    leads.unshift(novoLead);
+    if (telLimpo) telsExistentes.add(telLimpo);
+    adicionados++;
+  });
+
+  crmSheet.getRange(1, 1).setValue(JSON.stringify(leads));
+  Logger.log(adicionados + ' lead(s) importado(s) para o CRM do Lucas.');
+}
+
+// ────────────────────────────────────────────────
 // PASTA NO DRIVE
 // ────────────────────────────────────────────────
 function obterPastaIndicacoes(parceiro) {
