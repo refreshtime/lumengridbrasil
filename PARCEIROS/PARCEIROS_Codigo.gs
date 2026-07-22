@@ -4,6 +4,7 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const SHEET_ID_PARCEIROS = '1PoXQTLBfciYHSqQZn1ryHEx_0C6TQn5jDDyGNavGLuo';
+const SHEET_ID_CRM       = '1LTv6dFRT56533gfPc5elNfxiddsUzgYyLbCLsNykyRQ';
 const EMAIL_NOTIFICACAO  = ''; // opcional: e-mail para receber avisos
 
 // ────────────────────────────────────────────────
@@ -146,7 +147,53 @@ function addClient(body) {
     } catch(e) {}
   }
 
+  // Cria lead no CRM automaticamente
+  adicionarNoCRM({ nome: body.nome, telefone: body.telefone, email: body.email,
+                   cidade: body.cidade, endereco: body.endereco, obs: body.obs,
+                   parceiro });
+
   return { ok: true, id };
+}
+
+// ────────────────────────────────────────────────
+// CRIAR LEAD NO CRM AUTOMATICAMENTE
+// ────────────────────────────────────────────────
+function adicionarNoCRM(lead) {
+  try {
+    const ss    = SpreadsheetApp.openById(SHEET_ID_CRM);
+    let sheet   = ss.getSheetByName('CRM_Dados');
+    if (!sheet) sheet = ss.insertSheet('CRM_Dados');
+
+    const raw   = sheet.getRange(1, 1).getValue();
+    const leads = raw ? JSON.parse(raw) : [];
+
+    // Evita duplicata pelo telefone
+    const tel = String(lead.telefone || '').replace(/\D/g, '');
+    if (tel && leads.some(l => String(l.telefone || '').replace(/\D/g, '') === tel)) return;
+
+    const novoLead = {
+      id:        Utilities.getUuid(),
+      nome:      lead.nome      || 'Lead do Parceiro',
+      telefone:  lead.telefone  || '',
+      email:     lead.email     || '',
+      cidade:    lead.cidade    || '',
+      origem:    'Parceiro — ' + (lead.parceiro || 'Parceiro'),
+      resp:      'Comercial Lumen',
+      stage:     0,
+      subtasks:  {},
+      history:   [{ text: 'Lead indicado pelo parceiro ' + (lead.parceiro || '') +
+                          (lead.obs ? ' — ' + lead.obs : ''),
+                    user: 'Sistema', ts: Date.now() }],
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      seenBy:    [],
+    };
+
+    leads.unshift(novoLead);
+    sheet.getRange(1, 1).setValue(JSON.stringify(leads));
+  } catch(e) {
+    Logger.log('Erro ao adicionar no CRM: ' + e.message);
+  }
 }
 
 // ────────────────────────────────────────────────
