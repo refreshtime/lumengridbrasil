@@ -624,9 +624,9 @@ tbody td { padding: 14px 16px; font-size: 14px; }
       <div class="kpi-icon">✅</div>
     </div>
     <div class="kpi-card yellow">
-      <div class="kpi-label">Comissão Pendente</div>
+      <div class="kpi-label">A Receber</div>
       <div class="kpi-value yellow" id="kpiComPendente" style="font-size:24px;">—</div>
-      <div class="kpi-sub">a receber</div>
+      <div class="kpi-sub">contratos fechados não pagos</div>
       <div class="kpi-icon">⏳</div>
     </div>
   </div>
@@ -867,10 +867,16 @@ tbody td { padding: 14px 16px; font-size: 14px; }
         </div>
       </div>
 
+      <!-- Lucro da empresa (só admin) -->
+      <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:8px;padding:12px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;font-weight:700;color:rgba(34,197,94,.8);text-transform:uppercase;letter-spacing:1px;">Lucro da Empresa</span>
+        <input type="number" id="detailLucro" readonly style="background:none;border:none;color:#22C55E;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;outline:none;text-align:right;width:160px;">
+      </div>
+
       <!-- O que o parceiro vê -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div>
-          <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Comissão Estimada (visível)</label>
+          <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Comissão Estimada (visível ao parceiro)</label>
           <input type="number" id="detailComEstimada" readonly style="width:100%;padding:10px 12px;background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.25);border-radius:8px;color:var(--orange);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;outline:none;">
         </div>
         <div>
@@ -1021,10 +1027,16 @@ function calcResumo(list) {
     if (n>=2) con++;
     if (n>=3) prop++;
     if (n>=4) fec++;
+    const isFechado = (c.status||'').toLowerCase().includes('fechado');
     valor += +c.valorProjeto     || +c['Valor Projeto']      || 0;
     estim += +c.comissaoEstimada || +c['Comissão Estimada']  || 0;
     paga  += +c.comissaoPaga     || +c['Comissão Paga']      || 0;
-    pend  += +c.comissaoPendente || +c['Comissão Pendente']  || 0;
+    // Pendente só conta em contratos fechados
+    if (isFechado) {
+      const estimC = +c.comissaoEstimada || +c['Comissão Estimada'] || 0;
+      const pagaC  = +c.comissaoPaga     || +c['Comissão Paga']     || 0;
+      pend += Math.max(0, estimC - pagaC);
+    }
   });
 
   return { indicados:ind, contatados:con, propostas:prop, fechados:fec,
@@ -1258,7 +1270,7 @@ function renderFinanceiro(r) {
       <span class="fin-value green">${fmt(r.comPaga)}</span>
     </div>
     <div class="fin-row">
-      <span class="fin-label">⏳ Comissão pendente</span>
+      <span class="fin-label">⏳ A receber (contratos fechados)</span>
       <span class="fin-value yellow">${fmt(r.comPendente)}</span>
     </div>
     <div class="fin-row" style="border-top:1px solid var(--orange);margin-top:4px;padding-top:16px;">
@@ -1504,7 +1516,8 @@ async function salvarStatus() {
   const pctComissao   = +document.getElementById('detailPct').value         || 0;
   const comEstimada   = +document.getElementById('detailComEstimada').value || 0;
   const comPaga       = +document.getElementById('detailComPaga').value     || 0;
-  const comPendente   = Math.max(0, comEstimada - comPaga);
+  // Comissão pendente só existe em contratos fechados
+  const comPendente = novoStatus === 'Contrato Fechado' ? Math.max(0, comEstimada - comPaga) : 0;
   const btn           = document.getElementById('btnSalvarStatus');
 
   btn.disabled     = true;
@@ -1556,11 +1569,12 @@ function calcComissao() {
   const impostos   = Math.round(projeto * 0.10);
   const margem     = Math.max(0, projeto - instalacao - impostos);
   const estimada   = Math.round(margem * pct / 100);
-  const paga       = +document.getElementById('detailComPaga').value     || 0;
+  const lucro      = Math.max(0, margem - estimada);
 
-  document.getElementById('detailImpostos').value    = projeto  ? impostos  : '';
-  document.getElementById('detailMargem').value      = projeto  ? margem    : '';
-  document.getElementById('detailComEstimada').value = estimada ? estimada  : '';
+  document.getElementById('detailImpostos').value    = projeto  ? impostos : '';
+  document.getElementById('detailMargem').value      = projeto  ? margem   : '';
+  document.getElementById('detailComEstimada').value = estimada ? estimada : '';
+  document.getElementById('detailLucro').value       = projeto  ? lucro    : '';
 }
 
 // ── HELPERS ──────────────────────────────────────────────────
