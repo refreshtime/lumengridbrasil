@@ -178,7 +178,7 @@ function adicionarNoCRM(lead) {
       email:     lead.email     || '',
       cidade:    lead.cidade    || '',
       origem:    'Parceiro — ' + (lead.parceiro || 'Parceiro'),
-      resp:      'Comercial Lumen',
+      resp:      'Lucas',
       stage:     0,
       subtasks:  {},
       history:   [{ text: 'Lead indicado pelo parceiro ' + (lead.parceiro || '') +
