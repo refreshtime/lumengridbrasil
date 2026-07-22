@@ -8,7 +8,7 @@
 // ────────────────────────────────────────────────
 
 // ID da sua planilha do Google Sheets (parte da URL: /d/XXXX/edit)
-const SHEET_ID = 'COLE_O_ID_DA_PLANILHA_AQUI';
+const SHEET_ID = '1LTv6dFRT56533gfPc5elNfxiddsUzgYyLbCLsNykyRQ';
 
 // Nome da aba com os leads do Meta
 const ABA_META = 'Leads';
@@ -203,35 +203,66 @@ function instalarTrigger() {
 
 function verificarNovosLeadsMeta() {
   try {
-    const metaLeads = getLeadsMeta();
+    const ss = SpreadsheetApp.openById(SHEET_ID);
+    const sheet = ss.getSheetByName(ABA_META);
+    if (!sheet) { Logger.log('Aba "' + ABA_META + '" não encontrada.'); return; }
+
+    const data = sheet.getDataRange().getValues();
+    if (data.length < 2) return;
+
+    // Detecta coluna Responsável (coluna E = índice 4), se existir
+    const headers = data[0].map(h => String(h).toLowerCase().trim());
+    const respColIdx = headers.indexOf('responsável') >= 0
+      ? headers.indexOf('responsável')
+      : headers.indexOf('responsavel') >= 0
+      ? headers.indexOf('responsavel')
+      : 4; // coluna E por padrão
+
+    const VENDEDORES_VALIDOS = ['Lucas', 'Giovani', 'Hingrid', 'Comercial Lumen'];
+
     const crmLeads = getLeadsCRM();
     const existingTels = new Set(crmLeads.map(l => (l.tel||l.telefone||'').replace(/\D/g,'')));
     let added = 0;
-    metaLeads.forEach(m => {
-      const tel = String(m.tel||'').replace(/\D/g,'');
-      if (tel && existingTels.has(tel)) return;
+
+    data.slice(1).forEach(row => {
+      const nome  = String(row[COLUNAS_META.nome]  || '').trim();
+      const tel   = String(row[COLUNAS_META.tel]   || '').trim();
+      const email = String(row[COLUNAS_META.email] || '').trim();
+      const cidade= String(row[COLUNAS_META.cidade]|| '').trim();
+      if (!nome) return;
+
+      const telLimpo = tel.replace(/\D/g,'');
+      if (telLimpo && existingTels.has(telLimpo)) return;
+
+      // Lê responsável da coluna E (ou coluna com cabeçalho "Responsável")
+      const respRaw = row[respColIdx] ? String(row[respColIdx]).trim() : '';
+      const resp = VENDEDORES_VALIDOS.includes(respRaw) ? respRaw : 'Comercial Lumen';
+
       const lead = {
         id: Utilities.getUuid(),
-        nome: m.nome || 'Lead do Meta',
-        telefone: m.tel || '',
-        email: m.email || '',
-        cidade: m.cidade || '',
-        origem: 'Meta',
-        resp: 'Comercial Lumen', // padrão — ajuste conforme preferir
+        nome: nome || 'Lead importado',
+        telefone: tel,
+        email,
+        cidade,
+        origem: 'Planilha',
+        resp,
         stage: 0,
         subtasks: {},
-        history: [{ text: 'Lead importado automaticamente do Meta', user: 'Sistema', ts: Date.now() }],
+        history: [{ text: 'Lead importado em lote — responsável: ' + resp, user: 'Sistema', ts: Date.now() }],
         createdAt: Date.now(),
         updatedAt: Date.now(),
         seenBy: [],
       };
       crmLeads.unshift(lead);
-      if (tel) existingTels.add(tel);
+      if (telLimpo) existingTels.add(telLimpo);
       added++;
     });
+
     if (added > 0) {
       saveLeadsCRM(crmLeads);
-      Logger.log(added + ' novo(s) lead(s) importado(s) do Meta.');
+      Logger.log(added + ' lead(s) importado(s).');
+    } else {
+      Logger.log('Nenhum lead novo encontrado.');
     }
   } catch(e) {
     Logger.log('Erro em verificarNovosLeadsMeta: ' + e.message);
