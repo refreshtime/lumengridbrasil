@@ -248,28 +248,27 @@ function lancarProposta(body) {
 function updateStatus(body) {
   const parceiro = body.parceiro || 'Michael';
   const ss       = SpreadsheetApp.openById(SHEET_ID_PARCEIROS);
-  const sheet    = ss.getSheetByName(parceiro);
-  if (!sheet) return { error: 'Aba não encontrada: ' + parceiro };
+  const sheet    = garantirAba(ss, parceiro); // cria aba se não existir
 
   const data    = sheet.getDataRange().getValues();
   const headers = data[0];
-  const nomeCol = headers.indexOf('Nome');
-  const statCol = headers.indexOf('Status')            + 1;
-  const pagaCol = headers.indexOf('Comissão Paga')     + 1;
-  const pendCol = headers.indexOf('Comissão Pendente') + 1;
+  const nomeCol    = headers.indexOf('Nome');
+  const statCol    = headers.indexOf('Status')             + 1;
+  const pagaCol    = headers.indexOf('Comissão Paga')      + 1;
+  const pendCol    = headers.indexOf('Comissão Pendente')  + 1;
+  const kwpCol     = headers.indexOf('kWp')                + 1;
+  const valCol     = headers.indexOf('Valor Projeto')      + 1;
+  const equipCol   = headers.indexOf('Custo Equipamento')  + 1;
+  const instCol    = headers.indexOf('Custo Instalação')   + 1;
+  const homoCol    = headers.indexOf('Homologação')        + 1;
+  const totInstCol = headers.indexOf('Total Instalação')   + 1;
+  const impCol     = headers.indexOf('Impostos')           + 1;
+  const margCol    = headers.indexOf('Margem Líquida')     + 1;
+  const pctCol     = headers.indexOf('% Comissão')         + 1;
+  const estCol     = headers.indexOf('Comissão Estimada')  + 1;
+  const lucroCol   = headers.indexOf('Lucro Empresa')      + 1;
 
-  const kwpCol   = headers.indexOf('kWp')               + 1;
-  const valCol   = headers.indexOf('Valor Projeto')     + 1;
-  const equipCol = headers.indexOf('Custo Equipamento') + 1;
-  const instCol  = headers.indexOf('Custo Instalação')  + 1;
-  const homoCol  = headers.indexOf('Homologação')       + 1;
-  const totInstCol = headers.indexOf('Total Instalação')+ 1;
-  const impCol   = headers.indexOf('Impostos')          + 1;
-  const margCol  = headers.indexOf('Margem Líquida')    + 1;
-  const pctCol   = headers.indexOf('% Comissão')        + 1;
-  const estCol   = headers.indexOf('Comissão Estimada') + 1;
-  const lucroCol = headers.indexOf('Lucro Empresa')     + 1;
-
+  // Tenta atualizar linha existente pelo nome do cliente
   for (let i = 1; i < data.length; i++) {
     if (String(data[i][nomeCol]||'').toLowerCase().trim() ===
         String(body.nomeCliente||'').toLowerCase().trim()) {
@@ -289,10 +288,38 @@ function updateStatus(body) {
       if (pagaCol    > 0 && b.comissaoPaga !== undefined)      sheet.getRange(row, pagaCol).setValue(b.comissaoPaga);
       if (pendCol    > 0 && b.comissaoPendente !== undefined)  sheet.getRange(row, pendCol).setValue(b.comissaoPendente);
       if (lucroCol   > 0 && b.lucro !== undefined)             sheet.getRange(row, lucroCol).setValue(b.lucro);
-      return { ok: true };
+      return { ok: true, updated: true };
     }
   }
-  return { error: 'Cliente não encontrado: ' + body.nomeCliente };
+
+  // Cliente não encontrado — cria nova linha na aba do parceiro
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  sheet.appendRow([
+    'MC' + Date.now().toString(36).toUpperCase(),
+    body.nomeCliente      || '',
+    body.telefone         || '',
+    body.email            || '',
+    '',
+    body.cidade           || '',
+    hoje,
+    body.status           || 'Proposta Enviada',
+    body.kwp              || 0,
+    body.valorProjeto     || 0,
+    body.custoEquipamento || 0,
+    body.custoInstalacao  || 0,
+    body.homologacao      || 0,
+    body.instalacao       || 0,
+    body.impostos         || 0,
+    body.margem           || 0,
+    body.pctComissao      || 0,
+    body.comissaoEstimada || 0,
+    0,
+    body.comissaoEstimada || 0,
+    body.lucro            || 0,
+    '',
+    body.obs              || ''
+  ]);
+  return { ok: true, created: true };
 }
 
 // ────────────────────────────────────────────────
