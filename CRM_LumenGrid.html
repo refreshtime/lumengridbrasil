@@ -1632,7 +1632,8 @@ function openDetail(id) {
       <div class="if"><div class="if-lbl">% Comissão Parceiro</div><input class="if-inp" id="pp-pct" type="number" step="0.1" value="${lead.pctComissao||15}" oninput="calcPP()"></div>
     </div>
     <div class="pp-calc">
-      <div class="pp-calc-item"><div class="pp-calc-lbl">Margem</div><div class="pp-calc-val" id="pp-mgm">—</div></div>
+      <div class="pp-calc-item"><div class="pp-calc-lbl">Margem Bruta</div><div class="pp-calc-val" id="pp-mgm">—</div></div>
+      <div class="pp-calc-item"><div class="pp-calc-lbl" style="color:#F59E0B">Pós-Venda 20%</div><div class="pp-calc-val" style="color:#F59E0B" id="pp-posv">—</div></div>
       <div class="pp-calc-item"><div class="pp-calc-lbl">Comissão Parceiro</div><div class="pp-calc-val" style="color:var(--gold-d)" id="pp-com">—</div></div>
       <div class="pp-calc-item"><div class="pp-calc-lbl" style="color:#22C55E">Lucro Empresa</div><div class="pp-calc-val" style="color:#22C55E" id="pp-lucro">—</div></div>
     </div>
@@ -1997,15 +1998,18 @@ function calcPP() {
   const inst  = parseFloat(document.getElementById('pp-inst').value)  || 0;
   const equip = parseFloat(document.getElementById('pp-equip').value) || 0;
   const pct   = parseFloat(document.getElementById('pp-pct').value)   || 0;
-  const imp   = Math.round(proj * 0.10);
-  const mgm   = proj - inst - equip - imp;
-  const com   = Math.round(Math.max(0, mgm) * (pct / 100));
-  const lucro = Math.max(0, mgm) - com;
-  const fmt   = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('pp-imp').value       = imp   ? fmt(imp)   : '';
-  document.getElementById('pp-mgm').textContent = proj  ? fmt(mgm)   : '—';
-  document.getElementById('pp-com').textContent = proj  ? fmt(com)   : '—';
-  document.getElementById('pp-lucro').textContent = proj ? fmt(lucro) : '—';
+  const imp      = Math.round(proj * 0.10);
+  const mgm      = proj - inst - equip - imp;
+  const posVenda = Math.round(Math.max(0, mgm) * 0.20);
+  const mgmLiq   = Math.max(0, mgm) - posVenda;
+  const com      = Math.round(mgmLiq * (pct / 100));
+  const lucro    = mgmLiq - com;
+  const fmt      = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('pp-imp').value          = imp   ? fmt(imp)      : '';
+  document.getElementById('pp-mgm').textContent    = proj  ? fmt(mgm)      : '—';
+  document.getElementById('pp-posv').textContent   = proj  ? fmt(posVenda) : '—';
+  document.getElementById('pp-com').textContent    = proj  ? fmt(com)      : '—';
+  document.getElementById('pp-lucro').textContent  = proj  ? fmt(lucro)    : '—';
 }
 async function lancarPP(leadId) {
   const sel      = document.getElementById('pp-parceiro-sel').value;
@@ -2018,10 +2022,12 @@ async function lancarPP(leadId) {
   const inst     = parseFloat(document.getElementById('pp-inst').value)  || 0;
   const pct      = parseFloat(document.getElementById('pp-pct').value)   || 0;
   if (!proj) { toast('Informe o valor do projeto.','err'); return; }
-  const imp    = Math.round(proj * 0.10);
-  const margem = Math.max(0, proj - inst - equip - imp);
-  const com    = Math.round(margem * pct / 100);
-  const lucro  = Math.max(0, margem - com);
+  const imp      = Math.round(proj * 0.10);
+  const margem   = Math.max(0, proj - inst - equip - imp);
+  const posVenda = Math.round(margem * 0.20);
+  const mgmLiq   = Math.max(0, margem - posVenda);
+  const com      = Math.round(mgmLiq * pct / 100);
+  const lucro    = Math.max(0, mgmLiq - com);
   const leads  = getAllLeadsRaw();
   const lead   = leads.find(l => l.id === leadId);
   // Envia ao portal do parceiro apenas se informado
@@ -2036,7 +2042,7 @@ async function lancarPP(leadId) {
         nomeCliente:      lead.nome,
         kwp, valorProjeto: proj, custoEquipamento: equip,
         custoInstalacao: inst, instalacao: inst,
-        impostos: imp, margem, pctComissao: pct,
+        impostos: imp, margem, posVenda, pctComissao: pct,
         comissaoEstimada: com, lucro,
       })
     }).catch(() => {});
@@ -2050,7 +2056,7 @@ async function lancarPP(leadId) {
     lead.history = lead.history || [];
     const parceiroTxt = parceiro ? ` · enviado ao parceiro "${parceiro}"` : '';
     lead.history.push({
-      text: `Proposta calculada: Projeto ${proj.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} | Comissão ${com.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} | Lucro LG ${lucro.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}${parceiroTxt}`,
+      text: `Proposta calculada: Projeto ${proj.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} | Pós-venda ${posVenda.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} | Comissão ${com.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} | Lucro LG ${lucro.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}${parceiroTxt}`,
       user: currentUser, ts: Date.now()
     });
     lead.updatedAt = Date.now();

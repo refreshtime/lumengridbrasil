@@ -875,15 +875,19 @@ tbody td { padding: 14px 16px; font-size: 14px; }
           </div>
         </div>
 
-        <!-- Impostos / Margem / % Comissão -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+        <!-- Impostos / Margem / Pós-Venda / % Comissão -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
             <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Impostos (10%)</label>
             <input type="number" id="detailImpostos" oninput="calcComissao()" style="width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
           </div>
           <div>
-            <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Margem Líquida</label>
+            <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Margem Bruta</label>
             <input type="number" id="detailMargem" oninput="calcComissao()" style="width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+          </div>
+          <div>
+            <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#B45309;margin-bottom:5px;">Pós-Venda 20% (auto)</label>
+            <input type="number" id="detailPosVenda" style="width:100%;padding:10px 12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;color:#B45309;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;outline:none;" readonly>
           </div>
           <div>
             <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">% Comissão</label>
@@ -1655,11 +1659,14 @@ function calcComissao() {
   const pct         = +document.getElementById('detailPct').value         || 0;
   const impostos    = Math.round(projeto * 0.10);
   const margem      = Math.max(0, projeto - instalacao - equipamento - impostos);
-  const estimada    = Math.round(margem * pct / 100);
-  const lucro       = Math.max(0, margem - estimada);
+  const posVenda    = Math.round(margem * 0.20);
+  const mgmLiq      = Math.max(0, margem - posVenda);
+  const estimada    = Math.round(mgmLiq * pct / 100);
+  const lucro       = Math.max(0, mgmLiq - estimada);
 
   document.getElementById('detailImpostos').value    = projeto  ? impostos : '';
   document.getElementById('detailMargem').value      = projeto  ? margem   : '';
+  document.getElementById('detailPosVenda').value    = projeto  ? posVenda : '';
   document.getElementById('detailComEstimada').value = estimada ? estimada : '';
   document.getElementById('detailLucro').value       = projeto  ? lucro    : '';
 }
