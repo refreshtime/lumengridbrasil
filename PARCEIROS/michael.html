@@ -840,8 +840,8 @@ tbody td { padding: 14px 16px; font-size: 14px; }
       <div style="background:rgba(242,101,34,.06);border:1px solid rgba(242,101,34,.15);border-radius:10px;padding:16px;margin-bottom:12px;">
         <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;">Cálculo Interno — não visível ao parceiro</div>
 
-        <!-- kWp + Valor Projeto -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <!-- kWp + Valor Projeto + Custo Equipamento -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
             <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Valor do Projeto (R$)</label>
             <input type="number" id="detailValor" placeholder="Ex: 45000" oninput="calcComissao()" style="width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
@@ -849,6 +849,10 @@ tbody td { padding: 14px 16px; font-size: 14px; }
           <div>
             <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Potência do Sistema (kWp)</label>
             <input type="number" id="detailKwp" placeholder="Ex: 5.5" step="0.1" oninput="calcInstalacaoAuto()" style="width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+          </div>
+          <div>
+            <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Custo Equipamento (R$)</label>
+            <input type="number" id="detailEquipamento" placeholder="Ex: 22000" oninput="calcComissao()" style="width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
           </div>
         </div>
 
@@ -858,15 +862,15 @@ tbody td { padding: 14px 16px; font-size: 14px; }
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
             <div>
               <div style="font-size:9px;color:var(--muted2);margin-bottom:3px;">Instalação</div>
-              <input type="number" id="detailCustoInst" readonly style="width:100%;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;outline:none;border:none;">
+              <input type="number" id="detailCustoInst" oninput="recalcTotalInst()" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;outline:none;">
             </div>
             <div>
               <div style="font-size:9px;color:var(--muted2);margin-bottom:3px;">Homologação</div>
-              <input type="number" id="detailHomologacao" readonly style="width:100%;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;outline:none;border:none;">
+              <input type="number" id="detailHomologacao" oninput="recalcTotalInst()" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;outline:none;">
             </div>
             <div>
               <div style="font-size:9px;color:var(--muted2);margin-bottom:3px;">Total Instalação</div>
-              <input type="number" id="detailInstalacao" readonly style="width:100%;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;font-weight:600;outline:none;border:none;">
+              <input type="number" id="detailInstalacao" oninput="calcComissao()" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;font-weight:600;outline:none;">
             </div>
           </div>
         </div>
@@ -875,11 +879,11 @@ tbody td { padding: 14px 16px; font-size: 14px; }
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
             <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Impostos (10%)</label>
-            <input type="number" id="detailImpostos" readonly style="width:100%;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+            <input type="number" id="detailImpostos" oninput="calcComissao()" style="width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
           </div>
           <div>
             <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Margem Líquida</label>
-            <input type="number" id="detailMargem" readonly style="width:100%;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+            <input type="number" id="detailMargem" oninput="calcComissao()" style="width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
           </div>
           <div>
             <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">% Comissão</label>
@@ -891,14 +895,14 @@ tbody td { padding: 14px 16px; font-size: 14px; }
       <!-- Lucro da empresa (só admin) -->
       <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:8px;padding:12px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
         <span style="font-size:11px;font-weight:700;color:rgba(34,197,94,.8);text-transform:uppercase;letter-spacing:1px;">Lucro da Empresa</span>
-        <input type="number" id="detailLucro" readonly style="background:none;border:none;color:#22C55E;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;outline:none;text-align:right;width:160px;">
+        <input type="number" id="detailLucro" style="background:none;border:none;color:#22C55E;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;outline:none;text-align:right;width:160px;">
       </div>
 
       <!-- O que o parceiro vê -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div>
           <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Comissão Estimada (visível ao parceiro)</label>
-          <input type="number" id="detailComEstimada" readonly style="width:100%;padding:10px 12px;background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.25);border-radius:8px;color:var(--orange);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;outline:none;">
+          <input type="number" id="detailComEstimada" style="width:100%;padding:10px 12px;background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.25);border-radius:8px;color:var(--orange);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;outline:none;">
         </div>
         <div>
           <label style="display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Comissão Paga (R$)</label>
@@ -1008,9 +1012,10 @@ async function syncData() {
       cidade:            c['Cidade']            || c.cidade            || '',
       dataIndicacao:     c['Data Indicação']    || c.dataIndicacao     || '',
       status:            c['Status']            || c.status            || '',
-      kwp:               +c['kWp']               || +c.kwp              || 0,
-      valorProjeto:      +c['Valor Projeto']    || +c.valorProjeto     || 0,
-      custoInstalacao:   +c['Custo Instalação'] || +c.custoInstalacao  || 0,
+      kwp:               +c['kWp']               || +c.kwp               || 0,
+      valorProjeto:      +c['Valor Projeto']    || +c.valorProjeto      || 0,
+      custoEquipamento:  +c['Custo Equipamento']|| +c.custoEquipamento  || 0,
+      custoInstalacao:   +c['Custo Instalação'] || +c.custoInstalacao   || 0,
       homologacao:       +c['Homologação']      || +c.homologacao      || 0,
       instalacao:        +c['Total Instalação'] || +c.instalacao       || 0,
       impostos:          +c['Impostos']         || +c.impostos         || 0,
@@ -1508,8 +1513,9 @@ function openClientDetail(idx) {
   document.getElementById('detailEmail').textContent    = c.email    || '—';
   document.getElementById('detailObs').textContent      = c.obs      || 'Sem observações.';
   document.getElementById('detailStatus').value      = c.status       || 'Indicado';
-  document.getElementById('detailValor').value       = c.valorProjeto || '';
-  document.getElementById('detailKwp').value         = c.kwp          || '';
+  document.getElementById('detailValor').value       = c.valorProjeto     || '';
+  document.getElementById('detailKwp').value         = c.kwp             || '';
+  document.getElementById('detailEquipamento').value = c.custoEquipamento || '';
   document.getElementById('detailPct').value         = c.pctComissao  || '';
   document.getElementById('detailComPaga').value     = c.comissaoPaga || '';
   document.getElementById('adminStatusSection').style.display = isAdmin ? 'block' : 'none';
@@ -1541,9 +1547,10 @@ async function salvarStatus() {
   if (detailIdx < 0) return;
   const c          = CLIENTES[detailIdx];
   const novoStatus    = document.getElementById('detailStatus').value;
-  const valorProjeto  = +document.getElementById('detailValor').value      || 0;
-  const kwp           = +document.getElementById('detailKwp').value         || 0;
-  const instalacao    = +document.getElementById('detailInstalacao').value  || 0;
+  const valorProjeto    = +document.getElementById('detailValor').value        || 0;
+  const kwp             = +document.getElementById('detailKwp').value           || 0;
+  const custoEquipamento= +document.getElementById('detailEquipamento').value   || 0;
+  const instalacao      = +document.getElementById('detailInstalacao').value    || 0;
   const pctComissao   = +document.getElementById('detailPct').value         || 0;
   const comEstimada   = +document.getElementById('detailComEstimada').value || 0;
   const comPaga       = +document.getElementById('detailComPaga').value     || 0;
@@ -1558,6 +1565,7 @@ async function salvarStatus() {
   c.status            = novoStatus;
   c.valorProjeto      = valorProjeto;
   c.kwp               = kwp;
+  c.custoEquipamento  = custoEquipamento;
   c.custoInstalacao   = +document.getElementById('detailCustoInst').value   || 0;
   c.homologacao       = +document.getElementById('detailHomologacao').value  || 0;
   c.instalacao        = instalacao;
@@ -1583,6 +1591,7 @@ async function salvarStatus() {
           status:            novoStatus,
           kwp,
           valorProjeto,
+          custoEquipamento,
           custoInstalacao:   c.custoInstalacao || 0,
           homologacao:       c.homologacao     || 0,
           instalacao,
@@ -1632,14 +1641,22 @@ function calcInstalacaoAuto() {
 }
 
 // ── CÁLCULO DE COMISSÃO ───────────────────────────────────────
+function recalcTotalInst() {
+  const c = +document.getElementById('detailCustoInst').value  || 0;
+  const h = +document.getElementById('detailHomologacao').value || 0;
+  document.getElementById('detailInstalacao').value = (c + h) || '';
+  calcComissao();
+}
+
 function calcComissao() {
-  const projeto    = +document.getElementById('detailValor').value      || 0;
-  const instalacao = +document.getElementById('detailInstalacao').value  || 0;
-  const pct        = +document.getElementById('detailPct').value         || 0;
-  const impostos   = Math.round(projeto * 0.10);
-  const margem     = Math.max(0, projeto - instalacao - impostos);
-  const estimada   = Math.round(margem * pct / 100);
-  const lucro      = Math.max(0, margem - estimada);
+  const projeto     = +document.getElementById('detailValor').value       || 0;
+  const instalacao  = +document.getElementById('detailInstalacao').value  || 0;
+  const equipamento = +document.getElementById('detailEquipamento').value || 0;
+  const pct         = +document.getElementById('detailPct').value         || 0;
+  const impostos    = Math.round(projeto * 0.10);
+  const margem      = Math.max(0, projeto - instalacao - equipamento - impostos);
+  const estimada    = Math.round(margem * pct / 100);
+  const lucro       = Math.max(0, margem - estimada);
 
   document.getElementById('detailImpostos').value    = projeto  ? impostos : '';
   document.getElementById('detailMargem').value      = projeto  ? margem   : '';

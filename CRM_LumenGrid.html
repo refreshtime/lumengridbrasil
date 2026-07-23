@@ -1621,11 +1621,12 @@ function openDetail(id) {
   <div class="pp-card">
     <div class="pp-title">Lançar Proposta ao Parceiro</div>
     <div class="info-grid">
-      <div class="if"><div class="if-lbl">Parceiro</div><input class="if-inp" id="pp-parceiro" placeholder="Ex: Michael"></div>
+      <div class="if"><div class="if-lbl">Parceiro</div><input class="if-inp" id="pp-parceiro" placeholder="Ex: Michael" value="${(lead.origem||'').startsWith('Parceiro — ') ? lead.origem.replace('Parceiro — ','') : ''}"></div>
       <div class="if"><div class="if-lbl">% Comissão</div><input class="if-inp" id="pp-pct" type="number" step="0.1" value="15" oninput="calcPP()"></div>
-      <div class="if"><div class="if-lbl">Valor Projeto (R$)</div><input class="if-inp" id="pp-proj" type="number" placeholder="45000" oninput="calcPP()"></div>
-      <div class="if"><div class="if-lbl">Valor Instalação (R$)</div><input class="if-inp" id="pp-inst" type="number" placeholder="5000" oninput="calcPP()"></div>
-      <div class="if"><div class="if-lbl">Valor Equipamentos (R$)</div><input class="if-inp" id="pp-equip" type="number" placeholder="25000" oninput="calcPP()"></div>
+      <div class="if"><div class="if-lbl">Valor Projeto (R$)</div><input class="if-inp" id="pp-proj" type="number" placeholder="45000" value="${lead.valorProjeto||''}" oninput="calcPP()"></div>
+      <div class="if"><div class="if-lbl">Potência (kWp)</div><input class="if-inp" id="pp-kwp" type="number" step="0.1" placeholder="5.5" oninput="calcPPInst()"></div>
+      <div class="if"><div class="if-lbl">Custo Equipamentos (R$)</div><input class="if-inp" id="pp-equip" type="number" placeholder="22000" oninput="calcPP()"></div>
+      <div class="if"><div class="if-lbl">Custo Instalação (R$)</div><input class="if-inp" id="pp-inst" type="number" placeholder="auto p/ kWp" oninput="calcPP()"></div>
       <div class="if"><div class="if-lbl">Impostos 10% (auto)</div><input class="if-inp" id="pp-imp" disabled style="color:var(--text3)"></div>
     </div>
     <div class="pp-calc">
@@ -1952,38 +1953,75 @@ function importBackup(e) {
 }
 
 /* ━━━ PROPOSTA PARCEIRO ━━━ */
+const TABELA_INST_PP = [
+  { max:  3, porWp: 0.84, homologacao:  500 },
+  { max:  6, porWp: 0.60, homologacao:  500 },
+  { max:  9, porWp: 0.50, homologacao:  800 },
+  { max: 12, porWp: 0.44, homologacao:  950 },
+  { max: 20, porWp: 0.42, homologacao: 1050 },
+  { max: 45, porWp: 0.38, homologacao: 1450 },
+];
+function calcPPInst() {
+  const kwp = parseFloat(document.getElementById('pp-kwp').value) || 0;
+  if (!kwp) { document.getElementById('pp-inst').value = ''; calcPP(); return; }
+  const faixa = TABELA_INST_PP.find(f => kwp <= f.max) || TABELA_INST_PP[TABELA_INST_PP.length - 1];
+  document.getElementById('pp-inst').value = Math.round(kwp * 1000 * faixa.porWp) + faixa.homologacao;
+  calcPP();
+}
 function calcPP() {
   const proj  = parseFloat(document.getElementById('pp-proj').value)  || 0;
   const inst  = parseFloat(document.getElementById('pp-inst').value)  || 0;
   const equip = parseFloat(document.getElementById('pp-equip').value) || 0;
   const pct   = parseFloat(document.getElementById('pp-pct').value)   || 0;
-  const imp   = proj * 0.10;
+  const imp   = Math.round(proj * 0.10);
   const mgm   = proj - inst - equip - imp;
   const com   = Math.max(0, mgm) * (pct / 100);
-  document.getElementById('pp-imp').value  = imp.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('pp-mgm').value  = mgm.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('pp-com').value  = com.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('pp-imp').value         = imp ? imp.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '';
+  document.getElementById('pp-mgm').textContent   = proj ? mgm.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '—';
+  document.getElementById('pp-com').textContent   = proj ? com.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '—';
 }
 async function lancarPP(leadId) {
   const parceiro = document.getElementById('pp-parceiro').value.trim();
   const proj     = parseFloat(document.getElementById('pp-proj').value)  || 0;
-  const com      = parseFloat((document.getElementById('pp-com').value||'0').replace(/[^\d,]/g,'').replace(',','.')) || 0;
+  const kwp      = parseFloat(document.getElementById('pp-kwp').value)   || 0;
+  const equip    = parseFloat(document.getElementById('pp-equip').value) || 0;
+  const inst     = parseFloat(document.getElementById('pp-inst').value)  || 0;
+  const pct      = parseFloat(document.getElementById('pp-pct').value)   || 0;
+  // Parse currency string from pp-com display element
+  const comRaw   = (document.getElementById('pp-com').textContent||'0').replace(/[^\d,]/g,'').replace(',','.');
+  const com      = parseFloat(comRaw) || 0;
   if (!parceiro) { toast('Informe o nome do parceiro.','err'); return; }
   if (!proj)     { toast('Informe o valor do projeto.','err'); return; }
   const leads = getAllLeadsRaw();
   const lead  = leads.find(l => l.id === leadId);
   const cfg   = getConfig();
-  if (cfg.parceirosUrl) {
-    const p = new URLSearchParams({
-      action:'addClient', parceiro,
-      nome: lead ? lead.nome : '',
-      telefone: lead ? (lead.telefone||'') : '',
-      cidade:   lead ? (lead.cidade||'')   : '',
-      obs: `Proposta via CRM — R$${proj.toLocaleString('pt-BR')}`,
-    });
-    try { await fetch(cfg.parceirosUrl + '?' + p.toString()); } catch(_) {}
+  if (cfg.parceirosUrl && lead) {
+    const imp    = Math.round(proj * 0.10);
+    const margem = Math.max(0, proj - inst - equip - imp);
+    fetch(cfg.parceirosUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'update_status',
+        parceiro,
+        nomeCliente:       lead.nome,
+        kwp,
+        valorProjeto:      proj,
+        custoEquipamento:  equip,
+        custoInstalacao:   inst,
+        instalacao:        inst,
+        impostos:          imp,
+        margem,
+        pctComissao:       pct,
+        comissaoEstimada:  Math.round(com),
+        lucro:             Math.max(0, margem - Math.round(com)),
+      })
+    }).catch(() => {});
   }
   if (lead) {
+    lead.valorProjeto     = proj;
+    lead.comissaoEstimada = Math.round(com);
     lead.history = lead.history || [];
     lead.history.push({ text:`Proposta lançada ao parceiro "${parceiro}": Projeto R$${proj.toLocaleString('pt-BR')} | Comissão R$${com.toLocaleString('pt-BR')}`, user:currentUser, ts:Date.now() });
     lead.updatedAt = Date.now();

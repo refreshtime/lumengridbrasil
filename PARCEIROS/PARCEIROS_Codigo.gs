@@ -52,7 +52,7 @@ function doPost(e) {
 const HEADERS = [
   'ID','Nome','Telefone','E-mail','Endereço','Cidade',
   'Data Indicação','Status',
-  'kWp','Valor Projeto','Custo Instalação','Homologação','Total Instalação',
+  'kWp','Valor Projeto','Custo Equipamento','Custo Instalação','Homologação','Total Instalação',
   'Impostos','Margem Líquida','% Comissão',
   'Comissão Estimada','Comissão Paga','Comissão Pendente','Lucro Empresa',
   'Arquivo','Observações'
@@ -260,6 +260,7 @@ function updateStatus(body) {
 
   const kwpCol   = headers.indexOf('kWp')               + 1;
   const valCol   = headers.indexOf('Valor Projeto')     + 1;
+  const equipCol = headers.indexOf('Custo Equipamento') + 1;
   const instCol  = headers.indexOf('Custo Instalação')  + 1;
   const homoCol  = headers.indexOf('Homologação')       + 1;
   const totInstCol = headers.indexOf('Total Instalação')+ 1;
@@ -277,6 +278,7 @@ function updateStatus(body) {
       if (statCol    > 0 && b.status !== undefined)            sheet.getRange(row, statCol).setValue(b.status);
       if (kwpCol     > 0 && b.kwp !== undefined)               sheet.getRange(row, kwpCol).setValue(b.kwp);
       if (valCol     > 0 && b.valorProjeto !== undefined)      sheet.getRange(row, valCol).setValue(b.valorProjeto);
+      if (equipCol   > 0 && b.custoEquipamento !== undefined)  sheet.getRange(row, equipCol).setValue(b.custoEquipamento);
       if (instCol    > 0 && b.custoInstalacao !== undefined)   sheet.getRange(row, instCol).setValue(b.custoInstalacao);
       if (homoCol    > 0 && b.homologacao !== undefined)       sheet.getRange(row, homoCol).setValue(b.homologacao);
       if (totInstCol > 0 && b.instalacao !== undefined)        sheet.getRange(row, totInstCol).setValue(b.instalacao);
