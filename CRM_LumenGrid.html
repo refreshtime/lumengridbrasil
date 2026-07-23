@@ -1625,9 +1625,9 @@ function openDetail(id) {
     <div class="pp-title">Calcular Proposta / Comissão</div>
     <div class="info-grid">
       <div class="if"><div class="if-lbl">Valor Projeto (R$)</div><input class="if-inp" id="pp-proj" type="number" placeholder="45000" value="${lead.valorProjeto||''}" oninput="calcPP()"></div>
-      <div class="if"><div class="if-lbl">Potência (kWp)</div><input class="if-inp" id="pp-kwp" type="number" step="0.1" placeholder="5.5" oninput="calcPPInst()"></div>
-      <div class="if"><div class="if-lbl">Custo Equipamentos (R$)</div><input class="if-inp" id="pp-equip" type="number" placeholder="22000" oninput="calcPP()"></div>
-      <div class="if"><div class="if-lbl">Custo Instalação (R$)</div><input class="if-inp" id="pp-inst" type="number" placeholder="auto p/ kWp" oninput="calcPP()"></div>
+      <div class="if"><div class="if-lbl">Potência (kWp)</div><input class="if-inp" id="pp-kwp" type="number" step="0.1" placeholder="5.5" value="${lead.kwp||''}" oninput="calcPPInst()"></div>
+      <div class="if"><div class="if-lbl">Custo Equipamentos (R$)</div><input class="if-inp" id="pp-equip" type="number" placeholder="22000" value="${lead.custoEquipamento||''}" oninput="calcPP()"></div>
+      <div class="if"><div class="if-lbl">Custo Instalação (R$)</div><input class="if-inp" id="pp-inst" type="number" placeholder="auto p/ kWp" value="${lead.custoInstalacao||''}" oninput="calcPP()"></div>
       <div class="if"><div class="if-lbl">Impostos 10% (auto)</div><input class="if-inp" id="pp-imp" disabled style="color:var(--text3)"></div>
       <div class="if"><div class="if-lbl">% Comissão Parceiro</div><input class="if-inp" id="pp-pct" type="number" step="0.1" value="${lead.pctComissao||15}" oninput="calcPP()"></div>
     </div>
@@ -1678,6 +1678,8 @@ function openDetail(id) {
   </div>
   `;
 
+  // Recalcula proposta com dados salvos do lead
+  if (lead.valorProjeto) calcPP();
   openModal('ov-detail');
 }
 
