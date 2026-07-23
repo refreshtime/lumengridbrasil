@@ -105,12 +105,12 @@ code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7
     <strong>Você só enxerga os seus leads.</strong> Leads atribuídos a outros vendedores não aparecem na sua tela.
   </div>
 
-  <!-- 2. LEADS DO MICHAEL -->
-  <h2>2. Leads indicados pelo Michael</h2>
-  <p>Quando o Michael cadastra uma indicação no portal dele, o lead entra <strong>automaticamente</strong> no seu CRM como <strong>Lead Novo</strong>, já atribuído a você.</p>
+  <!-- 2. LEADS DOS PARCEIROS -->
+  <h2>2. Leads indicados por parceiros</h2>
+  <p>Quando um parceiro (Michael ou Jessica) cadastra uma indicação no portal dele, o lead entra <strong>automaticamente</strong> no seu CRM como <strong>Lead Novo</strong>, já atribuído a você.</p>
 
   <div class="flow">
-    <div class="flow-box orange">Michael cadastra<br>indicação</div>
+    <div class="flow-box orange">Michael ou Jessica<br>cadastra indicação</div>
     <div class="flow-arrow">→</div>
     <div class="flow-box">Lead Novo<br>no seu CRM</div>
     <div class="flow-arrow">→</div>
@@ -118,44 +118,51 @@ code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7
   </div>
 
   <div class="alert alert-orange">
-    <strong>Não precisa fazer nada para receber.</strong> O lead aparece sozinho. Origem: <code>Parceiro — Michael</code>
+    <strong>Não precisa fazer nada para receber.</strong> O lead aparece sozinho com origem <code>Parceiro — Michael</code> ou <code>Parceiro — Jessica</code>.
   </div>
 
-  <!-- 3. LANÇAR PROPOSTA -->
-  <h2>3. Lançar proposta no portal do parceiro</h2>
-  <p>Quando você fechar os números de um lead que veio do Michael, preencha a seção <strong>"Lançar Proposta ao Parceiro"</strong> dentro do detalhe do lead no CRM.</p>
+  <!-- 3. CALCULAR PROPOSTA / COMISSÃO -->
+  <h2>3. Calcular proposta e enviar ao parceiro</h2>
+  <p>A seção <strong>"Calcular Proposta / Comissão"</strong> aparece no detalhe de <strong>qualquer lead</strong> — de parceiro ou não. Use para calcular margem, comissão e lucro da empresa em todo atendimento.</p>
 
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
       <div>
-        <div class="step-title">Abra o lead no CRM</div>
-        <div class="step-desc">Clique no card do cliente para abrir o detalhe.</div>
+        <div class="step-title">Abra o lead no CRM e role até "Calcular Proposta / Comissão"</div>
+        <div class="step-desc">Preencha: Valor Projeto, kWp (instalação calculada automaticamente), Custo Equipamentos e % Comissão do parceiro.</div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div>
-        <div class="step-title">Role até "Lançar Proposta ao Parceiro"</div>
-        <div class="step-desc">Preencha: Parceiro (<code>Michael</code>), kWp, Valor Projeto, Custo Equipamentos e % Comissão. A instalação e impostos são calculados automaticamente.</div>
+        <div class="step-title">Veja os resultados calculados automaticamente</div>
+        <div class="step-desc">O sistema mostra: <strong>Margem</strong>, <strong>Comissão do Parceiro</strong> e <strong>Lucro da Empresa</strong> (em verde).</div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div>
-        <div class="step-title">Clique em "→ Lançar Proposta ao Parceiro"</div>
-        <div class="step-desc">Os dados são enviados direto para o painel do Michael. Ele verá apenas o <strong>Valor do Projeto</strong> e a <strong>Comissão Estimada</strong> — nada mais.</div>
+        <div class="step-title">Selecione o parceiro no campo "Parceiro"</div>
+        <div class="step-desc">Escolha <strong>Michael</strong>, <strong>Jessica</strong> ou <strong>Outro (digitar)</strong>. Se não houver parceiro, deixe "Sem parceiro".</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Clique em "→ Salvar / Enviar ao Parceiro"</div>
+        <div class="step-desc">Se selecionou um parceiro: os dados vão direto para o painel dele (ele só vê Valor do Projeto e Comissão). Se "Sem parceiro": apenas salva o cálculo no histórico do lead.</div>
       </div>
     </div>
   </div>
 
   <div class="alert alert-green">
-    <strong>Automático.</strong> Você não precisa acessar o portal do Michael para lançar — basta fazer pelo CRM.
+    <strong>Use em todos os leads.</strong> Mesmo sem parceiro, registre sempre o cálculo para controle interno do lucro da empresa.
   </div>
 
-  <!-- 4. PORTAL DO MICHAEL (ADMIN) -->
-  <h2>4. Acessar o portal do Michael como admin</h2>
-  <p>Se precisar movimentar o status de um cliente, editar valores ou ver o painel completo, acesse o portal do Michael com o link de administrador:</p>
+  <!-- 4. PORTAIS DOS PARCEIROS (ADMIN) -->
+  <h2>4. Acessar os portais dos parceiros como admin</h2>
+  <p>Se precisar movimentar status, editar valores ou ver o painel completo de um parceiro, use os links de administrador abaixo.</p>
 
   <a class="link-pill" href="https://lumengridbrasil.com.br/PARCEIROS/michael.html?admin=1" target="_blank">
     <div class="link-pill-icon" style="background:#FEF3C7">🔑</div>
@@ -166,9 +173,18 @@ code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7
     <div class="link-pill-arrow">→</div>
   </a>
 
+  <a class="link-pill" href="https://lumengridbrasil.com.br/PARCEIROS/jessica.html?admin=1" target="_blank">
+    <div class="link-pill-icon" style="background:#EDE9FE">🔑</div>
+    <div class="link-pill-body">
+      <div class="link-pill-title">Portal Jessica — Acesso Admin</div>
+      <div class="link-pill-url">lumengridbrasil.com.br/PARCEIROS/jessica.html?admin=1</div>
+    </div>
+    <div class="link-pill-arrow">→</div>
+  </a>
+
   <div class="cred-row">
     <div class="cred">
-      <div class="cred-label">Senha Admin</div>
+      <div class="cred-label">Senha Admin (ambos)</div>
       <div class="cred-val orange">Lumen@2026</div>
     </div>
     <div class="cred">
@@ -178,7 +194,7 @@ code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7
   </div>
 
   <div class="alert alert-orange">
-    <strong>Atenção:</strong> O link sem <code>?admin=1</code> é o que o Michael acessa — ele não vê os dados internos. Nunca passe o link de admin para o parceiro.
+    <strong>Atenção:</strong> O link sem <code>?admin=1</code> é o que o parceiro acessa — ele não vê dados internos. Nunca passe o link de admin para o parceiro.
   </div>
 
   <!-- 5. PLANILHAS -->
@@ -207,11 +223,12 @@ code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7
       <div class="sheet-icon">S</div>
       <div>
         <div class="sheet-title">Planilha do Portal de Parceiros</div>
-        <div class="sheet-sub">Indicações do Michael — dados financeiros e status</div>
+        <div class="sheet-sub">Indicações de Michael e Jessica — dados financeiros e status</div>
       </div>
     </div>
     <ul>
       <li>Aba <code>Michael</code> — cada linha é um cliente indicado por ele</li>
+      <li>Aba <code>Jessica</code> — cada linha é um cliente indicado por ela</li>
       <li>Inclui: status, kWp, valor projeto, custo equipamento, comissão, lucro</li>
     </ul>
     <div class="sheet-url">
@@ -303,15 +320,22 @@ code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7
     <div class="step">
       <div class="step-num" style="background:#0b0b12">→</div>
       <div>
-        <div class="step-title">Quer lançar proposta para o Michael ver?</div>
-        <div class="step-desc">Faça pelo CRM em "Lançar Proposta ao Parceiro". Não precisa acessar o portal.</div>
+        <div class="step-title">Quer calcular e enviar proposta para Michael ou Jessica?</div>
+        <div class="step-desc">Faça pelo CRM em "Calcular Proposta / Comissão" — selecione o parceiro no dropdown. Não precisa acessar o portal deles.</div>
       </div>
     </div>
     <div class="step">
       <div class="step-num" style="background:#0b0b12">→</div>
       <div>
-        <div class="step-title">Precisa mudar o status no portal do Michael?</div>
-        <div class="step-desc">Acesse o link admin com <code>?admin=1</code> e senha <code>Lumen@2026</code>.</div>
+        <div class="step-title">Lead sem parceiro? Calcule assim mesmo.</div>
+        <div class="step-desc">Selecione "Sem parceiro" — o cálculo de lucro fica salvo no histórico do lead para controle interno.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Precisa mudar status no portal do parceiro?</div>
+        <div class="step-desc">Acesse o link admin com <code>?admin=1</code> e senha <code>Lumen@2026</code> (vale para Michael e Jessica).</div>
       </div>
     </div>
     <div class="step">
