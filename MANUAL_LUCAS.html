@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Manual do Lucas — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#F8F9FB;color:#1E293B;-webkit-font-smoothing:antialiased;padding:40px 20px 80px}
+.wrap{max-width:700px;margin:0 auto}
+
+.logo{display:flex;align-items:baseline;margin-bottom:4px}
+.logo span:first-child{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:26px;color:#F26522;letter-spacing:-1px}
+.logo span:last-child{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:26px;color:#0b0b12;letter-spacing:-1px}
+.tag{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#94A3B8;margin-bottom:36px}
+
+h2{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:800;color:#0b0b12;margin:40px 0 14px;padding-bottom:8px;border-bottom:2px solid #F26522}
+p,li{font-size:13px;color:#475569;line-height:1.75}
+ul{padding-left:18px;display:flex;flex-direction:column;gap:6px}
+
+/* Link pill */
+.link-pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;padding:12px 16px;margin:10px 0;text-decoration:none;width:100%;transition:border-color .15s}
+.link-pill:hover{border-color:#F26522}
+.link-pill-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.link-pill-body{flex:1;min-width:0}
+.link-pill-title{font-size:13px;font-weight:700;color:#1E293B;margin-bottom:2px}
+.link-pill-url{font-size:11px;color:#94A3B8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.link-pill-arrow{font-size:16px;color:#CBD5E1;flex-shrink:0}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:12px;margin:14px 0}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;background:#F26522;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-title{font-size:13px;font-weight:700;color:#1E293B;margin-bottom:3px}
+.step-desc{font-size:12px;color:#64748B;line-height:1.65}
+
+/* Alert */
+.alert{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:12px;line-height:1.75}
+.alert-orange{background:#FFF7ED;border:1.5px solid rgba(242,101,34,.3);color:#92400E}
+.alert-orange strong{color:#C94E0F}
+.alert-blue{background:#EFF6FF;border:1.5px solid #BFDBFE;color:#1E40AF}
+.alert-blue strong{color:#1D4ED8}
+.alert-green{background:#F0FDF4;border:1.5px solid #BBF7D0;color:#14532D}
+.alert-green strong{color:#15803D}
+
+/* Flow */
+.flow{display:flex;align-items:center;gap:0;margin:16px 0;flex-wrap:wrap;gap:6px}
+.flow-box{background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;color:#1E293B;text-align:center;min-width:120px}
+.flow-box.orange{background:#FFF7ED;border-color:rgba(242,101,34,.4);color:#C94E0F}
+.flow-box.green{background:#F0FDF4;border-color:#BBF7D0;color:#15803D}
+.flow-arrow{font-size:18px;color:#CBD5E1;flex-shrink:0}
+
+/* Credencial */
+.cred-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.cred{background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;padding:14px 16px}
+.cred-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#94A3B8;margin-bottom:5px}
+.cred-val{font-size:14px;font-weight:700;color:#1E293B}
+.cred-val.orange{color:#F26522}
+
+/* Planilha card */
+.sheet-card{background:#fff;border:1.5px solid #E2E8F0;border-radius:12px;padding:16px 20px;margin:10px 0}
+.sheet-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sheet-icon{width:36px;height:36px;border-radius:8px;background:#1A6B3A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
+.sheet-title{font-size:14px;font-weight:700;color:#1E293B}
+.sheet-sub{font-size:11px;color:#94A3B8;margin-top:1px}
+.sheet-url{font-size:11px;color:#2563EB;word-break:break-all;margin-top:8px;padding-top:8px;border-top:1px solid #F1F5F9}
+
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid #E2E8F0;font-size:11px;color:#94A3B8;text-align:center}
+
+code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7px;font-size:11px;color:#C94E0F;font-family:monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="logo"><span>LUMEN</span><span>GRID</span></div>
+  <div class="tag">Manual do Lucas — Fluxo Comercial & Sistemas</div>
+
+  <!-- 1. ACESSO AO CRM -->
+  <h2>1. Acessar o CRM</h2>
+  <p>O CRM é onde você gerencia todos os seus leads. Acesse pelo link abaixo e faça login com seu usuário.</p>
+
+  <a class="link-pill" href="https://lumengridbrasil.com.br/CRM_LumenGrid.html" target="_blank">
+    <div class="link-pill-icon" style="background:#FFF7ED">📋</div>
+    <div class="link-pill-body">
+      <div class="link-pill-title">CRM LumenGrid</div>
+      <div class="link-pill-url">lumengridbrasil.com.br/CRM_LumenGrid.html</div>
+    </div>
+    <div class="link-pill-arrow">→</div>
+  </a>
+
+  <div class="cred-row">
+    <div class="cred">
+      <div class="cred-label">Usuário</div>
+      <div class="cred-val">Lucas</div>
+    </div>
+    <div class="cred">
+      <div class="cred-label">Senha</div>
+      <div class="cred-val orange">Lucas@2026</div>
+    </div>
+  </div>
+
+  <div class="alert alert-blue">
+    <strong>Você só enxerga os seus leads.</strong> Leads atribuídos a outros vendedores não aparecem na sua tela.
+  </div>
+
+  <!-- 2. LEADS DO MICHAEL -->
+  <h2>2. Leads indicados pelo Michael</h2>
+  <p>Quando o Michael cadastra uma indicação no portal dele, o lead entra <strong>automaticamente</strong> no seu CRM como <strong>Lead Novo</strong>, já atribuído a você.</p>
+
+  <div class="flow">
+    <div class="flow-box orange">Michael cadastra<br>indicação</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Lead Novo<br>no seu CRM</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">Você trabalha<br>o lead</div>
+  </div>
+
+  <div class="alert alert-orange">
+    <strong>Não precisa fazer nada para receber.</strong> O lead aparece sozinho. Origem: <code>Parceiro — Michael</code>
+  </div>
+
+  <!-- 3. LANÇAR PROPOSTA -->
+  <h2>3. Lançar proposta no portal do parceiro</h2>
+  <p>Quando você fechar os números de um lead que veio do Michael, preencha a seção <strong>"Lançar Proposta ao Parceiro"</strong> dentro do detalhe do lead no CRM.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Abra o lead no CRM</div>
+        <div class="step-desc">Clique no card do cliente para abrir o detalhe.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Role até "Lançar Proposta ao Parceiro"</div>
+        <div class="step-desc">Preencha: Parceiro (<code>Michael</code>), kWp, Valor Projeto, Custo Equipamentos e % Comissão. A instalação e impostos são calculados automaticamente.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Clique em "→ Lançar Proposta ao Parceiro"</div>
+        <div class="step-desc">Os dados são enviados direto para o painel do Michael. Ele verá apenas o <strong>Valor do Projeto</strong> e a <strong>Comissão Estimada</strong> — nada mais.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-green">
+    <strong>Automático.</strong> Você não precisa acessar o portal do Michael para lançar — basta fazer pelo CRM.
+  </div>
+
+  <!-- 4. PORTAL DO MICHAEL (ADMIN) -->
+  <h2>4. Acessar o portal do Michael como admin</h2>
+  <p>Se precisar movimentar o status de um cliente, editar valores ou ver o painel completo, acesse o portal do Michael com o link de administrador:</p>
+
+  <a class="link-pill" href="https://lumengridbrasil.com.br/PARCEIROS/michael.html?admin=1" target="_blank">
+    <div class="link-pill-icon" style="background:#FEF3C7">🔑</div>
+    <div class="link-pill-body">
+      <div class="link-pill-title">Portal Michael — Acesso Admin</div>
+      <div class="link-pill-url">lumengridbrasil.com.br/PARCEIROS/michael.html?admin=1</div>
+    </div>
+    <div class="link-pill-arrow">→</div>
+  </a>
+
+  <div class="cred-row">
+    <div class="cred">
+      <div class="cred-label">Senha Admin</div>
+      <div class="cred-val orange">Lumen@2026</div>
+    </div>
+    <div class="cred">
+      <div class="cred-label">O que você pode fazer</div>
+      <div class="cred-val" style="font-size:12px;font-weight:500">Alterar status, editar valores, ver lucro da empresa</div>
+    </div>
+  </div>
+
+  <div class="alert alert-orange">
+    <strong>Atenção:</strong> O link sem <code>?admin=1</code> é o que o Michael acessa — ele não vê os dados internos. Nunca passe o link de admin para o parceiro.
+  </div>
+
+  <!-- 5. PLANILHAS -->
+  <h2>5. Planilhas de dados</h2>
+  <p>Os dados de ambos os sistemas ficam salvos no Google Sheets. Para acessar, <strong>entre pelo Google Workspace da LumenGrid</strong> (conta <code>@lumengridbrasil.com.br</code>).</p>
+
+  <div class="sheet-card">
+    <div class="sheet-card-header">
+      <div class="sheet-icon">S</div>
+      <div>
+        <div class="sheet-title">Planilha do CRM</div>
+        <div class="sheet-sub">Todos os seus leads — backup automático a cada alteração</div>
+      </div>
+    </div>
+    <ul>
+      <li>Aba <code>Leads</code> — leads vindos do Meta/Facebook</li>
+      <li>Aba <code>CRM_Dados</code> — dados completos do CRM (JSON + tabela legível)</li>
+    </ul>
+    <div class="sheet-url">
+      docs.google.com/spreadsheets/d/1LTv6dFRT56533gfPc5elNfxiddsUzgYyLbCLsNykyRQ/edit
+    </div>
+  </div>
+
+  <div class="sheet-card">
+    <div class="sheet-card-header">
+      <div class="sheet-icon">S</div>
+      <div>
+        <div class="sheet-title">Planilha do Portal de Parceiros</div>
+        <div class="sheet-sub">Indicações do Michael — dados financeiros e status</div>
+      </div>
+    </div>
+    <ul>
+      <li>Aba <code>Michael</code> — cada linha é um cliente indicado por ele</li>
+      <li>Inclui: status, kWp, valor projeto, custo equipamento, comissão, lucro</li>
+    </ul>
+    <div class="sheet-url">
+      docs.google.com/spreadsheets/d/1PoXQTLBfciYHSqQZn1ryHEx_0C6TQn5jDDyGNavGLuo/edit
+    </div>
+  </div>
+
+  <!-- 6. IMPORTAR LEADS EM LOTE -->
+  <h2>6. Importar leads em lote para o CRM</h2>
+  <p>Para subir vários leads de uma vez (ex: lista de um evento ou campanha), adicione-os na aba <strong>Leads</strong> da planilha do CRM, seguindo as colunas:</p>
+
+  <div style="background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;padding:14px 18px;margin:12px 0;overflow-x:auto">
+    <table style="border-collapse:collapse;font-size:12px;width:100%">
+      <tr style="border-bottom:1px solid #F1F5F9">
+        <td style="padding:6px 12px 6px 0;font-weight:700;color:#F26522">Coluna A</td>
+        <td style="padding:6px 0;color:#475569">Nome do cliente</td>
+      </tr>
+      <tr style="border-bottom:1px solid #F1F5F9">
+        <td style="padding:6px 12px 6px 0;font-weight:700;color:#F26522">Coluna B</td>
+        <td style="padding:6px 0;color:#475569">Telefone</td>
+      </tr>
+      <tr style="border-bottom:1px solid #F1F5F9">
+        <td style="padding:6px 12px 6px 0;font-weight:700;color:#F26522">Coluna C</td>
+        <td style="padding:6px 0;color:#475569">E-mail</td>
+      </tr>
+      <tr style="border-bottom:1px solid #F1F5F9">
+        <td style="padding:6px 12px 6px 0;font-weight:700;color:#F26522">Coluna D</td>
+        <td style="padding:6px 0;color:#475569">Cidade</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 12px 6px 0;font-weight:700;color:#F26522">Coluna E</td>
+        <td style="padding:6px 0;color:#475569">Responsável (Lucas, Giovani, Hingrid ou Comercial Lumen)</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Preencha as linhas na aba "Leads" da planilha do CRM</div>
+        <div class="step-desc">A primeira linha deve ser o cabeçalho. A partir da linha 2, os dados dos clientes.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Acesse o CRM e vá em Importar → Google Sheets</div>
+        <div class="step-desc">O CRM vai ler a planilha e importar os leads novos automaticamente, sem duplicar quem já está cadastrado.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Os leads aparecem como "Lead Novo" no Kanban</div>
+        <div class="step-desc">Atribuídos conforme a Coluna E. Se a coluna estiver vazia, vai para "Comercial Lumen".</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. ACESSO AO GOOGLE WORKSPACE -->
+  <h2>7. Google Workspace LumenGrid</h2>
+  <p>Para acessar as planilhas você precisa estar logado na conta da empresa. Use o login abaixo em <strong>workspace.google.com</strong>:</p>
+
+  <a class="link-pill" href="https://workspace.google.com" target="_blank">
+    <div class="link-pill-icon" style="background:#EFF6FF">G</div>
+    <div class="link-pill-body">
+      <div class="link-pill-title">Google Workspace — LumenGrid</div>
+      <div class="link-pill-url">workspace.google.com · conta @lumengridbrasil.com.br</div>
+    </div>
+    <div class="link-pill-arrow">→</div>
+  </a>
+
+  <div class="alert alert-blue">
+    Peça o e-mail e a senha da sua conta <strong>@lumengridbrasil.com.br</strong> para a Hingrid antes de acessar.
+  </div>
+
+  <!-- RESUMO RÁPIDO -->
+  <h2>Resumo rápido</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Lead chegou do Michael?</div>
+        <div class="step-desc">Já está no seu CRM. Trabalhe normalmente.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Quer lançar proposta para o Michael ver?</div>
+        <div class="step-desc">Faça pelo CRM em "Lançar Proposta ao Parceiro". Não precisa acessar o portal.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Precisa mudar o status no portal do Michael?</div>
+        <div class="step-desc">Acesse o link admin com <code>?admin=1</code> e senha <code>Lumen@2026</code>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Quer subir leads em lote?</div>
+        <div class="step-desc">Preencha a aba "Leads" na planilha do CRM e importe pelo menu Importar → Google Sheets.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    LumenGrid · Manual do Lucas · Julho 2026<br>
+    Dúvidas? Fale com a Hingrid.
+  </div>
+
+</div>
+</body>
+</html>
