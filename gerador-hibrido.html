@@ -341,9 +341,9 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <div><label class="fl">Potência (kW)</label><input class="fi" type="number" id="invPower" placeholder="Ex: 8" min="0"></div>
     </div>
     <label class="fl">Modelo do Inversor Híbrido <span class="req-star">*</span></label>
-    <select class="fsel" onchange="onInvModelChange(this)">
+    <select class="fsel" id="invModelSel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="GoodWe GW5K-ES Híbrido Bifásico 2MPPT 127/220V 5kW" data-power="5">GoodWe GW5K-ES Híbrido 5kW</option>
+      <option value="GoodWe GW5K-ES Híbrido Bifásico 2MPPT 127/220V 5kW" data-power="5" selected>GoodWe GW5K-ES Híbrido 5kW ★ padrão</option>
       <option value="GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5">GoodWe GW7.5K-ES-LD-G10 Híbrido 7.5kW</option>
       <option value="FoxESS Híbrido Bifásico 3MPPT 127/220V 11.4kW" data-power="11.4">FoxESS Híbrido Bifásico 11.4kW</option>
       <option value="FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW" data-power="5.7">FoxESS US Híbrido Bifásico 5.7kW</option>
@@ -906,7 +906,7 @@ function generateProposal(){
     kVp?{label:'Sistema Fotovoltaico',qty:'—',spec:kVp.toFixed(2)+' kWp',hero:true}:null,
     batKwh?{label:'Armazenamento',qty:'—',spec:batKwh+' kWh',hero2:true}:null,
     modQty&&modModel?{label:'M\u00f3dulos Fotovoltaicos',qty:modQty+' un.',spec:modModel+(modPower?' \u00b7 '+modPower+' W':'')}:null,
-    invQty?{label:'Inversor H\u00edbrido',qty:invQty+' un.',spec:(invModel||'Inversor H\u00edbrido')+(invPower?' \u00b7 '+invPower+' kW':'')}:null,
+    invQty?{label:'Inversor H\u00edbrido',qty:invQty+' un.',spec:(invModel||'Inversor H\u00edbrido')+(invPower?' \u00b7 '+invPower+' kW':''),goodwe:invModel&&invModel.toLowerCase().includes('goodwe')}:null,
     batKwh&&batModel?{label:'Bateria',qty:batQty+' un.',spec:batModel}:null,
     {label:'Estrutura de Fixa\u00e7\u00e3o',qty:'\u2713',spec:'Alum\u00ednio anodizado \u2014 conforme projeto'},
     {label:'Cabeamento CC / CA',qty:'\u2713',spec:'Fio solar 6mm\u00b2 certificado ABNT'},
@@ -929,10 +929,11 @@ function generateProposal(){
       <td style="${border}padding:8px 12px;font-size:11px;color:var(--lmuted);text-align:center">—</td>
       <td style="${border}padding:8px 12px;font-size:14px;font-weight:900;color:var(--or)">${it.spec}</td>
     </tr>`;
-    return`<tr>
+    const gwBadge=it.goodwe?` <span style="background:#1a6fa8;color:#fff;font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;vertical-align:middle;letter-spacing:.5px">★ RECOMENDADO</span>`:'';
+    return`<tr${it.goodwe?' style="background:rgba(26,111,168,.05)"':''}>
       <td style="${border}padding:7px 12px;font-size:11px;color:var(--lmuted)">${it.label}</td>
       <td style="${border}padding:7px 12px;font-size:${isCheck?'13px':'11px'};font-weight:${isCheck?'900':'700'};color:${isCheck?'#27ae60':'var(--ltext)'};text-align:center">${it.qty}</td>
-      <td style="${border}padding:7px 12px;font-size:11px;font-weight:700;color:var(--ltext)">${it.spec}</td>
+      <td style="${border}padding:7px 12px;font-size:11px;font-weight:700;color:var(--ltext)">${it.spec}${gwBadge}</td>
     </tr>`;
   }).join('');
 
@@ -1214,6 +1215,11 @@ document.querySelectorAll('input[name=vend]').forEach(r=>r.addEventListener('cha
 
 
 renderEquipmentTable();
+// Inicializa modelo padrão (Jinko + GoodWe) no carregamento da página
+(function(){
+  const ms=$('modModelSel');if(ms)onModModelChange(ms);
+  const is=$('invModelSel');if(is)onInvModelChange(is);
+})();
 </script>
 </body>
 </html>
