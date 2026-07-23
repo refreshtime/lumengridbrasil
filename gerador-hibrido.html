@@ -603,6 +603,7 @@ function onInvModelChange(sel){
   if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}
   else{inp.style.display='none';inp.value=sel.value;const pw=sel.options[sel.selectedIndex].dataset.power;if(pw){$('invPower').value=pw;}}
   autoCalcHibrido();
+  calcOverload();
 }
 
 
@@ -759,6 +760,7 @@ function resetForm(){
   $('vendCustom').style.display='none';
   $('preview').style.display='none';$('prevEmpty').style.display='';
   const sel=$('modModelSel');sel.selectedIndex=1;onModModelChange(sel);
+  const isel=$('invModelSel');isel.selectedIndex=1;onInvModelChange(isel);
   equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
   renderEquipmentTable();
 }
