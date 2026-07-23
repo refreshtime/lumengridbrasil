@@ -1561,6 +1561,9 @@ function openDetail(id) {
     </div>
   </div>` : '';
 
+  const _parc    = (lead.origem||'').startsWith('Parceiro — ') ? lead.origem.replace('Parceiro — ','') : (lead.parceiro||'');
+  const _parcSel = ['Michael','Jessica'].includes(_parc) ? _parc : (_parc ? 'outro' : '');
+
   document.getElementById('d-body').innerHTML = notesHtml + msgsHtml + `
   <div class="ms">
     <div class="ms-title${posCls}">Informações</div>
@@ -1633,13 +1636,21 @@ function openDetail(id) {
       <div class="pp-calc-item"><div class="pp-calc-lbl">Comissão Parceiro</div><div class="pp-calc-val" style="color:var(--gold-d)" id="pp-com">—</div></div>
       <div class="pp-calc-item"><div class="pp-calc-lbl" style="color:#22C55E">Lucro Empresa</div><div class="pp-calc-val" style="color:#22C55E" id="pp-lucro">—</div></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-      <div>
-        <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:5px">Parceiro (opcional)</div>
-        <input class="if-inp" id="pp-parceiro" placeholder="Ex: Michael, Jessica…" value="${(lead.origem||'').startsWith('Parceiro — ') ? lead.origem.replace('Parceiro — ','') : (lead.parceiro||'')}">
-      </div>
-      <div style="display:flex;flex-direction:column;justify-content:flex-end">
-        <button class="btn btn-g" style="width:100%" onclick="lancarPP('${id}')">→ Salvar / Enviar ao Parceiro</button>
+    <div style="margin-top:10px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:5px">Parceiro (opcional)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <select id="pp-parceiro-sel" onchange="onParcSelect()" class="if-inp" style="cursor:pointer">
+            <option value="" ${_parcSel===''?'selected':''}>Sem parceiro</option>
+            <option value="Michael" ${_parcSel==='Michael'?'selected':''}>Michael</option>
+            <option value="Jessica" ${_parcSel==='Jessica'?'selected':''}>Jessica</option>
+            <option value="outro" ${_parcSel==='outro'?'selected':''}>Outro (digitar)</option>
+          </select>
+          <input id="pp-parceiro-outro" class="if-inp" placeholder="Nome do parceiro" style="margin-top:6px;display:${_parcSel==='outro'?'block':'none'}" value="${_parcSel==='outro'?_parc:''}">
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-start;gap:6px">
+          <button class="btn btn-g" style="width:100%;margin-top:0" onclick="lancarPP('${id}')">→ Salvar / Enviar ao Parceiro</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1961,6 +1972,11 @@ function importBackup(e) {
 }
 
 /* ━━━ PROPOSTA PARCEIRO ━━━ */
+function onParcSelect() {
+  const sel   = document.getElementById('pp-parceiro-sel').value;
+  const outro = document.getElementById('pp-parceiro-outro');
+  if (outro) outro.style.display = sel === 'outro' ? 'block' : 'none';
+}
 const TABELA_INST_PP = [
   { max:  3, porWp: 0.84, homologacao:  500 },
   { max:  6, porWp: 0.60, homologacao:  500 },
@@ -1992,7 +2008,10 @@ function calcPP() {
   document.getElementById('pp-lucro').textContent = proj ? fmt(lucro) : '—';
 }
 async function lancarPP(leadId) {
-  const parceiro = document.getElementById('pp-parceiro').value.trim();
+  const sel      = document.getElementById('pp-parceiro-sel').value;
+  const parceiro = sel === 'outro'
+    ? (document.getElementById('pp-parceiro-outro').value || '').trim()
+    : sel;
   const proj     = parseFloat(document.getElementById('pp-proj').value)  || 0;
   const kwp      = parseFloat(document.getElementById('pp-kwp').value)   || 0;
   const equip    = parseFloat(document.getElementById('pp-equip').value) || 0;
