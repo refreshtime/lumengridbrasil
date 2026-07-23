@@ -125,10 +125,17 @@ function gravarTabelaLegivel(sheet, leads) {
       'Agendar Visita','Estruturação Projeto','Comprar Equipamento',
       'Compra Realizada','Agendar Instalação','Homologação','Projeto Concluído'
     ];
-    const headers = ['ID','Nome','Telefone','E-mail','Cidade','kWh','Tipo','Telhado','Sistema','Etapa','Responsável','Origem','Valor','Criado em','Atualizado em'];
+    const headers = [
+      'ID','Nome','Telefone','E-mail','Cidade','kWh Mensal','Tipo','Telhado','Sistema','Etapa','Responsável','Origem',
+      'kWp','Valor Projeto','Custo Equipamento','Custo Instalação','Impostos','Margem Bruta','Pós-Venda (20%)','% Comissão','Comissão Estimada','Lucro Empresa','Parceiro',
+      'Criado em','Atualizado em'
+    ];
     const rows = leads.map(l => [
       l.id, l.nome, l.telefone, l.email, l.cidade, l.kwh, l.tipo, l.telhado, l.sistema,
-      STAGES[l.stage] || l.stage, l.resp, l.origem, l.valor,
+      STAGES[l.stage] || l.stage, l.resp, l.origem,
+      l.kwp||'', l.valorProjeto||'', l.custoEquipamento||'', l.custoInstalacao||'',
+      l.impostos||'', l.margemBruta||'', l.posVenda||'', l.pctComissao||'',
+      l.comissaoEstimada||'', l.lucroEmpresa||'', l.parceiro||'',
       l.createdAt ? new Date(l.createdAt).toLocaleString('pt-BR') : '',
       l.updatedAt ? new Date(l.updatedAt).toLocaleString('pt-BR') : '',
     ]);

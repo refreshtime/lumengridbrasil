@@ -2048,7 +2048,13 @@ async function lancarPP(leadId) {
     }).catch(() => {});
   }
   if (lead) {
+    lead.kwp              = kwp;
     lead.valorProjeto     = proj;
+    lead.custoEquipamento = equip;
+    lead.custoInstalacao  = inst;
+    lead.impostos         = imp;
+    lead.margemBruta      = margem;
+    lead.posVenda         = posVenda;
     lead.pctComissao      = pct;
     lead.comissaoEstimada = com;
     lead.lucroEmpresa     = lucro;
