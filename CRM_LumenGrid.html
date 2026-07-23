@@ -1619,21 +1619,29 @@ function openDetail(id) {
   </div>`:''}
 
   <div class="pp-card">
-    <div class="pp-title">Lançar Proposta ao Parceiro</div>
+    <div class="pp-title">Calcular Proposta / Comissão</div>
     <div class="info-grid">
-      <div class="if"><div class="if-lbl">Parceiro</div><input class="if-inp" id="pp-parceiro" placeholder="Ex: Michael" value="${(lead.origem||'').startsWith('Parceiro — ') ? lead.origem.replace('Parceiro — ','') : ''}"></div>
-      <div class="if"><div class="if-lbl">% Comissão</div><input class="if-inp" id="pp-pct" type="number" step="0.1" value="15" oninput="calcPP()"></div>
       <div class="if"><div class="if-lbl">Valor Projeto (R$)</div><input class="if-inp" id="pp-proj" type="number" placeholder="45000" value="${lead.valorProjeto||''}" oninput="calcPP()"></div>
       <div class="if"><div class="if-lbl">Potência (kWp)</div><input class="if-inp" id="pp-kwp" type="number" step="0.1" placeholder="5.5" oninput="calcPPInst()"></div>
       <div class="if"><div class="if-lbl">Custo Equipamentos (R$)</div><input class="if-inp" id="pp-equip" type="number" placeholder="22000" oninput="calcPP()"></div>
       <div class="if"><div class="if-lbl">Custo Instalação (R$)</div><input class="if-inp" id="pp-inst" type="number" placeholder="auto p/ kWp" oninput="calcPP()"></div>
       <div class="if"><div class="if-lbl">Impostos 10% (auto)</div><input class="if-inp" id="pp-imp" disabled style="color:var(--text3)"></div>
+      <div class="if"><div class="if-lbl">% Comissão Parceiro</div><input class="if-inp" id="pp-pct" type="number" step="0.1" value="${lead.pctComissao||15}" oninput="calcPP()"></div>
     </div>
     <div class="pp-calc">
       <div class="pp-calc-item"><div class="pp-calc-lbl">Margem</div><div class="pp-calc-val" id="pp-mgm">—</div></div>
-      <div class="pp-calc-item"><div class="pp-calc-lbl">Comissão Estimada</div><div class="pp-calc-val" style="color:var(--gold-d)" id="pp-com">—</div></div>
+      <div class="pp-calc-item"><div class="pp-calc-lbl">Comissão Parceiro</div><div class="pp-calc-val" style="color:var(--gold-d)" id="pp-com">—</div></div>
+      <div class="pp-calc-item"><div class="pp-calc-lbl" style="color:#22C55E">Lucro Empresa</div><div class="pp-calc-val" style="color:#22C55E" id="pp-lucro">—</div></div>
     </div>
-    <button class="btn btn-g" style="margin-top:10px;width:100%" onclick="lancarPP('${id}')">→ Lançar Proposta ao Parceiro</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+      <div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:5px">Parceiro (opcional)</div>
+        <input class="if-inp" id="pp-parceiro" placeholder="Ex: Michael, Jessica…" value="${(lead.origem||'').startsWith('Parceiro — ') ? lead.origem.replace('Parceiro — ','') : (lead.parceiro||'')}">
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:flex-end">
+        <button class="btn btn-g" style="width:100%" onclick="lancarPP('${id}')">→ Salvar / Enviar ao Parceiro</button>
+      </div>
+    </div>
   </div>
 
   <div class="ms">
@@ -1975,10 +1983,13 @@ function calcPP() {
   const pct   = parseFloat(document.getElementById('pp-pct').value)   || 0;
   const imp   = Math.round(proj * 0.10);
   const mgm   = proj - inst - equip - imp;
-  const com   = Math.max(0, mgm) * (pct / 100);
-  document.getElementById('pp-imp').value         = imp ? imp.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '';
-  document.getElementById('pp-mgm').textContent   = proj ? mgm.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '—';
-  document.getElementById('pp-com').textContent   = proj ? com.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '—';
+  const com   = Math.round(Math.max(0, mgm) * (pct / 100));
+  const lucro = Math.max(0, mgm) - com;
+  const fmt   = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('pp-imp').value       = imp   ? fmt(imp)   : '';
+  document.getElementById('pp-mgm').textContent = proj  ? fmt(mgm)   : '—';
+  document.getElementById('pp-com').textContent = proj  ? fmt(com)   : '—';
+  document.getElementById('pp-lucro').textContent = proj ? fmt(lucro) : '—';
 }
 async function lancarPP(leadId) {
   const parceiro = document.getElementById('pp-parceiro').value.trim();
@@ -1987,47 +1998,46 @@ async function lancarPP(leadId) {
   const equip    = parseFloat(document.getElementById('pp-equip').value) || 0;
   const inst     = parseFloat(document.getElementById('pp-inst').value)  || 0;
   const pct      = parseFloat(document.getElementById('pp-pct').value)   || 0;
-  // Parse currency string from pp-com display element
-  const comRaw   = (document.getElementById('pp-com').textContent||'0').replace(/[^\d,]/g,'').replace(',','.');
-  const com      = parseFloat(comRaw) || 0;
-  if (!parceiro) { toast('Informe o nome do parceiro.','err'); return; }
-  if (!proj)     { toast('Informe o valor do projeto.','err'); return; }
-  const leads = getAllLeadsRaw();
-  const lead  = leads.find(l => l.id === leadId);
-  const cfg   = getConfig();
-  if (cfg.parceirosUrl && lead) {
-    const imp    = Math.round(proj * 0.10);
-    const margem = Math.max(0, proj - inst - equip - imp);
-    fetch(cfg.parceirosUrl, {
+  if (!proj) { toast('Informe o valor do projeto.','err'); return; }
+  const imp    = Math.round(proj * 0.10);
+  const margem = Math.max(0, proj - inst - equip - imp);
+  const com    = Math.round(margem * pct / 100);
+  const lucro  = Math.max(0, margem - com);
+  const leads  = getAllLeadsRaw();
+  const lead   = leads.find(l => l.id === leadId);
+  // Envia ao portal do parceiro apenas se informado
+  if (parceiro && getConfig().parceirosUrl && lead) {
+    fetch(getConfig().parceirosUrl, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'update_status',
         parceiro,
-        nomeCliente:       lead.nome,
-        kwp,
-        valorProjeto:      proj,
-        custoEquipamento:  equip,
-        custoInstalacao:   inst,
-        instalacao:        inst,
-        impostos:          imp,
-        margem,
-        pctComissao:       pct,
-        comissaoEstimada:  Math.round(com),
-        lucro:             Math.max(0, margem - Math.round(com)),
+        nomeCliente:      lead.nome,
+        kwp, valorProjeto: proj, custoEquipamento: equip,
+        custoInstalacao: inst, instalacao: inst,
+        impostos: imp, margem, pctComissao: pct,
+        comissaoEstimada: com, lucro,
       })
     }).catch(() => {});
   }
   if (lead) {
     lead.valorProjeto     = proj;
-    lead.comissaoEstimada = Math.round(com);
+    lead.pctComissao      = pct;
+    lead.comissaoEstimada = com;
+    lead.lucroEmpresa     = lucro;
+    lead.parceiro         = parceiro || lead.parceiro || '';
     lead.history = lead.history || [];
-    lead.history.push({ text:`Proposta lançada ao parceiro "${parceiro}": Projeto R$${proj.toLocaleString('pt-BR')} | Comissão R$${com.toLocaleString('pt-BR')}`, user:currentUser, ts:Date.now() });
+    const parceiroTxt = parceiro ? ` · enviado ao parceiro "${parceiro}"` : '';
+    lead.history.push({
+      text: `Proposta calculada: Projeto ${proj.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} | Comissão ${com.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} | Lucro LG ${lucro.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}${parceiroTxt}`,
+      user: currentUser, ts: Date.now()
+    });
     lead.updatedAt = Date.now();
     saveLeads(leads.map(l => l.id===leadId ? lead : l));
   }
-  toast(`Proposta lançada para ${parceiro}!`,'ok');
+  toast(parceiro ? `Proposta enviada para ${parceiro}!` : 'Proposta salva no lead!', 'ok');
 }
 
 /* ━━━ MODALS ━━━ */
