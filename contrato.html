@@ -125,6 +125,18 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 .fs-body.collapsed{max-height:0!important;opacity:0;pointer-events:none}
 .fs-body.expanded{max-height:2000px;opacity:1}
 
+/* Drive toast */
+#driveToast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1f2e;border:1.5px solid #1a73e8;border-radius:10px;padding:16px 22px;font-family:'Montserrat',sans-serif;font-size:12px;color:#e8eaf0;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;min-width:320px;max-width:480px;display:none;animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+#driveToast.show{display:block}
+#driveToast .dt-title{font-weight:800;font-size:13px;margin-bottom:6px}
+#driveToast .dt-link{display:inline-block;margin-top:8px;padding:8px 14px;background:#1a73e8;color:#fff;border-radius:6px;font-weight:700;font-size:11px;text-decoration:none}
+#driveToast .dt-link:hover{background:#1558b0}
+#driveToast .dt-close{position:absolute;top:8px;right:10px;background:none;border:none;color:rgba(255,255,255,.3);font-size:16px;cursor:pointer;line-height:1}
+
+/* GAS URL config */
+#gasUrlSection{background:#0a0c10;border:1.5px dashed rgba(26,115,232,.4);border-radius:8px;padding:12px;margin-bottom:14px}
+#gasUrlSection .fl{color:#1a73e8}
 </style>
 </head>
 <body>
@@ -142,6 +154,12 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 
 <div class="ed-layout">
 <div class="form-panel">
+
+  <div id="gasUrlSection" style="display:none">
+    <label class="fl">URL do Web App (Google Apps Script)</label>
+    <input class="fi" id="gasUrl" value="https://script.google.com/a/macros/lumengridbrasil.com.br/s/AKfycbyx9BCjvqzdMk2dEABVZkHwrUTlRHe_WIYsYEQkso4Q-wRA_nHnleLSH5wSG1PfTt9yig/exec" style="margin-bottom:4px;display:none">
+    <div style="font-size:9px;color:rgba(255,255,255,.3);line-height:1.5">Cole aqui a URL do seu Web App implantado no Google Apps Script. Necessário para salvar no Drive.</div>
+  </div>
 
   <div class="fs">
     <div class="fs-title">Dados do Contrato</div>
@@ -319,6 +337,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
   <div class="btn-bar">
     <button class="bp btn" onclick="generateContract()">📄 Gerar Contrato</button>
     <button class="bpdf btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+    <button class="btn" id="btnDrive" onclick="salvarNoDrive()" style="background:#1a73e8;color:#fff;border:none">&#9729; Salvar no Drive</button>
   </div>
 </div>
 
@@ -534,8 +553,7 @@ function generateContract(){
     '<div class="clausula">'+
     '<div class="clausula-title">Cl\u00e1usula 2\u00aa &mdash; Objeto do Contrato</div>'+
     '<p><span class="cnum">2.1.</span> O presente contrato tem por objeto o fornecimento de equipamentos, a execu\u00e7\u00e3o da instala\u00e7\u00e3o e a presta\u00e7\u00e3o de servi\u00e7os de comissionamento de um <strong>Sistema de Gera\u00e7\u00e3o de Energia Solar Fotovoltaica'+(hasBat?' com Armazenamento em Bateria':'')+'</strong> na modalidade <strong>'+instTipo+' / '+instConexao+'</strong>, no endere\u00e7o: <strong>'+instEnder+'</strong>.</p>'+
-    '<p><span class="cnum">2.2.</span> O sistema projetado possui potência nominal de <strong>'+kvp+'</strong>'+(gen?', com estimativa de gera\u00e7\u00e3o de <strong>'+gen+'/m\u00eas</strong>, conforme irradiação local e condi\u00e7\u00f5es clim\u00e1ticas da regi\u00e3o.':''+(gen?'':'.'))+'</p>'+
-    '<div class="alert-box">&#9432; A gera\u00e7\u00e3o estimada \u00e9 calculada com base em dados de irradiação solar da base CRESESB/INMET e pode variar conforme \u00edndices clim\u00e1ticos reais. N\u00e3o constitui garantia de gera\u00e7\u00e3o m\u00ednima, salvo disposi\u00e7\u00e3o expressa em cl\u00e1usula espec\u00edfica.</div>'+
+    '<p><span class="cnum">2.2.</span> O sistema projetado possui potência nominal de <strong>'+kvp+'</strong>.'+'</p>'+
     '<p><span class="cnum">2.3.</span> Compõem o escopo do fornecimento os seguintes equipamentos e servi\u00e7os:</p>'+
     '<div class="equip-box"><div class="equip-title">Relação de Equipamentos e Serviços</div>'+equipRows+
     '<div class="etrow"><span><strong>Projeto El\u00e9trico (ART/RRT)</strong></span><span style="color:#666;font-size:11px">inclu\u00eddo</span></div>'+
@@ -547,13 +565,34 @@ function generateContract(){
   '</div>';
 
   // PAGE 2 — PRAZO · RESPONSABILIDADE · PREÇO
-  const pg2='<div class="cpage-cont">'+header()+'<div class="clausula">'+'<div class="clausula-title">Cláusula 3ª — Prazo de Instalação</div>'+'<p><span class="cnum">3.1.</span> A conclusão da instalação física dar-se-á em até <strong>'+prazo+' ('+numPorExtensoInt(prazo)+') dias úteis</strong>, a contar da confirmação do pagamento da entrada e assinatura deste instrumento.</p>'+'<p><span class="cnum">3.2.</span> O prazo de homologação junto à concessionária de energia é de responsabilidade desta, estando sujeito aos prazos regulatórios da ANEEL. A CONTRATADA realizará todos os trâmites necessários, mas não se responsabiliza por atrasos ocasionados pela concessionária.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 4ª — Responsabilidade pela Instalação</div>'+'<p><span class="cnum">4.1.</span> Após a aquisição dos equipamentos, a CONTRATADA fará uma visita técnica ao local de instalação para avaliação do projeto e requisitos de homologação, resultando em relatório técnico enviado ao CONTRATANTE.</p>'+'<p><span class="cnum">4.2.</span> A CONTRATADA poderá optar por um parceiro de instalação, que será o responsável pela engenharia e execução dos serviços no local, permanecendo a CONTRATADA como responsável perante o CONTRATANTE pela qualidade e documentação do projeto.</p>'+'<p><span class="cnum">4.3.</span> Caso o relatório técnico identifique a necessidade de alteração do Padrão de Entrada ou separação de cargas exigidas pela concessionária, a CONTRATADA apresentará proposta para tais adequações. O CONTRATANTE poderá optá-las com a CONTRATADA ou de forma independente, assumindo, neste último caso, a responsabilidade pelo cumprimento dos requisitos técnicos.</p>'+'<p><span class="cnum">4.4.</span> Os equipamentos adquiridos serão compatíveis com os requisitos técnicos da distribuidora local, incluindo tensão, distribuição de cargas, fases e dispositivos de proteção necessários ao funcionamento seguro do sistema.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 5ª — Preço e Forma de Pagamento</div>'+'<p><span class="cnum">5.1.</span> O valor total do presente contrato é de <strong>'+(payTotal?fmtBRL(payTotal):'[VALOR A DEFINIR]')+'</strong> ('+(payTotal?numPorExtenso(payTotal):'[VALOR POR EXTENSO]')+').</p>'+payBoxHtml()+'<p><span class="cnum">5.2.</span> O valor contratado inclui o fornecimento dos equipamentos especificados na Cláusula 3ª do Objeto e os serviços de instalação, comissionamento e projeto elétrico. <strong>Não estão incluídos:</strong> obras civis, taxa de vistoria da concessionária, materiais adicionais não especificados e adequações elétricas internas do imóvel.</p>'+'<p><span class="cnum">5.3.</span> Durante a instalação, alterações podem ser necessárias em função das características do telhado ou exigências da concessionária, podendo implicar reajuste do valor contratado mediante prévia notificação e aceite do CONTRATANTE.</p>'+'<p><span class="cnum">5.4.</span> As concessionárias de energia ou órgãos fiscalizadores podem demandar exigências adicionais não incluídas neste contrato, tais como: aumento de carga contratada, reforço estrutural, regularização de pendências elétricas pré-existentes ou adequações solicitadas pela distribuidora.</p>'+'<p><span class="cnum">5.5.</span> Caso o CONTRATANTE opte por financiamento bancário, a CONTRATADA fica desde já autorizada a compartilhar documentos e informações referentes a este contrato com a instituição financeira responsável.</p>'+'</div>'+    footer(2,4)+  '</div>';
+  const pg2='<div class="cpage-cont">'+header()+'<div class="clausula">'+'<div class="clausula-title">Cláusula 3ª — Prazo de Instalação</div>'+'<p><span class="cnum">3.1.</span> A conclusão da instalação física dar-se-á em até <strong>'+prazo+' ('+numPorExtensoInt(prazo)+') dias úteis</strong>, a contar da confirmação do pagamento da entrada e assinatura deste instrumento.</p>'+'<p><span class="cnum">3.2.</span> O prazo de homologação junto à concessionária de energia é de responsabilidade desta, estando sujeito aos prazos regulatórios da ANEEL. A CONTRATADA realizará todos os trâmites necessários, mas não se responsabiliza por atrasos ocasionados pela concessionária.</p>'+'</div>'+
+    '<div class="clausula">'+
+    '<div class="clausula-title">Projeto e Homologação junto à Concessionária</div>'+
+    '<p>A CONTRATADA será responsável pela elaboração e condução do processo de homologação do sistema de energia solar perante a concessionária, contemplando:</p>'+
+    '<ul>'+
+    '<li>Desenvolvimento do projeto elétrico do sistema;</li>'+
+    '<li>Elaboração do memorial descritivo;</li>'+
+    '<li>Elaboração dos diagramas unifilar e de blocos;</li>'+
+    '<li>Dimensionamento elétrico de cabos, proteções, dispositivos de seccionamento e aterramento;</li>'+
+    '<li>Detalhamento do ponto de conexão, padrão de entrada e integração com a rede elétrica;</li>'+
+    '<li>Especificação técnica dos módulos, inversores e demais equipamentos;</li>'+
+    '<li>Preparação e preenchimento dos formulários exigidos pela concessionária;</li>'+
+    '<li>Organização da documentação técnica e dos certificados dos equipamentos;</li>'+
+    '<li>Protocolo da solicitação de conexão;</li>'+
+    '<li>Acompanhamento do processo e atendimento de eventuais adequações técnicas solicitadas;</li>'+
+    '<li>Solicitação de vistoria e troca ou parametrização do medidor;</li>'+
+    '<li>Acompanhamento até a conclusão da homologação e liberação do sistema para operação.</li>'+
+    '</ul>'+
+    (hasBat ? '<p>Nos sistemas híbridos, o projeto também contemplará a integração entre geração solar, rede elétrica, baterias e cargas de backup, incluindo a definição dos modos de operação, proteções anti-ilhamento e controle de injeção de energia, quando aplicável.</p>' : '')+
+    '<p>A homologação assegura que o sistema seja projetado, documentado e apresentado conforme as normas técnicas e os procedimentos da concessionária, permitindo sua conexão regular e segura à rede elétrica.</p>'+
+    '</div>'+
+    '<div class="clausula">'+'<div class="clausula-title">Cláusula 4ª — Responsabilidade pela Instalação</div>'+'<p><span class="cnum">4.1.</span> Após a aquisição dos equipamentos, a CONTRATADA fará uma visita técnica ao local de instalação para avaliação do projeto e requisitos de homologação, resultando em relatório técnico enviado ao CONTRATANTE.</p>'+'<p><span class="cnum">4.2.</span> A CONTRATADA poderá optar por um parceiro de instalação, que será o responsável pela engenharia e execução dos serviços no local, permanecendo a CONTRATADA como responsável perante o CONTRATANTE pela qualidade e documentação do projeto.</p>'+'<p><span class="cnum">4.3.</span> Caso o relatório técnico identifique a necessidade de alteração do Padrão de Entrada ou separação de cargas exigidas pela concessionária, a CONTRATADA apresentará proposta para tais adequações. O CONTRATANTE poderá optá-las com a CONTRATADA ou de forma independente, assumindo, neste último caso, a responsabilidade pelo cumprimento dos requisitos técnicos.</p>'+'<p><span class="cnum">4.4.</span> Os equipamentos adquiridos serão compatíveis com os requisitos técnicos da distribuidora local, incluindo tensão, distribuição de cargas, fases e dispositivos de proteção necessários ao funcionamento seguro do sistema.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 5ª — Preço e Forma de Pagamento</div>'+'<p><span class="cnum">5.1.</span> O valor total do presente contrato é de <strong>'+(payTotal?fmtBRL(payTotal):'[VALOR A DEFINIR]')+'</strong> ('+(payTotal?numPorExtenso(payTotal):'[VALOR POR EXTENSO]')+').</p>'+payBoxHtml()+'<p><span class="cnum">5.2.</span> O valor contratado inclui o fornecimento dos equipamentos especificados na Cláusula 3ª do Objeto e os serviços de instalação, comissionamento e projeto elétrico. <strong>Não estão incluídos:</strong> obras civis, taxa de vistoria da concessionária, materiais adicionais não especificados e adequações elétricas internas do imóvel.</p>'+'<p><span class="cnum">5.3.</span> Durante a instalação, alterações podem ser necessárias em função das características do telhado ou exigências da concessionária, podendo implicar reajuste do valor contratado mediante prévia notificação e aceite do CONTRATANTE.</p>'+''+'<p><span class="cnum">5.5.</span> Caso o CONTRATANTE opte por financiamento bancário, a CONTRATADA fica desde já autorizada a compartilhar documentos e informações referentes a este contrato com a instituição financeira responsável.</p>'+'</div>'+    footer(2,4)+  '</div>';
 
   // PAGE 3 — GARANTIAS · OBRIGAÇÕES · PENALIDADES
-  const pg3='<div class="cpage-cont">'+header()+'<div class="clausula">'+'<div class="clausula-title">Cláusula 6ª — Garantias</div>'+'<p><span class="cnum">6.1.</span> A garantia dos equipamentos integrantes do sistema é de responsabilidade exclusiva de seus respectivos fabricantes. A CONTRATADA se responsabilizará por intermediar, caso necessário, quaisquer tratativas referentes às necessidades de pós-venda junto aos devidos fornecedores, desde que não seja identificado mau uso.</p>'+'<div class="equip-box">'+'<div class="equip-title">Prazos de Garantia do Fabricante</div>'+'<div class="etrow"><span>Módulos Fotovoltaicos</span><span style="font-weight:700;color:#E8641A">'+warMod+' anos</span></div>'+'<div class="etrow"><span>Microinversores</span><span style="font-weight:700;color:#E8641A">'+warMicro+' anos</span></div>'+'<div class="etrow"><span>Inversor String / Híbrido</span><span style="font-weight:700;color:#E8641A">'+warInv+' anos</span></div>'+(hasBat?'<div class="etrow"><span>Sistema de Bateria</span><span style="font-weight:700;color:#E8641A">'+warBat+' anos</span></div>':'')+'<div class="etrow"><span>Instalação e Mão de Obra</span><span style="font-weight:700;color:#E8641A">'+warInst+' ano(s)</span></div>'+'</div>'+'<p><span class="cnum">6.2.</span> A garantia de instalação cobre defeitos de execução, fixação e conexões elétricas. Não estão cobertos danos decorrentes de: (i) mau uso pelo CONTRATANTE; (ii) intervenções de terceiros não autorizadas; (iii) eventos naturais extremos (granizo, inundação, raios); (iv) surtos elétricos da rede pública.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 7ª — Obrigações da CONTRATADA</div>'+'<p><span class="cnum">7.1.</span> São obrigações da CONTRATADA:</p>'+'<ul>'+'<li>Fornecer os equipamentos integrantes do sistema em perfeitas condições;</li>'+'<li>Executar a instalação conforme especificações técnicas e projeto elétrico;</li>'+'<li>Protocolar a solicitação de acesso junto à concessionária e acompanhar o processo até a homologação;</li>'+'<li>Comunicar ao CONTRATANTE em tempo hábil qualquer irregularidade no fornecimento do sistema;</li>'+'<li>Deixar o local de trabalho limpo e organizado após a conclusão dos serviços.</li>'+'</ul>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 8ª — Obrigações do CONTRATANTE</div>'+'<p><span class="cnum">8.1.</span> São obrigações do CONTRATANTE:</p>'+'<ul>'+'<li>Efetuar os pagamentos nas datas e condições acordados neste instrumento;</li>'+'<li>Garantir acesso ao local de instalação nos horários combinados com a equipe técnica;</li>'+'<li>Informar à CONTRATADA qualquer alteração na instalação elétrica existente que possa afetar o sistema;</li>'+'<li>Não realizar intervenções no sistema sem prévia autorização da CONTRATADA;</li>'+'<li>Realizar manutenção periódica de limpeza dos módulos conforme orientação técnica;</li>'+'<li>Comunicar imediatamente à CONTRATADA sobre quaisquer falhas no sistema;</li>'+'<li>Enviar, em até 10 (dez) dias corridos após a assinatura deste contrato, os documentos necessários ao andamento do projeto: fatura de energia, documento pessoal com foto do titular e demais requeridos pela concessionária.</li>'+'</ul>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 9ª — Penalidades</div>'+'<p><span class="cnum">9.1.</span> No caso de infração contratual por quaisquer das partes, a parte infratora pagará à outra multa não compensatória de <strong>2% (dois por cento)</strong> sobre o valor total do contrato, até o limite de <strong>10% (dez por cento)</strong> do mesmo valor.</p>'+'</div>'+    footer(3,4)+  '</div>';
+  const pg3='<div class="cpage-cont">'+header()+'<div class="clausula">'+'<div class="clausula-title">Cláusula 6ª — Garantias</div>'+'<p><span class="cnum">6.1.</span> A garantia dos equipamentos integrantes do sistema é de responsabilidade exclusiva de seus respectivos fabricantes. A CONTRATADA se responsabilizará por intermediar, caso necessário, quaisquer tratativas referentes às necessidades de pós-venda junto aos devidos fornecedores, desde que não seja identificado mau uso.</p>'+'<div class="equip-box">'+'<div class="equip-title">Prazos de Garantia do Fabricante</div>'+'<div class="etrow"><span>Módulos Fotovoltaicos</span><span style="font-weight:700;color:#E8641A">'+warMod+' anos</span></div>'+'<div class="etrow"><span>Microinversores</span><span style="font-weight:700;color:#E8641A">'+warMicro+' anos</span></div>'+'<div class="etrow"><span>Inversor String / Híbrido</span><span style="font-weight:700;color:#E8641A">'+warInv+' anos</span></div>'+(hasBat?'<div class="etrow"><span>Sistema de Bateria</span><span style="font-weight:700;color:#E8641A">'+warBat+' anos — 6.000 ciclos de vida útil</span></div>':'')+'<div class="etrow"><span>Instalação e Mão de Obra</span><span style="font-weight:700;color:#E8641A">'+warInst+' ano(s)</span></div>'+'</div>'+'<p><span class="cnum">6.2.</span> A garantia de instalação cobre defeitos de execução, fixação e conexões elétricas. Não estão cobertos danos decorrentes de: (i) mau uso pelo CONTRATANTE; (ii) intervenções de terceiros não autorizadas.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 7ª — Obrigações da CONTRATADA</div>'+'<p><span class="cnum">7.1.</span> São obrigações da CONTRATADA:</p>'+'<ul>'+'<li>Fornecer os equipamentos integrantes do sistema em perfeitas condições;</li>'+'<li>Executar a instalação conforme especificações técnicas e projeto elétrico;</li>'+'<li>Protocolar a solicitação de acesso junto à concessionária e acompanhar o processo até a homologação;</li>'+'<li>Comunicar ao CONTRATANTE em tempo hábil qualquer irregularidade no fornecimento do sistema;</li>'+'<li>Deixar o local de trabalho limpo e organizado após a conclusão dos serviços.</li>'+'</ul>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 8ª — Obrigações do CONTRATANTE</div>'+'<p><span class="cnum">8.1.</span> São obrigações do CONTRATANTE:</p>'+'<ul>'+'<li>Efetuar os pagamentos nas datas e condições acordados neste instrumento;</li>'+'<li>Garantir acesso ao local de instalação nos horários combinados com a equipe técnica;</li>'+'<li>Informar à CONTRATADA qualquer alteração na instalação elétrica existente que possa afetar o sistema;</li>'+'<li>Não realizar intervenções no sistema sem prévia autorização da CONTRATADA;</li>'+'<li>Realizar manutenção periódica de limpeza dos módulos conforme orientação técnica;</li>'+'<li>Comunicar imediatamente à CONTRATADA sobre quaisquer falhas no sistema;</li>'+'<li>Enviar, em até 10 (dez) dias corridos após a assinatura deste contrato, os documentos necessários ao andamento do projeto: fatura de energia, documento pessoal com foto do titular e demais requeridos pela concessionária.</li>'+'</ul>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 9ª — Penalidades</div>'+'<p><span class="cnum">9.1.</span> No caso de infração contratual por quaisquer das partes, a parte infratora pagará à outra multa não compensatória de <strong>2% (dois por cento)</strong> sobre o valor total do contrato, até o limite de <strong>10% (dez por cento)</strong> do mesmo valor.</p>'+'</div>'+    footer(3,4)+  '</div>';
 
   // PAGE 4 — RESCISÃO · LGPD · DISPOSIÇÕES GERAIS · ASSINATURAS
-  const pg4='<div class="cpage-cont">'+header()+'<div class="clausula">'+'<div class="clausula-title">Cláusula 10ª — Rescisão</div>'+'<p>A rescisão poderá ser solicitada por qualquer das partes, mediante prévio envio de comunicação por escrito, durante toda a etapa de elaboração do projeto, ou seja, <strong>até o momento anterior à compra dos equipamentos por parte da CONTRATADA.</strong></p>'+'<p><span class="cnum">10.1.</span> São hipóteses de rescisão motivadas pelo CONTRATANTE:</p>'+'<ul>'+'<li>Problemas de infraestrutura ou padrão de entrada no local de instalação;</li>'+'<li>Condições estruturais do telhado inadequadas para suporte e fixação dos módulos;</li>'+'<li>Não aceite das adequações de projeto apontadas em relatório técnico;</li>'+'<li>Problemas que inviabilizem a acessibilidade ao local de instalação;</li>'+'<li>Alterações estruturais do telhado não informadas no momento da contratação;</li>'+'<li>Não aceite do aumento de carga contratada junto à concessionária;</li>'+'<li>Não aceite de regularizações de pendências elétricas pré-existentes;</li>'+'<li>Não envio das documentações necessárias no prazo previsto na Cláusula 8ª;</li>'+'<li>Problemas pessoais; e</li>'+'<li>Solicitação de cancelamento imotivada.</li>'+'</ul>'+'<p><span class="cnum">10.2.</span> São hipóteses de rescisão motivadas pela CONTRATADA:</p>'+'<ul>'+'<li>Adequações de projeto que inviabilizem tecnicamente a realização da instalação;</li>'+'<li>Eventos de força maior que impeçam a compra, instalação ou homologação do sistema.</li>'+'</ul>'+'<p><span class="cnum">10.3.</span> Nos casos de rescisão atribuídos ao CONTRATANTE, <strong>após a compra dos equipamentos</strong> por parte da CONTRATADA, o CONTRATANTE não terá direito ao reembolso dos valores que representem <strong>50% (cinquenta por cento)</strong> do valor contratado.</p>'+'<p><span class="cnum">10.4.</span> Nos casos de rescisão atribuídos ao CONTRATANTE, <strong>antes da compra dos equipamentos</strong>, o CONTRATANTE terá direito à devolução dos valores já pagos, sendo devida à CONTRATADA multa compensatória de <strong>10% (dez por cento)</strong> do valor total do projeto, referente aos custos já incorridos.</p>'+'<p><span class="cnum">10.5.</span> Nos casos de rescisão atribuídos à CONTRATADA, antes ou após a compra dos equipamentos, a CONTRATADA devolverá integralmente os valores já pagos pelo CONTRATANTE.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 11ª — Proteção de Dados (LGPD)</div>'+'<p><span class="cnum">11.1.</span> As partes são obrigadas a observar a legislação em vigor relativa à proteção de dados pessoais (Lei nº 13.709/2018 — LGPD), sem prejuízo de empenhar os esforços necessários para não causar danos à contraparte.</p>'+'<p><span class="cnum">11.2.</span> Por meio do presente, o CONTRATANTE expressamente autoriza a CONTRATADA a: (i) tratar seus dados pessoais, inclusive armazenando-os em base de dados própria, com a finalidade exclusiva de cumprir o objeto deste contrato; (ii) compartilhar os dados pessoais do CONTRATANTE com o parceiro de instalação responsável pela execução e homologação do sistema.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 12ª — Disposições Gerais</div>'+'<p><span class="cnum">12.1.</span> A tolerância de qualquer das partes em relação às condições ora pactuadas não representará novação ou renúncia de direitos.</p>'+'<p><span class="cnum">12.2.</span> A CONTRATADA não é responsável perante o CONTRATANTE por alterações em regulamentos, normas ou leis referentes a sistemas fotovoltaicos, após a entrega e instalação do sistema.</p>'+'<p><span class="cnum">12.3.</span> O CONTRATANTE declara estar ciente de que fotos da instalação do sistema poderão ser reproduzidas e divulgadas pela CONTRATADA com fins publicitários/comerciais.</p>'+'<p><span class="cnum">12.4.</span> Quaisquer alterações das obrigações contratuais somente serão válidas mediante a celebração de Termos Aditivos, firmados pelos representantes legais das partes.</p>'+'<p><span class="cnum">12.5.</span> As partes afirmam expressamente que reconhecem a autenticidade, integridade e validade jurídica do instrumento, que poderá ser firmado por meio eletrônico, digital ou físico.</p>'+'<p><span class="cnum">12.6.</span> As partes reconhecem que o presente contrato constitui <strong>título executivo extrajudicial</strong>, dotado de certeza, liquidez e exigibilidade, para todos os fins previstos no Código de Processo Civil.</p>'+'</div>'+(obs?'<div class="clausula"><div class="clausula-title">Cláusula 13ª — Disposições Especiais</div><p>'+obs+'</p></div>':'')+'<div class="clausula">'+'<div class="clausula-title">Cláusula '+(obs?'14':'13')+'ª — Foro</div>'+'<p>As partes elegem o Foro da Comarca de <strong>'+foro+'</strong> para dirimir quaisquer dúvidas ou litígios oriundos do presente instrumento, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>'+'<p>E, por estarem assim justos e contratados, firmam o presente instrumento em 2 (duas) vias de igual teor e forma.</p>'+'</div>'+'<div class="sign-section">'+'<p style="text-align:center;margin-bottom:20px"><strong>'+foro+', '+data+'</strong></p>'+'<div class="sign-line">'+'<div class="sign-block"><div class="sign-underline">[RAZÃO SOCIAL DA LUMEN GRID]</div><div class="sign-role">CONTRATADA — Lumen Grid Energia Inteligente</div></div>'+'<div class="sign-block"><div class="sign-underline">'+cliNome+'</div><div class="sign-role">CONTRATANTE — CPF: '+cliDoc+'</div></div>'+'</div>'+'</div>'+    footer(4,4)+  '</div>';
+  const pg4='<div class="cpage-cont">'+header()+'<div class="clausula">'+'<div class="clausula-title">Cláusula 10ª — Rescisão</div>'+'<p>A rescisão poderá ser solicitada por qualquer das partes, mediante prévio envio de comunicação por escrito, durante toda a etapa de elaboração do projeto, ou seja, <strong>até o momento anterior à compra dos equipamentos por parte da CONTRATADA.</strong></p>'+'<p><span class="cnum">10.1.</span> São hipóteses de rescisão motivadas pelo CONTRATANTE:</p>'+'<ul>'+'<li>Problemas de infraestrutura ou padrão de entrada no local de instalação;</li>'+'<li>Condições estruturais do telhado inadequadas para suporte e fixação dos módulos;</li>'+'<li>Não aceite das adequações de projeto apontadas em relatório técnico;</li>'+'<li>Problemas que inviabilizem a acessibilidade ao local de instalação;</li>'+'<li>Alterações estruturais do telhado não informadas no momento da contratação;</li>'+'<li>Não aceite do aumento de carga contratada junto à concessionária;</li>'+'<li>Não aceite de regularizações de pendências elétricas pré-existentes;</li>'+'<li>Não envio das documentações necessárias no prazo previsto na Cláusula 8ª;</li>'+'<li>Problemas pessoais; e</li>'+'<li>Solicitação de cancelamento imotivada.</li>'+'</ul>'+'<p><span class="cnum">10.2.</span> São hipóteses de rescisão motivadas pela CONTRATADA:</p>'+'<ul>'+'<li>Adequações de projeto que inviabilizem tecnicamente a realização da instalação;</li>'+'<li>Eventos de força maior que impeçam a compra, instalação ou homologação do sistema.</li>'+'</ul>'+'<p><span class="cnum">10.3.</span> Nos casos de rescisão atribuídos ao CONTRATANTE, <strong>após a compra dos equipamentos</strong> por parte da CONTRATADA, o CONTRATANTE não terá direito ao reembolso de nenhum valor pago.</p>'+'<p><span class="cnum">10.4.</span> Nos casos de rescisão atribuídos ao CONTRATANTE, <strong>antes da compra dos equipamentos</strong>, o CONTRATANTE terá direito à devolução dos valores já pagos, sendo devida à CONTRATADA multa compensatória de <strong>10% (dez por cento)</strong> do valor total do projeto, referente aos custos já incorridos.</p>'+'<p><span class="cnum">10.5.</span> Nos casos de rescisão atribuídos à CONTRATADA, antes ou após a compra dos equipamentos, a CONTRATADA devolverá integralmente os valores já pagos pelo CONTRATANTE.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 11ª — Proteção de Dados (LGPD)</div>'+'<p><span class="cnum">11.1.</span> As partes são obrigadas a observar a legislação em vigor relativa à proteção de dados pessoais (Lei nº 13.709/2018 — LGPD), sem prejuízo de empenhar os esforços necessários para não causar danos à contraparte.</p>'+'<p><span class="cnum">11.2.</span> Por meio do presente, o CONTRATANTE expressamente autoriza a CONTRATADA a: (i) tratar seus dados pessoais, inclusive armazenando-os em base de dados própria, com a finalidade exclusiva de cumprir o objeto deste contrato; (ii) compartilhar os dados pessoais do CONTRATANTE com o parceiro de instalação responsável pela execução e homologação do sistema.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 12ª — Disposições Gerais</div>'+'<p><span class="cnum">12.1.</span> A tolerância de qualquer das partes em relação às condições ora pactuadas não representará novação ou renúncia de direitos.</p>'+'<p><span class="cnum">12.2.</span> A CONTRATADA não é responsável perante o CONTRATANTE por alterações em regulamentos, normas ou leis referentes a sistemas fotovoltaicos, após a entrega e instalação do sistema.</p>'+'<p><span class="cnum">12.3.</span> O CONTRATANTE declara estar ciente de que fotos da instalação do sistema poderão ser reproduzidas e divulgadas pela CONTRATADA com fins publicitários/comerciais.</p>'+'<p><span class="cnum">12.4.</span> Quaisquer alterações das obrigações contratuais somente serão válidas mediante a celebração de Termos Aditivos, firmados pelos representantes legais das partes.</p>'+'<p><span class="cnum">12.5.</span> As partes afirmam expressamente que reconhecem a autenticidade, integridade e validade jurídica do instrumento, que poderá ser firmado por meio eletrônico, digital ou físico.</p>'+'<p><span class="cnum">12.6.</span> As partes reconhecem que o presente contrato constitui <strong>título executivo extrajudicial</strong>, dotado de certeza, liquidez e exigibilidade, para todos os fins previstos no Código de Processo Civil.</p>'+'</div>'+(obs?'<div class="clausula"><div class="clausula-title">Cláusula 13ª — Disposições Especiais</div><p>'+obs+'</p></div>':'')+'<div class="clausula">'+'<div class="clausula-title">Cláusula '+(obs?'14':'13')+'ª — Foro</div>'+'<p>As partes elegem o Foro da Comarca de <strong>'+foro+'</strong> para dirimir quaisquer dúvidas ou litígios oriundos do presente instrumento, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>'+'<p>E, por estarem assim justos e contratados, firmam o presente instrumento em 2 (duas) vias de igual teor e forma.</p>'+'</div>'+'<div class="sign-section">'+'<p style="text-align:center;margin-bottom:20px"><strong>'+foro+', '+data+'</strong></p>'+'<div class="sign-line">'+'<div class="sign-block"><div class="sign-underline">[RAZÃO SOCIAL DA LUMEN GRID]</div><div class="sign-role">CONTRATADA — Lumen Grid Energia Inteligente</div></div>'+'<div class="sign-block"><div class="sign-underline">'+cliNome+'</div><div class="sign-role">CONTRATANTE — CPF: '+cliDoc+'</div></div>'+'</div>'+'</div>'+    footer(4,4)+  '</div>';
 
     document.getElementById('prevPanel').innerHTML=pg1+pg2+pg3+pg4;
 }
@@ -642,7 +681,135 @@ function importarBridge(){
   function _regen(){ clearTimeout(_lp); _lp=setTimeout(generateContract,250); }
   document.querySelector('.form-panel').addEventListener('input',_regen);
   document.querySelector('.form-panel').addEventListener('change',_regen);
+
+  // Auto-calcular kVp
+  function autoKvp(){
+    const qty=parseFloat(document.getElementById('eqModQty').value)||0;
+    const pwr=parseFloat(document.getElementById('eqModPwr').value)||0;
+    const field=document.getElementById('eqKvp');
+    if(qty&&pwr&&!field.dataset.manual){
+      field.value=(qty*pwr/1000).toFixed(2)+' kVp';
+    }
+  }
+  document.getElementById('eqModQty').addEventListener('input',autoKvp);
+  document.getElementById('eqModPwr').addEventListener('input',autoKvp);
+  document.getElementById('eqKvp').addEventListener('input',function(){this.dataset.manual='1';});
 })();
+
+// ── SALVAR NO DRIVE ──────────────────────────────────────────────────────────
+function salvarNoDrive() {
+  const gasUrl = document.getElementById('gasUrl').value.trim();
+  if (!gasUrl || !gasUrl.startsWith('https://script.google.com')) {
+    _driveToast('erro', 'Configure a URL do Web App no campo azul acima do formulário.', null);
+    return;
+  }
+  const cliNome = document.getElementById('cliNome').value.trim();
+  const payTotal = parseFloat(document.getElementById('payTotal').value) || 0;
+  if (!cliNome || !payTotal) {
+    _driveToast('erro', 'Preencha o Nome do Cliente e o Valor Total antes de salvar.', null);
+    return;
+  }
+
+  const btn = document.getElementById('btnDrive');
+  btn.disabled = true;
+  btn.textContent = '⏳ Salvando...';
+  _driveToast('loading', 'Criando documento no Google Drive...', null);
+
+  const dados = {
+    action: 'salvarContrato',
+    num: document.getElementById('cNum').value.trim() || '001/' + new Date().getFullYear(),
+    dataEmissao: document.getElementById('cData').value,
+    tipoSistema: document.getElementById('tipoSistema').value,
+    tipoSistemaOutro: document.getElementById('tipoSistemaOutro') ? document.getElementById('tipoSistemaOutro').value.trim() : '',
+    cliNome: cliNome,
+    cliDoc: document.getElementById('cliDoc').value.trim(),
+    cliRG: document.getElementById('cliRG').value.trim(),
+    cliEnder: document.getElementById('cliEnder').value.trim(),
+    cliCidade: document.getElementById('cliCidade').value.trim(),
+    cliCEP: document.getElementById('cliCEP').value.trim(),
+    cliEmail: document.getElementById('cliEmail').value.trim(),
+    cliFone: document.getElementById('cliFone').value.trim(),
+    instEnder: document.getElementById('instEnder').value.trim(),
+    instTipo: document.getElementById('instTipo').value,
+    instConexao: document.getElementById('instConexao').value,
+    eqModQty: document.getElementById('eqModQty').value,
+    eqModPwr: document.getElementById('eqModPwr').value,
+    eqModModel: document.getElementById('eqModModel').value.trim(),
+    eqInvQty: document.getElementById('eqInvQty').value,
+    eqInvPwr: document.getElementById('eqInvPwr').value,
+    eqInvModel: document.getElementById('eqInvModel').value.trim(),
+    eqBatQty: document.getElementById('eqBatQty').value,
+    eqBatKwh: document.getElementById('eqBatKwh').value,
+    eqBatModel: document.getElementById('eqBatModel').value.trim(),
+    eqKvp: document.getElementById('eqKvp').value.trim(),
+    eqGen: document.getElementById('eqGen').value.trim(),
+    eqEstrutura: document.getElementById('eqEstrutura').value,
+    eqAdicionais: document.getElementById('eqAdicionais').value.trim(),
+    payTotal: payTotal,
+    payModo: document.getElementById('payModo').value,
+    payParcelas: document.getElementById('payParcelas').value,
+    payJuros: document.getElementById('payJuros') ? document.getElementById('payJuros').value : '',
+    payEntrada: document.getElementById('payEntrada').value,
+    payEquip: document.getElementById('payEquip').value,
+    payInst: document.getElementById('payInst').value,
+    payPersonalizado: document.getElementById('payPersonalizado').value.trim(),
+    payPrazo: document.getElementById('payPrazo').value,
+    vendNome: document.getElementById('vendNome').value.trim(),
+    vendCargo: document.getElementById('vendCargo').value.trim(),
+    cObs: document.getElementById('cObs').value.trim()
+  };
+
+  const params = new URLSearchParams(dados);
+
+  fetch(gasUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    btn.disabled = false;
+    btn.innerHTML = '&#9729; Salvar no Drive';
+    if (res.success) {
+      _driveToast('sucesso', 'Contrato salvo! Abra o Google Doc e use <strong>Ferramentas &rsaquo; Solicitar assinatura</strong> para coletar a assinatura do cliente.', res.docUrl);
+    } else {
+      _driveToast('erro', 'Erro: ' + (res.error || 'Tente novamente.'), null);
+    }
+  })
+  .catch(function(err) {
+    btn.disabled = false;
+    btn.innerHTML = '&#9729; Salvar no Drive';
+    _driveToast('erro', 'Falha de conexão: ' + err.message, null);
+  });
+}
+
+function _driveToast(tipo, msg, docUrl) {
+  var t = document.getElementById('driveToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'driveToast';
+    t.innerHTML = '<button class="dt-close" onclick="this.parentElement.classList.remove(\'show\')">✕</button><div class="dt-title"></div><div class="dt-msg"></div>';
+    document.body.appendChild(t);
+  }
+  var colors = { sucesso: '#1a73e8', erro: '#c0392b', loading: '#555' };
+  t.style.borderColor = colors[tipo] || '#1a73e8';
+  t.querySelector('.dt-title').textContent = tipo === 'sucesso' ? '✅ Documento criado no Drive!' : tipo === 'erro' ? '❌ Erro' : '⏳ Aguarde...';
+  t.querySelector('.dt-msg').innerHTML = msg;
+  var existing = t.querySelector('.dt-link');
+  if (existing) existing.remove();
+  if (docUrl) {
+    var a = document.createElement('a');
+    a.className = 'dt-link';
+    a.href = docUrl;
+    a.target = '_blank';
+    a.textContent = 'Abrir Google Doc para Assinar';
+    t.appendChild(a);
+  }
+  t.classList.add('show');
+  if (tipo !== 'loading' && tipo !== 'sucesso') {
+    setTimeout(function() { t.classList.remove('show'); }, 6000);
+  }
+}
 // ─────────────────────────────────────────────────────────────────────────────
 </script>
 </body>
