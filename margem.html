@@ -474,10 +474,8 @@ function calcular() {
   const pComissao  = v('pComissao') / 100;
   const pPisCofins = v('pPisCofins') / 100;
 
-  // Custo direto
+  // Custo direto (pós-venda deduzida da margem, igual ao CRM)
   const custoDireto = cEquip + cBat + cInst + cHomol + cFrete;
-  const posVendaVal = custoDireto * pPosVenda;
-  const custoTotal  = custoDireto + posVendaVal;
 
   // Custo financeiro efetivo como % do preço
   const finEfetivo = (1 - pEntrada) * pFinCusto;
@@ -485,9 +483,7 @@ function calcular() {
   const precoAlvoInput = parseFloat(document.getElementById('precoAlvo').value) || 0;
   const modoPrecoAlvo  = precoAlvoInput > 0;
 
-  // Modo Preço Alvo: calcula margem a partir do preço informado
-  // Modo Margem Alvo: calcula preço a partir da margem desejada
-  let preco, margemCash, pMargemEfetiva;
+  let preco, margemBruta, pMargemEfetiva;
 
   const alertEl = document.getElementById('alertWarn');
 
@@ -496,29 +492,38 @@ function calcular() {
     document.getElementById('margemSliderWrap').style.opacity = '0.35';
   } else {
     document.getElementById('margemSliderWrap').style.opacity = '1';
+    // preco = custoDireto / (1 - impostos% - margem% - finEfetivo%)
     const divisor = 1 - pImpostos - pMargem - finEfetivo;
     if (divisor <= 0) {
       alertEl.classList.add('show');
       resetUI();
       return;
     }
-    preco = custoTotal / divisor;
+    preco = custoDireto / divisor;
   }
   alertEl.classList.remove('show');
 
   const impostosVal  = preco * pImpostos;
   const finVal       = preco * finEfetivo;
-  margemCash         = preco - custoTotal - impostosVal - finVal;
-  pMargemEfetiva     = margemCash / preco;
-  const comissaoVal  = preco * pComissao;
-  const margemLiq    = margemCash - comissaoVal;
+
+  // Margem Bruta = o que sobra após pagar custo, impostos e financeiro
+  margemBruta        = preco - custoDireto - impostosVal - finVal;
+  pMargemEfetiva     = margemBruta / preco;
+
+  // Pós-venda / Gestão OP = 20% da Margem Bruta (igual ao CRM)
+  const posVendaVal  = margemBruta * pPosVenda;
+  const aposGestao   = margemBruta - posVendaVal;
+
+  // Comissão = % do que sobrou após gestão OP (igual ao CRM)
+  const comissaoVal  = aposGestao * pComissao;
+  const margemLiq    = aposGestao - comissaoVal;
   const margemLiqPerc = margemLiq / preco;
   const cashPis      = margemLiq * (1 - pPisCofins);
 
   // ── Atualiza KPIs ──
   set('kPreco',  fmtR(preco));
-  set('kCustoSub', 'Custo: ' + fmtR(custoTotal));
-  set('kMargem', fmtR(margemCash));
+  set('kCustoSub', 'Custo direto: ' + fmtR(custoDireto));
+  set('kMargem', fmtR(margemBruta));
   set('kMargemPerc', fmtPerc(pMargemEfetiva) + ' do preço');
   set('kLiquida', fmtR(margemLiq));
   set('kLiquidaPerc', 'após comissão — ' + fmtPerc(margemLiqPerc) + ' do preço');
@@ -542,16 +547,16 @@ function calcular() {
   set('bInst',        fmtR(cInst));
   set('bHomol',       fmtR(cHomol));
   set('bFrete',       fmtR(cFrete));
-  set('bPosVenda',    fmtR(posVendaVal));
-  set('bPosVendaPerc', fmtPerc(pPosVenda));
-  set('bCustoTotal',  fmtR(custoTotal));
+  set('bCustoTotal',  fmtR(custoDireto));
   set('bPreco',       fmtR(preco));
   set('bImpostos',    fmtR(impostosVal));
   set('bImpostosPerc', fmtPerc(pImpostos));
   set('bFin',         fmtR(finVal));
   set('bFinPercLabel', pFinCusto > 0 ? fmtPerc(finEfetivo) + ' efetivo' : '');
   document.getElementById('bFinRow').style.display = pFinCusto > 0 ? '' : 'none';
-  set('bMargemCash',  fmtR(margemCash));
+  set('bMargemCash',  fmtR(margemBruta));
+  set('bPosVenda',    fmtR(posVendaVal));
+  set('bPosVendaPerc', fmtPerc(pPosVenda));
   set('bComissao',    fmtR(comissaoVal));
   set('bComissaoPerc', fmtPerc(pComissao));
   set('bLiquida',     fmtR(margemLiq));
