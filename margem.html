@@ -222,12 +222,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <div class="sec">
     <div class="sec-title">Margem e Comissão</div>
     <div class="fg">
+      <label>Preço Alvo (R$) <span style="font-size:9px;color:var(--t3)">— opcional: informe o preço e veja o resultado</span></label>
+      <input class="fi" type="number" id="precoAlvo" placeholder="Deixe vazio para calcular pela margem alvo" step="100">
+    </div>
+    <div id="margemSliderWrap" class="fg">
       <label>Margem Alvo %</label>
       <div class="slider-wrap">
         <input type="range" id="pMargem" min="5" max="60" value="30" step="1">
         <div class="slider-val"><span>5%</span><span id="margemVal">30%</span><span>60%</span></div>
       </div>
     </div>
+    </div><!-- /margemSliderWrap -->
     <div class="fg">
       <label>Comissão do Vendedor % <span style="font-size:9px;color:var(--t3)">(deduzida da margem)</span></label>
       <div class="slider-wrap">
@@ -477,21 +482,34 @@ function calcular() {
   // Custo financeiro efetivo como % do preço
   const finEfetivo = (1 - pEntrada) * pFinCusto;
 
-  // Preço: custo_total = preço × (1 - impostos - margem - fin_efetivo)
-  const divisor = 1 - pImpostos - pMargem - finEfetivo;
+  const precoAlvoInput = parseFloat(document.getElementById('precoAlvo').value) || 0;
+  const modoPrecoAlvo  = precoAlvoInput > 0;
+
+  // Modo Preço Alvo: calcula margem a partir do preço informado
+  // Modo Margem Alvo: calcula preço a partir da margem desejada
+  let preco, margemCash, pMargemEfetiva;
 
   const alertEl = document.getElementById('alertWarn');
-  if (divisor <= 0) {
-    alertEl.classList.add('show');
-    resetUI();
-    return;
+
+  if (modoPrecoAlvo) {
+    preco = precoAlvoInput;
+    document.getElementById('margemSliderWrap').style.opacity = '0.35';
+  } else {
+    document.getElementById('margemSliderWrap').style.opacity = '1';
+    const divisor = 1 - pImpostos - pMargem - finEfetivo;
+    if (divisor <= 0) {
+      alertEl.classList.add('show');
+      resetUI();
+      return;
+    }
+    preco = custoTotal / divisor;
   }
   alertEl.classList.remove('show');
 
-  const preco        = custoTotal / divisor;
   const impostosVal  = preco * pImpostos;
   const finVal       = preco * finEfetivo;
-  const margemCash   = preco * pMargem;
+  margemCash         = preco - custoTotal - impostosVal - finVal;
+  pMargemEfetiva     = margemCash / preco;
   const comissaoVal  = preco * pComissao;
   const margemLiq    = margemCash - comissaoVal;
   const margemLiqPerc = margemLiq / preco;
@@ -501,7 +519,7 @@ function calcular() {
   set('kPreco',  fmtR(preco));
   set('kCustoSub', 'Custo: ' + fmtR(custoTotal));
   set('kMargem', fmtR(margemCash));
-  set('kMargemPerc', fmtPerc(pMargem) + ' do preço');
+  set('kMargemPerc', fmtPerc(pMargemEfetiva) + ' do preço');
   set('kLiquida', fmtR(margemLiq));
   set('kLiquidaPerc', 'após comissão — ' + fmtPerc(margemLiqPerc) + ' do preço');
 
@@ -556,6 +574,8 @@ function fmtR(n) {
 }
 function fmtN(n) { return n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 function fmtPerc(n) { return (n*100).toFixed(1) + '%'; }
+
+document.getElementById('precoAlvo').addEventListener('input', calcular);
 
 // Inicia
 calcular();
