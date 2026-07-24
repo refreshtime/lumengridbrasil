@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lumen Grid — Margem de Projeto</title>
+<script>(function(){
+  var t=sessionStorage.getItem('lg_auth');
+  if(!t){location.replace('login.html');return;}
+  try{var d=atob(t).split(':'),age=Date.now()-parseInt(d[1]);if(age>28800000)throw 1;}catch(e){sessionStorage.clear();location.replace('login.html');}
+})();</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#E8641A;--or-d:rgba(232,100,26,.1);--or-h:#F07328;
+  --bg:#0A0A0C;--s1:#111115;--s2:#18181D;--s3:#222228;
+  --b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.04);
+  --t1:#F4F4F5;--t2:#A1A1AA;--t3:#52525B;
+  --green:#22C55E;--green-d:rgba(34,197,94,.1);
+  --red:#F87171;--red-d:rgba(248,113,113,.09);
+  --blue:#60A5FA;--blue-d:rgba(96,165,250,.1);
+  --yellow:#FBBF24;--yellow-d:rgba(251,191,36,.1);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;font-size:13px;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.hdr{background:var(--s1);border-bottom:1px solid var(--b1);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hdr-brand{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:900;letter-spacing:3px;color:var(--or)}
+.hdr-brand span{color:var(--t1)}
+.hdr-sub{font-size:9px;letter-spacing:2px;color:var(--t3);margin-top:2px;text-transform:uppercase}
+.hdr-nav{display:flex;gap:8px;align-items:center}
+.nav-link{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--b1);border-radius:6px;font-size:11px;font-weight:600;color:var(--t3);text-decoration:none;transition:all .15s}
+.nav-link:hover{color:var(--t2);border-color:rgba(255,255,255,.12)}
+
+/* LAYOUT */
+.main{display:grid;grid-template-columns:380px 1fr;gap:0;min-height:calc(100vh - 54px)}
+
+/* INPUT PANEL */
+.inp-panel{background:var(--s1);border-right:1px solid var(--b1);overflow-y:auto;padding:20px 18px 40px}
+.sec{margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--b1)}
+.sec:last-child{border-bottom:none}
+.sec-title{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:12px;padding-left:8px;border-left:3px solid var(--or)}
+.fg{margin-bottom:9px}
+.fg label{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:3px}
+.fi,.fsel{width:100%;padding:7px 10px;background:var(--s2);border:1.5px solid var(--b1);border-radius:6px;font-size:12px;color:var(--t1);font-family:'Inter',sans-serif;transition:border-color .15s}
+.fi:focus,.fsel:focus{outline:none;border-color:rgba(232,100,26,.5)}
+.fi::placeholder{color:var(--t3)}
+.fsel option{background:var(--s2)}
+.frow{display:flex;gap:8px}.frow>.fg{flex:1}
+.fi-auto{border-color:rgba(96,165,250,.3);color:var(--blue)}
+.fi-note{font-size:9px;color:var(--t3);margin-top:2px}
+
+/* Slider */
+.slider-wrap{position:relative;padding:4px 0 2px}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--b1);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--or);cursor:pointer;border:2px solid var(--bg)}
+.slider-val{display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-top:4px}
+
+/* RESULT PANEL */
+.res-panel{padding:24px 28px;overflow-y:auto}
+.res-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:16px}
+
+/* KPI grid */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.kpi.kpi-or::before{background:var(--or)}
+.kpi.kpi-g::before{background:var(--green)}
+.kpi.kpi-b::before{background:var(--blue)}
+.kpi.kpi-r::before{background:var(--red)}
+.kpi.kpi-y::before{background:var(--yellow)}
+.kpi-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:8px}
+.kpi-val{font-size:20px;font-weight:700;letter-spacing:-.5px;line-height:1}
+.kpi.kpi-or .kpi-val{color:var(--or)}
+.kpi.kpi-g .kpi-val{color:var(--green)}
+.kpi.kpi-b .kpi-val{color:var(--blue)}
+.kpi.kpi-r .kpi-val{color:var(--red)}
+.kpi.kpi-y .kpi-val{color:var(--yellow)}
+.kpi-sub{font-size:10px;color:var(--t3);margin-top:5px}
+
+/* Breakdown card */
+.bk-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.bk-hdr{padding:11px 18px;border-bottom:1px solid var(--b1);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2)}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:9px 18px;border-bottom:1px solid var(--b2);font-size:12px}
+.bk-row:last-child{border-bottom:none}
+.bk-row.bk-section{background:var(--s2);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);padding:6px 18px}
+.bk-row.bk-total{background:var(--or-d);border-top:1px solid rgba(232,100,26,.2)}
+.bk-row.bk-total .bk-label{font-weight:700;color:var(--or)}
+.bk-row.bk-total .bk-val{font-weight:700;color:var(--or);font-size:14px}
+.bk-row.bk-neg .bk-val{color:var(--red)}
+.bk-row.bk-green .bk-val{color:var(--green)}
+.bk-row.bk-blue .bk-val{color:var(--blue)}
+.bk-label{color:var(--t2)}
+.bk-val{font-weight:600;color:var(--t1);text-align:right}
+.bk-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px}
+.badge-red{background:var(--red-d);color:var(--red)}
+.badge-green{background:var(--green-d);color:var(--green)}
+.badge-blue{background:var(--blue-d);color:var(--blue)}
+.badge-yellow{background:var(--yellow-d);color:var(--yellow)}
+
+/* Margin gauge */
+.gauge-wrap{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:16px 18px;margin-bottom:20px}
+.gauge-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:10px}
+.gauge-bar{height:8px;background:var(--b1);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.gauge-fill{height:100%;border-radius:4px;transition:width .4s ease,background .4s}
+.gauge-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--t3)}
+.gauge-markers{display:flex;justify-content:space-between;font-size:8px;color:var(--t3);margin-top:2px}
+
+/* Faixa table */
+.faixa-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;overflow:hidden}
+.faixa-hdr{padding:11px 18px;border-bottom:1px solid var(--b1);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);display:flex;align-items:center;gap:6px}
+.faixa-table{width:100%;border-collapse:collapse}
+.faixa-table th{padding:8px 16px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);text-align:left;border-bottom:1px solid var(--b1)}
+.faixa-table td{padding:9px 16px;font-size:12px;border-bottom:1px solid var(--b2);color:var(--t2)}
+.faixa-table tr:last-child td{border-bottom:none}
+.faixa-table tr{cursor:pointer;transition:background .15s}
+.faixa-table tr:hover td{background:rgba(232,100,26,.06);color:var(--t1)}
+.faixa-table tr.active td{background:var(--or-d);color:var(--t1)}
+.faixa-table .td-val{font-weight:700;color:var(--t1);text-align:right}
+.faixa-table .td-or{color:var(--or);font-weight:700}
+
+/* Alert */
+.alert-warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--yellow);margin-bottom:16px;display:none}
+.alert-warn.show{display:block}
+
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+  .inp-panel{border-right:none;border-bottom:1px solid var(--b1)}
+  .kpi-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-brand">LUMEN<span>GRID</span></div>
+    <div class="hdr-sub">Análise de Margem de Projeto</div>
+  </div>
+  <div class="hdr-nav">
+    <a class="nav-link" href="portal.html">&#8592; Portal</a>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ═══ PAINEL DE INPUTS ═══ -->
+<div class="inp-panel">
+
+  <div class="sec">
+    <div class="sec-title">Sistema</div>
+    <div class="fg">
+      <label>kWp do Sistema</label>
+      <input class="fi" type="number" id="kvp" placeholder="Ex: 6.6" step="0.1" min="0">
+      <div class="fi-note">Preencha para calcular instalação e homologação automaticamente</div>
+    </div>
+    <div class="fg">
+      <label>Tipo</label>
+      <select class="fsel" id="tipo">
+        <option value="solar">Solar (On-Grid)</option>
+        <option value="hibrido">Híbrido (com Bateria)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Custos do Projeto</div>
+    <div class="fg">
+      <label>Equipamentos — Inversor + Módulos (R$)</label>
+      <input class="fi" type="number" id="cEquip" placeholder="0,00" step="100">
+    </div>
+    <div class="fg" id="cBatWrap">
+      <label>Bateria (R$)</label>
+      <input class="fi" type="number" id="cBat" placeholder="0,00" step="100">
+    </div>
+    <div class="fg">
+      <label>Instalação (R$) <span id="instAuto" style="font-size:9px;color:var(--blue);margin-left:4px;display:none">● auto</span></label>
+      <input class="fi" type="number" id="cInst" placeholder="0,00" step="100">
+    </div>
+    <div class="fg">
+      <label>Homologação (R$) <span id="homolAuto" style="font-size:9px;color:var(--blue);margin-left:4px;display:none">● auto</span></label>
+      <input class="fi" type="number" id="cHomol" placeholder="0,00" step="50">
+    </div>
+    <div class="fg">
+      <label>Frete (R$)</label>
+      <input class="fi" type="number" id="cFrete" placeholder="0,00" step="50">
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Parâmetros Financeiros</div>
+    <div class="frow">
+      <div class="fg">
+        <label>Pós-venda %</label>
+        <input class="fi" type="number" id="pPosVenda" value="20" min="0" max="100" step="1">
+      </div>
+      <div class="fg">
+        <label>Impostos %</label>
+        <input class="fi" type="number" id="pImpostos" value="10" min="0" max="50" step="0.5">
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fg">
+        <label>PIS + COFINS %</label>
+        <input class="fi" type="number" id="pPisCofins" value="3.65" min="0" max="15" step="0.05">
+      </div>
+      <div class="fg">
+        <label>Custo Financeiro %</label>
+        <input class="fi" type="number" id="pFinCusto" value="0" min="0" max="20" step="0.5">
+      </div>
+    </div>
+    <div class="fg" id="entradaWrap" style="display:none">
+      <label>Entrada % (para custo financeiro)</label>
+      <div class="slider-wrap">
+        <input type="range" id="pEntrada" min="0" max="100" value="50" step="5">
+        <div class="slider-val"><span>0%</span><span id="entradaVal">50%</span><span>100%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Margem e Comissão</div>
+    <div class="fg">
+      <label>Margem Alvo %</label>
+      <div class="slider-wrap">
+        <input type="range" id="pMargem" min="5" max="60" value="30" step="1">
+        <div class="slider-val"><span>5%</span><span id="margemVal">30%</span><span>60%</span></div>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Comissão do Vendedor % <span style="font-size:9px;color:var(--t3)">(deduzida da margem)</span></label>
+      <div class="slider-wrap">
+        <input type="range" id="pComissao" min="0" max="15" value="5" step="0.5">
+        <div class="slider-val"><span>0%</span><span id="comissaoVal">5%</span><span>15%</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /inp-panel -->
+
+<!-- ═══ PAINEL DE RESULTADOS ═══ -->
+<div class="res-panel">
+
+  <div class="alert-warn" id="alertWarn">
+    ⚠️ Atenção: com os parâmetros atuais não é possível calcular o preço (divisor negativo). Reduza a margem alvo, impostos ou custo financeiro.
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi kpi-or">
+      <div class="kpi-lbl">Preço de Venda</div>
+      <div class="kpi-val" id="kPreco">—</div>
+      <div class="kpi-sub" id="kCustoSub">Custo: —</div>
+    </div>
+    <div class="kpi kpi-g">
+      <div class="kpi-lbl">Margem CASH</div>
+      <div class="kpi-val" id="kMargem">—</div>
+      <div class="kpi-sub" id="kMargemPerc">— % do preço</div>
+    </div>
+    <div class="kpi kpi-b">
+      <div class="kpi-lbl">Margem Líquida</div>
+      <div class="kpi-val" id="kLiquida">—</div>
+      <div class="kpi-sub" id="kLiquidaPerc">após comissão — % do preço</div>
+    </div>
+  </div>
+
+  <!-- Gauge -->
+  <div class="gauge-wrap">
+    <div class="gauge-title">Margem Líquida sobre o Preço</div>
+    <div class="gauge-bar"><div class="gauge-fill" id="gaugeFill" style="width:0%"></div></div>
+    <div class="gauge-labels">
+      <span id="gaugeLabel">—</span>
+      <span id="gaugeStatus">—</span>
+    </div>
+  </div>
+
+  <!-- Breakdown -->
+  <div class="bk-card">
+    <div class="bk-hdr">Detalhamento do Projeto</div>
+
+    <div class="bk-row bk-section"><span>CUSTOS</span></div>
+    <div class="bk-row">
+      <span class="bk-label">Equipamentos (Inversor + Módulos)</span>
+      <span class="bk-val" id="bEquip">—</span>
+    </div>
+    <div class="bk-row" id="bBatRow">
+      <span class="bk-label">Bateria</span>
+      <span class="bk-val" id="bBat">—</span>
+    </div>
+    <div class="bk-row">
+      <span class="bk-label">Instalação</span>
+      <span class="bk-val" id="bInst">—</span>
+    </div>
+    <div class="bk-row">
+      <span class="bk-label">Homologação</span>
+      <span class="bk-val" id="bHomol">—</span>
+    </div>
+    <div class="bk-row">
+      <span class="bk-label">Frete</span>
+      <span class="bk-val" id="bFrete">—</span>
+    </div>
+    <div class="bk-row">
+      <span class="bk-label">Pós-venda / Gestão OP <span class="bk-badge badge-yellow" id="bPosVendaPerc">20%</span></span>
+      <span class="bk-val" id="bPosVenda">—</span>
+    </div>
+    <div class="bk-row" style="background:var(--s2)">
+      <span class="bk-label" style="font-weight:700;color:var(--t1)">Custo Total</span>
+      <span class="bk-val" id="bCustoTotal" style="color:var(--t1)">—</span>
+    </div>
+
+    <div class="bk-row bk-section"><span>PREÇO E DEDUÇÕES</span></div>
+    <div class="bk-row bk-total">
+      <span class="bk-label">PREÇO DE VENDA</span>
+      <span class="bk-val" id="bPreco">—</span>
+    </div>
+    <div class="bk-row bk-neg">
+      <span class="bk-label">(−) Impostos <span class="bk-badge badge-red" id="bImpostosPerc">10%</span></span>
+      <span class="bk-val" id="bImpostos">—</span>
+    </div>
+    <div class="bk-row bk-neg" id="bFinRow">
+      <span class="bk-label">(−) Custo Financeiro <span class="bk-badge badge-red" id="bFinPercLabel"></span></span>
+      <span class="bk-val" id="bFin">—</span>
+    </div>
+
+    <div class="bk-row bk-section"><span>RESULTADO</span></div>
+    <div class="bk-row bk-green">
+      <span class="bk-label">Margem CASH</span>
+      <span class="bk-val" id="bMargemCash">—</span>
+    </div>
+    <div class="bk-row bk-neg">
+      <span class="bk-label">(−) Comissão Vendedor <span class="bk-badge badge-red" id="bComissaoPerc">5%</span></span>
+      <span class="bk-val" id="bComissao">—</span>
+    </div>
+    <div class="bk-row bk-green" style="background:var(--green-d)">
+      <span class="bk-label" style="font-weight:700;color:var(--green)">Margem Líquida</span>
+      <span class="bk-val" style="color:var(--green);font-size:14px" id="bLiquida">—</span>
+    </div>
+    <div class="bk-row bk-blue">
+      <span class="bk-label">Cash s/ PIS+COFINS <span class="bk-badge badge-blue" id="bPisCofinsPerc">3.65%</span></span>
+      <span class="bk-val" id="bCashPis">—</span>
+    </div>
+  </div>
+
+  <!-- Tabela de Faixas -->
+  <div class="faixa-card">
+    <div class="faixa-hdr">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Tabela de Referência — Instalação e Homologação por Faixa de kWp
+      <span style="font-size:9px;color:var(--t3);margin-left:auto">Clique numa linha para aplicar</span>
+    </div>
+    <table class="faixa-table">
+      <thead>
+        <tr>
+          <th>Faixa</th>
+          <th>R$/Wp Instalação</th>
+          <th style="text-align:right">Homologação</th>
+        </tr>
+      </thead>
+      <tbody id="faixaBody"></tbody>
+    </table>
+  </div>
+
+</div><!-- /res-panel -->
+</div><!-- /main -->
+
+<script>
+// ── TABELA DE FAIXAS ─────────────────────────────────────────
+const FAIXAS = [
+  { label:'0 a 3 kWp',   min:0,  max:3,  rsPorWp:0.84, homol:500  },
+  { label:'3 a 6 kWp',   min:3,  max:6,  rsPorWp:0.60, homol:500  },
+  { label:'6 a 9 kWp',   min:6,  max:9,  rsPorWp:0.50, homol:800  },
+  { label:'9 a 12 kWp',  min:9,  max:12, rsPorWp:0.44, homol:950  },
+  { label:'12 a 20 kWp', min:12, max:20, rsPorWp:0.42, homol:1050 },
+  { label:'20 a 45 kWp', min:20, max:45, rsPorWp:0.38, homol:1450 },
+];
+
+// Renderiza tabela de faixas
+(function(){
+  const tbody = document.getElementById('faixaBody');
+  FAIXAS.forEach((f,i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td>${f.label}</td>` +
+      `<td class="td-or">R$ ${f.rsPorWp.toFixed(2)}/Wp</td>` +
+      `<td class="td-val">R$ ${fmtN(f.homol)}</td>`;
+    tr.addEventListener('click', () => aplicarFaixa(f, tr));
+    tbody.appendChild(tr);
+  });
+})();
+
+function aplicarFaixa(f, tr) {
+  document.querySelectorAll('.faixa-table tr').forEach(r => r.classList.remove('active'));
+  tr.classList.add('active');
+  const kp = parseFloat(document.getElementById('kvp').value) || ((f.min + f.max) / 2);
+  const instVal = Math.round(kp * 1000 * f.rsPorWp);
+  document.getElementById('cInst').value = instVal;
+  document.getElementById('cHomol').value = f.homol;
+  calcular();
+}
+
+// ── AUTO FILL POR kWp ────────────────────────────────────────
+document.getElementById('kvp').addEventListener('input', function() {
+  const kp = parseFloat(this.value) || 0;
+  if (!kp) return;
+  const faixa = FAIXAS.find(f => kp > f.min && kp <= f.max) || FAIXAS[FAIXAS.length-1];
+  const instVal = Math.round(kp * 1000 * faixa.rsPorWp);
+  document.getElementById('cInst').value = instVal;
+  document.getElementById('cHomol').value = faixa.homol;
+  document.getElementById('instAuto').style.display = 'inline';
+  document.getElementById('homolAuto').style.display = 'inline';
+  // Highlight faixa na tabela
+  document.querySelectorAll('#faixaBody tr').forEach((tr, i) => {
+    tr.classList.toggle('active', FAIXAS[i] === faixa);
+  });
+  calcular();
+});
+
+// ── TIPO SISTEMA ─────────────────────────────────────────────
+document.getElementById('tipo').addEventListener('change', function() {
+  document.getElementById('cBatWrap').style.display = this.value === 'hibrido' ? '' : 'none';
+  document.getElementById('bBatRow').style.display = this.value === 'hibrido' ? '' : 'none';
+  calcular();
+});
+// init
+document.getElementById('cBatWrap').style.display = 'none';
+document.getElementById('bBatRow').style.display = 'none';
+
+// ── CUSTO FINANCEIRO — mostra entrada % ──────────────────────
+document.getElementById('pFinCusto').addEventListener('input', function() {
+  document.getElementById('entradaWrap').style.display =
+    parseFloat(this.value) > 0 ? '' : 'none';
+  calcular();
+});
+
+// ── SLIDERS ──────────────────────────────────────────────────
+document.getElementById('pMargem').addEventListener('input', function() {
+  document.getElementById('margemVal').textContent = this.value + '%';
+  calcular();
+});
+document.getElementById('pComissao').addEventListener('input', function() {
+  document.getElementById('comissaoVal').textContent = this.value + '%';
+  calcular();
+});
+document.getElementById('pEntrada').addEventListener('input', function() {
+  document.getElementById('entradaVal').textContent = this.value + '%';
+  calcular();
+});
+
+// ── INPUTS GERAL ────────────────────────────────────────────
+document.querySelectorAll('.fi,.fsel').forEach(el => {
+  el.addEventListener('input', calcular);
+  el.addEventListener('change', calcular);
+});
+
+// ── CÁLCULO PRINCIPAL ────────────────────────────────────────
+function calcular() {
+  const tipo = document.getElementById('tipo').value;
+  const cEquip   = v('cEquip');
+  const cBat     = tipo === 'hibrido' ? v('cBat') : 0;
+  const cInst    = v('cInst');
+  const cHomol   = v('cHomol');
+  const cFrete   = v('cFrete');
+  const pPosVenda  = v('pPosVenda') / 100;
+  const pImpostos  = v('pImpostos') / 100;
+  const pFinCusto  = v('pFinCusto') / 100;
+  const pEntrada   = v('pEntrada') / 100;
+  const pMargem    = v('pMargem') / 100;
+  const pComissao  = v('pComissao') / 100;
+  const pPisCofins = v('pPisCofins') / 100;
+
+  // Custo direto
+  const custoDireto = cEquip + cBat + cInst + cHomol + cFrete;
+  const posVendaVal = custoDireto * pPosVenda;
+  const custoTotal  = custoDireto + posVendaVal;
+
+  // Custo financeiro efetivo como % do preço
+  const finEfetivo = (1 - pEntrada) * pFinCusto;
+
+  // Preço: custo_total = preço × (1 - impostos - margem - fin_efetivo)
+  const divisor = 1 - pImpostos - pMargem - finEfetivo;
+
+  const alertEl = document.getElementById('alertWarn');
+  if (divisor <= 0) {
+    alertEl.classList.add('show');
+    resetUI();
+    return;
+  }
+  alertEl.classList.remove('show');
+
+  const preco        = custoTotal / divisor;
+  const impostosVal  = preco * pImpostos;
+  const finVal       = preco * finEfetivo;
+  const margemCash   = preco * pMargem;
+  const comissaoVal  = preco * pComissao;
+  const margemLiq    = margemCash - comissaoVal;
+  const margemLiqPerc = margemLiq / preco;
+  const cashPis      = margemLiq * (1 - pPisCofins);
+
+  // ── Atualiza KPIs ──
+  set('kPreco',  fmtR(preco));
+  set('kCustoSub', 'Custo: ' + fmtR(custoTotal));
+  set('kMargem', fmtR(margemCash));
+  set('kMargemPerc', fmtPerc(pMargem) + ' do preço');
+  set('kLiquida', fmtR(margemLiq));
+  set('kLiquidaPerc', 'após comissão — ' + fmtPerc(margemLiqPerc) + ' do preço');
+
+  // ── Gauge ──
+  const gaugePerc = Math.min(Math.max(margemLiqPerc * 100, 0), 60);
+  const gaugePct  = (gaugePerc / 60) * 100;
+  const gaugeColor = gaugePerc < 10 ? 'var(--red)' : gaugePerc < 20 ? 'var(--yellow)' : 'var(--green)';
+  const gaugeEl = document.getElementById('gaugeFill');
+  gaugeEl.style.width = gaugePct + '%';
+  gaugeEl.style.background = gaugeColor;
+  set('gaugeLabel', fmtPerc(margemLiqPerc) + ' margem líquida');
+  set('gaugeStatus',
+    gaugePerc < 10 ? '⚠️ Baixa' :
+    gaugePerc < 20 ? '⚡ Moderada' : '✅ Saudável'
+  );
+
+  // ── Breakdown ──
+  set('bEquip',       fmtR(cEquip));
+  set('bBat',         fmtR(cBat));
+  set('bInst',        fmtR(cInst));
+  set('bHomol',       fmtR(cHomol));
+  set('bFrete',       fmtR(cFrete));
+  set('bPosVenda',    fmtR(posVendaVal));
+  set('bPosVendaPerc', fmtPerc(pPosVenda));
+  set('bCustoTotal',  fmtR(custoTotal));
+  set('bPreco',       fmtR(preco));
+  set('bImpostos',    fmtR(impostosVal));
+  set('bImpostosPerc', fmtPerc(pImpostos));
+  set('bFin',         fmtR(finVal));
+  set('bFinPercLabel', pFinCusto > 0 ? fmtPerc(finEfetivo) + ' efetivo' : '');
+  document.getElementById('bFinRow').style.display = pFinCusto > 0 ? '' : 'none';
+  set('bMargemCash',  fmtR(margemCash));
+  set('bComissao',    fmtR(comissaoVal));
+  set('bComissaoPerc', fmtPerc(pComissao));
+  set('bLiquida',     fmtR(margemLiq));
+  set('bCashPis',     fmtR(cashPis));
+  set('bPisCofinsPerc', fmtPerc(pPisCofins));
+}
+
+function resetUI() {
+  ['kPreco','kMargem','kLiquida','bEquip','bBat','bInst','bHomol','bFrete',
+   'bPosVenda','bCustoTotal','bPreco','bImpostos','bFin','bMargemCash',
+   'bComissao','bLiquida','bCashPis'].forEach(id => set(id, '—'));
+  document.getElementById('gaugeFill').style.width = '0%';
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function set(id, val) { const el = document.getElementById(id); if(el) el.textContent = val; }
+function fmtR(n) {
+  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtN(n) { return n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmtPerc(n) { return (n*100).toFixed(1) + '%'; }
+
+// Inicia
+calcular();
+</script>
+</body>
+</html>
