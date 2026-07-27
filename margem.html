@@ -312,9 +312,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       <div class="an-sub">s/ faturamento</div>
     </div>
     <div class="an-card">
-      <div class="an-label">Margem Bruta Aplicada</div>
+      <div class="an-label">Margem CASH</div>
       <div class="an-val" id="anMargemAplicada">—</div>
-      <div class="an-sub" id="anMargemSub">sobre o preço</div>
+      <div class="an-sub" id="anMargemSub">após gestão OP</div>
     </div>
     <div class="an-card">
       <div class="an-label">Equipamentos / Preço</div>
@@ -399,11 +399,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       <span class="bk-pct" id="bCustoTotalPct" style="color:var(--blue);font-weight:800">—</span>
     </div>
 
-    <div class="bk-cols bk-section">DEDUÇÕES DO PREÇO</div>
+    <div class="bk-cols bk-section">CASCATA DO RESULTADO</div>
     <div class="bk-cols bk-total">
       <span class="bk-label">PREÇO DE VENDA</span>
       <span class="bk-val" id="bPreco">—</span>
       <span class="bk-pct" style="color:var(--or);font-weight:800">100%</span>
+    </div>
+    <div class="bk-cols bk-neg">
+      <span class="bk-label">(−) Custo Direto</span>
+      <span class="bk-val" id="bCustoDeducao">—</span>
+      <span class="bk-pct" id="bCustoDeducaoPct">—</span>
     </div>
     <div class="bk-cols bk-neg">
       <span class="bk-label">(−) Impostos<span class="bk-badge badge-red" id="bImpostosPerc">—</span></span>
@@ -415,25 +420,23 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       <span class="bk-val" id="bFin">—</span>
       <span class="bk-pct" id="bFinPct">—</span>
     </div>
-
-    <div class="bk-cols bk-section">RESULTADO — MARGEM BRUTA (CASH)</div>
-    <div class="bk-cols bk-green" style="background:rgba(34,197,94,.05)">
-      <span class="bk-label" style="font-weight:700;color:var(--green)">Margem CASH</span>
-      <span class="bk-val" id="bMargemCash" style="color:var(--green)">—</span>
-      <span class="bk-pct" id="bMargemCashPct" style="color:var(--green);font-weight:800">—</span>
-    </div>
-    <div class="bk-cols">
-      <span class="bk-label">(−) Gestão OP / Pós-venda<span class="bk-badge badge-yellow" id="bPosVendaPerc">—</span><span style="font-size:9px;color:var(--t3);margin-left:4px">da margem bruta</span></span>
+    <div class="bk-cols bk-neg" style="border-bottom:1px solid rgba(251,191,36,.25)">
+      <span class="bk-label">(−) Gestão OP<span class="bk-badge badge-yellow" id="bPosVendaPerc">—</span><span style="font-size:9px;color:var(--t3);margin-left:4px">fixo — 20% da margem bruta</span></span>
       <span class="bk-val" id="bPosVenda">—</span>
       <span class="bk-pct" id="bPosVendaPct">—</span>
     </div>
+    <div class="bk-cols" style="background:rgba(34,197,94,.08);border-top:2px solid rgba(34,197,94,.35)">
+      <span class="bk-label" style="font-weight:700;color:var(--green)">= MARGEM CASH</span>
+      <span class="bk-val" id="bMargemCash" style="color:var(--green);font-size:14px;font-weight:800">—</span>
+      <span class="bk-pct" id="bMargemCashPct" style="color:var(--green);font-weight:800;font-size:12px">—</span>
+    </div>
     <div class="bk-cols bk-neg">
-      <span class="bk-label">(−) Comissão Vendedor<span class="bk-badge badge-red" id="bComissaoPerc">—</span><span style="font-size:9px;color:var(--t3);margin-left:4px">do saldo após gestão OP</span></span>
+      <span class="bk-label">(−) Comissão Vendedor<span class="bk-badge badge-red" id="bComissaoPerc">—</span><span style="font-size:9px;color:var(--t3);margin-left:4px">s/ Margem CASH</span></span>
       <span class="bk-val" id="bComissao">—</span>
       <span class="bk-pct" id="bComissaoPct">—</span>
     </div>
-    <div class="bk-cols" style="background:var(--purple-d);border-top:1px solid rgba(167,139,250,.2)">
-      <span class="bk-label" style="font-weight:700;color:var(--purple)">✦ Margem Líquida Final</span>
+    <div class="bk-cols" style="background:var(--purple-d);border-top:2px solid rgba(167,139,250,.35)">
+      <span class="bk-label" style="font-weight:700;color:var(--purple)">= MARGEM LÍQUIDA FINAL</span>
       <span class="bk-val" id="bLiquida" style="color:var(--purple);font-size:15px;font-weight:800">—</span>
       <span class="bk-pct" id="bLiquidaPct" style="color:var(--purple);font-weight:800;font-size:12px">—</span>
     </div>
@@ -589,16 +592,16 @@ function calcular() {
   set('kCustoSub',     'Custo: ' + fmtR(custoDireto));
   set('kCusto',        fmtR(custoDireto));
   set('kCustoPercSub', fmtPerc(p(custoDireto)) + ' do preço');
-  set('kMargem',       fmtR(margemBruta));
-  set('kMargemPerc',   fmtPerc(pMargemEfetiva) + ' do preço');
+  set('kMargem',       fmtR(aposGestao));
+  set('kMargemPerc',   fmtPerc(aposGestao / preco) + ' do preço');
   set('kLiquida',      fmtR(margemLiq));
   set('kLiquidaPerc',  fmtPerc(margemLiqPerc) + ' do preço');
 
   // Análise rápida
   set('anInstCusto',    custoDireto > 0 ? fmtPerc(cInst / custoDireto) : '—');
   set('anInstPreco',    fmtPerc(p(cInst)));
-  set('anMargemAplicada', fmtPerc(pMargemEfetiva));
-  set('anMargemSub',    modoPrecoAlvo ? 'margem efetiva (preço fixo)' : 'margem alvo aplicada');
+  set('anMargemAplicada', fmtPerc(aposGestao / preco));
+  set('anMargemSub',    modoPrecoAlvo ? 'margem CASH efetiva (preço fixo)' : 'margem CASH s/ preço');
   set('anEquipPreco',   fmtPerc(p(cEquip + cBat)));
 
   // Stacked bar
@@ -642,7 +645,8 @@ function calcular() {
   set('bFin',           fmtR(finVal));      set('bFinPct',        fmtPerc(p(finVal)));
   set('bFinPercLabel',  pFinCusto > 0 ? fmtPerc(finEfetivo) + ' ef.' : '');
   document.getElementById('bFinRow').style.display = pFinCusto > 0 ? '' : 'none';
-  set('bMargemCash',    fmtR(margemBruta)); set('bMargemCashPct', fmtPerc(pMargemEfetiva));
+  set('bCustoDeducao',  fmtR(custoDireto)); set('bCustoDeducaoPct', fmtPerc(p(custoDireto)));
+  set('bMargemCash',    fmtR(aposGestao)); set('bMargemCashPct', fmtPerc(aposGestao / preco));
   set('bPosVenda',      fmtR(posVendaVal)); set('bPosVendaPct',   fmtPerc(p(posVendaVal)));
   set('bPosVendaPerc',  fmtPerc(pPosVenda));
   set('bComissao',      fmtR(comissaoVal)); set('bComissaoPct',   fmtPerc(p(comissaoVal)));
@@ -659,8 +663,9 @@ function resetUI() {
    'bPreco','bImpostos','bFin','bMargemCash','bPosVenda',
    'bComissao','bLiquida','bCashPis'].forEach(id => set(id, '—'));
   ['bEquipPct','bBatPct','bInstPct','bHomolPct','bFretePct','bCustoTotalPct',
-   'bImpostosPct','bFinPct','bMargemCashPct','bPosVendaPct',
+   'bCustoDeducaoPct','bImpostosPct','bFinPct','bMargemCashPct','bPosVendaPct',
    'bComissaoPct','bLiquidaPct','bCashPisPct'].forEach(id => set(id, '—'));
+  set('bCustoDeducao', '—');
   ['segEquip','segInst','segHomol','segImpostos','segGestao','segComissao','segLiquida']
     .forEach(id => setSeg(id, 0));
   document.getElementById('gaugeFill').style.width = '0%';
