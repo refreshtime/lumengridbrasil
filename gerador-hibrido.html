@@ -1157,19 +1157,17 @@ function generateProposal(){
         <div style="font-size:8px;color:var(--lmuted);font-style:italic;border-top:1px solid rgba(232,100,26,.15);padding-top:8px;margin-top:8px">Projeção estimada. Resultados reais podem variar conforme consumo, tarifas e desempenho do sistema.</div>
       </div>`:''}
 
+      <!-- Gráfico mês a mês (conta antes vs depois) -->
+      ${buildChart(bill,genKwhNum,tarifa,minKwh,ecoMonthly)}
+
       <!-- Impacto ambiental -->
       ${co2>0?`
-      <div style="background:rgba(39,174,96,.06);border:1px solid rgba(39,174,96,.25);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:16px">
-        <div style="font-size:32px">🌱</div>
+      <div style="background:rgba(39,174,96,.06);border:1px solid rgba(39,174,96,.25);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:28px">🌱</div>
         <div>
           <div style="font-size:11px;font-weight:800;color:#1a7a3c;margin-bottom:2px">Impacto Ambiental Positivo</div>
-          <div style="font-size:11px;color:#2d8a50;line-height:1.5">Seu sistema evitará a emissão de <strong>${(co2/1000).toFixed(1)} ton de CO₂</strong> por ano — equivalente ao plantio de aproximadamente <strong>${co2Arvores} árvores</strong>.</div>
+          <div style="font-size:11px;color:#2d8a50;line-height:1.5">Seu sistema evitará a emissão de <strong>${(co2/1000).toFixed(1)} ton de CO₂</strong> por ano — equivalente a aproximadamente <strong>${co2Arvores} árvores</strong> plantadas.</div>
         </div>
-      </div>`:''}
-
-      ${paybackStr?`<div style="background:#fff;border:1.5px solid var(--lborder);border-left:4px solid var(--or);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-        <div style="font-size:11px;color:var(--lmuted);font-weight:600">Retorno estimado do investimento</div>
-        <div style="font-size:15px;font-weight:900;color:var(--or)">${paybackStr}</div>
       </div>`:''}
     </div>
     ${footer(today)}
