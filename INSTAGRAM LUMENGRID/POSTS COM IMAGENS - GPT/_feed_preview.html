@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Preview do Feed Instagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a10; font-family: 'DM Sans', sans-serif; color: #FAFAFA; padding: 48px; }
+
+h1 { font-family: 'Space Grotesk', sans-serif; font-size: 20px; color: #F26522; margin-bottom: 4px; }
+.intro { font-size: 13px; color: rgba(250,250,250,.4); margin-bottom: 48px; }
+
+/* Grid 3 colunas — simula perfil Instagram */
+.feed-grid { display: grid; grid-template-columns: repeat(3, 220px); gap: 3px; margin-bottom: 48px; }
+
+.post {
+  width: 220px; height: 275px;
+  position: relative; overflow: hidden;
+  cursor: default; border-radius: 2px;
+}
+
+/* Template A: sem borda */
+.tmpl-a { background: #161616; }
+/* Template B: com borda laranja */
+.tmpl-b { background: #161616; outline: 2.5px solid rgba(242,101,34,.65); outline-offset: -6px; }
+/* Slot vazio */
+.slot-empty { background: rgba(250,250,250,.02); border: 1px dashed rgba(250,250,250,.08); display: flex; align-items: center; justify-content: center; }
+
+/* Layout type badge — canto superior direito */
+.badge-layout {
+  position: absolute; top: 8px; right: 8px; z-index: 10;
+  font-family: 'Space Grotesk', sans-serif; font-size: 7px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase; padding: 2px 6px;
+  border-radius: 2px;
+}
+.lyt-tipo { background: rgba(180,120,255,.22); color: rgba(180,120,255,.90); }
+.lyt-hero { background: rgba(255,255,255,.10); color: rgba(255,255,255,.55); }
+.lyt-edit { background: rgba(80,160,255,.18); color: rgba(80,160,255,.90); }
+.lyt-grid { background: rgba(80,220,140,.18); color: rgba(80,220,140,.90); }
+.lyt-carr { background: rgba(242,101,34,.18); color: rgba(242,101,34,.90); }
+
+/* Peso visual badge — canto superior esquerdo (quando não há carrossel dots) */
+.badge-peso {
+  position: absolute; top: 8px; left: 8px; z-index: 10;
+  font-family: 'Space Grotesk', sans-serif; font-size: 7px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; padding: 2px 6px;
+  border-radius: 2px;
+}
+.peso-heavy { background: rgba(250,50,50,.15); color: rgba(250,130,130,.80); }
+.peso-light { background: rgba(250,250,250,.06); color: rgba(250,250,250,.35); }
+
+/* Carrossel dots */
+.carousel-badge {
+  position: absolute; top: 10px; left: 10px; z-index: 10;
+  display: flex; gap: 3px;
+}
+.carousel-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(250,250,250,.30); }
+.carousel-dot.active { background: #F26522; }
+
+/* Status badge */
+.badge-new {
+  position: absolute; top: 26px; right: 8px; z-index: 10;
+  font-family: 'Space Grotesk', sans-serif; font-size: 7px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; padding: 2px 6px;
+  border-radius: 2px; background: rgba(242,200,34,.22); color: rgba(242,200,34,.90);
+}
+
+/* Overlay para posts com foto */
+.overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to bottom, rgba(10,10,16,.45) 0%, rgba(10,10,16,0) 35%, rgba(10,10,16,.90) 100%);
+}
+.post-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px; z-index: 5; }
+.post-content-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 5; text-align: center; }
+
+.post-num { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: rgba(242,101,34,.65); letter-spacing: 1px; margin-bottom: 4px; }
+.post-eyebrow { font-family: 'DM Sans', sans-serif; font-size: 8px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(242,101,34,.75); margin-bottom: 5px; }
+.post-headline { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: #FAFAFA; line-height: 1.35; }
+.post-headline-orange { color: #F26522; }
+.post-headline-muted { color: rgba(250,250,250,.38); }
+
+/* Logo tiny */
+.mini-logo { position: absolute; bottom: 14px; right: 14px; z-index: 6; display: flex; align-items: center; gap: 4px; }
+.mini-icon { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle, #F26522 30%, rgba(242,101,34,.3) 100%); }
+.mini-wm { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 7px; text-transform: uppercase; }
+.mini-wm .l { color: #F26522; }.mini-wm .g { color: #FAFAFA; }
+
+/* Fundos simulados */
+.bg-manifesto { background: radial-gradient(ellipse at 50% 130%, rgba(242,101,34,.20) 0%, rgba(242,101,34,.06) 35%, #08080d 60%); }
+.bg-historia  { background: #111118; }
+.bg-confianca { background: #0e0e16; }
+.bg-solucoes  { background: linear-gradient(135deg, #0e1018 0%, #12101c 100%); }
+.bg-apagaluz  { background: rgba(20,18,26,1); }
+.bg-apagao    { background: #060609; }
+.bg-ongrid    { background: #12121a; }
+.bg-litio     { background: #141418; }
+.bg-solar     { background: rgba(28,26,22,1); }
+.bg-hibrido   { background: linear-gradient(108deg, #060609 44%, rgba(22,11,3,1) 100%); }
+.bg-independ  { background: rgba(20,18,16,1); }
+.bg-bateria   { background: radial-gradient(ellipse at 50% 44%,rgba(242,101,34,.10) 0%,#161616 65%); }
+.bg-wallbox   { background: rgba(18,16,14,1); }
+.bg-casaint   { background: #0c0c10; }
+.bg-trabalho  { background: #0e0e16; }
+
+/* Separador de linha entre capítulos */
+.chapter-label { grid-column: 1 / -1; padding: 12px 0 6px; }
+.chapter-label span { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: rgba(242,101,34,.40); }
+
+/* Legenda */
+.legend { display: flex; gap: 20px; margin-top: 28px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: rgba(250,250,250,.40); }
+.legend-swatch { width: 24px; height: 10px; border-radius: 2px; }
+
+/* Seção de planejamento */
+.plan { margin-top: 52px; }
+.plan h2 { font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: rgba(250,250,250,.30); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 20px; border-top: 1px solid rgba(250,250,250,.06); padding-top: 20px; }
+.plan-row { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+.plan-num { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700; color: #F26522; min-width: 26px; padding-top: 1px; }
+.plan-main { font-size: 13px; color: rgba(250,250,250,.58); line-height: 1.5; }
+.plan-type { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 1px; color: rgba(242,101,34,.80); background: rgba(242,101,34,.12); border-radius: 3px; padding: 2px 7px; margin-right: 7px; text-transform: uppercase; }
+.plan-layout { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 1px; color: rgba(180,120,255,.80); background: rgba(180,120,255,.10); border-radius: 3px; padding: 2px 7px; margin-right: 7px; text-transform: uppercase; }
+.plan-file { font-family: 'Courier New', monospace; font-size: 11px; color: rgba(250,250,250,.25); margin-top: 3px; }
+.plan-new { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1px; color: rgba(242,200,34,.85); background: rgba(242,200,34,.12); border-radius: 3px; padding: 2px 7px; margin-right: 7px; text-transform: uppercase; }
+.plan-ok { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1px; color: rgba(80,220,140,.80); background: rgba(80,220,140,.10); border-radius: 3px; padding: 2px 7px; margin-right: 7px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<h1>Preview do Feed — LumenGrid</h1>
+<p class="intro">15 posts · Grade 3×5 · Sistema de layouts variados · Peso alternado · Nunca repetir layout consecutivo</p>
+
+<div class="feed-grid">
+
+  <!-- ── CAPÍTULO 1 — QUEM SOMOS ─────────────────────────────────────── -->
+  <div class="chapter-label"><span>▸ capítulo 1 — quem somos</span></div>
+
+  <!-- POST 01 · TIPOGRAFIA · Pesado · Centro -->
+  <div class="post tmpl-a bg-manifesto">
+    <div class="badge-layout lyt-tipo">Tipografia</div>
+    <div class="badge-new">🆕 novo</div>
+    <div class="post-content-center">
+      <div class="post-num">01 · post único</div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;color:rgba(250,250,250,.30);line-height:1.3;margin:0 0 6px;">Não vendemos placas solares.</p>
+      <div style="width:18px;height:2px;background:#F26522;border-radius:2px;margin:6px auto;"></div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:800;color:#F26522;line-height:1.2;margin:0;">Projetamos<br>independência<br>energética.</p>
+    </div>
+    <div class="badge-peso peso-heavy">Pesado</div>
+  </div>
+
+  <!-- POST 02 · CARROSSEL · Leve · Centro por card -->
+  <div class="post tmpl-b bg-historia">
+    <div class="badge-layout lyt-carr">Carrossel</div>
+    <div class="badge-new">🆕 novo</div>
+    <div class="carousel-badge"><span class="carousel-dot active"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span></div>
+    <div class="post-content-center">
+      <div class="post-num">02 · carrossel</div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:rgba(250,250,250,.70);line-height:1.3;margin:0;">Toda história<br>evolui.</p>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#F26522;line-height:1.3;margin:4px 0 0;">A nossa<br>também.</p>
+    </div>
+    <div class="badge-peso peso-light">Leve</div>
+  </div>
+
+  <!-- POST 03 · GRID · Pesado · Esquerda + números -->
+  <div class="post tmpl-a bg-confianca">
+    <div class="badge-layout lyt-grid">Grid</div>
+    <div class="badge-new">🆕 novo</div>
+    <div class="post-content">
+      <div class="post-num">03 · post único</div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:600;color:rgba(250,250,250,.40);margin:0 0 8px;">Confiança se constrói com resultados.</p>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800;color:#F26522;line-height:1.1;margin:0 0 2px;">+8 anos</p>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;color:#FAFAFA;line-height:1.1;margin:0 0 6px;">+700 projetos</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:8px;color:rgba(250,250,250,.38);line-height:1.4;margin:0;">Atendimento consultivo.<br>Projetos personalizados.</p>
+    </div>
+    <div class="badge-peso peso-heavy">Pesado</div>
+  </div>
+
+  <!-- POST 04 · EDITORIAL · Leve · Centro -->
+  <div class="post tmpl-b bg-solucoes">
+    <div class="badge-layout lyt-edit">Editorial</div>
+    <div class="badge-new">🆕 novo</div>
+    <div class="post-content-center">
+      <div class="post-num">04 · post único</div>
+      <p style="font-family:'DM Sans',sans-serif;font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(242,101,34,.75);margin:0 0 8px;">▶ soluções</p>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#FAFAFA;line-height:1.3;margin:0 0 10px;">Tudo o que sua<br>energia precisa.</p>
+      <div style="display:flex;flex-direction:column;gap:4px;width:100%;">
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(242,101,34,.15);border:1px solid rgba(242,101,34,.40);flex-shrink:0;"></div><span style="font-size:8px;color:rgba(250,250,250,.55);">Energia Solar</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(242,101,34,.15);border:1px solid rgba(242,101,34,.40);flex-shrink:0;"></div><span style="font-size:8px;color:rgba(250,250,250,.55);">Sistemas Híbridos</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(242,101,34,.15);border:1px solid rgba(242,101,34,.40);flex-shrink:0;"></div><span style="font-size:8px;color:rgba(250,250,250,.55);">Baterias de Lítio</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(242,101,34,.15);border:1px solid rgba(242,101,34,.40);flex-shrink:0;"></div><span style="font-size:8px;color:rgba(250,250,250,.55);">Carregadores Veiculares</span></div>
+      </div>
+    </div>
+    <div class="badge-peso peso-light">Leve</div>
+  </div>
+
+  <!-- ── CAPÍTULO 2 — O FUTURO DA ENERGIA ────────────────────────────── -->
+  <div class="chapter-label"><span>▸ capítulo 2 — o futuro da energia</span></div>
+
+  <!-- POST 05 · CARROSSEL · Pesado · Base-esq (ex-Post03 Apaga a Luz) -->
+  <div class="post tmpl-a bg-apagaluz">
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 40%,rgba(0,0,0,.90) 100%);"></div>
+    <div class="badge-layout lyt-carr">Carrossel</div>
+    <div class="carousel-badge" style="z-index:10;"><span class="carousel-dot active"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span></div>
+    <div class="post-content" style="z-index:5;">
+      <div class="post-num">05 · carrossel</div>
+      <div class="post-eyebrow">▶ rewind anos 90</div>
+      <div class="post-headline">Apaga a luz!</div>
+    </div>
+    <div class="badge-peso peso-heavy">Pesado</div>
+  </div>
+
+  <!-- POST 06 · HERO · Pesado · Base-esq (Apagão) -->
+  <div class="post tmpl-b bg-apagao">
+    <div style="position:absolute;inset:0;z-index:1;background:radial-gradient(circle at 31% 55%,rgba(255,185,55,.20) 0%,transparent 10%);"></div>
+    <div class="badge-layout lyt-hero">Hero</div>
+    <div class="post-content" style="z-index:5;">
+      <div class="post-num">06 · post único</div>
+      <div class="post-eyebrow">▶ quando a luz acaba</div>
+      <div class="post-headline">Você só percebe o valor da energia quando ela acaba.</div>
+    </div>
+    <div class="badge-peso peso-heavy">Pesado</div>
+  </div>
+
+  <!-- ── CAPÍTULO 2 continua ─────────────────────────────────────────── -->
+
+  <!-- POST 07 · CARROSSEL · Leve · Centro (On-Grid vs Híbrido) -->
+  <div class="post tmpl-a bg-ongrid">
+    <div class="badge-layout lyt-carr">Carrossel</div>
+    <div class="carousel-badge"><span class="carousel-dot active"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span></div>
+    <div class="post-content-center">
+      <div class="post-num">07 · carrossel</div>
+      <div class="post-eyebrow">▶ a pergunta que vale dinheiro</div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:#FAFAFA;line-height:1.3;margin:6px 0 0;">On-Grid<br>ou Híbrido?</p>
+    </div>
+    <div class="badge-peso peso-light">Leve</div>
+  </div>
+
+  <!-- POST 08 · CARROSSEL · Pesado · Base-esq (Lítio) -->
+  <div class="post tmpl-b bg-litio">
+    <div class="badge-layout lyt-carr">Carrossel</div>
+    <div class="carousel-badge"><span class="carousel-dot active"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span></div>
+    <div class="post-content" style="z-index:5;">
+      <div class="post-num">08 · carrossel</div>
+      <div class="post-eyebrow">▶ a escolha das montadoras</div>
+      <div class="post-headline">Por que você ainda não escolheu o lítio para a sua casa?</div>
+    </div>
+    <div class="badge-peso peso-heavy">Pesado</div>
+  </div>
+
+  <!-- ── CAPÍTULO 3 — AS SOLUÇÕES ────────────────────────────────────── -->
+  <div class="chapter-label"><span>▸ capítulo 3 — as soluções</span></div>
+
+  <!-- POST 09 · HERO · Leve · Topo (Solar) -->
+  <div class="post tmpl-a bg-solar">
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(10,10,16,.65) 0%,rgba(10,10,16,0) 45%,rgba(10,10,16,.75) 100%);"></div>
+    <div class="badge-layout lyt-hero">Hero</div>
+    <div class="post-content" style="z-index:5;">
+      <div class="post-num">09 · post único</div>
+      <div class="post-eyebrow">▶ energia solar</div>
+      <div class="post-headline">O melhor investimento da sua casa pode estar em cima dela.</div>
+    </div>
+    <div class="badge-peso peso-light">Leve</div>
+  </div>
+
+  <!-- POST 10 · EDITORIAL · Pesado · Dividido (Híbrido) -->
+  <div class="post tmpl-b bg-hibrido">
+    <div style="position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 85% 55%,rgba(242,101,34,.15) 0%,transparent 50%);"></div>
+    <div style="position:absolute;top:0;bottom:0;left:44%;width:1px;z-index:2;background:linear-gradient(to bottom,transparent 8%,rgba(242,101,34,.30) 35%,rgba(242,101,34,.20) 65%,transparent 92%);"></div>
+    <div class="badge-layout lyt-edit">Editorial</div>
+    <div class="post-content" style="z-index:5;">
+      <div class="post-num">10 · post único</div>
+      <div class="post-eyebrow">▶ sistema híbrido</div>
+      <div class="post-headline"><span class="post-headline-muted">Quando a rua fica sem energia...</span><br><span>sua casa não precisa ficar.</span></div>
+    </div>
+    <div class="badge-peso peso-heavy">Pesado</div>
+  </div>
+
+  <!-- POST 11 · HERO · Leve · Base-esq (Independência) -->
+  <div class="post tmpl-a bg-independ">
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(10,10,16,.60) 0%,rgba(10,10,16,0) 35%,rgba(10,10,16,.92) 100%);"></div>
+    <div class="badge-layout lyt-hero">Hero</div>
+    <div class="post-content" style="z-index:5;">
+      <div class="post-num">11 · post único</div>
+      <div class="post-eyebrow">▶ independência energética</div>
+      <div class="post-headline">Quanto da sua vida ainda depende da concessionária?</div>
+    </div>
+    <div class="badge-peso peso-light">Leve</div>
+  </div>
+
+  <!-- POST 12 · TIPOGRAFIA · Pesado · Dividido (Bateria) -->
+  <div class="post tmpl-b bg-bateria">
+    <div class="badge-layout lyt-tipo">Tipografia</div>
+    <div class="post-content" style="z-index:5;">
+      <div class="post-num">12 · post único</div>
+      <div class="post-eyebrow">▶ bateria residencial</div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;color:rgba(250,250,250,.50);line-height:1.3;margin:0 0 4px;">Energia não vale apenas quando é gerada.</p>
+      <div style="width:14px;height:2px;background:#F26522;border-radius:1px;margin:4px 0;opacity:.70;"></div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;color:#F26522;line-height:1.3;margin:0;">Vale quando<br>continua disponível.</p>
+    </div>
+    <div class="badge-peso peso-heavy">Pesado</div>
+  </div>
+
+  <!-- POST 13 · HERO · Leve · Base (Wallbox) -->
+  <div class="post tmpl-a bg-wallbox">
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(10,10,16,.55) 0%,rgba(10,10,16,0) 26%,rgba(10,10,16,.90) 100%);"></div>
+    <div class="badge-layout lyt-hero">Hero</div>
+    <div class="post-content" style="z-index:5;">
+      <div class="post-num">13 · post único</div>
+      <div class="post-eyebrow">▶ wallbox solar</div>
+      <div class="post-headline">Imagine dirigir usando a energia do seu próprio telhado.</div>
+    </div>
+    <div class="badge-peso peso-light">Leve</div>
+  </div>
+
+  <!-- POST 14 · TIPOGRAFIA · Pesado · Centro (Casa Inteligente) -->
+  <div class="post tmpl-b bg-casaint">
+    <div style="position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 28% 65%,rgba(242,101,34,.08) 0%,transparent 50%);"></div>
+    <div class="badge-layout lyt-tipo">Tipografia</div>
+    <div class="post-content-center" style="z-index:5;">
+      <div class="post-num">14 · post único</div>
+      <div class="post-eyebrow">▶ casa inteligente</div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;color:rgba(250,250,250,.42);line-height:1.3;margin:6px 0 4px;">Casas inteligentes não economizam energia.</p>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:800;color:#F26522;line-height:1.3;margin:0;">Elas<br>administram energia.</p>
+    </div>
+    <div class="badge-peso peso-heavy">Pesado</div>
+  </div>
+
+  <!-- POST 15 · CARROSSEL · Leve · Centro (Como trabalhamos) -->
+  <div class="post tmpl-a bg-trabalho">
+    <div class="badge-layout lyt-carr">Carrossel</div>
+    <div class="badge-new">🆕 novo</div>
+    <div class="carousel-badge"><span class="carousel-dot active"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span><span class="carousel-dot"></span></div>
+    <div class="post-content-center">
+      <div class="post-num">15 · carrossel</div>
+      <div class="post-eyebrow">▶ nosso processo</div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:rgba(250,250,250,.70);line-height:1.35;margin:6px 0 0;">Cada projeto começa muito antes da instalação.</p>
+    </div>
+    <div class="badge-peso peso-light">Leve</div>
+  </div>
+
+</div>
+
+<!-- Legenda -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(180,120,255,.40);"></div>Tipografia</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(255,255,255,.20);"></div>Hero</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(80,160,255,.35);"></div>Editorial</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(80,220,140,.35);"></div>Grid</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(242,101,34,.45);"></div>Carrossel</div>
+  <div class="legend-item" style="margin-left:24px;"><div class="legend-swatch" style="background:rgba(250,50,50,.30);"></div>Pesado</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(250,250,250,.12);"></div>Leve</div>
+  <div class="legend-item" style="margin-left:24px;"><div class="legend-swatch" style="background:#1e1e22; outline:1.5px solid rgba(242,101,34,.65);"></div>Template B</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:rgba(242,200,34,.30);"></div>🆕 A produzir</div>
+</div>
+
+<!-- Plano de publicação -->
+<div class="plan">
+  <h2>Plano de publicação — 15 posts</h2>
+
+  <div class="plan-row"><div class="plan-num">01</div><div><div class="plan-main"><span class="plan-new">🆕 novo</span><span class="plan-layout">Tipografia · Pesado</span>Manifesto da marca — Não vendemos placas solares. Projetamos independência energética.</div><div class="plan-file">post01_manifesto.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">02</div><div><div class="plan-main"><span class="plan-new">🆕 novo</span><span class="plan-layout">Carrossel · Leve</span>Nossa história — +8 anos de trajetória, agora sob uma única marca.</div><div class="plan-file">post02_nossa_historia.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">03</div><div><div class="plan-main"><span class="plan-new">🆕 novo</span><span class="plan-layout">Grid · Pesado</span>Confiança — +8 anos, +700 projetos, atendimento consultivo, projetos personalizados.</div><div class="plan-file">post03_confianca.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">04</div><div><div class="plan-main"><span class="plan-new">🆕 novo</span><span class="plan-layout">Editorial · Leve</span>Soluções — Solar, Híbridos, Lítio, Wallbox, Projetos personalizados.</div><div class="plan-file">post04_solucoes.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">05</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Carrossel · Pesado</span>Apaga a luz! — nostalgia anos 90/2000</div><div class="plan-file">Post03_ApagaALuz.dc.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">06</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Hero · Pesado</span>Apagão — você só percebe o valor quando ela acaba · foto: bairro escuro / casa iluminada</div><div class="plan-file">post06_apagao.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">07</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Carrossel · Leve</span>On-Grid ou Híbrido? — comparativo educativo</div><div class="plan-file">post04_on_grid_vs_hibrido.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">08</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Carrossel · Pesado</span>Por que montadoras escolheram o lítio? — mesmo tech nos carros e na sua casa</div><div class="plan-file">post05_carro_eletrico_bateria_litio.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">09</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Hero · Leve</span>Energia Solar — melhor investimento no telhado · foto: casa moderna com painéis</div><div class="plan-file">post07_energia_solar.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">10</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Editorial · Pesado</span>Sistema Híbrido — quando a rua fica sem energia, sua casa não precisa ficar · foto: split casa iluminada</div><div class="plan-file">post08_sistema_hibrido.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">11</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Hero · Leve</span>Independência energética — quanto da sua vida depende da concessionária? · foto: família pôr do sol</div><div class="plan-file">post09_independencia_energetica.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">12</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Tipografia · Pesado</span>Bateria residencial — energia vale quando continua disponível · foto: bateria em destaque</div><div class="plan-file">post10_bateria_residencial.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">13</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Hero · Leve</span>Wallbox Solar — imagine dirigir com a energia do seu telhado · foto: carro carregando</div><div class="plan-file">post11_wallbox.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">14</div><div><div class="plan-main"><span class="plan-ok">✅ pronto</span><span class="plan-layout">Tipografia · Pesado</span>Casa inteligente — não economiza energia, administra energia · foto: residência premium</div><div class="plan-file">post12_casa_inteligente.html</div></div></div>
+
+  <div class="plan-row"><div class="plan-num">15</div><div><div class="plan-main"><span class="plan-new">🆕 novo</span><span class="plan-layout">Carrossel · Leve</span>Como trabalhamos — do diagnóstico ao pós-venda, 5 etapas</div><div class="plan-file">post15_como_trabalhamos.html</div></div></div>
+</div>
+
+</body>
+</html>

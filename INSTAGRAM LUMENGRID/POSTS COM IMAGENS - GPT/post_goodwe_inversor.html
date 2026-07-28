@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — GoodWe Inversores</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a10;display:flex;justify-content:center;padding:44px;}
+.li{height:58px;width:auto;object-fit:contain;filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9));}
+</style>
+</head>
+<body>
+<div style="width:1080px;height:1350px;position:relative;overflow:hidden;background:#08080d;">
+
+  <!-- ===== FUNDO: imagem completa sem corte ===== -->
+  <!-- contain garante que a imagem inteira apareça; o bg #08080d preenche o restante -->
+  <div style="position:absolute;inset:0;z-index:0;
+    background:url('../imagens/Inversor + bateria Goodwe.png') 28% center / auto 92% no-repeat, #08080d;"></div>
+
+  <!-- Gradiente escurecendo a metade direita para o texto ficar legível -->
+  <div style="position:absolute;inset:0;z-index:1;
+    background:linear-gradient(to right,
+      rgba(8,8,13,0) 0%,
+      rgba(8,8,13,0) 24%,
+      rgba(8,8,13,.55) 40%,
+      rgba(8,8,13,.88) 52%,
+      rgba(8,8,13,1) 64%,
+      rgba(8,8,13,1) 100%);"></div>
+
+  <!-- Gradiente topo (para a logo) -->
+  <div style="position:absolute;top:0;left:0;right:0;height:200px;z-index:2;
+    background:linear-gradient(to bottom,rgba(8,8,13,.70) 0%,rgba(8,8,13,0) 100%);"></div>
+
+  <!-- ===== MOLDURA LARANJA — padrão Template B ===== -->
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.65);pointer-events:none;"></div>
+
+  <!-- ===== LOGO — topo esquerdo ===== -->
+  <div style="position:absolute;top:72px;left:72px;display:flex;align-items:center;gap:12px;z-index:30;">
+    <img src="../imagens/logo-icone.png" alt="" class="li">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:baseline;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;text-shadow:0 2px 10px rgba(0,0,0,.95);">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;text-shadow:0 2px 10px rgba(0,0,0,.95);">GRID</span>
+      </div>
+      <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);text-shadow:0 2px 8px rgba(0,0,0,.95);">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <!-- ===== COLUNA DE TEXTO — direita, verticalmente centrada ===== -->
+  <div style="position:absolute;left:460px;right:68px;top:0;bottom:0;z-index:20;display:flex;flex-direction:column;justify-content:center;gap:0;">
+
+    <!-- Eyebrow -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:#F26522;margin:0 0 20px;opacity:.90;">▶ inversores goodwe</p>
+
+    <!-- Headline -->
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:800;color:#FAFAFA;line-height:1.08;letter-spacing:-1px;margin:0 0 8px;">Tecnologia<br>que <span style="color:#F26522;">lidera<br>o mundo.</span></p>
+
+    <!-- Traço laranja -->
+    <div style="width:44px;height:3px;background:#F26522;border-radius:2px;margin:26px 0 30px;"></div>
+
+    <!-- Feature 1 -->
+    <div style="margin-bottom:26px;padding-left:16px;border-left:3px solid rgba(242,101,34,.55);">
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#F26522;margin:0 0 7px;">Referência em Inversores</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:400;color:rgba(250,250,250,.82);line-height:1.55;margin:0;">Desde 2021, reconhecida pela <span style="color:#FAFAFA;font-weight:500;">Wood Mackenzie</span> entre as três maiores fornecedoras globais.</p>
+    </div>
+
+    <!-- Feature 2 -->
+    <div style="margin-bottom:26px;padding-left:16px;border-left:3px solid rgba(242,101,34,.55);">
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#F26522;margin:0 0 7px;">Escala Global</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:400;color:rgba(250,250,250,.82);line-height:1.55;margin:0;"><span style="color:#FAFAFA;font-weight:500;">Mais de 100 GW</span> instalados em mais de 100 países.</p>
+    </div>
+
+    <!-- Feature 3 -->
+    <div style="margin-bottom:26px;padding-left:16px;border-left:3px solid rgba(242,101,34,.55);">
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#F26522;margin:0 0 7px;">Integração Flexível</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:400;color:rgba(250,250,250,.82);line-height:1.55;margin:0;">Integração ao sistema solar já existente.</p>
+    </div>
+
+    <!-- Feature 4 -->
+    <div style="margin-bottom:36px;padding-left:16px;border-left:3px solid #F26522;">
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#F26522;margin:0 0 7px;">Suporte LumenGrid</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:400;color:rgba(250,250,250,.82);line-height:1.55;margin:0;">Suporte técnico e substituição em até <span style="color:#FAFAFA;font-weight:500;">24 horas.</span><sup style="font-size:12px;color:rgba(250,250,250,.40);">*</sup></p>
+    </div>
+
+    <!-- Linha divisora -->
+    <div style="height:1px;background:linear-gradient(to right,rgba(242,101,34,.50) 0%,rgba(242,101,34,.10) 70%,transparent 100%);margin-bottom:28px;"></div>
+
+    <!-- CTA -->
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.1px;color:#FAFAFA;margin:0 0 12px;line-height:1.2;">A melhor escolha para sua<br><span style="color:#F26522;">independência energética.</span></p>
+
+    <!-- Nota -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:rgba(250,250,250,.28);margin:0;">*Após diagnóstico.</p>
+
+  </div>
+
+</div>
+</body>
+</html>

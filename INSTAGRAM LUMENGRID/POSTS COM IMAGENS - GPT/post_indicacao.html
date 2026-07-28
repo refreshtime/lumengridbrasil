@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Indicação</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body { margin:0; background:#0a0a0a; display:flex; justify-content:center; padding:44px; }
+.li  { height:58px; width:auto; object-fit:contain;
+       filter:drop-shadow(0 0 18px rgba(242,101,34,.80))
+              drop-shadow(0 0 7px rgba(242,101,34,.55))
+              drop-shadow(0 2px 10px rgba(0,0,0,.9)); }
+</style>
+</head>
+<body>
+
+<div style="width:1080px;height:1350px;position:relative;overflow:hidden;">
+
+  <!-- ── FOTO ── -->
+  <div style="position:absolute;inset:0;z-index:0;
+    background:url('../imagens/PARCERIA .png') center 25%/cover no-repeat;"></div>
+
+  <!-- ── OVERLAY "SANDUÍCHE"
+       Topo escuro  → texto do topo legível (logo + badge + headline)
+       Meio claro   → rostos e aperto de mão aparecem
+       Fundo escuro → R$500 + steps + CTA legíveis
+  ── -->
+  <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,
+    rgba(6,6,6,.92)  0%,
+    rgba(6,6,6,.86) 10%,
+    rgba(6,6,6,.68) 22%,
+    rgba(6,6,6,.18) 34%,
+    rgba(6,6,6,.04) 44%,
+    rgba(6,6,6,.04) 83%,
+    rgba(6,6,6,.72) 90%,
+    rgba(6,6,6,.97) 100%
+  );"></div>
+
+  <!-- ── CANTOS DECORATIVOS ── -->
+  <div style="position:absolute;top:32px;left:32px;width:28px;height:28px;border-top:2px solid rgba(242,101,34,.75);border-left:2px solid rgba(242,101,34,.75);z-index:20;"></div>
+  <div style="position:absolute;top:32px;right:32px;width:28px;height:28px;border-top:2px solid rgba(242,101,34,.75);border-right:2px solid rgba(242,101,34,.75);z-index:20;"></div>
+  <div style="position:absolute;bottom:24px;left:32px;width:28px;height:28px;border-bottom:2px solid rgba(242,101,34,.75);border-left:2px solid rgba(242,101,34,.75);z-index:20;"></div>
+  <div style="position:absolute;bottom:24px;right:32px;width:28px;height:28px;border-bottom:2px solid rgba(242,101,34,.75);border-right:2px solid rgba(242,101,34,.75);z-index:20;"></div>
+
+  <!-- ── FAIXA RODAPÉ ── -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:7px;z-index:30;
+    background:linear-gradient(to right,#C94E0F,#F26522,#C94E0F);"></div>
+
+  <!-- ═══════════════════════════════════════════
+       ZONA TOPO — logo + badge + headline + sub
+       (ficam no escuro do céu, acima dos rostos)
+  ════════════════════════════════════════════ -->
+
+  <!-- LOGO -->
+  <div style="position:absolute;top:72px;left:88px;display:flex;align-items:center;gap:12px;z-index:20;">
+    <img src="../imagens/logo-icone.png" alt="" class="li">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:baseline;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+      </div>
+      <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <!-- BADGE -->
+  <div style="position:absolute;top:180px;left:88px;z-index:20;
+    display:inline-flex;align-items:center;gap:10px;
+    border:1px solid rgba(242,101,34,.70);padding:8px 22px;">
+    <div style="width:5px;height:5px;border-radius:50%;background:#F26522;"></div>
+    <span style="font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:#F26522;">Programa de Indicação</span>
+    <div style="width:5px;height:5px;border-radius:50%;background:#F26522;"></div>
+  </div>
+
+  <!-- HEADLINE -->
+  <div style="position:absolute;top:242px;left:88px;right:88px;z-index:20;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:72px;font-weight:800;color:#FAFAFA;line-height:1.0;letter-spacing:-2px;margin:0;">Energia boa</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:72px;font-weight:800;color:#F26522;line-height:1.0;letter-spacing:-2px;margin:0 0 20px;">se compartilha.</p>
+    <!-- linha divisória suave -->
+    <div style="width:52px;height:3px;background:linear-gradient(to right,#C94E0F,#F26522);margin-bottom:20px;"></div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:400;color:#FAFAFA;line-height:1.55;margin:0;text-shadow:0 2px 16px rgba(0,0,0,.95),0 1px 6px rgba(0,0,0,1);">
+      Indique alguém para um projeto solar com a LumenGrid<br>
+      e, após a contratação, você recebe:
+    </p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       ZONA FUNDO — R$500 + steps + benefit + CTA
+       (escuro a partir de ~63%, rostos já ficaram acima)
+  ════════════════════════════════════════════ -->
+
+  <div style="position:absolute;top:860px;left:72px;right:72px;z-index:20;">
+
+    <!-- DESTAQUE R$ 500 -->
+    <div style="display:flex;align-items:stretch;border-left:5px solid #F26522;margin-bottom:24px;">
+      <div style="background:rgba(10,6,2,.78);border:1px solid rgba(242,101,34,.45);border-left:none;padding:20px 30px;flex:1;">
+        <span style="font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.80);display:block;margin-bottom:2px;">Você recebe</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:76px;font-weight:800;color:#F26522;line-height:.92;letter-spacing:-2px;display:block;">R$ 500</span>
+        <span style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:rgba(250,250,250,.50);display:block;margin-top:6px;letter-spacing:.5px;">direto no seu Pix · após a contratação</span>
+      </div>
+    </div>
+
+    <!-- 3 PASSOS -->
+    <div style="display:flex;gap:0;margin-bottom:22px;">
+
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.12);padding:18px 10px;">
+        <div style="width:32px;height:32px;border-radius:50%;border:1.5px solid #F26522;background:rgba(242,101,34,.14);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#F26522;">1</div>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#FAFAFA;">Você indica</span>
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:rgba(250,250,250,.48);">pelo WhatsApp</span>
+      </div>
+
+      <div style="width:26px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(255,255,255,.09);color:#F26522;font-size:22px;">›</div>
+
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.12);border-left:none;padding:18px 10px;">
+        <div style="width:32px;height:32px;border-radius:50%;border:1.5px solid #F26522;background:rgba(242,101,34,.14);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#F26522;">2</div>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#FAFAFA;">Amigo contrata</span>
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:rgba(250,250,250,.48);">condições exclusivas</span>
+      </div>
+
+      <div style="width:26px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(255,255,255,.09);color:#F26522;font-size:22px;">›</div>
+
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.12);border-left:none;padding:18px 10px;">
+        <div style="width:32px;height:32px;border-radius:50%;border:1.5px solid #F26522;background:rgba(242,101,34,.14);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#F26522;">3</div>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#FAFAFA;">Você recebe</span>
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:rgba(250,250,250,.48);">R$ 500 no Pix</span>
+      </div>
+
+    </div>
+
+    <!-- BENEFÍCIO PARA O INDICADO -->
+    <div style="display:flex;align-items:center;gap:14px;background:rgba(0,0,0,.80);border:1px solid rgba(255,255,255,.10);padding:15px 20px;margin-bottom:24px;">
+      <div style="width:6px;height:6px;border-radius:50%;background:#F26522;flex-shrink:0;"></div>
+      <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:300;color:rgba(250,250,250,.80);line-height:1.45;margin:0;">
+        Quem você indicar terá acesso a <strong style="font-weight:600;color:#FAFAFA;">condições promocionais exclusivas</strong> para começar a economizar.
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;background:#F26522;padding:24px 40px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="#111"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#111;text-transform:uppercase;letter-spacing:2px;">Indique agora pelo WhatsApp</span>
+    </div>
+
+  </div><!-- /zona fundo -->
+
+</div>
+</body>
+</html>

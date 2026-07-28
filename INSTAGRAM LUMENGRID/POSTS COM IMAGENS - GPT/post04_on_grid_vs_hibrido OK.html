@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Post 04 — On-Grid vs Híbrido</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a10;display:flex;flex-direction:column;align-items:center;gap:44px;padding:44px;}
+.slide{width:1080px;height:1350px;position:relative;overflow:hidden;font-family:'DM Sans',sans-serif;background:#161616;flex-shrink:0;}
+/* Logo */
+.logo-icon{height:58px;width:auto;object-fit:contain;filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9));}
+.lumen{font-family:'Space Grotesk',sans-serif;font-weight:800;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;}
+.grid{font-family:'Space Grotesk',sans-serif;font-weight:800;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;}
+.tag{font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.88);}
+/* tabela */
+.sim{display:flex;align-items:center;gap:10px;justify-content:center;}
+.sim-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dot-yes{background:#2E7D32;}.dot-no{background:#B71C1C;}
+.sim-txt{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;}
+.txt-yes{color:#FAFAFA;}.txt-no{color:rgba(250,250,250,.45);}
+</style>
+</head>
+<body>
+<!-- POST 04 · VERTICAL · On-Grid vs Híbrido -->
+
+<!-- ════════════════ SLIDE 1 — HOOK ════════════════ -->
+<div class="slide" id="s1">
+  <div style="position:absolute;inset:0;z-index:0;background:#0c1220 url('assets/images/post07-slide01-casa-solar-premium.png') center/cover no-repeat;"></div>
+  <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(10,10,16,.35) 0%,rgba(10,10,16,0) 28%,rgba(10,10,16,0) 48%,rgba(10,10,16,.97) 100%);"></div>
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.65);pointer-events:none;"></div>
+
+  <div style="position:absolute;top:60px;left:88px;display:inline-flex;align-items:center;gap:14px;z-index:30;">
+    <img src="../imagens/logo-icone.png" alt="" class="logo-icon">
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen" style="font-size:32px;">LUMEN</span><span class="grid" style="font-size:32px;">GRID</span></div>
+      <span class="tag">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <div style="position:absolute;top:170px;left:88px;z-index:20;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.95);text-shadow:0 2px 8px rgba(0,0,0,.8);margin:0;">▶ a pergunta que vale dinheiro</p>
+  </div>
+
+  <div style="position:absolute;left:88px;right:88px;bottom:120px;z-index:20;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:76px;font-weight:700;color:#FAFAFA;line-height:1.0;letter-spacing:-2px;text-shadow:0 4px 26px rgba(0,0,0,.85);margin:0 0 24px;">On-Grid<br>ou<br><span style="color:#F26522;">Híbrido?</span></p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:300;color:rgba(250,250,250,.62);line-height:1.6;max-width:680px;text-shadow:0 2px 12px rgba(0,0,0,.6);">Essa escolha muda quanto você economiza — e o que acontece quando a luz da rua cai.</p>
+  </div>
+</div>
+
+<!-- ════════════════ SLIDE 2 — ON-GRID ════════════════ -->
+<div class="slide" id="s2" style="display:flex;width:1080px;height:1350px;">
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.65);pointer-events:none;"></div>
+
+  <!-- Texto esquerda -->
+  <div style="width:520px;height:100%;position:relative;z-index:10;flex-shrink:0;">
+    <div style="position:absolute;top:60px;left:88px;display:inline-flex;align-items:center;gap:14px;z-index:30;">
+      <img src="../imagens/logo-icone.png" alt="" class="logo-icon">
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen" style="font-size:26px;">LUMEN</span><span class="grid" style="font-size:26px;">GRID</span></div>
+        <span class="tag">Energia Inteligente</span>
+      </div>
+    </div>
+    <div style="position:absolute;top:170px;left:88px;z-index:20;">
+      <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.95);margin:0;">▶ opção 01</p>
+    </div>
+    <div style="position:absolute;top:200px;left:56px;z-index:5;user-select:none;pointer-events:none;">
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:320px;font-weight:800;color:rgba(242,101,34,.055);line-height:1;letter-spacing:-12px;">01</span>
+    </div>
+    <div style="position:absolute;bottom:110px;left:88px;right:28px;z-index:10;">
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:700;color:#FAFAFA;letter-spacing:-.5px;margin:0 0 8px;line-height:1.1;">Solar<br>On-Grid</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:300;color:rgba(250,250,250,.40);margin:0 0 36px;">Conectado à rede. Sem bateria.</p>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;"><div style="width:8px;height:8px;border-radius:50%;background:#F26522;margin-top:8px;flex-shrink:0;"></div><span style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400;color:#FAFAFA;line-height:1.45;">Reduz até 95% da conta de luz</span></div>
+        <div style="display:flex;align-items:flex-start;gap:14px;"><div style="width:8px;height:8px;border-radius:50%;background:#F26522;margin-top:8px;flex-shrink:0;"></div><span style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400;color:#FAFAFA;line-height:1.45;">Menor investimento inicial</span></div>
+        <div style="display:flex;align-items:flex-start;gap:14px;"><div style="width:8px;height:8px;border-radius:50%;background:rgba(242,101,34,.30);margin-top:8px;flex-shrink:0;"></div><span style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:300;color:rgba(250,250,250,.40);line-height:1.45;">Se a rede cai, o sistema para <span style="font-size:16px;">(norma de segurança)</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Foto direita -->
+  <div style="width:560px;height:100%;position:relative;flex-shrink:0;">
+    <div style="position:absolute;inset:0;background:url('assets/images/post07-slide02-instalacao-on-grid.png') 64% center/cover no-repeat;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(22,22,22,1) 0%,rgba(22,22,22,.15) 28%,rgba(22,22,22,0) 50%);"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(22,22,22,.35) 0%,rgba(22,22,22,0) 18%,rgba(22,22,22,0) 80%,rgba(22,22,22,.55) 100%);"></div>
+  </div>
+</div>
+
+<!-- ════════════════ SLIDE 3 — HÍBRIDO ════════════════ -->
+<div class="slide" id="s3" style="display:flex;width:1080px;height:1350px;">
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.65);pointer-events:none;"></div>
+
+  <!-- Foto esquerda -->
+  <div style="width:520px;height:100%;position:relative;flex-shrink:0;">
+    <div style="position:absolute;inset:0;background:url('assets/images/post07-slide03-sistema-hibrido-premium.png') 42% center/cover no-repeat;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to left,rgba(22,22,22,1) 0%,rgba(22,22,22,.15) 28%,rgba(22,22,22,0) 55%);"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(22,22,22,.35) 0%,rgba(22,22,22,0) 18%,rgba(22,22,22,0) 80%,rgba(22,22,22,.55) 100%);"></div>
+  </div>
+
+  <!-- Texto direita -->
+  <div style="width:560px;height:100%;position:relative;z-index:10;flex-shrink:0;">
+    <div style="position:absolute;top:60px;left:28px;display:inline-flex;align-items:center;gap:14px;z-index:30;">
+      <img src="../imagens/logo-icone.png" alt="" class="logo-icon">
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen" style="font-size:26px;">LUMEN</span><span class="grid" style="font-size:26px;">GRID</span></div>
+        <span class="tag">Energia Inteligente</span>
+      </div>
+    </div>
+    <div style="position:absolute;top:170px;left:28px;z-index:20;">
+      <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.95);margin:0;">▶ opção 02</p>
+    </div>
+    <div style="position:absolute;top:200px;left:0;z-index:5;user-select:none;pointer-events:none;">
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:320px;font-weight:800;color:rgba(242,101,34,.055);line-height:1;letter-spacing:-12px;">02</span>
+    </div>
+    <div style="position:absolute;bottom:110px;left:28px;right:64px;z-index:10;">
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:700;color:#FAFAFA;letter-spacing:-.5px;margin:0 0 8px;line-height:1.1;">Solar<br>Híbrido</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:300;color:rgba(250,250,250,.40);margin:0 0 36px;">Painéis + baterias + rede. O trio completo.</p>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;"><div style="width:8px;height:8px;border-radius:50%;background:#F26522;margin-top:8px;flex-shrink:0;"></div><span style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400;color:#FAFAFA;line-height:1.45;">Funciona mesmo sem rede elétrica</span></div>
+        <div style="display:flex;align-items:flex-start;gap:14px;"><div style="width:8px;height:8px;border-radius:50%;background:#F26522;margin-top:8px;flex-shrink:0;"></div><span style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400;color:#FAFAFA;line-height:1.45;">Armazena energia e usa à noite</span></div>
+        <div style="display:flex;align-items:flex-start;gap:14px;"><div style="width:8px;height:8px;border-radius:50%;background:#F26522;margin-top:8px;flex-shrink:0;"></div><span style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400;color:#FAFAFA;line-height:1.45;">Autonomia total — você não depende de ninguém</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SLIDE 4 — TABELA ════════════════ -->
+<div class="slide" id="s4">
+  <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 50%,rgba(242,101,34,.11) 0%,rgba(242,101,34,0) 65%);"></div>
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.65);pointer-events:none;"></div>
+
+  <div style="position:absolute;top:60px;left:88px;display:inline-flex;align-items:center;gap:14px;z-index:30;">
+    <img src="../imagens/logo-icone.png" alt="" class="logo-icon">
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen" style="font-size:32px;">LUMEN</span><span class="grid" style="font-size:32px;">GRID</span></div>
+      <span class="tag">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <div style="position:absolute;top:170px;left:88px;z-index:20;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.95);margin:0;">▶ comparativo</p>
+  </div>
+  <div style="position:absolute;top:215px;left:88px;right:88px;z-index:20;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;color:#FAFAFA;letter-spacing:-.8px;line-height:1.1;margin:0;">On-Grid ou Híbrido?<br><span style="color:#F26522;font-size:36px;font-weight:600;">Veja lado a lado.</span></p>
+  </div>
+
+  <!-- Tabela -->
+  <div style="position:absolute;top:368px;left:56px;right:56px;z-index:20;border-radius:12px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.5);">
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;background:#0d0d0d;">
+      <div style="padding:18px 20px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(250,250,250,.25);">Recurso</div>
+      <div style="padding:18px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.06);"><span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(250,250,250,.70);">On-Grid</span></div>
+      <div style="padding:18px 8px;text-align:center;background:rgba(242,101,34,.15);border-left:1px solid rgba(242,101,34,.25);"><span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F26522;">Híbrido</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;background:rgba(255,255,255,.055);border-top:1px solid rgba(255,255,255,.07);">
+      <div style="padding:20px 20px;display:flex;align-items:center;gap:14px;"><div style="width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(242,101,34,.40);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.8" stroke-linecap="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><circle cx="12" cy="19" r="1" fill="#F26522" stroke="none"/></svg></div><span style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:500;color:#FAFAFA;">Conectado à rede</span></div>
+      <div style="display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.06);"><div class="sim"><div class="sim-dot dot-yes"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><span class="sim-txt txt-yes">Sim</span></div></div>
+      <div style="display:flex;align-items:center;justify-content:center;background:rgba(242,101,34,.08);border-left:1px solid rgba(242,101,34,.18);"><div class="sim"><div class="sim-dot dot-yes"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><span class="sim-txt txt-yes">Sim</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.07);">
+      <div style="padding:20px 20px;display:flex;align-items:center;gap:14px;"><div style="width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(242,101,34,.40);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/></svg></div><span style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:500;color:#FAFAFA;">Usa baterias</span></div>
+      <div style="display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.06);"><div class="sim"><div class="sim-dot dot-no"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><span class="sim-txt txt-no">Não</span></div></div>
+      <div style="display:flex;align-items:center;justify-content:center;background:rgba(242,101,34,.08);border-left:1px solid rgba(242,101,34,.18);"><div class="sim"><div class="sim-dot dot-yes"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><span class="sim-txt txt-yes">Sim</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;background:rgba(255,255,255,.055);border-top:1px solid rgba(255,255,255,.07);">
+      <div style="padding:20px 20px;display:flex;align-items:center;gap:14px;"><div style="width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(242,101,34,.40);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.8" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><span style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:500;color:#FAFAFA;">Gera créditos</span></div>
+      <div style="display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.06);"><div class="sim"><div class="sim-dot dot-yes"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><span class="sim-txt txt-yes">Sim</span></div></div>
+      <div style="display:flex;align-items:center;justify-content:center;background:rgba(242,101,34,.08);border-left:1px solid rgba(242,101,34,.18);"><div class="sim"><div class="sim-dot dot-yes"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><span class="sim-txt txt-yes">Sim</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.07);">
+      <div style="padding:20px 20px;display:flex;align-items:center;gap:14px;"><div style="width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(242,101,34,.40);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.8" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></div><span style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:500;color:#FAFAFA;line-height:1.3;">Funciona sem<br>rede elétrica</span></div>
+      <div style="display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.06);"><div class="sim"><div class="sim-dot dot-no"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><span class="sim-txt txt-no">Não</span></div></div>
+      <div style="display:flex;align-items:center;justify-content:center;background:rgba(242,101,34,.08);border-left:1px solid rgba(242,101,34,.18);"><div class="sim"><div class="sim-dot dot-yes"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div><span class="sim-txt txt-yes">Sim</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;background:rgba(255,255,255,.055);border-top:1px solid rgba(255,255,255,.07);">
+      <div style="padding:20px 20px;display:flex;align-items:center;gap:14px;"><div style="width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(242,101,34,.40);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><span style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:500;color:#FAFAFA;line-height:1.3;">Investimento<br>inicial</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;text-align:center;border-left:1px solid rgba(255,255,255,.06);"><span style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:#FAFAFA;">Mais acessível</span><span style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;color:rgba(250,250,250,.40);margin-top:4px;">Menor invest. inicial</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;text-align:center;background:rgba(242,101,34,.08);border-left:1px solid rgba(242,101,34,.18);"><span style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:#F26522;">Maior invest.</span><span style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;color:rgba(242,101,34,.65);margin-top:4px;">Maior autonomia<br>e segurança</span></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:110px;left:88px;right:88px;z-index:20;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:300;color:rgba(250,250,250,.35);margin:0;">Salve este slide para comparar na hora de decidir.</p>
+  </div>
+</div>
+
+<!-- ════════════════ SLIDE 5 — CTA ════════════════ -->
+<div class="slide" id="s5">
+  <div style="position:absolute;inset:0;z-index:0;background:url('assets/images/post07-slide05-consultoria.png') center 20%/cover no-repeat;"></div>
+  <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(10,10,16,.50) 0%,rgba(10,10,16,.05) 28%,rgba(10,10,16,.15) 55%,rgba(10,10,16,.96) 100%);"></div>
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.65);pointer-events:none;"></div>
+
+  <div style="position:absolute;top:60px;left:88px;display:inline-flex;align-items:center;gap:14px;z-index:30;">
+    <img src="../imagens/logo-icone.png" alt="" class="logo-icon">
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen" style="font-size:32px;">LUMEN</span><span class="grid" style="font-size:32px;">GRID</span></div>
+      <span class="tag">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <div style="position:absolute;top:170px;left:88px;z-index:20;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.95);text-shadow:0 2px 8px rgba(0,0,0,.8);margin:0;">▶ qual é o seu?</p>
+  </div>
+
+  <div style="position:absolute;left:88px;right:88px;bottom:120px;z-index:20;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;color:#FAFAFA;line-height:1.1;letter-spacing:-.8px;text-shadow:0 4px 24px rgba(0,0,0,.85);margin:0 0 20px;">A gente descobre<br>o ideal pra <span style="color:#F26522;">você.</span></p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400;color:rgba(250,250,250,.85);line-height:1.6;max-width:780px;text-shadow:0 2px 16px rgba(0,0,0,.8);margin:0 0 32px;">Análise gratuita do seu perfil de consumo. Indicamos o sistema que traz mais resultado pra você.</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:26px;font-weight:500;color:#F26522;margin:0;">Chama a gente no WhatsApp</p>
+  </div>
+</div>
+
+</body>
+</html>
