@@ -808,6 +808,43 @@ function buildChart(bill,genKwh,tarifa,minKwh,ecoMonthly){
   </div>`;
 }
 
+// ── GERAÇÃO MÊS A MÊS (sempre visível quando há geração) ──
+function buildGenChart(genKwh,ecoMonthly,bill,tarifa,minKwh){
+  if(!genKwh)return'';
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  // Variação sazonal simples (irradiação): mais alta no verão (dez-fev), menor no inverno (jun-ago)
+  const factors=[1.08,1.06,1.02,0.97,0.93,0.91,0.93,0.97,1.00,1.04,1.06,1.09];
+  const vals=factors.map(f=>Math.round(genKwh*f));
+  const maxVal=Math.max(...vals,1);
+  const hasBill=bill&&tarifa;
+  const bars=months.map((m,i)=>{
+    const v=vals[i];
+    const h=Math.round(76*v/maxVal);
+    const afterBill=hasBill?Math.max(minKwh,Math.round(bill/tarifa)-v)*tarifa:0;
+    return`<div class="bar-wrap">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;width:100%;gap:2px">
+        ${hasBill?`<div class="bar-inner" style="height:${Math.round(76*(bill/Math.max(bill*1.1,1)))}px;background:rgba(100,100,140,.2)"></div>`:''}
+        <div class="bar-inner" style="height:${h}px;background:var(--or)"></div>
+      </div>
+      <div class="bar-lbl">${m}</div>
+    </div>`;
+  }).join('');
+  const totalGen=vals.reduce((a,b)=>a+b,0);
+  return`<div class="chart-wrap">
+    <div class="chart-title">Geração Estimada Mês a Mês</div>
+    <div class="chart-bars">${bars}</div>
+    <div class="chart-legend">
+      ${hasBill?`<div class="cleg"><div class="cleg-dot" style="background:rgba(100,100,140,.4)"></div>Conta atual</div>`:''}
+      <div class="cleg"><div class="cleg-dot" style="background:var(--or)"></div>Energia gerada pelo sistema</div>
+    </div>
+    <div class="chart-summary">
+      <div class="csumitem"><div class="csum-val" style="color:var(--or)">${genKwh.toLocaleString('pt-BR')} kWh</div><div class="csum-lbl">Média mensal</div></div>
+      <div class="csumitem"><div class="csum-val" style="color:var(--ltext)">${totalGen.toLocaleString('pt-BR')} kWh</div><div class="csum-lbl">Total anual estimado</div></div>
+      ${ecoMonthly?`<div class="csumitem"><div class="csum-val" style="color:#27ae60">${fmtBRL(ecoMonthly)}</div><div class="csum-lbl">Economia/mês</div></div>`:''}
+    </div>
+  </div>`;
+}
+
 // ── GENERATE PROPOSAL ──
 function generateProposal(){
   // Validação obrigatória
@@ -1157,8 +1194,8 @@ function generateProposal(){
         <div style="font-size:8px;color:var(--lmuted);font-style:italic;border-top:1px solid rgba(232,100,26,.15);padding-top:8px;margin-top:8px">Projeção estimada. Resultados reais podem variar conforme consumo, tarifas e desempenho do sistema.</div>
       </div>`:''}
 
-      <!-- Gráfico mês a mês (conta antes vs depois) -->
-      ${buildChart(bill,genKwhNum,tarifa,minKwh,ecoMonthly)}
+      <!-- Gráfico geração mês a mês -->
+      ${buildGenChart(genKwhNum,ecoMonthly,bill,tarifa,minKwh)}
 
       <!-- Impacto ambiental -->
       ${co2>0?`
