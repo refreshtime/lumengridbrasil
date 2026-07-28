@@ -233,6 +233,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     <div class="hdr-label">Dashboard de Gestão</div>
   </div>
   <div style="display:flex;align-items:center;gap:10px">
+    <span id="finSync" style="font-size:10px;color:#22C55E;opacity:0.4;transition:opacity .5s;white-space:nowrap;cursor:default" title="Última sincronização com o servidor">● Sync</span>
+    <button onclick="setFinUrl()" title="Configurar URL do backend compartilhado" style="background:none;border:1px solid var(--b1);border-radius:6px;padding:5px 8px;cursor:pointer;color:var(--t3);display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;transition:color .15s" onmouseover="this.style.color='var(--t2)'" onmouseout="this.style.color='var(--t3)'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07M8.46 8.46a5 5 0 000 7.07"/></svg>Sync</button>
     <div class="hdr-date" id="hdrDate"></div>
     <a href="portal.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--b1);border-radius:6px;font-size:11px;font-weight:600;color:var(--t3);text-decoration:none;transition:all .15s" onmouseover="this.style.color='var(--t2)'" onmouseout="this.style.color='var(--t3)'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Portal</a>
   </div>
@@ -563,9 +565,57 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 
 <script>
 // ── STORE ──
-const IS_AS=typeof google!=='undefined'&&google.script;
 function loadData(k,d){try{const v=localStorage.getItem('lg_'+k);return v?JSON.parse(v):d;}catch(e){return d;}}
-function saveData(k,v){try{localStorage.setItem('lg_'+k,JSON.stringify(v));}catch(e){alert('Erro ao salvar: '+e.message);}if(IS_AS)google.script.run.saveData(k,JSON.stringify(v));}
+function saveData(k,v){
+  try{localStorage.setItem('lg_'+k,JSON.stringify(v));}catch(e){alert('Erro ao salvar: '+e.message);}
+  // Sync para backend compartilhado (sem arquivos base64)
+  const url=getFinUrl();
+  if(url&&['despesas','receitas','previsoes'].includes(k)){
+    fetch(url,{method:'POST',body:JSON.stringify({action:'replace_'+k,data:finPayload(v)})}).catch(()=>{});
+  }
+}
+
+// ── BACKEND COMPARTILHADO ──
+function getFinUrl(){return localStorage.getItem('lg_fin_url')||'';}
+function setFinUrl(){
+  const url=prompt('Cole aqui a URL do Apps Script (Financeiro):\n(Executar como: Você · Acesso: Qualquer pessoa)',getFinUrl());
+  if(url===null)return;
+  localStorage.setItem('lg_fin_url',url.trim());
+  if(url.trim())loadFinanceiro(false).then(()=>{renderDespesas();renderReceitas();populateDespProjeto();renderFluxo();});
+}
+// Remove campos de arquivo (base64) antes de enviar ao backend
+function finPayload(arr){
+  return arr.map(o=>{const c={...o};delete c.fileData;delete c.pdfData;delete c.compData;delete c.fileName;delete c.pdfName;delete c.compName;return c;});
+}
+async function loadFinanceiro(silent=true){
+  const url=getFinUrl();if(!url)return;
+  try{
+    const res=await fetch(url+'?action=get_data&t='+Date.now());
+    const data=await res.json();
+    // Receitas
+    if(Array.isArray(data.receitas)){
+      if(data.receitas.length>0){receitas=data.receitas;localStorage.setItem('lg_receitas',JSON.stringify(receitas));}
+      else if(receitas.length>0){fetch(url,{method:'POST',body:JSON.stringify({action:'replace_receitas',data:finPayload(receitas)})}).catch(()=>{});}
+    }
+    // Despesas
+    if(Array.isArray(data.despesas)){
+      if(data.despesas.length>0){despesas=data.despesas;localStorage.setItem('lg_despesas',JSON.stringify(despesas));}
+      else if(despesas.length>0){fetch(url,{method:'POST',body:JSON.stringify({action:'replace_despesas',data:finPayload(despesas)})}).catch(()=>{});}
+    }
+    // Previsões
+    if(Array.isArray(data.previsoes)){
+      if(data.previsoes.length>0){previsoes=data.previsoes;localStorage.setItem('lg_previsoes',JSON.stringify(previsoes));}
+      else if(previsoes.length>0){fetch(url,{method:'POST',body:JSON.stringify({action:'replace_previsoes',data:previsoes})}).catch(()=>{});}
+    }
+    if(silent){
+      renderDespesas();renderReceitas();populateDespProjeto();renderFluxo();
+      const el=document.getElementById('finSync');
+      if(el){el.textContent='● '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});el.style.opacity='1';setTimeout(()=>el.style.opacity='0.4',2000);}
+    }
+  }catch(e){}
+}
+let _finInterval=null;
+function startFinSync(){if(_finInterval)clearInterval(_finInterval);_finInterval=setInterval(()=>loadFinanceiro(true),30000);}
 
 let despesas=loadData('despesas',[]);
 let receitas=loadData('receitas',[]);
@@ -978,6 +1028,8 @@ renderReceitas();
 populateDespProjeto();
 renderRelProjeto();
 renderFluxo();
+// Carrega do backend e inicia auto-sync
+loadFinanceiro(false).then(()=>{renderDespesas();renderReceitas();populateDespProjeto();renderRelProjeto();renderFluxo();startFinSync();});
 
 // ── HISTÓRICO DE PROPOSTAS ──────────────────────────────────────────────────
 (function(){
