@@ -677,6 +677,7 @@ tbody tr td:first-child{font-weight:700}
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
         Novo Lead
       </button>
+      <span id="syncStatus" style="font-size:10px;color:#6366F1;opacity:0.4;transition:opacity .5s;white-space:nowrap">● Sync</span>
       <div class="usr-pill" onclick="logout()">
         <div class="usr-pill-av" id="headerAvatar"></div>
         <span class="usr-pill-name" id="headerName"></span>
@@ -1119,16 +1120,33 @@ function syncToSheets() {
 }
 
 // Carrega leads do Sheets na inicialização (se URL configurada)
-async function loadFromSheets() {
+async function loadFromSheets(silent = false) {
   const cfg = getConfig();
   if (!cfg.gsUrl) return;
   try {
-    const res = await fetch(cfg.gsUrl + '?action=leads_crm');
+    const res = await fetch(cfg.gsUrl + '?action=leads_crm&t=' + Date.now());
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
       localStorage.setItem('lg_leads', JSON.stringify(data));
+      if (!silent) return;
+      // Re-renderiza a view ativa após sync automático
+      const activeView = document.querySelector('.view.active');
+      if (activeView) {
+        const id = activeView.id;
+        if (id === 'v-kanban') renderKanban();
+        else if (id === 'v-leads') renderLeadsList();
+        else if (id === 'v-dash') renderDashboard();
+      }
+      const el = document.getElementById('syncStatus');
+      if (el) { el.textContent = '● Sync ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); el.style.opacity='1'; setTimeout(()=>el.style.opacity='0.4',2000); }
     }
   } catch(_) {}
+}
+
+let _syncInterval = null;
+function startAutoSync() {
+  if (_syncInterval) clearInterval(_syncInterval);
+  _syncInterval = setInterval(() => loadFromSheets(true), 30000);
 }
 const PARCEIROS_URL = 'https://script.google.com/macros/s/AKfycby8FMy4HPUiRCjGjWjyMEdZE7DGFzwNzmACBlI2RxdrC9PlbgyO_Kdh1PuQoQIKHTr-Lg/exec';
 const CRM_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
@@ -1172,6 +1190,7 @@ function login(user) {
 }
 function logout() {
   if (!confirm('Sair do sistema?')) return;
+  if (_syncInterval) clearInterval(_syncInterval);
   localStorage.removeItem('lg_user');
   location.reload();
 }
@@ -1195,6 +1214,8 @@ function initApp() {
   renderDashboard();
   renderKanban();
   renderLeadsList();
+  // Auto-sync a cada 30 segundos para manter todos os usuários atualizados
+  startAutoSync();
 }
 
 /* ━━━ VIEWS ━━━ */
