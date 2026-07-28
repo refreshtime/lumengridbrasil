@@ -416,6 +416,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
   <div class="fs">
     <div class="fs-title">Consumo & Economia</div>
+    <div class="ftw" style="margin-bottom:10px">
+      <label class="ftog"><input type="checkbox" id="showGenPage" checked><span class="sl"></span></label>
+      <span class="ftl">Incluir página de Geração de Energia na proposta <span style="font-size:9px;color:rgba(0,0,0,.3);font-weight:400">(ativo por padrão)</span></span>
+    </div>
     <div style="background:#fff8f4;border:1px solid rgba(232,100,26,.3);border-radius:6px;padding:7px 10px;margin-bottom:10px;font-size:9px;line-height:1.55;color:#666">
       <strong style="color:var(--or)">Parâmetro automático:</strong> Se não preencher nenhum campo abaixo, a economia será estimada em <strong style="color:#333">R$130/kWp·mês</strong> (padrão LumenGrid — estimativa alta). Preencher a conta ou consumo+tarifa é mais preciso.
     </div>
@@ -763,6 +767,7 @@ function resetForm(){
   $('batQty').value='1';$('precoKvp').value='5000';
   $('monthlyGen').removeAttribute('data-manual');
   $('hasWallbox').checked=false;$('wallboxField').style.display='none';
+  if($('showGenPage'))$('showGenPage').checked=true;
   document.querySelector('input[name=installType][value="Residencial"]').checked=true;
   document.querySelector('input[name=conexao][value="Bifasico"]').checked=true;
   document.querySelector('input[name=vend][value="lucas"]').checked=true;
@@ -908,7 +913,8 @@ function generateProposal(){
   const waMsg=encodeURIComponent('Olá, '+vendNome+'. Tenho interesse na proposta de energia híbrida Lumen Grid.');
   const waUrl=waFoneDigits?'https://wa.me/55'+waFoneDigits+'?text='+waMsg:'';
 
-  const tot=7;
+  const showGenPage=$('showGenPage')&&$('showGenPage').checked;
+  const tot=showGenPage?7:6;
   let pg=1;
 
   // ── PAGE 1: CAPA ──
@@ -1334,7 +1340,7 @@ function generateProposal(){
     ${footer(today)}
   </div>`;
 
-  const html=p1+p2+p3+p3b+p4+p5+p6;
+  const html=p1+p2+p3+(showGenPage?p3b:'')+p4+p5+p6;
   $('preview').innerHTML=html;
   $('preview').style.display='block';
   $('prevEmpty').style.display='none';
