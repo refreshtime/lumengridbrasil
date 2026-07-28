@@ -266,7 +266,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
         <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(0,1)">Aplicar</button>
       </div>
     </div>
-    <div style="font-size:7.5px;color:var(--uim);margin-top:3px;margin-bottom:10px">+R$800 por placa extra acima de 9</div>
+    <div style="font-size:7.5px;color:var(--uim);margin-top:3px;margin-bottom:10px">+R$850 por placa extra acima de 9</div>
     <!-- GW7.5K -->
     <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:5px">Inversor GW7.5K — 7,5 kW · 9 placas base</div>
     <div style="display:flex;flex-direction:column;gap:4px">
@@ -283,7 +283,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
         <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(1,2)">Aplicar</button>
       </div>
     </div>
-    <div style="font-size:7.5px;color:var(--uim);margin-top:3px">+R$800 por placa extra acima de 9</div>
+    <div style="font-size:7.5px;color:var(--uim);margin-top:3px">+R$850 por placa extra acima de 9</div>
   </div>
 
   <!-- SOFAR -->
@@ -294,11 +294,11 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:5px">Inversor HYD-7.5K — 7,5 kW</div>
     <div style="display:flex;flex-direction:column;gap:4px">
       <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
-        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">1 Bat · 9 placas · 5,1 kWh</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">R$ 43.700 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">mín R$ 39.700</span></div></div>
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">1 Bat · 9 placas · 5,1 kWh</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">R$ 43.700 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">+R$850/placa extra</span></div></div>
         <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(2,0)">Aplicar</button>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
-        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">2 Bat · 16 placas · 10,2 kWh</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">R$ 59.740 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">mín R$ 55.470</span></div></div>
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">2 Bat · 16 placas · 10,2 kWh</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">R$ 59.740 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">+R$850/placa extra</span></div></div>
         <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(2,1)">Aplicar</button>
       </div>
     </div>
@@ -441,8 +441,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   <div class="fs">
     <div class="fs-title">Investimento</div>
     <div class="frow">
-      <div><label class="fl">Preço por kVp (R$) <span class="auto-tag">mín R$4.000</span></label><input class="fi" type="number" id="precoKvp" value="5000" min="4000" max="9000" step="100"></div>
-      <div><label class="fl">Valor Total (R$) <span id="projectValueTag" class="auto-tag">mín R$28.000</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
+      <div><label class="fl">Preço por kVp (R$) <span class="auto-tag">mín R$5.000</span></label><input class="fi" type="number" id="precoKvp" value="5000" min="5000" max="9000" step="100"></div>
+      <div><label class="fl">Valor Total (R$) <span id="projectValueTag" class="auto-tag">mín R$5.000/kVp</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
     </div>
     <div class="frow">
       <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="7"></div>
@@ -499,20 +499,13 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 <script>
 const IMG_BASE='https://raw.githubusercontent.com/refreshtime/lumengrid-portal/main/imagens/';
-const PRECO_KVP_MIN=4000;
+const PRECO_KVP_MIN=5000;
 
-function getHibridoValores(){
-  const inv=(get('invModel')||'').toLowerCase();
-  if(inv.includes('fox'))return{def:39000,min:37000,label:'mín R$37.000 — FoxESS'};
-  if(inv.includes('goodwe')){
-    if(inv.includes('gw5k')||inv.includes('5k-es'))return{def:41446,min:37336,label:'mín R$37.336 — GoodWe 5kW'};
-    return{def:47000,min:43500,label:'mín R$43.500 — GoodWe 7.5kW'};
-  }
-  if(inv.includes('sofar')){
-    if(inv.includes('7.5k'))return{def:43700,min:39700,label:'mín R$39.700 — Sofar 7.5kW'};
-    return{def:33000,min:30000,label:'mín R$30.000 — Sofar 5kW'};
-  }
-  return{def:33000,min:30000,label:'mín R$30.000'};
+function getHibridoValores(qty,pwr,precoKvp){
+  // Mínimo sempre dinâmico: kVp × precoKvp (R$5.000/kVp)
+  const kVp=(qty||0)*(pwr||0)/1000;
+  const base=kVp>0?Math.round(kVp*precoKvp):0;
+  return{base,label:'mín R$'+PRECO_KVP_MIN.toLocaleString('pt-BR')+'/kVp'};
 }
 
 function $(id){return document.getElementById(id);}
@@ -639,18 +632,18 @@ const KITS_DATA=[
   // 0: GoodWe GW5K
   {invVal:'GoodWe GW5K-ES Híbrido Bifásico 2MPPT 127/220V 5kW',invPwr:5,
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:9,extras:800,
-   configs:[{nbat:1,preco:41446,min:37336},{nbat:2,preco:48446,min:44336}]},
+   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:9,extras:850,
+   configs:[{nbat:1,preco:41446},{nbat:2,preco:48446}]},
   // 1: GoodWe GW7.5K
   {invVal:'GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:9,extras:800,
-   configs:[{nbat:1,preco:47000,min:43500},{nbat:2,preco:54270,min:52000},{nbat:3,preco:61000,min:58700}]},
+   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:9,extras:850,
+   configs:[{nbat:1,preco:47000},{nbat:2,preco:54270},{nbat:3,preco:61000}]},
   // 2: Sofar HYD-7.5K
   {invVal:'Sofar HYD-7.5K-LSP1 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:null,extras:0,
-   configs:[{nbat:1,qty:9,preco:43700,min:39700},{nbat:2,qty:16,preco:59740,min:55470}]},
+   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:9,extras:850,
+   configs:[{nbat:1,qty:9,preco:43700},{nbat:2,qty:16,preco:59740}]},
 ];
 
 function applyKit(ki,ci){
@@ -678,7 +671,7 @@ function applyKit(ki,ci){
   if(!$('monthlyGen').dataset.manual)$('monthlyGen').value=Math.round(qty*65);
   $('projectValue').value=conf.preco;
   const tag=$('projectValueTag');
-  if(tag)tag.textContent='kit — mín R$'+conf.min.toLocaleString('pt-BR');
+  if(tag)tag.textContent='kit · +R$850/placa extra';
   recalcAutonomy();
 }
 
@@ -694,7 +687,7 @@ function onBatQtyChange(){
       if(conf.qty)$('modQty').value=conf.qty;
       $('batteryKwh').value=(kitAtual.kit.batKwh*conf.nbat).toFixed(1);
       $('projectValue').value=conf.preco;
-      const tag=$('projectValueTag');if(tag)tag.textContent='kit — mín R$'+conf.min.toLocaleString('pt-BR');
+      const tag=$('projectValueTag');if(tag)tag.textContent='kit · +R$850/placa extra';
       recalcAutonomy();return;
     }else{kitAtivo=false;}
   }
@@ -726,9 +719,8 @@ function autoCalcHibrido(){
   const qty=getN('modQty'),pwr=getN('modPower');
   const precoKvp=Math.max(PRECO_KVP_MIN,getN('precoKvp')||5000);
   const batQtyVal=Math.max(1,getN('batQty')||1);
-  const hv=getHibridoValores();
   const tag=$('projectValueTag');
-  if(tag)tag.textContent=hv.label;
+  if(tag)tag.textContent='mín R$'+PRECO_KVP_MIN.toLocaleString('pt-BR')+'/kVp';
   // ICMS: garantir mínimo 5 placas/bateria
   if($('isencaoICMS')&&$('isencaoICMS').checked){
     const minPlacas=batQtyVal*5;
@@ -743,9 +735,8 @@ function autoCalcHibrido(){
     const extraBat=(batQtyVal-1)*10000;
     if(qtyFinal>0&&pwr>0){
       const kVp=qtyFinal*pwr/1000;
-      projEl.value=Math.round(Math.max(hv.def,kVp*precoKvp)+extraBat);
-    } else {
-      projEl.value=Math.round(hv.def+extraBat);
+      // Mínimo dinâmico: kVp × precoKvp — SEMPRE sobe com mais placas
+      projEl.value=Math.round(kVp*precoKvp+extraBat);
     }
   }
   calcOverload();
@@ -1265,11 +1256,12 @@ function printPDF(){
 
 // ── AUTO CALC ──
 $('modQty').addEventListener('input',function(){
-  if(kitAtivo&&kitAtual&&kitAtual.kit.extras>0){
-    autoCalcHibrido();// atualiza totalPower/gen, não toca projectValue
+  if(kitAtivo&&kitAtual){
+    autoCalcHibrido();// atualiza totalPower/gen
     const baseQty=kitAtual.conf.qty||kitAtual.kit.baseQty||9;
     const extra=Math.max(0,getN('modQty')-baseQty);
-    $('projectValue').value=kitAtual.conf.preco+extra*kitAtual.kit.extras;
+    // SEMPRE +850 por placa extra (independente do kit)
+    $('projectValue').value=kitAtual.conf.preco+extra*850;
   }else{kitAtivo=false;autoCalcHibrido();}
 });
 $('modPower').addEventListener('input',function(){kitAtivo=false;autoCalcHibrido();});
