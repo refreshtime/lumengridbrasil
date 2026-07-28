@@ -293,7 +293,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       </div>
       <div class="frow">
         <div class="fg" style="flex:2"><label>Observação</label><input class="fi" id="despObs" placeholder="NF, fornecedor, referência..."></div>
-        <div class="fg" style="max-width:220px"><label>Vincular ao Projeto</label><select class="fsel" id="despProjeto"><option value="">— Despesa geral —</option></select></div>
+        <div class="fg" style="max-width:220px"><label>Vincular ao Projeto</label><select class="fsel" id="despProjeto" onchange="onDespProjetoChange()" style="margin-bottom:4px"><option value="">— Despesa geral —</option></select><input class="fi" id="despRefContrato" placeholder="Ou digitar referência / nº contrato" style="font-size:10px;margin-bottom:0"></div>
         <div class="fg" style="max-width:190px">
           <label>Comprovante / Foto</label>
           <div class="upzone" id="despZone" onclick="document.getElementById('despFile').click()">
@@ -331,7 +331,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       </div>
     </div>
     <div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Projeto</th><th>Método</th><th>Valor</th><th>Obs.</th><th>Anexo</th><th></th></tr></thead>
+      <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Projeto / Ref.</th><th>Método</th><th>Valor</th><th>Obs.</th><th>Anexo</th><th></th></tr></thead>
       <tbody id="despBody"></tbody>
     </table></div>
     <div class="empty" id="despEmpty" style="display:none">
@@ -621,12 +621,16 @@ function addDespesa(){
   const obs=document.getElementById('despObs').value.trim();
   if(!desc||!valor){alert('Preencha descrição e valor.');return;}
   const projetoId=document.getElementById('despProjeto').value||'';
-  despesas.push({id:genId(),data,desc,cat,valor,metodo,obs,projetoId,fileData:_dFile,fileName:_dName});
+  const refContrato=projetoId?'':document.getElementById('despRefContrato').value.trim();
+  despesas.push({id:genId(),data,desc,cat,valor,metodo,obs,projetoId,refContrato,fileData:_dFile,fileName:_dName});
   despesas.sort((a,b)=>b.data.localeCompare(a.data));
   saveData('despesas',despesas);
   document.getElementById('despDesc').value='';
   document.getElementById('despValor').value='';
   document.getElementById('despObs').value='';
+  document.getElementById('despRefContrato').value='';
+  document.getElementById('despProjeto').value='';
+  document.getElementById('despFiltroMes').value='';
   clearDFile();renderDespesas();
 }
 function deleteDespesa(id){if(!confirm('Excluir esta despesa?'))return;despesas=despesas.filter(d=>d.id!==id);saveData('despesas',despesas);renderDespesas();}
@@ -657,7 +661,11 @@ function renderDespesas(){
     let att=`<span style="color:var(--t3);font-size:11px">—</span>`;
     if(d.fileData){att=d.fileData.startsWith('data:image')?`<img class="thumb" src="${d.fileData}" onclick="openModal('${d.fileData}')" title="Ver comprovante">`:`<a class="pdf-lnk" href="${d.fileData}" download="${d.fileName||'comprovante'}">${icoPdf} ${(d.fileName||'PDF').slice(0,14)}</a>`;}
     const rec=d.projetoId?receitas.find(r=>r.id===d.projetoId):null;
-    const projLabel=rec?`<span class="badge" style="background:rgba(232,100,26,.12);color:var(--accent);font-size:10px">${rec.cliente}${rec.numContrato?' '+rec.numContrato:''}</span>`:`<span style="color:var(--t3);font-size:11px">—</span>`;
+    const projLabel=rec
+      ?`<span class="badge" style="background:rgba(232,100,26,.12);color:var(--accent);font-size:10px">${rec.cliente}${rec.numContrato?' · '+rec.numContrato:''}</span>`
+      :d.refContrato
+        ?`<span class="badge" style="background:rgba(100,100,200,.1);color:#888;font-size:10px">⏳ ${d.refContrato}</span>`
+        :`<span style="color:var(--t3);font-size:11px">—</span>`;
     return`<tr>`+
       `<td class="mu">${fmtDate(d.data)}</td>`+
       `<td style="font-weight:500">${d.desc}</td>`+
@@ -712,6 +720,11 @@ function populateDespProjeto(){
   sel.innerHTML='<option value="">— Despesa geral —</option>'+
     receitas.map(r=>`<option value="${r.id}">${r.cliente}${r.numContrato?' ('+r.numContrato+')':''}</option>`).join('');
   if(cur)sel.value=cur;
+}
+function onDespProjetoChange(){
+  const sel=document.getElementById('despProjeto');
+  const ref=document.getElementById('despRefContrato');
+  if(sel.value)ref.value='';
 }
 function updateRecStatus(id,ns){const r=receitas.find(r=>r.id===id);if(r)r.status=ns;saveData('receitas',receitas);renderReceitas();}
 function toggleCard(id){document.getElementById('vb_'+id).classList.toggle('open');}
