@@ -163,6 +163,21 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .vc-name{font-size:16px;font-weight:800;color:#fff;margin-bottom:2px}
 .vc-spec{font-size:10px;color:rgba(255,255,255,.4)}
 
+/* ── ECONOMY CHART ── */
+.chart-wrap{background:#fff;border:1px solid var(--lborder);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.chart-title{font-size:9px;font-weight:700;color:var(--ltext);letter-spacing:1px;margin-bottom:10px;text-transform:uppercase}
+.chart-bars{display:flex;gap:6px;align-items:flex-end;height:80px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
+.bar-inner{width:100%;border-radius:3px 3px 0 0;display:flex;align-items:flex-end;justify-content:center;min-height:4px}
+.bar-lbl{font-size:8px;color:var(--lmuted);text-align:center;line-height:1.2}
+.chart-legend{display:flex;gap:20px;margin-top:10px}
+.cleg{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--lmuted)}
+.cleg-dot{width:10px;height:10px;border-radius:50%}
+.chart-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;border-top:1px solid var(--lborder);padding-top:14px}
+.csumitem{text-align:center}
+.csum-val{font-size:16px;font-weight:900;color:var(--or)}
+.csum-lbl{font-size:9px;color:var(--lmuted)}
+
 /* ── HYBRID COMPARISON PAGE ── */
 .hyb-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
 .hyb-card{border-radius:10px;padding:18px 20px}
@@ -765,6 +780,40 @@ function resetForm(){
   renderEquipmentTable();
 }
 
+// ── ECONOMY BAR CHART (12 meses) ──
+function buildChart(bill,genKwh,tarifa,minKwh,ecoMonthly){
+  if(!bill||!genKwh||!tarifa)return'';
+  const beforeKwh=Math.round(bill/tarifa);
+  const afterKwh=Math.max(minKwh,beforeKwh-genKwh);
+  const afterBill=afterKwh*tarifa;
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const bars=months.map((m,i)=>{
+    const factor=1+Math.sin(i*0.5)*0.06;
+    const bH=Math.round(72*(bill*factor/Math.max(bill*1.1,1)));
+    const aH=Math.round(72*(afterBill*factor/Math.max(bill*1.1,1)));
+    return`<div class="bar-wrap">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;width:100%;gap:2px">
+        <div class="bar-inner" style="height:${bH}px;background:rgba(100,100,140,.25)"></div>
+        <div class="bar-inner" style="height:${aH}px;background:var(--or)"></div>
+      </div>
+      <div class="bar-lbl">${m}</div>
+    </div>`;
+  }).join('');
+  return`<div class="chart-wrap">
+    <div class="chart-title">Estimativa de Economia Anual</div>
+    <div class="chart-bars">${bars}</div>
+    <div class="chart-legend">
+      <div class="cleg"><div class="cleg-dot" style="background:rgba(100,100,140,.4)"></div>Conta atual</div>
+      <div class="cleg"><div class="cleg-dot" style="background:var(--or)"></div>Com sistema híbrido</div>
+    </div>
+    <div class="chart-summary">
+      <div class="csumitem"><div class="csum-val" style="color:#e74c3c">${fmtBRL(bill)}</div><div class="csum-lbl">Conta atual/mês</div></div>
+      <div class="csumitem"><div class="csum-val" style="color:#27ae60">${fmtBRL(afterBill)}</div><div class="csum-lbl">Com híbrido/mês</div></div>
+      <div class="csumitem"><div class="csum-val" style="color:var(--or)">${fmtBRL(ecoMonthly)}</div><div class="csum-lbl">Economia/mês</div></div>
+    </div>
+  </div>`;
+}
+
 // ── GENERATE PROPOSAL ──
 function generateProposal(){
   // Validação obrigatória
@@ -1115,6 +1164,8 @@ function generateProposal(){
       </div>
       <div style="font-size:9px;color:var(--lmuted);font-style:italic;margin-bottom:14px;padding-left:2px">* Valor referente ao pagamento \u00e0 vista (PIX / Boleto).</div>
       ${hasWallbox?`<div style="background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--lmuted)"><strong style="color:var(--ltext)">Upgrade Wallbox ${wallboxPower}</strong>${wallboxPrice?' &mdash; '+fmtBRL(wallboxPrice):''}${wallboxNote?' &mdash; '+wallboxNote:''}</div>`:''}
+      ${buildChart(bill,genKwhNum,tarifa,minKwh,ecoMonthly)}
+      ${ecoTimelineHtml}
       <div class="pay-img-box" style="flex:1;display:flex;flex-direction:column;min-height:0">
         <div class="pay-img-lbl">Formas de Pagamento</div>
         <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:4px 0">
