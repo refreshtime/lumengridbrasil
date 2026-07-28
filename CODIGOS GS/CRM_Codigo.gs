@@ -34,6 +34,7 @@ function doGet(e) {
   try {
     if      (action === 'leads_meta') result = getLeadsMeta();
     else if (action === 'leads_crm')  result = getLeadsCRM();
+    else if (action === 'fin_data')   result = getFinData();
     else result = { error: 'Ação desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };
@@ -48,9 +49,12 @@ function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
     const action = body.action;
-    if      (action === 'save_leads')       result = saveLeadsCRM(body.leads);
-    else if (action === 'save_lead')        result = saveOneLead(body.lead);
-    else if (action === 'save_solicitacao') result = saveSolicitacao(body.solicitacao);
+    if      (action === 'save_leads')        result = saveLeadsCRM(body.leads);
+    else if (action === 'save_lead')         result = saveOneLead(body.lead);
+    else if (action === 'save_solicitacao')  result = saveSolicitacao(body.solicitacao);
+    else if (action === 'replace_receitas')  result = saveFinJson('Fin_Receitas',  body.data);
+    else if (action === 'replace_despesas')  result = saveFinJson('Fin_Despesas',  body.data);
+    else if (action === 'replace_previsoes') result = saveFinJson('Fin_Previsoes', body.data);
     else result = { error: 'Ação desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };
@@ -278,6 +282,42 @@ function verificarNovosLeadsMeta() {
 
 // ────────────────────────────────────────────────
 // COMO IMPLANTAR
+// ────────────────────────────────────────────────
+// FINANCEIRO — Receitas, Despesas, Previsões
+// Armazena como JSON na mesma planilha do CRM
+// ────────────────────────────────────────────────
+
+function getFinData() {
+  return {
+    receitas:  loadFinJson('Fin_Receitas'),
+    despesas:  loadFinJson('Fin_Despesas'),
+    previsoes: loadFinJson('Fin_Previsoes'),
+  };
+}
+
+function loadFinJson(abaName) {
+  const ss    = SpreadsheetApp.openById(SHEET_ID);
+  const sheet = ss.getSheetByName(abaName);
+  if (!sheet) return [];
+  const raw = sheet.getRange(1, 1).getValue();
+  if (!raw) return [];
+  try { return JSON.parse(raw); } catch(e) { return []; }
+}
+
+function saveFinJson(abaName, data) {
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  let sheet = ss.getSheetByName(abaName);
+  if (!sheet) {
+    sheet = ss.insertSheet(abaName);
+    sheet.getRange(1, 1).setBackground('#E8641A').setFontColor('#FFFFFF').setFontWeight('bold');
+  }
+  sheet.clearContents();
+  sheet.getRange(1, 1).setValue(JSON.stringify(data || []));
+  // Linha legível de resumo na célula B1
+  sheet.getRange(1, 2).setValue('Atualizado: ' + new Date().toLocaleString('pt-BR') + ' — ' + (data||[]).length + ' registros');
+  return { ok: true, count: (data || []).length };
+}
+
 // ────────────────────────────────────────────────
 // 1. Acesse script.google.com
 // 2. Crie um novo projeto e cole este código

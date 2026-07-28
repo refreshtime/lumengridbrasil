@@ -234,7 +234,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
   </div>
   <div style="display:flex;align-items:center;gap:10px">
     <span id="finSync" style="font-size:10px;color:#22C55E;opacity:0.4;transition:opacity .5s;white-space:nowrap;cursor:default" title="Última sincronização com o servidor">● Sync</span>
-    <button onclick="setFinUrl()" title="Configurar URL do backend compartilhado" style="background:none;border:1px solid var(--b1);border-radius:6px;padding:5px 8px;cursor:pointer;color:var(--t3);display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;transition:color .15s" onmouseover="this.style.color='var(--t2)'" onmouseout="this.style.color='var(--t3)'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07M8.46 8.46a5 5 0 000 7.07"/></svg>Sync</button>
     <div class="hdr-date" id="hdrDate"></div>
     <a href="portal.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--b1);border-radius:6px;font-size:11px;font-weight:600;color:var(--t3);text-decoration:none;transition:all .15s" onmouseover="this.style.color='var(--t2)'" onmouseout="this.style.color='var(--t3)'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Portal</a>
   </div>
@@ -575,14 +574,9 @@ function saveData(k,v){
   }
 }
 
-// ── BACKEND COMPARTILHADO ──
-function getFinUrl(){return localStorage.getItem('lg_fin_url')||'';}
-function setFinUrl(){
-  const url=prompt('Cole aqui a URL do Apps Script (Financeiro):\n(Executar como: Você · Acesso: Qualquer pessoa)',getFinUrl());
-  if(url===null)return;
-  localStorage.setItem('lg_fin_url',url.trim());
-  if(url.trim())loadFinanceiro(false).then(()=>{renderDespesas();renderReceitas();populateDespProjeto();renderFluxo();});
-}
+// ── BACKEND COMPARTILHADO (hardcoded — mesmo Apps Script do CRM) ──
+const FIN_URL='https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
+function getFinUrl(){return FIN_URL;}
 // Remove campos de arquivo (base64) antes de enviar ao backend
 function finPayload(arr){
   return arr.map(o=>{const c={...o};delete c.fileData;delete c.pdfData;delete c.compData;delete c.fileName;delete c.pdfName;delete c.compName;return c;});
@@ -590,7 +584,7 @@ function finPayload(arr){
 async function loadFinanceiro(silent=true){
   const url=getFinUrl();if(!url)return;
   try{
-    const res=await fetch(url+'?action=get_data&t='+Date.now());
+    const res=await fetch(url+'?action=fin_data&t='+Date.now());
     const data=await res.json();
     // Receitas
     if(Array.isArray(data.receitas)){
