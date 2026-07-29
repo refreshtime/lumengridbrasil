@@ -54,7 +54,13 @@ function _criarAba(ss, nome, cor) {
 // ── RECEBE CONTRATO DO contrato.html ─────────────────────────
 function doPost(e) {
   try {
-    const p = e.parameter;
+    // Suporta JSON body (fetch sem Content-Type) e form params (legado)
+    let p;
+    try {
+      p = JSON.parse(e.postData.contents);
+    } catch(_) {
+      p = e.parameter;
+    }
     if (p.action === 'salvarContrato') {
       const result = salvarContrato(p);
       return ContentService

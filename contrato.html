@@ -157,7 +157,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 
   <div id="gasUrlSection" style="display:none">
     <label class="fl">URL do Web App (Google Apps Script)</label>
-    <input class="fi" id="gasUrl" value="https://script.google.com/a/macros/lumengridbrasil.com.br/s/AKfycbyx9BCjvqzdMk2dEABVZkHwrUTlRHe_WIYsYEQkso4Q-wRA_nHnleLSH5wSG1PfTt9yig/exec" style="margin-bottom:4px;display:none">
+    <input class="fi" id="gasUrl" value="https://script.google.com/macros/s/AKfycbyx9BCjvqzdMk2dEABVZkHwrUTlRHe_WIYsYEQkso4Q-wRA_nHnleLSH5wSG1PfTt9yig/exec" style="margin-bottom:4px;display:none">
     <div style="font-size:9px;color:rgba(255,255,255,.3);line-height:1.5">Cole aqui a URL do seu Web App implantado no Google Apps Script. Necessário para salvar no Drive.</div>
   </div>
 
@@ -759,12 +759,9 @@ function salvarNoDrive() {
     cObs: document.getElementById('cObs').value.trim()
   };
 
-  const params = new URLSearchParams(dados);
-
   fetch(gasUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString()
+    body: JSON.stringify(dados)
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
