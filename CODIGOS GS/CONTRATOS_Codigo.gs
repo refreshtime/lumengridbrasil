@@ -43,7 +43,7 @@ function salvarContrato(p, pdfBase64) {
   const num     = p.num     || '---';
   const cliNome = p.cliNome || 'Cliente';
   const fileName = 'Contrato ' + num + ' — ' + cliNome + '.pdf';
-  const bytes = Utilities.base64Decode(pdfBase64);
+  const bytes = Utilities.base64DecodeWebSafe(pdfBase64);
   const blob  = Utilities.newBlob(bytes, 'application/pdf', fileName);
   const file  = folder.createFile(blob);
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
