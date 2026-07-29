@@ -267,8 +267,7 @@ async function enviar() {
   // Enviar para Apps Script (Drive + Sheets)
   fetch(CRM_URL, {
     method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify({ action: 'save_solicitacao', solicitacao: sol })
   }).catch(() => {});
 
