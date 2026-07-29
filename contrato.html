@@ -102,9 +102,9 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
   .ed-header,.form-panel,.btn-bar{display:none!important}
   .ed-layout{display:block}
   .prev-panel{background:#fff;padding:0;margin:0}
-  .cpage,.cpage-cont{box-shadow:none;margin:0!important;page-break-after:always;break-after:page;overflow:hidden;height:100vh!important;max-height:100vh!important;width:100%!important}
-  .cpage:last-child,.cpage-cont:last-child{page-break-after:avoid;break-after:avoid}
-  @page{size:A4;margin:0}
+  .cpage,.cpage-cont{box-shadow:none;margin:0;width:100%}
+  .cpage-cont+.cpage-cont,.cpage+.cpage-cont{page-break-before:always;break-before:page}
+  @page{size:A4;margin:15mm}
 }
 
 @media(max-width:768px){
