@@ -55,7 +55,14 @@ function doPost(e) {
 function salvarContrato(p) {
   const ss = SpreadsheetApp.openById('1LTv6dFRT56533gfPc5elNfxiddsUzgYyLbCLsNykyRQ');
   let gerado = ss.getSheetByName('Gerado');
-  if (!gerado) { initSheets(); gerado = ss.getSheetByName('Gerado'); }
+  if (!gerado) {
+    gerado = ss.insertSheet('Gerado');
+    gerado.appendRow(COLS);
+    gerado.getRange(1, 1, 1, COLS.length).setFontWeight('bold').setBackground('#E8641A').setFontColor('#ffffff');
+    gerado.setFrozenRows(1);
+    gerado.setColumnWidth(14, 320);
+    gerado.setColumnWidth(4, 200);
+  }
 
   // — variáveis —
   const num        = p.num          || '---';
