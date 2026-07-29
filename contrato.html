@@ -759,10 +759,8 @@ function salvarNoDrive() {
     cObs: document.getElementById('cObs').value.trim()
   };
 
-  fetch(gasUrl, {
-    method: 'POST',
-    body: JSON.stringify(dados)
-  })
+  const qs = new URLSearchParams(dados).toString();
+  fetch(gasUrl + '?' + qs, { method: 'POST' })
   .then(function(r) { return r.json(); })
   .then(function(res) {
     btn.disabled = false;
