@@ -727,7 +727,7 @@ function autoCalcHibrido(){
   const precoKvp=Math.max(PRECO_KVP_MIN,getN('precoKvp')||5000);
   const batQtyVal=Math.max(1,getN('batQty')||1);
   const tag=$('projectValueTag');
-  if(tag)tag.textContent='mín R$'+PRECO_KVP_MIN.toLocaleString('pt-BR')+'/kVp';
+  if(tag&&!kitAtivo)tag.textContent='mín R$'+PRECO_KVP_MIN.toLocaleString('pt-BR')+'/kVp';
   // ICMS: garantir mínimo 5 placas/bateria
   if($('isencaoICMS')&&$('isencaoICMS').checked){
     const minPlacas=batQtyVal*5;
@@ -1361,15 +1361,18 @@ function printPDF(){
 }
 
 // ── AUTO CALC ──
-$('modQty').addEventListener('input',function(){
+function onModQtyChange(){
   if(kitAtivo&&kitAtual){
     autoCalcHibrido();// atualiza totalPower/gen
     const baseQty=kitAtual.conf.qty||kitAtual.kit.baseQty||9;
     const extra=Math.max(0,getN('modQty')-baseQty);
     // SEMPRE +850 por placa extra (independente do kit)
     $('projectValue').value=kitAtual.conf.preco+extra*850;
+    const tag=$('projectValueTag');if(tag)tag.textContent='kit · +R$850/placa extra';
   }else{kitAtivo=false;autoCalcHibrido();}
-});
+}
+$('modQty').addEventListener('input',onModQtyChange);
+$('modQty').addEventListener('change',onModQtyChange);
 $('modPower').addEventListener('input',function(){kitAtivo=false;autoCalcHibrido();});
 $('invPower').addEventListener('input',calcOverload);
 $('precoKvp').addEventListener('input',function(){kitAtivo=false;autoCalcHibrido();});
