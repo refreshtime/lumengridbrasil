@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Lumen Grid — Dashboard</title>
+<title>Receitas e Despesas — LumenGrid</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -218,6 +218,31 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
   .hdr,.tabs{display:none!important}
   body{background:#fff}
 }
+
+/* ── SYNC / CONFIG ── */
+.sync-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border:1px solid var(--b1);border-radius:6px;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;background:transparent;font-family:'Inter',sans-serif;transition:all .15s}
+.sync-btn:hover{color:var(--t2);border-color:rgba(255,255,255,.13)}
+.sync-btn svg{width:12px;height:12px;flex-shrink:0}
+.sync-btn.syncing svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--t3);display:inline-block;flex-shrink:0;transition:background .3s}
+.sync-dot.ok{background:var(--green)}.sync-dot.err{background:var(--red)}
+.cfg-modal{position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.cfg-modal.show{display:flex}
+.cfg-box{background:var(--s2);border:1px solid var(--b1);border-radius:14px;padding:28px 28px 24px;width:92%;max-width:520px}
+.cfg-title{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:900;letter-spacing:2px;color:var(--t1);margin-bottom:6px;text-transform:uppercase}
+.cfg-sub{font-size:12px;color:var(--t3);margin-bottom:20px;line-height:1.65}
+@media(max-width:480px){
+  .sync-btn span{display:none}
+  .cfg-box{padding:20px 16px}
+}
+/* ── CF MOBILE ── */
+@media(max-width:640px){
+  .cf-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .cf-head,.cf-row{min-width:560px}
+  .cf-sumbar{flex-direction:column}
+  .cf-sum{padding:12px 14px}
+}
 </style>
 </head>
 <body>
@@ -230,11 +255,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <div class="hdr">
   <div>
     <div class="hdr-brand">LUMEN<span>GRID</span></div>
-    <div class="hdr-label">Dashboard de Gestão</div>
+    <div class="hdr-label">Receitas e Despesas</div>
   </div>
-  <div style="display:flex;align-items:center;gap:10px">
-    <span id="finSync" style="font-size:10px;color:#22C55E;opacity:0.4;transition:opacity .5s;white-space:nowrap;cursor:default" title="Última sincronização com o servidor">● Sync</span>
+  <div style="display:flex;align-items:center;gap:8px">
     <div class="hdr-date" id="hdrDate"></div>
+    <span class="sync-dot" id="syncDot" title="Status Google Sheets"></span>
+    <button class="sync-btn" onclick="sincronizarSheets()" id="syncBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      <span>Sincronizar</span>
+    </button>
+    <button class="sync-btn" onclick="openCfg()" title="Configurar Apps Script URL">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </button>
     <a href="portal.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--b1);border-radius:6px;font-size:11px;font-weight:600;color:var(--t3);text-decoration:none;transition:all .15s" onmouseover="this.style.color='var(--t2)'" onmouseout="this.style.color='var(--t3)'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Portal</a>
   </div>
 </div>
@@ -262,6 +294,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 
 <!-- ═══ DESPESAS ═══ -->
 <div class="tab-pane active" id="pane-despesas">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <button class="pill on" onclick="setDespPeriodo('mes',this)">Mês Atual</button>
+    <button class="pill" onclick="setDespPeriodo('mesant',this)">Mês Ant.</button>
+    <button class="pill" onclick="setDespPeriodo('3m',this)">3 Meses</button>
+    <button class="pill" onclick="setDespPeriodo('6m',this)">6 Meses</button>
+    <button class="pill" onclick="setDespPeriodo('ano',this)">Este Ano</button>
+    <button class="pill" onclick="setDespPeriodo('todos',this)">Todos</button>
+    <div style="display:flex;gap:6px;margin-left:auto;align-items:center">
+      <input class="fi" id="despDe" type="date" style="width:130px;height:28px;padding:3px 8px;font-size:11px" oninput="setDespCustom()" title="De">
+      <span style="color:var(--t3);font-size:11px">até</span>
+      <input class="fi" id="despAte" type="date" style="width:130px;height:28px;padding:3px 8px;font-size:11px" oninput="setDespCustom()" title="Até">
+    </div>
+  </div>
   <div class="kpi-row" id="despKpis"></div>
 
   <div class="card">
@@ -291,10 +336,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
             <option>Transferência</option><option>Dinheiro</option><option>Cheque</option>
           </select>
         </div>
+        <div class="fg" style="max-width:150px">
+          <label>Lançado por</label>
+          <select class="fsel" id="despLancadoPor">
+            <option value="">— Selecione —</option>
+            <option>Hingrid</option>
+            <option>Lucas</option>
+          </select>
+        </div>
       </div>
       <div class="frow">
         <div class="fg" style="flex:2"><label>Observação</label><input class="fi" id="despObs" placeholder="NF, fornecedor, referência..."></div>
-        <div class="fg" style="max-width:220px"><label>Vincular ao Projeto</label><select class="fsel" id="despProjeto" onchange="onDespProjetoChange()" style="margin-bottom:4px"><option value="">— Despesa geral —</option></select><input class="fi" id="despRefContrato" placeholder="Ou digitar referência / nº contrato" style="font-size:10px;margin-bottom:0"></div>
+        <div class="fg" style="max-width:220px"><label>Vincular ao Projeto</label><select class="fsel" id="despProjeto"><option value="">— Despesa geral —</option></select></div>
         <div class="fg" style="max-width:190px">
           <label>Comprovante / Foto</label>
           <div class="upzone" id="despZone" onclick="document.getElementById('despFile').click()">
@@ -322,7 +375,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
         Registro de Despesas
       </div>
       <div style="display:flex;gap:8px">
-        <select class="fsel" id="despFiltroMes" style="padding:5px 10px;font-size:11px;height:32px" onchange="renderDespesas()"><option value="">Todos os meses</option></select>
         <select class="fsel" id="despFiltroCat" style="padding:5px 10px;font-size:11px;height:32px;min-width:150px" onchange="renderDespesas()">
           <option value="">Todas as categorias</option>
           <option>Materiais</option><option>Mão de Obra</option><option>Logística</option>
@@ -332,7 +384,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       </div>
     </div>
     <div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Projeto / Ref.</th><th>Método</th><th>Valor</th><th>Obs.</th><th>Anexo</th><th></th></tr></thead>
+      <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Projeto</th><th>Método</th><th>Valor</th><th>Por</th><th>Obs.</th><th>Anexo</th><th></th></tr></thead>
       <tbody id="despBody"></tbody>
     </table></div>
     <div class="empty" id="despEmpty" style="display:none">
@@ -354,6 +406,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 
 <!-- ═══ RECEITAS ═══ -->
 <div class="tab-pane" id="pane-receitas">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <button class="pill on" onclick="setRecPeriodo('mes',this)">Mês Atual</button>
+    <button class="pill" onclick="setRecPeriodo('mesant',this)">Mês Ant.</button>
+    <button class="pill" onclick="setRecPeriodo('3m',this)">3 Meses</button>
+    <button class="pill" onclick="setRecPeriodo('6m',this)">6 Meses</button>
+    <button class="pill" onclick="setRecPeriodo('ano',this)">Este Ano</button>
+    <button class="pill" onclick="setRecPeriodo('todos',this)">Todos</button>
+    <div style="display:flex;gap:6px;margin-left:auto;align-items:center">
+      <input class="fi" id="recDe" type="date" style="width:130px;height:28px;padding:3px 8px;font-size:11px" oninput="setRecCustom()" title="De">
+      <span style="color:var(--t3);font-size:11px">até</span>
+      <input class="fi" id="recAte" type="date" style="width:130px;height:28px;padding:3px 8px;font-size:11px" oninput="setRecCustom()" title="Até">
+    </div>
+  </div>
   <div class="kpi-row" id="recKpis"></div>
 
   <div class="card">
@@ -362,6 +427,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         Registrar Venda Realizada
       </div>
+      <button class="btn btn-g btn-sm" onclick="abrirImportarContrato()" title="Buscar contrato assinado para preencher automaticamente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Importar Contrato
+      </button>
     </div>
     <div class="card-body">
       <div class="frow">
@@ -427,7 +496,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
         Vendas Realizadas
       </div>
       <div style="display:flex;gap:8px">
-        <select class="fsel" id="recFiltroMes" style="padding:5px 10px;font-size:11px;height:32px" onchange="renderReceitas()"><option value="">Todos os meses</option></select>
         <select class="fsel" id="recFiltroStatus" style="padding:5px 10px;font-size:11px;height:32px;min-width:185px" onchange="renderReceitas()">
           <option value="">Todos os status</option>
           <option>Aguardando Instalação</option><option>Em Andamento</option>
@@ -562,59 +630,160 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 
 </div><!-- /content -->
 
+<!-- ═══ IMPORTAR CONTRATO MODAL ═══ -->
+<div class="cfg-modal" id="contModal" onclick="if(event.target===this)fecharContrato()">
+  <div class="cfg-box" style="max-width:600px">
+    <div class="cfg-title">Importar Contrato Assinado</div>
+    <div class="cfg-sub">Selecione um contrato para preencher automaticamente os dados da venda.</div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">
+      <label style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)">Buscar cliente ou nº contrato</label>
+      <input class="fi" id="contBusca" placeholder="Ex: João Silva ou LG-2026-0001…" oninput="filtrarContratos()">
+    </div>
+    <div id="contLista" style="max-height:280px;overflow-y:auto;border:1px solid var(--b1);border-radius:7px;margin-bottom:16px"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-g" onclick="fecharContrato()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VINCULAR MODAL ═══ -->
+<div class="cfg-modal" id="vincModal" onclick="if(event.target===this)fecharVincular()">
+  <div class="cfg-box">
+    <div class="cfg-title">Vincular Despesa a Projeto</div>
+    <div class="cfg-sub" id="vincDesc" style="margin-bottom:14px;color:var(--t2)"></div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+      <label style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)">Buscar cliente</label>
+      <input class="fi" id="vincBusca" placeholder="Digite o nome do cliente…" oninput="filtrarVincClientes()">
+    </div>
+    <div id="vincLista" style="max-height:220px;overflow-y:auto;border:1px solid var(--b1);border-radius:7px;margin-bottom:16px"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-g" onclick="fecharVincular()">Cancelar</button>
+      <button class="btn btn-a" onclick="salvarVincular()" id="vincSalvarBtn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        Vincular
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONFIG MODAL ═══ -->
+<div class="cfg-modal" id="cfgModal" onclick="if(event.target===this)closeCfg()">
+  <div class="cfg-box">
+    <div class="cfg-title">Google Sheets — Config</div>
+    <div class="cfg-sub">Cole a URL do seu Apps Script implantado como Web App (acesso público). Após salvar, os lançamentos serão enviados automaticamente para a planilha.</div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:20px">
+      <label style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)">URL do Apps Script</label>
+      <input class="fi" id="cfgUrl" placeholder="https://script.google.com/macros/s/…/exec" style="font-size:11px">
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-g" onclick="closeCfg()">Cancelar</button>
+      <button class="btn btn-a" onclick="saveCfg()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
+        Salvar e Sincronizar
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── STORE ──
+const IS_AS=typeof google!=='undefined'&&google.script;
 function loadData(k,d){try{const v=localStorage.getItem('lg_'+k);return v?JSON.parse(v):d;}catch(e){return d;}}
-function saveData(k,v){
-  try{localStorage.setItem('lg_'+k,JSON.stringify(v));}catch(e){alert('Erro ao salvar: '+e.message);}
-  // Sync para backend compartilhado (sem arquivos base64)
-  const url=getFinUrl();
-  if(url&&['despesas','receitas','previsoes'].includes(k)){
-    fetch(url,{method:'POST',body:JSON.stringify({action:'replace_'+k,data:finPayload(v)})}).catch(()=>{});
-  }
+function saveData(k,v){try{localStorage.setItem('lg_'+k,JSON.stringify(v));}catch(e){alert('Erro ao salvar: '+e.message);}if(IS_AS)google.script.run.saveData(k,JSON.stringify(v));}
+
+// ── GOOGLE SHEETS SYNC ──
+let _GS_URL=localStorage.getItem('lg_gs_url')||'https://script.google.com/macros/s/AKfycbyUnGzQmxNWBj_b8lokum_J0XcIW7sbXbA0slzul4b_DUibgZx-HZSas8qVXYC9wahJ/exec';
+
+function enviarSheets(acao,body){
+  if(!_GS_URL)return;
+  try{fetch(_GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:acao,...body})});}catch(e){}
 }
 
-// ── BACKEND COMPARTILHADO (hardcoded — mesmo Apps Script do CRM) ──
-const FIN_URL='https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
-function getFinUrl(){return FIN_URL;}
-// Remove campos de arquivo (base64) antes de enviar ao backend
-function finPayload(arr){
-  return arr.map(o=>{const c={...o};delete c.fileData;delete c.pdfData;delete c.compData;delete c.fileName;delete c.pdfName;delete c.compName;return c;});
+function sincronizarSheets(){
+  if(!_GS_URL){openCfg();return;}
+  const btn=document.getElementById('syncBtn');
+  const dot=document.getElementById('syncDot');
+  btn.classList.add('syncing');
+  fetch(_GS_URL+'?action=get_data')
+    .then(r=>r.json())
+    .then(d=>{
+      let changed=false;
+      if(Array.isArray(d.despesas)){
+        const ids=new Set(despesas.map(x=>x.id));
+        d.despesas.forEach(item=>{if(!ids.has(item.id)){despesas.push(item);changed=true;}});
+        if(changed){despesas.sort((a,b)=>b.data.localeCompare(a.data));saveData('despesas',despesas);}
+      }
+      let changedR=false;
+      if(Array.isArray(d.receitas)){
+        const ids=new Set(receitas.map(x=>x.id));
+        d.receitas.forEach(item=>{if(!ids.has(item.id)){receitas.push(item);changedR=true;}});
+        if(changedR){receitas.sort((a,b)=>b.data.localeCompare(a.data));saveData('receitas',receitas);}
+      }
+      if(changed||changedR){renderDespesas();renderReceitas();populateDespProjeto();renderRelProjeto();}
+      dot.className='sync-dot ok';
+      setTimeout(()=>dot.className='sync-dot',3000);
+    })
+    .catch(()=>{dot.className='sync-dot err';setTimeout(()=>dot.className='sync-dot',3000);})
+    .finally(()=>btn.classList.remove('syncing'));
 }
-async function loadFinanceiro(silent=true){
-  const url=getFinUrl();if(!url)return;
-  try{
-    const res=await fetch(url+'?action=fin_data&t='+Date.now());
-    const data=await res.json();
-    // Receitas
-    if(Array.isArray(data.receitas)){
-      if(data.receitas.length>0){receitas=data.receitas;localStorage.setItem('lg_receitas',JSON.stringify(receitas));}
-      else if(receitas.length>0){fetch(url,{method:'POST',body:JSON.stringify({action:'replace_receitas',data:finPayload(receitas)})}).catch(()=>{});}
-    }
-    // Despesas
-    if(Array.isArray(data.despesas)){
-      if(data.despesas.length>0){despesas=data.despesas;localStorage.setItem('lg_despesas',JSON.stringify(despesas));}
-      else if(despesas.length>0){fetch(url,{method:'POST',body:JSON.stringify({action:'replace_despesas',data:finPayload(despesas)})}).catch(()=>{});}
-    }
-    // Previsões
-    if(Array.isArray(data.previsoes)){
-      if(data.previsoes.length>0){previsoes=data.previsoes;localStorage.setItem('lg_previsoes',JSON.stringify(previsoes));}
-      else if(previsoes.length>0){fetch(url,{method:'POST',body:JSON.stringify({action:'replace_previsoes',data:previsoes})}).catch(()=>{});}
-    }
-    if(silent){
-      renderDespesas();renderReceitas();populateDespProjeto();renderFluxo();
-      const el=document.getElementById('finSync');
-      if(el){el.textContent='● '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});el.style.opacity='1';setTimeout(()=>el.style.opacity='0.4',2000);}
-    }
-  }catch(e){}
+
+function openCfg(){document.getElementById('cfgUrl').value=_GS_URL;document.getElementById('cfgModal').classList.add('show');}
+function closeCfg(){document.getElementById('cfgModal').classList.remove('show');}
+function saveCfg(){
+  _GS_URL=document.getElementById('cfgUrl').value.trim();
+  localStorage.setItem('lg_gs_url',_GS_URL);
+  closeCfg();
+  if(_GS_URL)sincronizarSheets();
 }
-let _finInterval=null;
-function startFinSync(){if(_finInterval)clearInterval(_finInterval);_finInterval=setInterval(()=>loadFinanceiro(true),30000);}
 
 let despesas=loadData('despesas',[]);
 let receitas=loadData('receitas',[]);
 let previsoes=loadData('previsoes',[]);
 let _period=30;
+
+// ── FILTROS DE PERÍODO ──
+let _despDe=''  ,_despAte='';
+let _recDe='' ,_recAte='';
+
+function _periodoRange(tipo){
+  const h=new Date();
+  if(tipo==='mes')    return[h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-01',TODAY];
+  if(tipo==='mesant'){const d=new Date(h.getFullYear(),h.getMonth()-1,1);const f=new Date(h.getFullYear(),h.getMonth(),0);return[d.toISOString().slice(0,10),f.toISOString().slice(0,10)];}
+  if(tipo==='3m') {const d=new Date(h.getFullYear(),h.getMonth()-2,1);return[d.toISOString().slice(0,10),TODAY];}
+  if(tipo==='6m') {const d=new Date(h.getFullYear(),h.getMonth()-5,1);return[d.toISOString().slice(0,10),TODAY];}
+  if(tipo==='ano'){return[h.getFullYear()+'-01-01',TODAY];}
+  return['',''];
+}
+function _setPills(group,btn){document.querySelectorAll(group+' .pill').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');}
+
+function setDespPeriodo(tipo,btn){
+  const [de,ate]=_periodoRange(tipo);
+  _despDe=de;_despAte=ate;
+  _setPills('#pane-despesas',btn);
+  document.getElementById('despDe').value=de;
+  document.getElementById('despAte').value=ate;
+  renderDespesas();
+}
+function setDespCustom(){
+  _despDe=document.getElementById('despDe').value;
+  _despAte=document.getElementById('despAte').value;
+  _setPills('#pane-despesas',null);
+  renderDespesas();
+}
+function setRecPeriodo(tipo,btn){
+  const [de,ate]=_periodoRange(tipo);
+  _recDe=de;_recAte=ate;
+  _setPills('#pane-receitas',btn);
+  document.getElementById('recDe').value=de;
+  document.getElementById('recAte').value=ate;
+  renderReceitas();
+}
+function setRecCustom(){
+  _recDe=document.getElementById('recDe').value;
+  _recAte=document.getElementById('recAte').value;
+  _setPills('#pane-receitas',null);
+  renderReceitas();
+}
 
 // ── UTILS ──
 const TODAY=new Date().toISOString().slice(0,10);
@@ -663,28 +832,73 @@ function addDespesa(){
   const valor=parseFloat(document.getElementById('despValor').value)||0;
   const metodo=document.getElementById('despMetodo').value;
   const obs=document.getElementById('despObs').value.trim();
+  const lancadoPor=document.getElementById('despLancadoPor').value;
   if(!desc||!valor){alert('Preencha descrição e valor.');return;}
+  if(!lancadoPor){alert('Selecione quem está lançando.');return;}
   const projetoId=document.getElementById('despProjeto').value||'';
-  const refContrato=projetoId?'':document.getElementById('despRefContrato').value.trim();
-  despesas.push({id:genId(),data,desc,cat,valor,metodo,obs,projetoId,refContrato,fileData:_dFile,fileName:_dName});
+  const _proj=projetoId?receitas.find(r=>r.id===projetoId):null;
+  const _nc=_proj?(_proj.numContrato||''):'';
+  const _nd={id:genId(),data,desc,cat,valor,metodo,obs,lancadoPor,projetoId,numContrato:_nc,fileData:_dFile,fileName:_dName};
+  despesas.push(_nd);
   despesas.sort((a,b)=>b.data.localeCompare(a.data));
   saveData('despesas',despesas);
+  enviarSheets('save_despesa',{id:_nd.id,data,desc,cat,valor,metodo,obs,lancadoPor,projetoId,numContrato:_nc});
   document.getElementById('despDesc').value='';
   document.getElementById('despValor').value='';
   document.getElementById('despObs').value='';
-  document.getElementById('despRefContrato').value='';
-  document.getElementById('despProjeto').value='';
-  document.getElementById('despFiltroMes').value='';
+  document.getElementById('despLancadoPor').value='';
   clearDFile();renderDespesas();
 }
 function deleteDespesa(id){if(!confirm('Excluir esta despesa?'))return;despesas=despesas.filter(d=>d.id!==id);saveData('despesas',despesas);renderDespesas();}
 
+// ── VINCULAR DESPESA ──
+let _vincId=null,_vincProjetoSel=null;
+function abrirVincular(id,desc){
+  _vincId=id;_vincProjetoSel=null;
+  document.getElementById('vincDesc').textContent='Despesa: '+desc;
+  document.getElementById('vincBusca').value='';
+  document.getElementById('vincSalvarBtn').disabled=true;
+  filtrarVincClientes();
+  document.getElementById('vincModal').classList.add('show');
+  setTimeout(()=>document.getElementById('vincBusca').focus(),100);
+}
+function fecharVincular(){document.getElementById('vincModal').classList.remove('show');_vincId=null;_vincProjetoSel=null;}
+function filtrarVincClientes(){
+  const q=document.getElementById('vincBusca').value.toLowerCase();
+  const lista=document.getElementById('vincLista');
+  const fil=receitas.filter(r=>!q||r.cliente.toLowerCase().includes(q)||(r.numContrato||'').toLowerCase().includes(q));
+  if(!fil.length){lista.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--t3)">Nenhum projeto encontrado</div>';return;}
+  lista.innerHTML=fil.map(r=>`
+    <div onclick="selecionarVincCliente('${r.id}')" id="vc_${r.id}" style="padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--b2);transition:background .1s;display:flex;flex-direction:column;gap:2px" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background=(_vincProjetoSel==='${r.id}'?'var(--accent-d)':'')">
+      <div style="font-size:12px;font-weight:600;color:var(--t1)">${r.cliente}</div>
+      <div style="font-size:10px;color:var(--t3)">${r.numContrato||'sem contrato'} · ${fmtDate(r.data)} · ${fmtBRL(r.valor)}</div>
+    </div>`).join('');
+}
+function selecionarVincCliente(projetoId){
+  _vincProjetoSel=projetoId;
+  document.querySelectorAll('#vincLista>div').forEach(el=>{
+    el.style.background=el.id==='vc_'+projetoId?'var(--accent-d)':'';
+  });
+  document.getElementById('vincSalvarBtn').disabled=false;
+}
+function salvarVincular(){
+  if(!_vincId||!_vincProjetoSel)return;
+  const desp=despesas.find(d=>d.id===_vincId);
+  const proj=receitas.find(r=>r.id===_vincProjetoSel);
+  if(!desp||!proj)return;
+  desp.projetoId=proj.id;
+  desp.numContrato=proj.numContrato||'';
+  saveData('despesas',despesas);
+  enviarSheets('vincular',{id:desp.id,projetoId:proj.id,numContrato:proj.numContrato||''});
+  fecharVincular();
+  renderDespesas();
+}
+
 function renderDespesas(){
-  monthFilter('despFiltroMes',despesas);
-  const fM=document.getElementById('despFiltroMes').value;
   const fC=document.getElementById('despFiltroCat').value;
   let fil=despesas;
-  if(fM)fil=fil.filter(d=>getMonth(d.data)===fM);
+  if(_despDe)fil=fil.filter(d=>d.data>=_despDe);
+  if(_despAte)fil=fil.filter(d=>d.data<=_despAte);
   if(fC)fil=fil.filter(d=>d.cat===fC);
   const total=fil.reduce((s,d)=>s+d.valor,0);
   const mesTot=despesas.filter(d=>getMonth(d.data)===MES_ATUAL).reduce((s,d)=>s+d.valor,0);
@@ -705,11 +919,10 @@ function renderDespesas(){
     let att=`<span style="color:var(--t3);font-size:11px">—</span>`;
     if(d.fileData){att=d.fileData.startsWith('data:image')?`<img class="thumb" src="${d.fileData}" onclick="openModal('${d.fileData}')" title="Ver comprovante">`:`<a class="pdf-lnk" href="${d.fileData}" download="${d.fileName||'comprovante'}">${icoPdf} ${(d.fileName||'PDF').slice(0,14)}</a>`;}
     const rec=d.projetoId?receitas.find(r=>r.id===d.projetoId):null;
+    const icoLink=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="11" height="11"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>`;
     const projLabel=rec
       ?`<span class="badge" style="background:rgba(232,100,26,.12);color:var(--accent);font-size:10px">${rec.cliente}${rec.numContrato?' · '+rec.numContrato:''}</span>`
-      :d.refContrato
-        ?`<span class="badge" style="background:rgba(100,100,200,.1);color:#888;font-size:10px">⏳ ${d.refContrato}</span>`
-        :`<span style="color:var(--t3);font-size:11px">—</span>`;
+      :`<button class="btn btn-g btn-sm" onclick="abrirVincular('${d.id}','${d.desc.replace(/'/g,'').slice(0,30)}')" title="Vincular a um projeto">${icoLink} Vincular</button>`;
     return`<tr>`+
       `<td class="mu">${fmtDate(d.data)}</td>`+
       `<td style="font-weight:500">${d.desc}</td>`+
@@ -717,6 +930,7 @@ function renderDespesas(){
       `<td>${projLabel}</td>`+
       `<td class="mu">${d.metodo}</td>`+
       `<td style="font-weight:700;color:var(--red)">${fmtBRL(d.valor)}</td>`+
+      `<td class="mu">${d.lancadoPor||'—'}</td>`+
       `<td class="mu">${d.obs||'—'}</td>`+
       `<td>${att}</td>`+
       `<td><button class="btn btn-r btn-sm" onclick="deleteDespesa('${d.id}')">${icoTrsh}</button></td>`+
@@ -751,9 +965,11 @@ function addReceita(){
   const numContrato=document.getElementById('recNumContrato').value.trim();
   if(!cliente){alert('Informe o nome do cliente.');return;}
   if(!valor){alert('Informe o valor da venda.');return;}
-  receitas.push({id:genId(),data,cliente,doc,ender,tipo,kvp,modulos,inversor,bateria,valor,recebido,pagamento,condicoes,consultor,status,obs,numContrato,pdfData:_rPdf,pdfName:_rPdfN,compData:_rComp,compName:_rCompN});
+  const _nr={id:genId(),data,cliente,doc,ender,tipo,kvp,modulos,inversor,bateria,valor,recebido,pagamento,condicoes,consultor,status,obs,numContrato,pdfData:_rPdf,pdfName:_rPdfN,compData:_rComp,compName:_rCompN};
+  receitas.push(_nr);
   receitas.sort((a,b)=>b.data.localeCompare(a.data));
   saveData('receitas',receitas);
+  enviarSheets('save_receita',{id:_nr.id,data,cliente,doc,ender,tipo,kvp,modulos,inversor,bateria,valor,recebido,pagamento,condicoes,consultor,status,obs,numContrato});
   ['recCliente','recDoc','recEnder','recKvp','recModulos','recInversor','recBateria','recValor','recRecebido','recCondicoes','recConsultor','recObs','recNumContrato'].forEach(i=>document.getElementById(i).value='');
   clearRFiles();renderReceitas();populateDespProjeto();
 }
@@ -765,20 +981,14 @@ function populateDespProjeto(){
     receitas.map(r=>`<option value="${r.id}">${r.cliente}${r.numContrato?' ('+r.numContrato+')':''}</option>`).join('');
   if(cur)sel.value=cur;
 }
-function onDespProjetoChange(){
-  const sel=document.getElementById('despProjeto');
-  const ref=document.getElementById('despRefContrato');
-  if(sel.value)ref.value='';
-}
 function updateRecStatus(id,ns){const r=receitas.find(r=>r.id===id);if(r)r.status=ns;saveData('receitas',receitas);renderReceitas();}
 function toggleCard(id){document.getElementById('vb_'+id).classList.toggle('open');}
 
 function renderReceitas(){
-  monthFilter('recFiltroMes',receitas);
-  const fM=document.getElementById('recFiltroMes').value;
   const fS=document.getElementById('recFiltroStatus').value;
   let fil=receitas;
-  if(fM)fil=fil.filter(r=>getMonth(r.data)===fM);
+  if(_recDe)fil=fil.filter(r=>r.data>=_recDe);
+  if(_recAte)fil=fil.filter(r=>r.data<=_recAte);
   if(fS)fil=fil.filter(r=>r.status===fS);
   const tv=receitas.reduce((s,r)=>s+r.valor,0);
   const tr=receitas.reduce((s,r)=>s+r.recebido,0);
@@ -1017,13 +1227,21 @@ function renderRelProjeto(){
   tbody.innerHTML=rows;
 }
 
+// Período padrão = mês atual
+const [_initDe,_initAte]=_periodoRange('mes');
+_despDe=_initDe;_despAte=_initAte;
+_recDe=_initDe;_recAte=_initAte;
+document.getElementById('despDe').value=_initDe;
+document.getElementById('despAte').value=_initAte;
+document.getElementById('recDe').value=_initDe;
+document.getElementById('recAte').value=_initAte;
+
 renderDespesas();
 renderReceitas();
 populateDespProjeto();
 renderRelProjeto();
 renderFluxo();
-// Carrega do backend e inicia auto-sync
-loadFinanceiro(false).then(()=>{renderDespesas();renderReceitas();populateDespProjeto();renderRelProjeto();renderFluxo();startFinSync();});
+if(_GS_URL)sincronizarSheets();
 
 // ── HISTÓRICO DE PROPOSTAS ──────────────────────────────────────────────────
 (function(){
@@ -1072,6 +1290,92 @@ function limparHistorico(){
 }
 // ────────────────────────────────────────────────────────────────────────────
 
+
+// ── IMPORTAR CONTRATO ──────────────────────────────────────────
+let _contratos = [];
+
+function abrirImportarContrato() {
+  document.getElementById('contBusca').value = '';
+  document.getElementById('contModal').classList.add('show');
+  _carregarContratos();
+}
+function fecharContrato() {
+  document.getElementById('contModal').classList.remove('show');
+}
+function _carregarContratos() {
+  const lista = document.getElementById('contLista');
+  if (!_GS_URL) {
+    lista.innerHTML = '<div style="padding:16px;text-align:center;color:var(--t3);font-size:12px">Configure a URL do Apps Script primeiro (ícone ⚙ no cabeçalho).</div>';
+    return;
+  }
+  lista.innerHTML = '<div style="padding:16px;text-align:center;color:var(--t3);font-size:12px">Carregando contratos…</div>';
+  fetch(_GS_URL + '?action=get_contratos')
+    .then(r => r.json())
+    .then(d => {
+      _contratos = Array.isArray(d.contratos) ? d.contratos : [];
+      filtrarContratos();
+    })
+    .catch(() => {
+      lista.innerHTML = '<div style="padding:16px;text-align:center;color:var(--red);font-size:12px">Erro ao carregar contratos. Verifique a URL do Apps Script e reimplante.</div>';
+    });
+}
+function filtrarContratos() {
+  const q = (document.getElementById('contBusca').value || '').toLowerCase();
+  const found = _contratos.filter(c =>
+    !q || (c.cliente||'').toLowerCase().includes(q) || (c.numContrato||'').toLowerCase().includes(q)
+  );
+  const lista = document.getElementById('contLista');
+  if (!found.length) {
+    lista.innerHTML = '<div style="padding:16px;text-align:center;color:var(--t3);font-size:12px">Nenhum contrato encontrado.</div>';
+    return;
+  }
+  lista.innerHTML = found.map(c => {
+    const idx = _contratos.indexOf(c);
+    return `<div onclick="importarContrato(${idx})" style="padding:12px 16px;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .12s" onmouseover="this.style.background='rgba(232,100,26,.07)'" onmouseout="this.style.background=''">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--t1)">${c.cliente||'—'}</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:2px">${c.numContrato||''} · ${c.tipoSistema||''} · ${c.kvp||''}kVp · ${c.status||''}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:12px;font-weight:700;color:var(--green)">${_fmt(parseFloat(c.valorTotal)||0)}</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:2px">${c.dataEmissao||''}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function importarContrato(idx) {
+  const c = _contratos[idx];
+  if (!c) return;
+  if (c.cliente)      document.getElementById('recCliente').value = c.cliente;
+  if (c.cpfCnpj)     document.getElementById('recDoc').value = c.cpfCnpj;
+  if (c.kvp)         document.getElementById('recKvp').value = c.kvp;
+  if (c.valorTotal)  document.getElementById('recValor').value = c.valorTotal;
+  if (c.numContrato) document.getElementById('recNumContrato').value = c.numContrato;
+  if (c.consultor)   document.getElementById('recConsultor').value = c.consultor;
+  if (c.formaPagamento) {
+    const sel = document.getElementById('recPagamento');
+    for (let opt of sel.options) {
+      if (opt.text.toLowerCase().includes((c.formaPagamento||'').toLowerCase().split(' ')[0])) {
+        sel.value = opt.value; break;
+      }
+    }
+  }
+  if (c.tipoSistema) {
+    const sel = document.getElementById('recTipo');
+    const t = c.tipoSistema.toLowerCase();
+    if (t.includes('residencial')) sel.value = 'Residencial';
+    else if (t.includes('comercial')) sel.value = 'Comercial';
+    else if (t.includes('industrial')) sel.value = 'Industrial';
+    else if (t.includes('rural')||t.includes('agro')) sel.value = 'Rural/Agro';
+  }
+  fecharContrato();
+  // Scroll suave ao formulário
+  document.querySelector('#pane-receitas .card').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 </script>
 </body>
 </html>
+
