@@ -12,7 +12,26 @@ const COLS = [
 ];
 const COL_STATUS = 13;
 
-// ── ENDPOINT ─────────────────────────────────────────────────
+// ── ENDPOINTS ────────────────────────────────────────────────
+function doGet(e) {
+  try {
+    const action = e.parameter.action;
+    let result;
+    if (action === 'get_contratos') {
+      result = getContratos();
+    } else {
+      result = { success: false, error: 'Acao desconhecida' };
+    }
+    return ContentService
+      .createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
 function doPost(e) {
   try {
     const action = e.parameter.action;
@@ -76,6 +95,29 @@ function salvarContrato(p, pdfBase64) {
   gerado.getRange(lr, 14).setFontColor('#1a73e8');
 
   return { success: true, docUrl: fileUrl, id: id };
+}
+
+// ── LER CONTRATOS ─────────────────────────────────────────────
+function getContratos() {
+  try {
+    const ss = SpreadsheetApp.openById('145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o');
+    const sheet = ss.getSheetByName('Assinado') || ss.getSheetByName('Gerado');
+    if (!sheet || sheet.getLastRow() < 2) return { contratos: [] };
+    const rows = sheet.getDataRange().getValues();
+    const contratos = rows.slice(1).map(function(r) {
+      return {
+        id: r[0]||'', numContrato: r[1]||'',
+        dataEmissao: r[2] ? String(r[2]) : '',
+        cliente: r[3]||'', cpfCnpj: r[4]||'', telefone: r[5]||'',
+        email: r[6]||'', tipoSistema: r[7]||'', kvp: r[8]||'',
+        valorTotal: r[9]||0, formaPagamento: r[10]||'',
+        consultor: r[11]||'', status: r[12]||''
+      };
+    }).filter(function(c) { return c.cliente; });
+    return { contratos: contratos };
+  } catch(err) {
+    return { contratos: [], error: err.message };
+  }
 }
 
 // ── MENU / EVENTOS ────────────────────────────────────────────
