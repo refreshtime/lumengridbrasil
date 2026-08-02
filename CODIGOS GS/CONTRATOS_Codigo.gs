@@ -34,15 +34,16 @@ function doGet(e) {
 
 function doPost(e) {
   try {
+    // action vem pela URL (?action=salvarContrato) para sobreviver ao redirect do GAS
     const action = e.parameter.action;
     if (action === 'salvarContrato') {
-      const pdfBase64 = (e.postData && e.postData.contents) ? e.postData.contents : '';
+      const body = JSON.parse(e.postData.contents);
       return ContentService
-        .createTextOutput(JSON.stringify(salvarContrato(e.parameter, pdfBase64)))
+        .createTextOutput(JSON.stringify(salvarContrato(body)))
         .setMimeType(ContentService.MimeType.JSON);
     }
     return ContentService
-      .createTextOutput(JSON.stringify({ success: false, error: 'Acao desconhecida' }))
+      .createTextOutput(JSON.stringify({ success: false, error: 'Acao desconhecida: ' + action }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch(err) {
     return ContentService

@@ -846,8 +846,9 @@ async function salvarNoDrive() {
       fatura: faturaBase64 ? { data: faturaBase64, type: faturaFile.type, name: faturaFile.name } : null
     });
 
-    fetch(gasUrl, {
+    fetch(gasUrl + '?action=salvarContrato', {
       method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
       body: payload
     })
     .then(function(r) { return r.json(); })
