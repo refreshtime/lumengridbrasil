@@ -55,12 +55,11 @@ function doPost(e) {
 function salvarContrato(p, pdfBase64) {
   if (!pdfBase64) throw new Error('PDF não recebido.');
 
-  // Pasta de destino
+  // 1. Salva PDF no Drive
   const folderName = 'LumenGrid — Contratos';
   const folders = DriveApp.getFoldersByName(folderName);
   const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
 
-  // Salva o PDF
   const num     = p.num     || '---';
   const cliNome = p.cliNome || 'Cliente';
   const fileName = cliNome + ' - ' + num + ' - LUMENGRID.pdf';
@@ -69,30 +68,42 @@ function salvarContrato(p, pdfBase64) {
   const file  = folder.createFile(blob);
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   const fileUrl = file.getUrl();
-
-  // Registro na planilha
-  const ss = SpreadsheetApp.openById('145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o');
-  let gerado = ss.getSheetByName('Gerado');
-  if (!gerado) {
-    gerado = ss.insertSheet('Gerado');
-    gerado.appendRow(COLS);
-    gerado.getRange(1, 1, 1, COLS.length).setFontWeight('bold').setBackground('#E8641A').setFontColor('#ffffff');
-    gerado.setFrozenRows(1);
-    gerado.setColumnWidth(14, 320);
-    gerado.setColumnWidth(4, 200);
-  }
-
   const id = Utilities.getUuid();
-  const tipoLabel = p.tipoSistema === 'solar_bateria' ? 'Solar com Bateria (Híbrido)' : 'Solar Fotovoltaico';
-  gerado.appendRow([
-    id, num, _dt(p.dataEmissao), cliNome, p.cliDoc || '', p.cliFone || '', p.cliEmail || '',
-    tipoLabel, p.eqKvp || '', parseFloat(p.payTotal) || 0, _pagLabel(p.payModo),
-    p.vendNome || '', 'Gerado', fileUrl, new Date().toLocaleString('pt-BR')
-  ]);
-  const lr = gerado.getLastRow();
-  gerado.getRange(lr, 10).setNumberFormat('R$ #,##0.00');
-  gerado.getRange(lr, COL_STATUS).setFontColor('#E8641A').setFontWeight('bold');
-  gerado.getRange(lr, 14).setFontColor('#1a73e8');
+
+  // 2. Registro na planilha (separado — erro aqui não cancela o Drive)
+  try {
+    const ss = SpreadsheetApp.openById('145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o');
+    let gerado = ss.getSheetByName('Gerado');
+    if (!gerado) {
+      gerado = ss.insertSheet('Gerado');
+      gerado.getRange(1, 1, 1, COLS.length).setValues([COLS])
+        .setFontWeight('bold').setBackground('#E8641A').setFontColor('#ffffff');
+      gerado.setFrozenRows(1);
+      gerado.setColumnWidth(14, 320);
+      gerado.setColumnWidth(4, 200);
+    }
+    SpreadsheetApp.flush();
+
+    const lastRow = gerado.getLastRow();
+    const newRow  = lastRow + 1;
+    // Garante que a linha existe no grid
+    if (gerado.getMaxRows() < newRow) {
+      gerado.insertRowsAfter(gerado.getMaxRows(), 20);
+    }
+
+    const tipoLabel = p.tipoSistema === 'solar_bateria' ? 'Solar com Bateria (Híbrido)' : 'Solar Fotovoltaico';
+    gerado.getRange(newRow, 1, 1, 15).setValues([[
+      id, num, _dt(p.dataEmissao), cliNome, p.cliDoc || '', p.cliFone || '', p.cliEmail || '',
+      tipoLabel, p.eqKvp || '', parseFloat(p.payTotal) || 0, _pagLabel(p.payModo),
+      p.vendNome || '', 'Gerado', fileUrl, new Date().toLocaleString('pt-BR')
+    ]]);
+    gerado.getRange(newRow, 10).setNumberFormat('R$ #,##0.00');
+    gerado.getRange(newRow, COL_STATUS).setFontColor('#E8641A').setFontWeight('bold');
+    gerado.getRange(newRow, 14).setFontColor('#1a73e8');
+  } catch(sheetErr) {
+    // PDF já foi salvo — retorna sucesso com aviso
+    return { success: true, docUrl: fileUrl, id: id, warning: sheetErr.message };
+  }
 
   return { success: true, docUrl: fileUrl, id: id };
 }
