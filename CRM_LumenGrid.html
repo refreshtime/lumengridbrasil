@@ -1096,27 +1096,56 @@ function getLeads() {
   if (ADMINS.includes(currentUser)) return all;
   return all.filter(l => l.resp === currentUser);
 }
-function saveLeads(leads) {
+function saveLeads(leads, changedLead) {
   if (ADMINS.includes(currentUser)) {
     localStorage.setItem('lg_leads', JSON.stringify(leads));
   } else {
     const others = getAllLeadsRaw().filter(l => l.resp !== currentUser);
     localStorage.setItem('lg_leads', JSON.stringify([...leads, ...others]));
   }
-  syncToSheets();
+  if (changedLead) syncOneLead(changedLead);
+  else syncToSheets();
 }
 
-// Sincroniza todos os leads com o Google Sheets em background
+// Sincroniza todos os leads — text/plain com no-cors envia o body corretamente
 function syncToSheets() {
   const cfg = getConfig();
   if (!cfg.gsUrl) return;
   const all = getAllLeadsRaw();
+  setSyncStatus('saving');
   fetch(cfg.gsUrl, {
     method: 'POST',
     mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify({ action: 'save_leads', leads: all })
-  }).catch(() => {});
+  }).then(() => setSyncStatus('ok')).catch(() => setSyncStatus('err'));
+}
+
+// Sincroniza apenas um lead (evita sobrescrever dados de outros usuários)
+function syncOneLead(lead) {
+  const cfg = getConfig();
+  if (!cfg.gsUrl) return;
+  setSyncStatus('saving');
+  fetch(cfg.gsUrl, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: 'save_lead', lead })
+  }).then(() => setSyncStatus('ok')).catch(() => setSyncStatus('err'));
+}
+
+function setSyncStatus(state) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  if (state === 'saving') {
+    el.textContent = '⟳ Salvando...'; el.style.color = '#F97316'; el.style.opacity = '1';
+  } else if (state === 'ok') {
+    el.textContent = '● Sync ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    el.style.color = '#22C55E'; el.style.opacity = '1';
+    setTimeout(() => { el.style.opacity = '0.4'; el.style.color = '#6366F1'; }, 3000);
+  } else {
+    el.textContent = '● Falha sync'; el.style.color = '#EF4444'; el.style.opacity = '1';
+  }
 }
 
 // JSONP — carrega dados sem bloqueio CORS (GAS faz redirect que derruba headers)
