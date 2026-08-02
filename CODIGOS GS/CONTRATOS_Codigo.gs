@@ -72,8 +72,9 @@ function salvarContrato(p) {
   if (!p || !p.pdf) throw new Error('PDF não recebido. Chaves recebidas: ' + Object.keys(p || {}).join(','));
   if (!p.cnh) throw new Error('CNH não recebida.');
 
-  // 1. Pasta raiz → subpasta do cliente
-  const root = getOrCreateFolder(DriveApp.getRootFolder(), 'LumenGrid — Contratos');
+  // 1. Pasta raiz (pasta fixa no Drive) → subpasta do cliente
+  const FOLDER_ID = '1DtFDC4jH_a1updhKrx-ns9qfLGnCyA9i';
+  const root = DriveApp.getFolderById(FOLDER_ID);
   const num     = p.num     || '---';
   const cliNome = p.cliNome || 'Cliente';
   const sub = getOrCreateFolder(root, cliNome + ' - ' + num);
