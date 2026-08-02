@@ -563,11 +563,11 @@ function generateContract(){
     '</div>'+
     '<p><span class="cnum">2.4.</span> A instala\u00e7\u00e3o seguir\u00e1 as normas t\u00e9cnicas aplic\u00e1veis, em especial a <strong>ABNT NBR 16690</strong> (sistemas fotovoltaicos), <strong>NR-10</strong> (seguran\u00e7a em eletricidade) e as resolu\u00e7\u00f5es vigentes da ANEEL, bem como as normas de acesso da distribuidora local.</p>'+
     '</div>'+
-    '<div class="clausula">'+'<div class="clausula-title">Cláusula 3ª — Declarações do CONTRATANTE</div>'+'<p><span class="cnum">3.1.</span> Ao assinar este contrato, o CONTRATANTE declara:</p>'+'<p class="pitem"><span class="cnum">3.1.1.</span> Não haver impedimento legal, estrutural ou regulatório para a instalação do sistema no endereço indicado;</p>'+'<p class="pitem"><span class="cnum">3.1.2.</span> Ter ciência de que o direito de propriedade sobre os equipamentos será transferido ao CONTRATANTE somente após a liquidação integral do valor contratado;</p>'+'<p class="pitem"><span class="cnum">3.1.3.</span> Ter ciência de que a CONTRATADA realizará a solicitação de compra dos equipamentos e, quando necessário, os processos de homologação junto à concessionária de energia em nome do CONTRATANTE.</p>'+'</div>'+    footer(1,4)+
+    footer(1,6)+
   '</div>';
 
-  // PAGE 2 — PRAZO · RESPONSABILIDADE · PREÇO
-  const pg2='<div class="cpage-cont">'+header()+'<div class="clausula">'+'<div class="clausula-title">Cláusula 4ª — Prazo de Instalação</div>'+'<p><span class="cnum">4.1.</span> A conclusão da instalação física dar-se-á em até <strong>'+prazo+' ('+numPorExtensoInt(prazo)+') dias úteis</strong>, a contar da confirmação do pagamento da entrada e assinatura deste instrumento.</p>'+'<p><span class="cnum">4.2.</span> O prazo de homologação junto à concessionária de energia é de responsabilidade desta, estando sujeito aos prazos regulatórios da ANEEL. A CONTRATADA realizará todos os trâmites necessários, mas não se responsabiliza por atrasos ocasionados pela concessionária.</p>'+'</div>'+
+  // PAGE 2 — DECLARAÇÕES · PRAZO · HOMOLOGAÇÃO
+  const pg2='<div class="cpage-cont">'+header()+'<div class="clausula">'+'<div class="clausula-title">Cláusula 3ª — Declarações do CONTRATANTE</div>'+'<p><span class="cnum">3.1.</span> Ao assinar este contrato, o CONTRATANTE declara:</p>'+'<p class="pitem"><span class="cnum">3.1.1.</span> Não haver impedimento legal, estrutural ou regulatório para a instalação do sistema no endereço indicado;</p>'+'<p class="pitem"><span class="cnum">3.1.2.</span> Ter ciência de que o direito de propriedade sobre os equipamentos será transferido ao CONTRATANTE somente após a liquidação integral do valor contratado;</p>'+'<p class="pitem"><span class="cnum">3.1.3.</span> Ter ciência de que a CONTRATADA realizará a solicitação de compra dos equipamentos e, quando necessário, os processos de homologação junto à concessionária de energia em nome do CONTRATANTE.</p>'+'</div>'+'<div class="clausula">'+'<div class="clausula-title">Cláusula 4ª — Prazo de Instalação</div>'+'<p><span class="cnum">4.1.</span> A conclusão da instalação física dar-se-á em até <strong>'+prazo+' ('+numPorExtensoInt(prazo)+') dias úteis</strong>, a contar da confirmação do pagamento da entrada e assinatura deste instrumento.</p>'+'<p><span class="cnum">4.2.</span> O prazo de homologação junto à concessionária de energia é de responsabilidade desta, estando sujeito aos prazos regulatórios da ANEEL. A CONTRATADA realizará todos os trâmites necessários, mas não se responsabiliza por atrasos ocasionados pela concessionária.</p>'+'</div>'+
     '<div class="clausula">'+
     '<div class="clausula-title">Projeto e Homologação junto à Concessionária</div>'+
     '<p>A CONTRATADA será responsável pela elaboração e condução do processo de homologação do sistema de energia solar perante a concessionária, contemplando:</p>'+
@@ -802,9 +802,17 @@ async function downloadPDF() {
     for (let i = 0; i < pages.length; i++) {
       const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, allowTaint: true, logging: false });
       const imgData = canvas.toDataURL('image/jpeg', 0.92);
-      const imgH = (canvas.height / canvas.width) * pW;
+      // Proporção real do canvas
+      const naturalH = (canvas.height / canvas.width) * pW;
+      let finalW = pW, finalH = naturalH, x = 0, y = 0;
+      if (naturalH > pH) {
+        // Escala para caber na altura A4, centraliza horizontalmente
+        finalH = pH;
+        finalW = (canvas.width / canvas.height) * pH;
+        x = (pW - finalW) / 2;
+      }
       if (i > 0) pdf.addPage();
-      pdf.addImage(imgData, 'JPEG', 0, 0, pW, imgH);
+      pdf.addImage(imgData, 'JPEG', x, y, finalW, finalH);
     }
     pdf.save(cliNome + ' - ' + num + ' - LUMENGRID.pdf');
   } catch(err) {
