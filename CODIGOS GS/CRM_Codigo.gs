@@ -29,7 +29,8 @@ const COLUNAS_META = {
 // ────────────────────────────────────────────────
 
 function doGet(e) {
-  const action = (e && e.parameter && e.parameter.action) || 'leads_meta';
+  const action   = (e && e.parameter && e.parameter.action)   || 'leads_meta';
+  const callback = (e && e.parameter && e.parameter.callback) || '';
   let result;
   try {
     if      (action === 'leads_meta') result = getLeadsMeta();
@@ -39,8 +40,15 @@ function doGet(e) {
   } catch(err) {
     result = { error: err.message };
   }
+  const json = JSON.stringify(result);
+  // JSONP: evita bloqueio CORS do browser
+  if (callback) {
+    return ContentService
+      .createTextOutput(callback + '(' + json + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
   return ContentService
-    .createTextOutput(JSON.stringify(result))
+    .createTextOutput(json)
     .setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -59,9 +67,9 @@ function doPost(e) {
   } catch(err) {
     result = { error: err.message };
   }
-  return ContentService
+  return addCors(ContentService
     .createTextOutput(JSON.stringify(result))
-    .setMimeType(ContentService.MimeType.JSON);
+    .setMimeType(ContentService.MimeType.JSON));
 }
 
 // ────────────────────────────────────────────────
