@@ -793,25 +793,24 @@ async function downloadPDF() {
   if (!pages.length) { alert('Gere o contrato antes de salvar.'); return; }
   const cliNome = document.getElementById('cliNome').value.trim() || 'Cliente';
   const num = document.getElementById('cNum').value.trim() || '001';
-  const btn = document.querySelector('.bpdf');
-  const orig = btn ? btn.innerHTML : '';
-  if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Gerando PDF...'; }
+  const btns = document.querySelectorAll('.bpdf');
+  btns.forEach(b => { b.disabled = true; b.dataset.orig = b.innerHTML; b.innerHTML = '⏳ Gerando PDF...'; });
   try {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const pW = pdf.internal.pageSize.getWidth();
-    const pH = pdf.internal.pageSize.getHeight();
     for (let i = 0; i < pages.length; i++) {
-      const canvas = await html2canvas(pages[i], { scale: 1.5, useCORS: true, allowTaint: true, logging: false });
-      const imgData = canvas.toDataURL('image/jpeg', 0.90);
+      const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, allowTaint: true, logging: false });
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      const imgH = (canvas.height / canvas.width) * pW;
       if (i > 0) pdf.addPage();
-      pdf.addImage(imgData, 'JPEG', 0, 0, pW, pH);
+      pdf.addImage(imgData, 'JPEG', 0, 0, pW, imgH);
     }
     pdf.save(cliNome + ' - ' + num + ' - LUMENGRID.pdf');
   } catch(err) {
     alert('Erro ao gerar PDF: ' + err.message);
   }
-  if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+  btns.forEach(b => { b.disabled = false; b.innerHTML = b.dataset.orig; });
 }
 
 function _driveToast(tipo, msg, docUrl) {
