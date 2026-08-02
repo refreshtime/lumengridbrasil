@@ -15,7 +15,10 @@ const HDR_RECEITAS = [
 ];
 const HDR_DESPESAS = [
   'ID','Data','Descrição','Categoria','Valor (R$)','Método',
-  'Observação','Lançado por','Nº Contrato','Projeto ID','Criado em'
+  'Observação','Lançado por','Nº Contrato','Projeto ID','Ref Contrato','Criado em'
+];
+const HDR_PREVISOES = [
+  'ID','Data','Tipo','Cliente','Descrição','Categoria','Valor (R$)','Observação','Status','Criado em'
 ];
 
 // ── CORS ──────────────────────────────────────────────────────
@@ -48,9 +51,12 @@ function doPost(e) {
   try {
     const body   = JSON.parse(e.postData.contents);
     const action = body.action;
-    if      (action === 'save_despesa') result = saveDespesa(body);
-    else if (action === 'save_receita') result = saveReceita(body);
-    else if (action === 'vincular')     result = vincularDespesa(body);
+    if      (action === 'save_despesa')      result = saveDespesa(body);
+    else if (action === 'save_receita')      result = saveReceita(body);
+    else if (action === 'vincular')          result = vincularDespesa(body);
+    else if (action === 'replace_despesas')  result = replaceDespesas(body);
+    else if (action === 'replace_receitas')  result = replaceReceitas(body);
+    else if (action === 'replace_previsoes') result = replacePrevisoes(body);
     else result = { error: 'Ação desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };
@@ -60,33 +66,31 @@ function doPost(e) {
     .setMimeType(ContentService.MimeType.JSON));
 }
 
-
-// ── GET CONTRATOS (Planilha de Contratos Assinados) ───────────
-const SHEET_ID_CONTRATOS = '1LTv6dFRT56533gfPc5elNfxiddsUzgYyLbCLsNykyRQ';
+// ── GET CONTRATOS (Planilha LumenGrid Contratos) ──────────────
+const SHEET_ID_CONTRATOS = '145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o';
 
 function getContratos() {
   try {
     const ss = SpreadsheetApp.openById(SHEET_ID_CONTRATOS);
-    const sheet = ss.getSheetByName('Gerado');
-    if (!sheet) return { contratos: [] };
+    const sheet = ss.getSheetByName('Assinado') || ss.getSheetByName('Gerado');
+    if (!sheet || sheet.getLastRow() < 2) return { contratos: [] };
     const rows = sheet.getDataRange().getValues();
-    if (rows.length < 2) return { contratos: [] };
     // Colunas: ID, Nº Contrato, Data Emissão, Cliente, CPF/CNPJ, Telefone, E-mail,
     //          Tipo Sistema, kVp, Valor Total, Forma Pagamento, Consultor, Status, Arquivo PDF, Criado em
     const contratos = rows.slice(1).map(r => ({
-      id:            r[0]  || '',
-      numContrato:   r[1]  || '',
-      dataEmissao:   r[2]  ? (r[2] instanceof Date ? r[2].toLocaleDateString('pt-BR') : String(r[2])) : '',
-      cliente:       r[3]  || '',
-      cpfCnpj:       r[4]  || '',
-      telefone:      r[5]  || '',
-      email:         r[6]  || '',
-      tipoSistema:   r[7]  || '',
-      kvp:           r[8]  || '',
-      valorTotal:    r[9]  || 0,
-      formaPagamento:r[10] || '',
-      consultor:     r[11] || '',
-      status:        r[12] || '',
+      id:             r[0]  || '',
+      numContrato:    r[1]  || '',
+      dataEmissao:    r[2]  ? (r[2] instanceof Date ? r[2].toLocaleDateString('pt-BR') : String(r[2])) : '',
+      cliente:        r[3]  || '',
+      cpfCnpj:        r[4]  || '',
+      telefone:       r[5]  || '',
+      email:          r[6]  || '',
+      tipoSistema:    r[7]  || '',
+      kvp:            r[8]  || '',
+      valorTotal:     r[9]  || 0,
+      formaPagamento: r[10] || '',
+      consultor:      r[11] || '',
+      status:         r[12] || '',
     })).filter(c => c.cliente);
     return { contratos };
   } catch(err) {
@@ -97,8 +101,9 @@ function getContratos() {
 // ── GET DATA ──────────────────────────────────────────────────
 function getData() {
   return {
-    receitas: getReceitas(),
-    despesas: getDespesas(),
+    receitas:  getReceitas(),
+    despesas:  getDespesas(),
+    previsoes: getPrevisoes(),
   };
 }
 
@@ -210,6 +215,7 @@ function getDespesas() {
       lancadoPor:  o['Lançado por']        || '',
       numContrato: String(o['Nº Contrato'] || ''),
       projetoId:   String(o['Projeto ID']  || ''),
+      refContrato: String(o['Ref Contrato']|| ''),
     };
   }).reverse();
 }
@@ -263,6 +269,78 @@ function vincularDespesa(body) {
     }
   }
   return { error: 'Despesa não encontrada: ' + body.id };
+}
+
+// ── PREVISÕES ─────────────────────────────────────────────────
+function getPrevisoes() {
+  const ss    = SpreadsheetApp.openById(SHEET_ID_FIN);
+  const sheet = ss.getSheetByName('Previsoes');
+  if (!sheet || sheet.getLastRow() < 2) return [];
+  const data    = sheet.getDataRange().getValues();
+  const headers = data[0];
+  return data.slice(1).filter(r => r[0]).map(row => {
+    const o = {};
+    headers.forEach((h, i) => o[h] = row[i]);
+    return {
+      id:     String(o['ID']       || ''),
+      data:   fmtIsoDate(o['Data'] || ''),
+      tipo:   o['Tipo']            || '',
+      cliente:o['Cliente']         || '',
+      desc:   o['Descrição']       || '',
+      cat:    o['Categoria']       || '',
+      valor:  parseFloat(o['Valor (R$)']) || 0,
+      obs:    o['Observação']      || '',
+      status: o['Status']          || 'previsto',
+    };
+  });
+}
+
+// ── REPLACE (bulk sync do dashboard) ─────────────────────────
+function replaceDespesas(body) {
+  const ss    = SpreadsheetApp.openById(SHEET_ID_FIN);
+  const sheet = garantirAba(ss, 'Despesas', HDR_DESPESAS);
+  const last  = sheet.getLastRow();
+  if (last > 1) sheet.deleteRows(2, last - 1);
+  const rows = (body.data || []).map(d => [
+    d.id||'', d.data||'', d.desc||'', d.cat||'',
+    parseFloat(d.valor)||0, d.metodo||'', d.obs||'',
+    d.lancadoPor||'', d.numContrato||'', d.projetoId||'',
+    d.refContrato||'', new Date().toLocaleString('pt-BR')
+  ]);
+  if (rows.length) sheet.getRange(2,1,rows.length,rows[0].length).setValues(rows);
+  return { ok: true, count: rows.length };
+}
+
+function replaceReceitas(body) {
+  const ss    = SpreadsheetApp.openById(SHEET_ID_FIN);
+  const sheet = garantirAba(ss, 'Receitas', HDR_RECEITAS);
+  const last  = sheet.getLastRow();
+  if (last > 1) sheet.deleteRows(2, last - 1);
+  const rows = (body.data || []).map(r => [
+    r.id||'', r.data||'', r.cliente||'', r.doc||'', r.ender||'',
+    r.tipo||'', r.kvp||'', r.modulos||'', r.inversor||'', r.bateria||'',
+    parseFloat(r.valor)||0, parseFloat(r.recebido)||0,
+    r.pagamento||'', r.condicoes||'', r.consultor||'',
+    r.status||'', r.obs||'', r.numContrato||'',
+    new Date().toLocaleString('pt-BR')
+  ]);
+  if (rows.length) sheet.getRange(2,1,rows.length,rows[0].length).setValues(rows);
+  atualizarResumos();
+  return { ok: true, count: rows.length };
+}
+
+function replacePrevisoes(body) {
+  const ss    = SpreadsheetApp.openById(SHEET_ID_FIN);
+  const sheet = garantirAba(ss, 'Previsoes', HDR_PREVISOES);
+  const last  = sheet.getLastRow();
+  if (last > 1) sheet.deleteRows(2, last - 1);
+  const rows = (body.data || []).map(p => [
+    p.id||'', p.data||'', p.tipo||'', p.cliente||'', p.desc||'',
+    p.cat||'', parseFloat(p.valor)||0, p.obs||'', p.status||'previsto',
+    new Date().toLocaleString('pt-BR')
+  ]);
+  if (rows.length) sheet.getRange(2,1,rows.length,rows[0].length).setValues(rows);
+  return { ok: true, count: rows.length };
 }
 
 // ── RESUMOS AUTOMÁTICOS ───────────────────────────────────────
@@ -394,4 +472,3 @@ function fmtIsoDate(v) {
 // 7. Clique em Implantar → copie a URL gerada
 // 8. No dashboard.html → botão engrenagem (Config) → cole a URL → Salvar
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
