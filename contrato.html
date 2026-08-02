@@ -848,7 +848,6 @@ async function salvarNoDrive() {
 
     fetch(gasUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: payload
     })
     .then(function(r) { return r.json(); })
