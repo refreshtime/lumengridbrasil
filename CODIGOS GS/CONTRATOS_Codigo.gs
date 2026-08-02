@@ -44,7 +44,7 @@ function salvarContrato(p, pdfBase64) {
   // Salva o PDF
   const num     = p.num     || '---';
   const cliNome = p.cliNome || 'Cliente';
-  const fileName = 'Contrato ' + num + ' — ' + cliNome + '.pdf';
+  const fileName = cliNome + ' - ' + num + ' - LUMENGRID.pdf';
   const bytes = Utilities.base64DecodeWebSafe(pdfBase64);
   const blob  = Utilities.newBlob(bytes, 'application/pdf', fileName);
   const file  = folder.createFile(blob);
