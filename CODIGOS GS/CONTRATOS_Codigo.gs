@@ -82,21 +82,13 @@ function salvarContrato(p, pdfBase64) {
       gerado.setColumnWidth(14, 320);
       gerado.setColumnWidth(4, 200);
     }
-    SpreadsheetApp.flush();
-
-    const lastRow = gerado.getLastRow();
-    const newRow  = lastRow + 1;
-    // Garante que a linha existe no grid
-    if (gerado.getMaxRows() < newRow) {
-      gerado.insertRowsAfter(gerado.getMaxRows(), 20);
-    }
-
     const tipoLabel = p.tipoSistema === 'solar_bateria' ? 'Solar com Bateria (Híbrido)' : 'Solar Fotovoltaico';
-    gerado.getRange(newRow, 1, 1, 15).setValues([[
+    gerado.appendRow([
       id, num, _dt(p.dataEmissao), cliNome, p.cliDoc || '', p.cliFone || '', p.cliEmail || '',
       tipoLabel, p.eqKvp || '', parseFloat(p.payTotal) || 0, _pagLabel(p.payModo),
-      p.vendNome || '', 'Gerado', fileUrl, new Date().toLocaleString('pt-BR')
-    ]]);
+      p.vendNome || '', 'Gerado', folderUrl, new Date().toLocaleString('pt-BR')
+    ]);
+    const newRow = gerado.getLastRow();
     gerado.getRange(newRow, 10).setNumberFormat('R$ #,##0.00');
     gerado.getRange(newRow, COL_STATUS).setFontColor('#E8641A').setFontWeight('bold');
     gerado.getRange(newRow, 14).setFontColor('#1a73e8');
