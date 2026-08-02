@@ -8,7 +8,7 @@
 const COLS = [
   'ID', 'Nº Contrato', 'Data Emissão', 'Cliente', 'CPF/CNPJ',
   'Telefone', 'E-mail', 'Tipo Sistema', 'kVp', 'Valor Total (R$)',
-  'Forma Pagamento', 'Consultor', 'Status', 'Arquivo PDF', 'Criado em'
+  'Forma Pagamento', 'Consultor', 'Status', 'Pasta no Drive', 'Criado em'
 ];
 const COL_STATUS = 13;
 
@@ -34,7 +34,7 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    // action vem pela URL (?action=salvarContrato) para sobreviver ao redirect do GAS
+    // action vem pela URL (?action=salvarContrato) — sobrevive ao redirect do GAS
     const action = e.parameter.action;
     if (action === 'salvarContrato') {
       const body = JSON.parse(e.postData.contents);
@@ -52,26 +52,52 @@ function doPost(e) {
   }
 }
 
-// ── SALVA PDF NO DRIVE ────────────────────────────────────────
-function salvarContrato(p, pdfBase64) {
-  if (!pdfBase64) throw new Error('PDF não recebido.');
+// ── HELPERS DE PASTA / ARQUIVO ────────────────────────────────
+function getOrCreateFolder(parent, name) {
+  const it = parent.getFoldersByName(name);
+  return it.hasNext() ? it.next() : parent.createFolder(name);
+}
 
-  // 1. Salva PDF no Drive
-  const folderName = 'LumenGrid — Contratos';
-  const folders = DriveApp.getFoldersByName(folderName);
-  const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+function saveOrReplaceFile(folder, fileName, bytes, mimeType) {
+  const existing = folder.getFilesByName(fileName);
+  while (existing.hasNext()) { existing.next().setTrashed(true); }
+  const blob = Utilities.newBlob(bytes, mimeType, fileName);
+  const file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return file.getUrl();
+}
 
+// ── SALVA DOCUMENTOS NO DRIVE ─────────────────────────────────
+function salvarContrato(p) {
+  if (!p || !p.pdf) throw new Error('PDF não recebido. Chaves recebidas: ' + Object.keys(p || {}).join(','));
+  if (!p.cnh) throw new Error('CNH não recebida.');
+
+  // 1. Pasta raiz → subpasta do cliente
+  const root = getOrCreateFolder(DriveApp.getRootFolder(), 'LumenGrid — Contratos');
   const num     = p.num     || '---';
   const cliNome = p.cliNome || 'Cliente';
-  const fileName = cliNome + ' - ' + num + ' - LUMENGRID.pdf';
-  const bytes = Utilities.base64DecodeWebSafe(pdfBase64);
-  const blob  = Utilities.newBlob(bytes, 'application/pdf', fileName);
-  const file  = folder.createFile(blob);
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  const fileUrl = file.getUrl();
+  const sub = getOrCreateFolder(root, cliNome + ' - ' + num);
+  sub.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  const folderUrl = sub.getUrl();
   const id = Utilities.getUuid();
 
-  // 2. Registro na planilha (separado — erro aqui não cancela o Drive)
+  // 2. PDF
+  const pdfBytes = Utilities.base64DecodeWebSafe(p.pdf);
+  saveOrReplaceFile(sub, cliNome + ' - ' + num + ' - LUMENGRID.pdf', pdfBytes, 'application/pdf');
+
+  // 3. CNH
+  const cnhBytes = Utilities.base64Decode(p.cnh.data);
+  const cnhExt   = _extFromMime(p.cnh.type) || _extFromName(p.cnh.name) || 'pdf';
+  saveOrReplaceFile(sub, 'CNH_' + cliNome + '.' + cnhExt, cnhBytes, p.cnh.type);
+
+  // 4. Fatura (opcional)
+  if (p.fatura) {
+    const fatBytes = Utilities.base64Decode(p.fatura.data);
+    const fatExt   = _extFromMime(p.fatura.type) || _extFromName(p.fatura.name) || 'pdf';
+    saveOrReplaceFile(sub, 'Fatura_' + cliNome + '.' + fatExt, fatBytes, p.fatura.type);
+  }
+
+  // 5. Registro na planilha
   try {
     const ss = SpreadsheetApp.openById('145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o');
     let gerado = ss.getSheetByName('Gerado');
@@ -94,11 +120,10 @@ function salvarContrato(p, pdfBase64) {
     gerado.getRange(newRow, COL_STATUS).setFontColor('#E8641A').setFontWeight('bold');
     gerado.getRange(newRow, 14).setFontColor('#1a73e8');
   } catch(sheetErr) {
-    // PDF já foi salvo — retorna sucesso com aviso
-    return { success: true, docUrl: fileUrl, id: id, warning: sheetErr.message };
+    return { success: true, folderUrl: folderUrl, id: id, warning: sheetErr.message };
   }
 
-  return { success: true, docUrl: fileUrl, id: id };
+  return { success: true, folderUrl: folderUrl, id: id };
 }
 
 // ── LER CONTRATOS ─────────────────────────────────────────────
@@ -177,4 +202,14 @@ function _pagLabel(modo) {
   if (modo === 'parcelado') return 'Parcelado';
   if (modo === 'personalizado') return 'Personalizado';
   return modo || '---';
+}
+function _extFromMime(mime) {
+  if (!mime) return null;
+  const map = { 'image/jpeg':'jpg','image/png':'png','image/gif':'gif','image/webp':'webp','application/pdf':'pdf' };
+  return map[mime] || null;
+}
+function _extFromName(name) {
+  if (!name) return null;
+  const parts = name.split('.');
+  return parts.length > 1 ? parts[parts.length-1].toLowerCase() : null;
 }
