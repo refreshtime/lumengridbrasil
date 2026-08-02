@@ -1,6 +1,8 @@
 // ═══════════════════════════════════════════════════════════
 // LUMEN GRID — CONTRATOS_Codigo.gs
-// Recebe PDF gerado no cliente e salva no Google Drive
+// Planilha: LumenGrid Contratos
+// https://docs.google.com/spreadsheets/d/145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o
+// Abas: Gerado | Assinado
 // ═══════════════════════════════════════════════════════════
 
 const COLS = [
@@ -50,7 +52,7 @@ function salvarContrato(p, pdfBase64) {
   const fileUrl = file.getUrl();
 
   // Registro na planilha
-  const ss = SpreadsheetApp.openById('1LTv6dFRT56533gfPc5elNfxiddsUzgYyLbCLsNykyRQ');
+  const ss = SpreadsheetApp.openById('145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o');
   let gerado = ss.getSheetByName('Gerado');
   if (!gerado) {
     gerado = ss.insertSheet('Gerado');
