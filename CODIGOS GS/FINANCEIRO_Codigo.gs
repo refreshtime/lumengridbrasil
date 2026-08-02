@@ -31,7 +31,8 @@ function addCors(output) {
 
 // ── GET ───────────────────────────────────────────────────────
 function doGet(e) {
-  const action = (e && e.parameter && e.parameter.action) || 'get_data';
+  const action   = (e && e.parameter && e.parameter.action)   || 'get_data';
+  const callback = (e && e.parameter && e.parameter.callback) || '';
   let result;
   try {
     if      (action === 'get_data')      result = getData();
@@ -40,8 +41,14 @@ function doGet(e) {
   } catch(err) {
     result = { error: err.message };
   }
+  const json = JSON.stringify(result);
+  if (callback) {
+    return ContentService
+      .createTextOutput(callback + '(' + json + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
   return addCors(ContentService
-    .createTextOutput(JSON.stringify(result))
+    .createTextOutput(json)
     .setMimeType(ContentService.MimeType.JSON));
 }
 

@@ -696,7 +696,8 @@ let _GS_URL=localStorage.getItem('lg_gs_url')||'https://script.google.com/macros
 
 function enviarSheets(acao,body){
   if(!_GS_URL)return;
-  try{fetch(_GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:acao,...body})});}catch(e){}
+  // text/plain com no-cors envia o body corretamente (application/json descarta o body)
+  try{fetch(_GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:acao,...body})});}catch(e){}
 }
 
 function sincronizarSheets(){
@@ -704,22 +705,21 @@ function sincronizarSheets(){
   const btn=document.getElementById('syncBtn');
   const dot=document.getElementById('syncDot');
   btn.classList.add('syncing');
-  fetch(_GS_URL+'?action=get_data')
-    .then(r=>r.json())
+  _jsonpFetch(_GS_URL+'?action=get_data')
     .then(d=>{
       let changed=false;
-      if(Array.isArray(d.despesas)){
-        const ids=new Set(despesas.map(x=>x.id));
-        d.despesas.forEach(item=>{if(!ids.has(item.id)){despesas.push(item);changed=true;}});
-        if(changed){despesas.sort((a,b)=>b.data.localeCompare(a.data));saveData('despesas',despesas);}
+      if(Array.isArray(d.despesas)&&d.despesas.length>0){
+        despesas=d.despesas;despesas.sort((a,b)=>b.data.localeCompare(a.data));
+        saveData('despesas',despesas);changed=true;
       }
-      let changedR=false;
-      if(Array.isArray(d.receitas)){
-        const ids=new Set(receitas.map(x=>x.id));
-        d.receitas.forEach(item=>{if(!ids.has(item.id)){receitas.push(item);changedR=true;}});
-        if(changedR){receitas.sort((a,b)=>b.data.localeCompare(a.data));saveData('receitas',receitas);}
+      if(Array.isArray(d.receitas)&&d.receitas.length>0){
+        receitas=d.receitas;receitas.sort((a,b)=>b.data.localeCompare(a.data));
+        saveData('receitas',receitas);changed=true;
       }
-      if(changed||changedR){renderDespesas();renderReceitas();populateDespProjeto();renderRelProjeto();}
+      if(Array.isArray(d.previsoes)&&d.previsoes.length>0){
+        previsoes=d.previsoes;saveData('previsoes',previsoes);changed=true;
+      }
+      if(changed){renderDespesas();renderReceitas();populateDespProjeto();renderRelProjeto();}
       dot.className='sync-dot ok';
       setTimeout(()=>dot.className='sync-dot',3000);
     })
