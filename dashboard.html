@@ -1302,14 +1302,12 @@ function abrirImportarContrato() {
 function fecharContrato() {
   document.getElementById('contModal').classList.remove('show');
 }
+const CONTRATOS_URL = 'https://script.google.com/macros/s/AKfycbyx9BCjvqzdMk2dEABVZkHwrUTlRHe_WIYsYEQkso4Q-wRA_nHnleLSH5wSG1PfTt9yig/exec';
+
 function _carregarContratos() {
   const lista = document.getElementById('contLista');
-  if (!_GS_URL) {
-    lista.innerHTML = '<div style="padding:16px;text-align:center;color:var(--t3);font-size:12px">Configure a URL do Apps Script primeiro (ícone ⚙ no cabeçalho).</div>';
-    return;
-  }
   lista.innerHTML = '<div style="padding:16px;text-align:center;color:var(--t3);font-size:12px">Carregando contratos…</div>';
-  fetch(_GS_URL + '?action=get_contratos')
+  fetch(CONTRATOS_URL + '?action=get_contratos')
     .then(r => r.json())
     .then(d => {
       _contratos = Array.isArray(d.contratos) ? d.contratos : [];
