@@ -36,6 +36,12 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 .btn{padding:10px 18px;border-radius:6px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:inherit;transition:all .2s}
 .bp{background:var(--or);color:#fff}.bp:hover{background:var(--or-l)}
 .bpdf{background:#1a1f1a;color:var(--or);border:1.5px solid var(--or);padding:10px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.fup-label{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1.5px dashed rgba(255,255,255,.18);border-radius:6px;padding:10px 14px;cursor:pointer;font-size:11px;color:rgba(255,255,255,.6);transition:border-color .2s,color .2s;margin-top:4px}
+.fup-label:hover{border-color:var(--or);color:var(--or)}
+.fup-label.has-file{border-color:#2ecc71;color:#2ecc71}
+.fup-label.req-miss{border-color:#e74c3c;color:#e74c3c;animation:shake .3s}
+.fup-label input[type=file]{display:none}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
 /* PREVIEW */
 .prev-panel{overflow-y:auto;background:#e8e8e8;padding:30px;display:flex;flex-direction:column;align-items:center}
@@ -334,6 +340,29 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
     <input class="fi" id="cForo" placeholder="Ex: São Paulo" value="São Paulo">
     <label class="fl">Observações Especiais</label>
     <textarea class="fta" id="cObs" placeholder="Condições especiais, exclusões, observações técnicas..."></textarea>
+  </div>
+
+  <div class="fs">
+    <div class="fs-title" style="display:flex;justify-content:space-between;align-items:center">
+      Documentos do Cliente
+      <span style="font-size:9px;font-weight:400;color:rgba(255,255,255,.4)">Exigidos para salvar no Drive</span>
+    </div>
+
+    <label class="fl">Documento com Foto — CNH ou RG <span style="color:#E8641A;font-weight:900">*</span></label>
+    <label class="fup-label" id="cnhLabel">
+      <span style="font-size:18px">🪪</span>
+      <span id="cnhLabelText">Clique para anexar CNH ou RG…</span>
+      <input type="file" id="fileCNH" accept="image/*,.pdf" onchange="_onFileChange(this,'cnhLabel','cnhLabelText')">
+    </label>
+
+    <label class="fl" style="margin-top:10px">Fatura de Energia
+      <span style="color:rgba(255,255,255,.4);font-weight:400;font-size:10px"> — opcional</span>
+    </label>
+    <label class="fup-label" id="faturaLabel">
+      <span style="font-size:18px">📄</span>
+      <span id="faturaLabelText">Clique para anexar a fatura…</span>
+      <input type="file" id="fileFatura" accept="image/*,.pdf" onchange="_onFileChange(this,'faturaLabel','faturaLabelText')">
+    </label>
   </div>
 
   <div class="btn-bar">
@@ -705,6 +734,37 @@ function importarBridge(){
   document.getElementById('eqKvp').addEventListener('input',function(){this.dataset.manual='1';});
 })();
 
+// ── HELPERS DE ARQUIVO ───────────────────────────────────────────────────────
+function _onFileChange(input, labelId, textId) {
+  const label = document.getElementById(labelId);
+  const textEl = document.getElementById(textId);
+  if (input.files && input.files[0]) {
+    const f = input.files[0];
+    textEl.textContent = '✓ ' + f.name + ' (' + (f.size/1024).toFixed(0) + ' KB)';
+    label.classList.add('has-file');
+    label.classList.remove('req-miss');
+  } else {
+    textEl.textContent = labelId === 'cnhLabel' ? 'Clique para anexar CNH ou RG…' : 'Clique para anexar a fatura…';
+    label.classList.remove('has-file');
+  }
+}
+function _fileToBase64(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var bytes = new Uint8Array(e.target.result);
+      var binary = '';
+      var chunk = 8192;
+      for (var i = 0; i < bytes.length; i += chunk) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i+chunk, bytes.length)));
+      }
+      resolve(btoa(binary));
+    };
+    reader.onerror = function() { reject(new Error('Erro ao ler arquivo')); };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 // ── SALVAR NO DRIVE ──────────────────────────────────────────────────────────
 async function salvarNoDrive() {
   const gasUrl = document.getElementById('gasUrl').value.trim();
@@ -718,6 +778,17 @@ async function salvarNoDrive() {
     _driveToast('erro', 'Preencha o Nome do Cliente e o Valor Total antes de salvar.', null);
     return;
   }
+
+  // Valida CNH obrigatória
+  const cnhFile = document.getElementById('fileCNH').files[0];
+  if (!cnhFile) {
+    document.getElementById('cnhLabel').classList.add('req-miss');
+    _driveToast('erro', 'Anexe o documento com foto (CNH ou RG) — campo obrigatório.', null);
+    return;
+  }
+
+  const faturaFile = document.getElementById('fileFatura').files[0] || null;
+
   const pages = Array.from(document.querySelectorAll('#prevPanel .cpage, #prevPanel .cpage-cont'));
   if (!pages.length) {
     _driveToast('erro', 'Gere o contrato antes de salvar.', null);
@@ -726,29 +797,40 @@ async function salvarNoDrive() {
 
   const btn = document.getElementById('btnDrive');
   btn.disabled = true;
-  btn.textContent = '\u23f3 Gerando PDF...';
-  _driveToast('loading', 'Gerando PDF id\u00eantico ao impresso...', null);
+  btn.textContent = '⏳ Gerando PDF...';
+  _driveToast('loading', 'Gerando PDF…', null);
 
   try {
+    // Gera PDF
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const pW = pdf.internal.pageSize.getWidth();
     const pH = pdf.internal.pageSize.getHeight();
-
     for (let i = 0; i < pages.length; i++) {
-      const canvas = await html2canvas(pages[i], { scale: 1.5, useCORS: true, allowTaint: true, logging: false });
-      const imgData = canvas.toDataURL('image/jpeg', 0.85);
+      const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, allowTaint: true, logging: false });
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      const naturalH = (canvas.height / canvas.width) * pW;
+      let fw = pW, fh = naturalH, fx = 0;
+      if (naturalH > pH) { fh = pH; fw = (canvas.width/canvas.height)*pH; fx = (pW-fw)/2; }
       if (i > 0) pdf.addPage();
-      pdf.addImage(imgData, 'JPEG', 0, 0, pW, pH);
+      pdf.addImage(imgData, 'JPEG', fx, 0, fw, fh);
     }
-
     const pdfBase64 = pdf.output('datauristring').split(',')[1].replace(/\+/g,'-').replace(/\//g,'_');
-    btn.textContent = '\u23f3 Salvando no Drive...';
-    _driveToast('loading', 'Enviando PDF ao Google Drive...', null);
 
-    const meta = new URLSearchParams({
+    btn.textContent = '⏳ Lendo documentos...';
+    _driveToast('loading', 'Lendo documentos…', null);
+
+    // Lê arquivos
+    const cnhBase64 = await _fileToBase64(cnhFile);
+    const faturaBase64 = faturaFile ? await _fileToBase64(faturaFile) : null;
+
+    btn.textContent = '⏳ Enviando ao Drive...';
+    _driveToast('loading', 'Enviando arquivos ao Google Drive…', null);
+
+    const num = document.getElementById('cNum').value.trim() || '001/' + new Date().getFullYear();
+    const payload = JSON.stringify({
       action: 'salvarContrato',
-      num: document.getElementById('cNum').value.trim() || '001/' + new Date().getFullYear(),
+      num: num,
       dataEmissao: document.getElementById('cData').value,
       tipoSistema: document.getElementById('tipoSistema').value,
       cliNome: cliNome,
@@ -759,19 +841,23 @@ async function salvarNoDrive() {
       payTotal: payTotal,
       payModo: document.getElementById('payModo').value,
       vendNome: document.getElementById('vendNome').value.trim(),
-    }).toString();
+      pdf: pdfBase64,
+      cnh: { data: cnhBase64, type: cnhFile.type, name: cnhFile.name },
+      fatura: faturaBase64 ? { data: faturaBase64, type: faturaFile.type, name: faturaFile.name } : null
+    });
 
-    fetch(gasUrl + '?' + meta, {
+    fetch(gasUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: pdfBase64
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
     })
     .then(function(r) { return r.json(); })
     .then(function(res) {
       btn.disabled = false;
       btn.innerHTML = '&#9729; Salvar no Drive';
       if (res.success) {
-        _driveToast('sucesso', 'PDF salvo no Drive! Abra e imprima diretamente \u2014 id\u00eantico ao contrato gerado aqui.', res.docUrl);
+        const aviso = res.warning ? ' (aviso: ' + res.warning + ')' : '';
+        _driveToast('sucesso', 'Pasta criada no Drive com PDF' + (faturaFile ? ', CNH e Fatura' : ' e CNH') + '!' + aviso, res.folderUrl);
       } else {
         _driveToast('erro', 'Erro: ' + (res.error || 'Tente novamente.'), null);
       }
@@ -779,12 +865,12 @@ async function salvarNoDrive() {
     .catch(function(err) {
       btn.disabled = false;
       btn.innerHTML = '&#9729; Salvar no Drive';
-      _driveToast('erro', 'Falha de conex\u00e3o: ' + err.message, null);
+      _driveToast('erro', 'Falha de conexão: ' + err.message, null);
     });
   } catch(err) {
     btn.disabled = false;
     btn.innerHTML = '&#9729; Salvar no Drive';
-    _driveToast('erro', 'Erro ao gerar PDF: ' + err.message, null);
+    _driveToast('erro', 'Erro: ' + err.message, null);
   }
 }
 
