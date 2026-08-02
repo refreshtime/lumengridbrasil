@@ -15,15 +15,22 @@ const COL_STATUS = 13;
 // ── ENDPOINTS ────────────────────────────────────────────────
 function doGet(e) {
   try {
-    const action = e.parameter.action;
+    const action   = e.parameter.action;
+    const callback = e.parameter.callback || '';
     let result;
     if (action === 'get_contratos') {
       result = getContratos();
     } else {
       result = { success: false, error: 'Acao desconhecida' };
     }
+    const json = JSON.stringify(result);
+    if (callback) {
+      return ContentService
+        .createTextOutput(callback + '(' + json + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
     return ContentService
-      .createTextOutput(JSON.stringify(result))
+      .createTextOutput(json)
       .setMimeType(ContentService.MimeType.JSON);
   } catch(err) {
     return ContentService
