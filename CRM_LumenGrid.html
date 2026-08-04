@@ -1951,10 +1951,10 @@ function uploadDoc(tipo, leadId, input) {
           setSyncStatus('ok');
           if (editingId === leadId) openDetail(leadId);
         } else {
-          toast('Não confirmado — verifique sua conexão e tente novamente.', 'err');
+          toast('Não confirmado — reimplante o Apps Script e tente novamente.', 'err');
           setSyncStatus('err');
         }
-      }, 4000);
+      }, 8000);
     }).catch(() => {
       toast('Erro ao enviar documento.', 'err');
       setSyncStatus('err');
