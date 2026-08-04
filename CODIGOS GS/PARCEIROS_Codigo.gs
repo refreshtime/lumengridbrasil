@@ -15,7 +15,8 @@ function doGet(e) {
   const parceiro = (e && e.parameter && e.parameter.parceiro) || 'Michael';
   let result;
   try {
-    if (action === 'getData') result = getData(parceiro);
+    if      (action === 'getData') result = getData(parceiro);
+    else if (action === 'notify')  result = receberNotificacao({ parceiro, mensagem: e.parameter.mensagem || '' });
     else result = { error: 'Ação GET desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };

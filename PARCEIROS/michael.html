@@ -1492,7 +1492,7 @@ async function sendNotify() {
   }
 
   try {
-    const url = `${CONFIG.APPS_SCRIPT_URL}?action=notify&mensagem=${enc(msg)}`;
+    const url = `${CONFIG.APPS_SCRIPT_URL}?action=notify&parceiro=${enc(CONFIG.PARCEIRO)}&mensagem=${enc(msg)}`;
     await fetch(url);
     closeNotify();
     showToast('Mensagem enviada para a LumenGrid!', 'success');

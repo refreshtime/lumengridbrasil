@@ -143,7 +143,8 @@ function gravarTabelaLegivel(sheet, leads) {
       'Lead Novo','Tentando Contato','Elaborar Orçamento','Enviar Orçamento',
       'Proposta Enviada','Negociação','Venda Fechada',
       'Agendar Visita','Estruturação Projeto','Comprar Equipamento',
-      'Compra Realizada','Agendar Instalação','Homologação','Projeto Concluído'
+      'Compra Realizada','Agendar Instalação','Homologação','Projeto Concluído',
+      'Oportunidade Futura'
     ];
     const headers = [
       'ID','Nome','Telefone','E-mail','Cidade','kWh Mensal','Tipo','Telhado','Sistema','Etapa','Responsável','Origem',
@@ -162,6 +163,9 @@ function gravarTabelaLegivel(sheet, leads) {
     sheet.getRange(1, 3, 1, headers.length).setValues([headers]);
     if (rows.length > 0) {
       sheet.getRange(2, 3, rows.length, headers.length).setValues(rows);
+      // Formata colunas financeiras para evitar interpretação como datas pelo Sheets
+      // Colunas 15-24 (kWp, Valor Projeto, Custo Equipamento ... Lucro Empresa)
+      sheet.getRange(2, 15, rows.length, 10).setNumberFormat('#,##0.##');
     }
   } catch(e) {
     Logger.log('Erro ao gravar tabela: ' + e.message);
