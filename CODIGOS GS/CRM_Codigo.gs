@@ -69,9 +69,9 @@ function doPost(e) {
   } catch(err) {
     result = { error: err.message };
   }
-  return addCors(ContentService
+  return ContentService
     .createTextOutput(JSON.stringify(result))
-    .setMimeType(ContentService.MimeType.JSON));
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 // ────────────────────────────────────────────────
