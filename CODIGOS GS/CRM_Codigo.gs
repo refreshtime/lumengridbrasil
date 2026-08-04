@@ -126,8 +126,14 @@ function saveLeadsCRM(leads) {
 function saveOneLead(lead) {
   const leads = getLeadsCRM();
   const idx = leads.findIndex(l => l.id === lead.id);
+  const oldStage = idx >= 0 ? leads[idx].stage : -1;
   if (idx >= 0) leads[idx] = lead; else leads.unshift(lead);
-  return saveLeadsCRM(leads);
+  const result = saveLeadsCRM(leads);
+  // Ao mover para Venda Fechada, tenta mover docs para pasta do contrato
+  if (lead.stage === 6 && oldStage !== 6 && (lead.docs || []).length > 0) {
+    tentarMoverDocsParaContrato(lead);
+  }
+  return result;
 }
 
 // Grava os dados em formato tabular a partir da coluna B para visualização
@@ -215,18 +221,30 @@ function obterPastaSolicitacoes() {
 
 function uploadDocGAS(leadId, tipo, arquivo, user) {
   try {
-    const pasta = obterPastaDocumentos();
-    const bytes = Utilities.base64Decode(arquivo.base64);
-    const blob  = Utilities.newBlob(bytes, arquivo.tipo || 'application/octet-stream', arquivo.nome || 'documento');
-    const file  = pasta.createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    const link = file.getUrl();
-
     const leads = getLeadsCRM();
+    const lead  = leads.find(l => l.id === leadId);
+    const leadNome = lead ? lead.nome : 'Desconhecido';
+
+    // Pasta raiz → subpasta do cliente
+    const root = obterPastaDocumentosCRM();
+    const clientFolder = getOrCreateSubpasta(root, leadNome);
+    clientFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+    // Nome do arquivo: Tipo_NomeCliente.ext
+    const ext = _extMimeCRM(arquivo.tipo) || 'pdf';
+    const fileName = tipo.replace(/\//g,'-') + '_' + leadNome + '.' + ext;
+    const bytes = Utilities.base64Decode(arquivo.base64);
+    const blob  = Utilities.newBlob(bytes, arquivo.tipo || 'application/octet-stream', fileName);
+    const file  = clientFolder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+    const link   = file.getUrl();
+    const fileId = file.getId();
+
     const idx = leads.findIndex(l => l.id === leadId);
     if (idx >= 0) {
       if (!leads[idx].docs) leads[idx].docs = [];
-      leads[idx].docs.push({ tipo, nome: arquivo.nome || 'documento', link, ts: Date.now(), user: user || '' });
+      leads[idx].docs.push({ tipo, nome: fileName, link, fileId, ts: Date.now(), user: user || '' });
       leads[idx].updatedAt = Date.now();
       saveLeadsCRM(leads);
     }
@@ -236,11 +254,85 @@ function uploadDocGAS(leadId, tipo, arquivo, user) {
   }
 }
 
-function obterPastaDocumentos() {
-  const nome = 'LumenGrid — Documentos';
+function obterPastaDocumentosCRM() {
+  const nome = 'Documentos CRM';
   const pastas = DriveApp.getFoldersByName(nome);
   if (pastas.hasNext()) return pastas.next();
   return DriveApp.createFolder(nome);
+}
+
+function getOrCreateSubpasta(parent, nome) {
+  const it = parent.getFoldersByName(nome);
+  return it.hasNext() ? it.next() : parent.createFolder(nome);
+}
+
+function _extMimeCRM(mime) {
+  if (!mime) return null;
+  const map = { 'image/jpeg':'jpg','image/png':'png','image/webp':'webp','application/pdf':'pdf' };
+  return map[mime] || null;
+}
+
+// ────────────────────────────────────────────────
+// INTEGRAÇÃO CONTRATO — move docs ao fechar venda
+// ────────────────────────────────────────────────
+
+function tentarMoverDocsParaContrato(lead) {
+  try {
+    const CONTRATOS_SHEET_ID = '145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o';
+    const ss    = SpreadsheetApp.openById(CONTRATOS_SHEET_ID);
+    const sheet = ss.getSheetByName('Gerado') || ss.getSheetByName('Assinado');
+    if (!sheet || sheet.getLastRow() < 2) return;
+
+    const rows = sheet.getDataRange().getValues();
+    const leadNome = (lead.nome || '').trim().toLowerCase();
+    const leadTel  = (lead.telefone || '').replace(/\D/g, '');
+
+    // Busca contrato pelo nome ou telefone
+    let folderUrl = null;
+    for (let i = 1; i < rows.length; i++) {
+      const cNome = String(rows[i][3] || '').trim().toLowerCase();
+      const cTel  = String(rows[i][5] || '').replace(/\D/g, '');
+      if (cNome === leadNome || (leadTel && cTel === leadTel)) {
+        folderUrl = String(rows[i][13] || ''); // Coluna N = Pasta no Drive
+        break;
+      }
+    }
+    if (!folderUrl) return; // contrato não encontrado ainda
+
+    // Extrai ID da pasta do contrato a partir da URL
+    const match = folderUrl.match(/\/folders\/([a-zA-Z0-9_-]+)/);
+    if (!match) return;
+    const destFolder = DriveApp.getFolderById(match[1]);
+
+    // Move cada arquivo para a pasta do contrato
+    const leads = getLeadsCRM();
+    const idx   = leads.findIndex(l => l.id === lead.id);
+    if (idx < 0) return;
+
+    let moveu = false;
+    (leads[idx].docs || []).forEach(function(doc) {
+      if (!doc.fileId) return;
+      try {
+        const file    = DriveApp.getFileById(doc.fileId);
+        destFolder.addFile(file);
+        const parents = file.getParents();
+        while (parents.hasNext()) {
+          const p = parents.next();
+          if (p.getId() !== match[1]) p.removeFile(file);
+        }
+        doc.link = file.getUrl();
+        moveu = true;
+      } catch(e) { Logger.log('Erro ao mover ' + doc.fileId + ': ' + e.message); }
+    });
+
+    if (moveu) {
+      leads[idx].docsFolderContrato = folderUrl;
+      saveLeadsCRM(leads);
+      Logger.log('Docs de ' + lead.nome + ' movidos para pasta do contrato.');
+    }
+  } catch(e) {
+    Logger.log('tentarMoverDocsParaContrato: ' + e.message);
+  }
 }
 
 // ────────────────────────────────────────────────
