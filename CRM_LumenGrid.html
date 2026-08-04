@@ -1935,14 +1935,26 @@ function uploadDoc(tipo, leadId, input) {
     const base64 = ev.target.result.split(',')[1];
     toast('Enviando para o Drive...','');
     setSyncStatus('saving');
+    const docsAntes = (getAllLeadsRaw().find(l => l.id === leadId)?.docs || []).length;
     fetch(cfg.gsUrl, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'upload_doc', leadId, tipo, arquivo: { base64, nome: file.name, tipo: file.type }, user: currentUser })
     }).then(() => {
-      toast(`${tipo} enviado! Aparecerá em até 10s.`, 'ok');
-      setSyncStatus('ok');
+      toast('Processando no Drive...', '');
+      setTimeout(async () => {
+        await loadFromSheets(true);
+        const docsDepois = (getAllLeadsRaw().find(l => l.id === leadId)?.docs || []).length;
+        if (docsDepois > docsAntes) {
+          toast(`✓ ${tipo} salvo no Drive com sucesso!`, 'ok');
+          setSyncStatus('ok');
+          if (editingId === leadId) openDetail(leadId);
+        } else {
+          toast('Não confirmado — verifique sua conexão e tente novamente.', 'err');
+          setSyncStatus('err');
+        }
+      }, 4000);
     }).catch(() => {
       toast('Erro ao enviar documento.', 'err');
       setSyncStatus('err');
