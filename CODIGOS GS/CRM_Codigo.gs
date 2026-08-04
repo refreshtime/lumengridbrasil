@@ -36,6 +36,7 @@ function doGet(e) {
     if      (action === 'leads_meta') result = getLeadsMeta();
     else if (action === 'leads_crm')  result = getLeadsCRM();
     else if (action === 'fin_data')   result = getFinData();
+    else if (action === 'save_lead')  result = saveOneLead(JSON.parse(e.parameter.data));
     else result = { error: 'Ação desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };
@@ -60,6 +61,7 @@ function doPost(e) {
     if      (action === 'save_leads')        result = saveLeadsCRM(body.leads);
     else if (action === 'save_lead')         result = saveOneLead(body.lead);
     else if (action === 'save_solicitacao')  result = saveSolicitacao(body.solicitacao);
+    else if (action === 'upload_doc')        result = uploadDocGAS(body.leadId, body.tipo, body.arquivo, body.user);
     else if (action === 'replace_receitas')  result = saveFinJson('Fin_Receitas',  body.data);
     else if (action === 'replace_despesas')  result = saveFinJson('Fin_Despesas',  body.data);
     else if (action === 'replace_previsoes') result = saveFinJson('Fin_Previsoes', body.data);
@@ -205,6 +207,40 @@ function obterPastaSolicitacoes() {
   const pastas = DriveApp.getFoldersByName(nomePasta);
   if (pastas.hasNext()) return pastas.next();
   return DriveApp.createFolder(nomePasta);
+}
+
+// ────────────────────────────────────────────────
+// DOCUMENTOS — Upload e vinculação ao lead
+// ────────────────────────────────────────────────
+
+function uploadDocGAS(leadId, tipo, arquivo, user) {
+  try {
+    const pasta = obterPastaDocumentos();
+    const bytes = Utilities.base64Decode(arquivo.base64);
+    const blob  = Utilities.newBlob(bytes, arquivo.tipo || 'application/octet-stream', arquivo.nome || 'documento');
+    const file  = pasta.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    const link = file.getUrl();
+
+    const leads = getLeadsCRM();
+    const idx = leads.findIndex(l => l.id === leadId);
+    if (idx >= 0) {
+      if (!leads[idx].docs) leads[idx].docs = [];
+      leads[idx].docs.push({ tipo, nome: arquivo.nome || 'documento', link, ts: Date.now(), user: user || '' });
+      leads[idx].updatedAt = Date.now();
+      saveLeadsCRM(leads);
+    }
+    return { ok: true, link };
+  } catch(e) {
+    return { error: e.message };
+  }
+}
+
+function obterPastaDocumentos() {
+  const nome = 'LumenGrid — Documentos';
+  const pastas = DriveApp.getFoldersByName(nome);
+  if (pastas.hasNext()) return pastas.next();
+  return DriveApp.createFolder(nome);
 }
 
 // ────────────────────────────────────────────────

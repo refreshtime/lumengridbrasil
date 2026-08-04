@@ -439,6 +439,31 @@ a{text-decoration:none;color:inherit}
 }
 .note-inp:focus{border-color:#F59E0B}
 
+/* ━━━ DOCUMENTOS ━━━ */
+.docs-panel{background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:8px;padding:14px;margin-bottom:18px}
+.docs-panel-title{font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#166534;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.docs-panel-title::after{content:'';flex:1;height:1px;background:#BBF7D0}
+.doc-item{display:flex;align-items:center;gap:10px;padding:9px 11px;background:#fff;border:1px solid #D1FAE5;border-radius:6px;margin-bottom:6px}
+.doc-icon{font-size:16px;flex-shrink:0}
+.doc-info{flex:1;min-width:0}
+.doc-tipo{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#166534}
+.doc-nome{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-meta{font-size:9px;color:var(--text3);margin-top:2px}
+.doc-link{font-size:9px;font-weight:700;color:#16A34A;text-decoration:none;white-space:nowrap;flex-shrink:0}
+.doc-link:hover{text-decoration:underline}
+.doc-uploads{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.doc-upload-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;background:#fff;border:1.5px dashed #86EFAC;border-radius:7px;cursor:pointer;font-size:9px;font-weight:700;color:#15803D;letter-spacing:.8px;text-transform:uppercase;transition:all .18s;user-select:none}
+.doc-upload-btn:hover{border-color:#22C55E;background:#DCFCE7}
+#v-docs{padding:20px 18px}
+.docs-view-title{font-size:18px;font-weight:900;color:var(--text);margin-bottom:16px}
+.doc-lead-row{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
+.doc-lead-hd{padding:12px 15px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.doc-lead-hd:hover{background:var(--surface2)}
+.doc-lead-name{font-size:12px;font-weight:700;color:var(--text);flex:1}
+.doc-lead-count{font-size:9px;font-weight:700;background:#D1FAE5;color:#166534;padding:2px 8px;border-radius:999px}
+.doc-lead-body{padding:0 15px 12px;display:none}
+.doc-lead-body.open{display:block}
+
 /* ━━━ MENSAGENS SUGERIDAS ━━━ */
 .msg-list{display:flex;flex-direction:column;gap:6px}
 .msg-item{
@@ -667,6 +692,7 @@ tbody tr td:first-child{font-weight:700}
       <button class="hn" onclick="showView('kanban',this)">Kanban</button>
       <button class="hn" onclick="showView('leads',this)">Todos os Leads</button>
       <button class="hn" onclick="showView('import',this)">Importar</button>
+      <button class="hn" onclick="showView('docs',this)">Documentos</button>
     </nav>
     <div class="hdr-right">
       <div class="hdr-search">
@@ -816,6 +842,12 @@ tbody tr td:first-child{font-weight:700}
   </div>
 
 </div><!-- /app -->
+
+<!-- DOCUMENTOS VIEW -->
+<div id="v-docs" class="view">
+  <div class="docs-view-title">Documentos dos Clientes</div>
+  <div id="docsViewBody"><div style="color:var(--text3);font-size:12px">Carregando...</div></div>
+</div>
 
 <!-- ADD LEAD MODAL -->
 <div class="ov" id="ov-add">
@@ -1121,17 +1153,15 @@ function syncToSheets() {
   }).then(() => setSyncStatus('ok')).catch(() => setSyncStatus('err'));
 }
 
-// Sincroniza apenas um lead (evita sobrescrever dados de outros usuários)
+// Sincroniza apenas um lead via GET (POST com no-cors perde body no redirect do GAS)
 function syncOneLead(lead) {
   const cfg = getConfig();
   if (!cfg.gsUrl) return;
   setSyncStatus('saving');
-  fetch(cfg.gsUrl, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'save_lead', lead })
-  }).then(() => setSyncStatus('ok')).catch(() => setSyncStatus('err'));
+  const url = cfg.gsUrl + '?action=save_lead&data=' + encodeURIComponent(JSON.stringify(lead));
+  jsonpFetch(url)
+    .then(() => setSyncStatus('ok'))
+    .catch(() => setSyncStatus('err'));
 }
 
 function setSyncStatus(state) {
@@ -1178,6 +1208,7 @@ async function loadFromSheets(silent = false) {
         if (id === 'v-kanban') renderKanban();
         else if (id === 'v-leads') renderLeadsList();
         else if (id === 'v-dash') renderDashboard();
+        else if (id === 'v-docs') renderDocsView();
       }
       setSyncStatus('ok');
     }
@@ -1187,7 +1218,7 @@ async function loadFromSheets(silent = false) {
 let _syncInterval = null;
 function startAutoSync() {
   if (_syncInterval) clearInterval(_syncInterval);
-  _syncInterval = setInterval(() => loadFromSheets(true), 30000);
+  _syncInterval = setInterval(() => loadFromSheets(true), 10000);
 }
 const PARCEIROS_URL = 'https://script.google.com/macros/s/AKfycby8FMy4HPUiRCjGjWjyMEdZE7DGFzwNzmACBlI2RxdrC9PlbgyO_Kdh1PuQoQIKHTr-Lg/exec';
 const CRM_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
@@ -1268,6 +1299,7 @@ function showView(name, btn) {
   if (name==='kanban') renderKanban();
   if (name==='leads') renderLeadsList();
   if (name==='dash') renderDashboard();
+  if (name==='docs') renderDocsView();
 }
 
 /* ━━━ DASHBOARD ━━━ */
@@ -1512,7 +1544,7 @@ function colDrop(e, stageId) {
     user: currentUser, ts: Date.now(),
   });
   lead.updatedAt = Date.now();
-  saveLeads(leads);
+  saveLeads(leads, lead);
   renderKanban();
   renderDashboard();
   toast(`${lead.nome} → ${STAGES[stageId].name}`, 'ok');
@@ -1529,7 +1561,7 @@ function quickFup() {
   lead.history = lead.history || [];
   lead.history.push({ text: `Contato registrado (FUP) por ${currentUser}`, user: currentUser, ts: Date.now() });
   lead.updatedAt = Date.now();
-  saveLeads(leads);
+  saveLeads(leads, lead);
   toast(`FUP registrado — ${lead.nome}`, 'ok');
   // Atualizar histórico no modal sem fechar
   const hist = document.getElementById('d-hist');
@@ -1555,7 +1587,7 @@ function quickFupCard(id) {
   lead.history = lead.history || [];
   lead.history.push({ text: `Contato registrado (FUP) por ${currentUser}`, user: currentUser, ts: Date.now() });
   lead.updatedAt = Date.now();
-  saveLeads(leads);
+  saveLeads(leads, lead);
   toast(`FUP registrado — ${lead.nome}`, 'ok');
   renderKanban();
   renderDashboard();
@@ -1574,7 +1606,7 @@ function addNote() {
   const note = { text, user: currentUser, ts: Date.now() };
   lead.notes.push(note);
   lead.updatedAt = Date.now();
-  saveLeads(leads);
+  saveLeads(leads, lead);
   inp.value = '';
   // Inserir na lista de notas sem fechar modal
   const notesList = document.querySelector('.notes-panel');
@@ -1623,7 +1655,7 @@ function openDetail(id) {
   editingId = id;
   if (!(lead.seenBy||[]).includes(currentUser)) {
     lead.seenBy = [...(lead.seenBy||[]), currentUser];
-    saveLeads(leads);
+    saveLeads(leads, lead);
   }
   const isPos = lead.stage >= 7;
   document.getElementById('d-name').textContent = lead.nome;
@@ -1779,6 +1811,32 @@ function openDetail(id) {
     </div>
   </div>
 
+  ${(()=>{
+    const DOC_ICONS = {'RG/CNH':'🪪','Fatura de Energia':'⚡','Contrato':'📄','Outro':'📎'};
+    const docs = lead.docs || [];
+    const docsListHtml = docs.length === 0
+      ? '<div style="font-size:10px;color:#166534;opacity:.6;margin-bottom:8px">Nenhum documento enviado ainda.</div>'
+      : docs.map(d => `<div class="doc-item">
+          <div class="doc-icon">${DOC_ICONS[d.tipo]||'📎'}</div>
+          <div class="doc-info">
+            <div class="doc-tipo">${d.tipo}</div>
+            <div class="doc-nome">${esc(d.nome||'Documento')}</div>
+            <div class="doc-meta">${d.user||'Sistema'} · ${fmtDateTime(d.ts)}</div>
+          </div>
+          <a class="doc-link" href="${d.link}" target="_blank">Abrir →</a>
+        </div>`).join('');
+    return `<div class="docs-panel">
+      <div class="docs-panel-title">Documentos</div>
+      ${docsListHtml}
+      <div class="doc-uploads">
+        <label class="doc-upload-btn">🪪 RG / CNH<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('RG/CNH','${id}',this)"></label>
+        <label class="doc-upload-btn">⚡ Fatura de Energia<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('Fatura de Energia','${id}',this)"></label>
+        <label class="doc-upload-btn">📄 Contrato<input type="file" style="display:none" accept="image/*,.pdf,.doc,.docx" onchange="uploadDoc('Contrato','${id}',this)"></label>
+        <label class="doc-upload-btn">📎 Outro<input type="file" style="display:none" onchange="uploadDoc('Outro','${id}',this)"></label>
+      </div>
+    </div>`;
+  })()}
+
   <div class="ms">
     <div class="ms-title n">Histórico</div>
     <div class="hist" id="d-hist">
@@ -1817,7 +1875,7 @@ function changeStage(id, btn) {
   lead.stage = id;
   if (id === 14) lead.oportunidadeDate = lead.oportunidadeDate || Date.now();
   lead.updatedAt = Date.now();
-  saveLeads(leads);
+  saveLeads(leads, lead);
   const stTag = document.getElementById('d-stage-tag');
   stTag.textContent = STAGES[id].name;
   stTag.className = `stage-tag sc-${id}`;
@@ -1833,7 +1891,7 @@ function toggleTask(i) {
   if (!lead.subtasks[lead.stage]) lead.subtasks[lead.stage] = {};
   lead.subtasks[lead.stage][i] = !lead.subtasks[lead.stage][i];
   lead.updatedAt = Date.now();
-  saveLeads(leads);
+  saveLeads(leads, lead);
   const chk = lead.subtasks[lead.stage][i];
   const isPos = lead.stage >= 7;
   const box = document.getElementById(`ckb-${i}`);
@@ -1852,7 +1910,7 @@ function addHistory() {
   lead.history = lead.history || [];
   lead.history.push({ text, user:currentUser, ts:Date.now() });
   lead.updatedAt = Date.now();
-  saveLeads(leads);
+  saveLeads(leads, lead);
   inp.value = '';
   const hist = document.getElementById('d-hist');
   const isPos = lead.stage >= 7;
@@ -1863,6 +1921,66 @@ function addHistory() {
       <div class="h-meta">${currentUser} · Agora</div>
     </div>
   </div>`);
+}
+
+function uploadDoc(tipo, leadId, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const cfg = getConfig();
+  if (!cfg.gsUrl) { toast('URL do Apps Script não configurada.','err'); return; }
+  if (file.size > 8 * 1024 * 1024) { toast('Arquivo muito grande. Máx 8MB.','err'); return; }
+  toast('Lendo arquivo...','');
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const base64 = ev.target.result.split(',')[1];
+    toast('Enviando para o Drive...','');
+    setSyncStatus('saving');
+    fetch(cfg.gsUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'upload_doc', leadId, tipo, arquivo: { base64, nome: file.name, tipo: file.type }, user: currentUser })
+    }).then(() => {
+      toast(`${tipo} enviado! Aparecerá em até 10s.`, 'ok');
+      setSyncStatus('ok');
+    }).catch(() => {
+      toast('Erro ao enviar documento.', 'err');
+      setSyncStatus('err');
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderDocsView() {
+  const body = document.getElementById('docsViewBody');
+  if (!body) return;
+  const DOC_ICONS = {'RG/CNH':'🪪','Fatura de Energia':'⚡','Contrato':'📄','Outro':'📎'};
+  const leads = getLeads().filter(l => (l.docs||[]).length > 0);
+  if (leads.length === 0) {
+    body.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px 0">Nenhum documento cadastrado ainda. Abra um lead e faça upload dos arquivos.</div>';
+    return;
+  }
+  body.innerHTML = leads.map(l => `
+    <div class="doc-lead-row">
+      <div class="doc-lead-hd" onclick="this.nextElementSibling.classList.toggle('open')">
+        <div class="doc-lead-name">${esc(l.nome)}</div>
+        <span class="stage-tag sc-${l.stage}" style="font-size:8px">${STAGES[l.stage].name}</span>
+        <div class="doc-lead-count">${l.docs.length} doc${l.docs.length>1?'s':''}</div>
+        <span style="font-size:10px;color:var(--text3)">▾</span>
+      </div>
+      <div class="doc-lead-body">
+        ${l.docs.map(d => `<div class="doc-item">
+          <div class="doc-icon">${DOC_ICONS[d.tipo]||'📎'}</div>
+          <div class="doc-info">
+            <div class="doc-tipo">${d.tipo}</div>
+            <div class="doc-nome">${esc(d.nome||'Documento')}</div>
+            <div class="doc-meta">${d.user||'Sistema'} · ${fmtDateTime(d.ts)}</div>
+          </div>
+          <a class="doc-link" href="${d.link}" target="_blank">Abrir →</a>
+        </div>`).join('')}
+        <button class="btn btn-s btn-sm" style="margin-top:6px" onclick="openDetail('${l.id}')">Abrir Lead</button>
+      </div>
+    </div>`).join('');
 }
 
 function saveLeadDetail() {
@@ -1881,7 +1999,7 @@ function saveLeadDetail() {
   lead.resp = document.getElementById('d-resp').value;
   lead.valor = document.getElementById('d-valor').value;
   lead.updatedAt = Date.now();
-  saveLeads(leads);
+  saveLeads(leads, lead);
   closeModal('ov-detail');
   toast('Lead salvo!','ok');
   renderDashboard(); renderKanban(); renderLeadsList();
@@ -1925,7 +2043,7 @@ function saveLead() {
   };
   const leads = getLeads();
   leads.unshift(lead);
-  saveLeads(leads);
+  saveLeads(leads, lead);
   ['af-nome','af-tel','af-email','af-cidade','af-kwh','af-valor','af-obs'].forEach(id=>document.getElementById(id).value='');
   closeModal('ov-add');
   toast(`Lead "${nome}" criado!`,'ok');
@@ -2239,7 +2357,7 @@ async function lancarPP(leadId) {
       user: currentUser, ts: Date.now()
     });
     lead.updatedAt = Date.now();
-    saveLeads(leads.map(l => l.id===leadId ? lead : l));
+    saveLeads(leads.map(l => l.id===leadId ? lead : l), lead);
   }
   toast(parceiro ? `Proposta enviada para ${parceiro}!` : 'Proposta salva no lead!', 'ok');
 }
