@@ -1693,6 +1693,32 @@ function openDetail(id) {
     </div>
   </div>`;
 
+  // Painel de documentos
+  const DOC_ICONS = {'RG/CNH':'🪪','Fatura de Energia':'⚡','Contrato':'📄','Outro':'📎'};
+  const docs = lead.docs || [];
+  const docsHtml = `
+  <div class="docs-panel">
+    <div class="docs-panel-title">Documentos do Cliente</div>
+    ${docs.length === 0
+      ? '<div style="font-size:11px;color:#166534;opacity:.7;margin-bottom:10px">Nenhum documento enviado ainda.</div>'
+      : docs.map(d => `
+        <div class="doc-item">
+          <div class="doc-icon">${DOC_ICONS[d.tipo]||'📎'}</div>
+          <div class="doc-info">
+            <div class="doc-tipo">${d.tipo}</div>
+            <div class="doc-nome">${esc(d.nome||'Documento')}</div>
+            <div class="doc-meta">${d.user||'Sistema'} · ${fmtDateTime(d.ts)}</div>
+          </div>
+          <a class="btn btn-g btn-sm" href="${d.link}" target="_blank" style="text-decoration:none;font-size:10px;padding:7px 14px;flex-shrink:0">📂 Abrir</a>
+        </div>`).join('')}
+    <div class="doc-uploads">
+      <label class="doc-upload-btn">🪪 RG / CNH<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('RG/CNH','${id}',this)"></label>
+      <label class="doc-upload-btn">⚡ Fatura de Energia<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('Fatura de Energia','${id}',this)"></label>
+      <label class="doc-upload-btn">📄 Contrato<input type="file" style="display:none" accept="image/*,.pdf,.doc,.docx" onchange="uploadDoc('Contrato','${id}',this)"></label>
+      <label class="doc-upload-btn">📎 Outro<input type="file" style="display:none" onchange="uploadDoc('Outro','${id}',this)"></label>
+    </div>
+  </div>`;
+
   // Mensagens sugeridas para o estágio atual
   const msgs = MESSAGES[lead.stage] || [];
   const msgsHtml = msgs.length > 0 ? `
@@ -1712,7 +1738,7 @@ function openDetail(id) {
   const _parc    = (lead.origem||'').startsWith('Parceiro — ') ? lead.origem.replace('Parceiro — ','') : (lead.parceiro||'');
   const _parcSel = ['Michael','Jessica'].includes(_parc) ? _parc : (_parc ? 'outro' : '');
 
-  document.getElementById('d-body').innerHTML = notesHtml + msgsHtml + `
+  document.getElementById('d-body').innerHTML = notesHtml + docsHtml + msgsHtml + `
   <div class="ms">
     <div class="ms-title${posCls}">Informações</div>
     <div class="info-grid">
@@ -1810,32 +1836,6 @@ function openDetail(id) {
       </div>
     </div>
   </div>
-
-  ${(()=>{
-    const DOC_ICONS = {'RG/CNH':'🪪','Fatura de Energia':'⚡','Contrato':'📄','Outro':'📎'};
-    const docs = lead.docs || [];
-    const docsListHtml = docs.length === 0
-      ? '<div style="font-size:10px;color:#166534;opacity:.6;margin-bottom:8px">Nenhum documento enviado ainda.</div>'
-      : docs.map(d => `<div class="doc-item">
-          <div class="doc-icon">${DOC_ICONS[d.tipo]||'📎'}</div>
-          <div class="doc-info">
-            <div class="doc-tipo">${d.tipo}</div>
-            <div class="doc-nome">${esc(d.nome||'Documento')}</div>
-            <div class="doc-meta">${d.user||'Sistema'} · ${fmtDateTime(d.ts)}</div>
-          </div>
-          <a class="doc-link" href="${d.link}" target="_blank">Abrir →</a>
-        </div>`).join('');
-    return `<div class="docs-panel">
-      <div class="docs-panel-title">Documentos</div>
-      ${docsListHtml}
-      <div class="doc-uploads">
-        <label class="doc-upload-btn">🪪 RG / CNH<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('RG/CNH','${id}',this)"></label>
-        <label class="doc-upload-btn">⚡ Fatura de Energia<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('Fatura de Energia','${id}',this)"></label>
-        <label class="doc-upload-btn">📄 Contrato<input type="file" style="display:none" accept="image/*,.pdf,.doc,.docx" onchange="uploadDoc('Contrato','${id}',this)"></label>
-        <label class="doc-upload-btn">📎 Outro<input type="file" style="display:none" onchange="uploadDoc('Outro','${id}',this)"></label>
-      </div>
-    </div>`;
-  })()}
 
   <div class="ms">
     <div class="ms-title n">Histórico</div>
