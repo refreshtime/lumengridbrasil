@@ -187,6 +187,7 @@ function adicionarNoCRM(lead) {
       history:   [{ text: 'Lead indicado pelo parceiro ' + (lead.parceiro || '') +
                           (lead.obs ? ' — ' + lead.obs : ''),
                     user: 'Sistema', ts: Date.now() }],
+      notes:     lead.obs ? [{ text: lead.obs, user: lead.parceiro || 'Parceiro', ts: Date.now() }] : [],
       createdAt: Date.now(),
       updatedAt: Date.now(),
       seenBy:    [],

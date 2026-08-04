@@ -133,7 +133,71 @@ function saveOneLead(lead) {
   if (lead.stage === 6 && oldStage !== 6 && (lead.docs || []).length > 0) {
     tentarMoverDocsParaContrato(lead);
   }
+  // Se lead veio de parceiro, espelha atualizações no portal
+  if ((lead.origem || '').startsWith('Parceiro — ')) {
+    atualizarPortalParceiro(lead);
+  }
   return result;
+}
+
+// ────────────────────────────────────────────────
+// INTEGRAÇÃO CRM → PORTAL DO PARCEIRO
+// Atualiza status, etapa e última anotação no
+// portal sempre que o CRM salvar o lead
+// ────────────────────────────────────────────────
+function atualizarPortalParceiro(lead) {
+  try {
+    const SHEET_ID_PARCEIROS = '1PoXQTLBfciYHSqQZn1ryHEx_0C6TQn5jDDyGNavGLuo';
+    const parceiro = (lead.origem || '').replace('Parceiro — ', '').trim();
+    if (!parceiro) return;
+
+    const STAGE_NOMES = [
+      'Lead Novo','Tentando Contato','Elaborar Orçamento','Enviar Orçamento',
+      'Proposta Enviada','Negociação','Venda Fechada',
+      'Agendar Visita','Estruturação Projeto','Comprar Equipamento',
+      'Compra Realizada','Agendar Instalação','Homologação','Projeto Concluído',
+      'Oportunidade Futura'
+    ];
+    const status = STAGE_NOMES[lead.stage] || 'Atualizado';
+
+    // Última anotação adicionada pela equipe
+    const notas = lead.notes || [];
+    const ultimaNota = notas.length > 0 ? notas[notas.length - 1].text : '';
+
+    const ss    = SpreadsheetApp.openById(SHEET_ID_PARCEIROS);
+    const sheet = ss.getSheetByName(parceiro);
+    if (!sheet) return;
+
+    const data    = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const nomeCol = headers.indexOf('Nome');
+    const telCol  = headers.indexOf('Telefone');
+    const statCol = headers.indexOf('Status')             + 1;
+    const obsCol  = headers.indexOf('Observações')        + 1;
+    const kwpCol  = headers.indexOf('kWp')                + 1;
+    const valCol  = headers.indexOf('Valor Projeto')      + 1;
+    const comCol  = headers.indexOf('Comissão Estimada')  + 1;
+
+    const leadNome = (lead.nome      || '').trim().toLowerCase();
+    const leadTel  = (lead.telefone  || '').replace(/\D/g, '');
+
+    for (let i = 1; i < data.length; i++) {
+      const rowNome = String(data[i][nomeCol] || '').trim().toLowerCase();
+      const rowTel  = String(data[i][telCol]  || '').replace(/\D/g, '');
+      const match   = rowNome === leadNome || (leadTel && rowTel === leadTel);
+      if (!match) continue;
+
+      const row = i + 1;
+      if (statCol > 0) sheet.getRange(row, statCol).setValue(status);
+      if (obsCol  > 0 && ultimaNota) sheet.getRange(row, obsCol).setValue(ultimaNota);
+      if (kwpCol  > 0 && lead.kwp)             sheet.getRange(row, kwpCol).setValue(lead.kwp);
+      if (valCol  > 0 && lead.valorProjeto)    sheet.getRange(row, valCol).setValue(lead.valorProjeto);
+      if (comCol  > 0 && lead.comissaoEstimada) sheet.getRange(row, comCol).setValue(lead.comissaoEstimada);
+      break;
+    }
+  } catch(e) {
+    Logger.log('atualizarPortalParceiro: ' + e.message);
+  }
 }
 
 // Grava os dados em formato tabular a partir da coluna B para visualização
