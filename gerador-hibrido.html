@@ -387,6 +387,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo da Bateria</label>
     <select class="fsel" id="batModelSel" onchange="onBatModelChange(this)">
       <option value="">— Selecionar —</option>
+      <option value="BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH" data-kwh="5">GOODWE LYNX LFP Classe A — Parede 5 kWh</option>
       <option value="Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh" data-kwh="5.1">Unipower UPLFP48-100 IW 5.1kWh</option>
       <option value="FoxESS Bateria LiFePO4 5.2kWh" data-kwh="5.2">FoxESS Bateria LiFePO4 5.2kWh</option>
       <option value="custom">Outro (digitar)</option>
@@ -452,7 +453,15 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <div><label class="fl">Valor Total (R$) <span id="projectValueTag" class="auto-tag">mín R$5.000/kVp</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
     </div>
     <div class="frow">
-      <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="7"></div>
+      <div>
+        <label class="fl">Validade da Proposta</label>
+        <div style="display:flex;gap:6px;margin-bottom:6px">
+          <label class="frl" style="flex:1;justify-content:center"><input type="radio" name="validMode" value="dias" checked onchange="onValidModeChange()"> Automático (dias)</label>
+          <label class="frl" style="flex:1;justify-content:center"><input type="radio" name="validMode" value="data" onchange="onValidModeChange()"> Data específica</label>
+        </div>
+        <input class="fi" type="number" id="validityDays" value="7" placeholder="Nº de dias" style="margin-bottom:0">
+        <input class="fi" type="date" id="validityDate" style="display:none;margin-bottom:0">
+      </div>
       <div><label class="fl">Prazo instalação (dias úteis)</label><input class="fi" type="number" id="prazoDias" value="20"></div>
     </div>
   </div>
@@ -639,17 +648,17 @@ const KITS_DATA=[
   // 0: GoodWe GW5K
   {invVal:'GoodWe GW5K-ES Híbrido Bifásico 2MPPT 127/220V 5kW',invPwr:5,
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:9,extras:850,
+   batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
    configs:[{nbat:1,preco:41446},{nbat:2,preco:48446}]},
   // 1: GoodWe GW7.5K
   {invVal:'GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:9,extras:850,
+   batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
    configs:[{nbat:1,preco:47000},{nbat:2,preco:54270},{nbat:3,preco:61000}]},
   // 2: Sofar HYD-7.5K
   {invVal:'Sofar HYD-7.5K-LSP1 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'Unipower UPLFP48-100 IW 48V 100Ah 5.1kWh',batKwh:5.1,baseQty:9,extras:850,
+   batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
    configs:[{nbat:1,qty:9,preco:43700},{nbat:2,qty:16,preco:59740}]},
 ];
 
@@ -759,9 +768,16 @@ function toggleSection(el){
   if(arrow)arrow.textContent=col?'▲':'▼';
 }
 
+function onValidModeChange(){
+  const mode=document.querySelector('input[name=validMode]:checked').value;
+  $('validityDays').style.display=mode==='dias'?'':'none';
+  $('validityDate').style.display=mode==='data'?'':'none';
+}
+
 function resetForm(){
   document.querySelectorAll('.fi,.fta').forEach(i=>{if(i.type!=='radio'&&i.type!=='checkbox')i.value='';});
-  $('validityDays').value='7';$('prazoDias').value='20';
+  $('validityDays').value='7';$('validityDate').value='';$('prazoDias').value='20';
+  document.querySelector('input[name=validMode][value="dias"]').checked=true;onValidModeChange();
   $('warPainel').value='25';$('warInvHib').value='10';
   $('warBateria').value='6.000 ciclos';$('warInstalacao').value='1';$('warAssistencia').value='Inclusa';
   $('batQty').value='1';$('precoKvp').value='5000';
@@ -864,7 +880,7 @@ function generateProposal(){
   const instType=document.querySelector('input[name=installType]:checked').value;
   const conexao=document.querySelector('input[name=conexao]:checked').value;
   const projectVal=getN('projectValue');
-  const validity=parseInt($('validityDays').value)||7;
+  const validMode=document.querySelector('input[name=validMode]:checked').value;
   const prazo=parseInt($('prazoDias').value)||20;
   const warPainel=getN('warPainel')||25;
   const warInvHib=getN('warInvHib')||10;
@@ -900,7 +916,14 @@ function generateProposal(){
   const paybackStr=paybackYears?(()=>{const a=Math.floor(paybackYears),m=Math.round((paybackYears-a)*12);if(a===0)return m+' meses';if(m===0)return a+' anos';return a+' anos e '+m+' meses';})():null;
 
   const today=new Date().toLocaleDateString('pt-BR');
-  const validUntil=new Date(Date.now()+validity*864e5).toLocaleDateString('pt-BR');
+  let validUntil;
+  if(validMode==='data'){
+    const d=$('validityDate').value;
+    validUntil=d?new Date(d+'T12:00:00').toLocaleDateString('pt-BR'):'—';
+  }else{
+    const validity=parseInt($('validityDays').value)||7;
+    validUntil=new Date(Date.now()+validity*864e5).toLocaleDateString('pt-BR');
+  }
   const waFoneDigits=vendFone.replace(/\D/g,'');
   const waMsg=encodeURIComponent('Olá, '+vendNome+'. Tenho interesse na proposta de energia híbrida Lumen Grid.');
   const waUrl=waFoneDigits?'https://wa.me/55'+waFoneDigits+'?text='+waMsg:'';
@@ -913,7 +936,7 @@ function generateProposal(){
   const p1=`<div class="page p-capa">
     <div style="position:absolute;inset:0;z-index:0;background:
       linear-gradient(to bottom, rgba(5,5,5,.10) 0%, rgba(5,5,5,.03) 20%, rgba(10,10,10,.50) 55%, rgba(10,10,10,.88) 85%),
-      url('imagens/capa-hibrido.png') center/cover no-repeat;
+      url('imagens/PROJETOS/capa-hibrido.png') center/cover no-repeat;
       background-color:#0a0f1a"></div>
     ${corners()}
     ${topbar(pg++,tot)}
