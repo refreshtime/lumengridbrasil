@@ -404,7 +404,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   <div class="fs">
     <div class="fs-title">Consumo & Economia</div>
     <div class="ftw" style="margin-bottom:10px">
-      <label class="ftog"><input type="checkbox" id="showGenPage" checked><span class="sl"></span></label>
+      <label class="ftog"><input type="checkbox" id="showGenPage"><span class="sl"></span></label>
       <span class="ftl">Incluir página de Geração de Energia <span style="font-size:9px;color:rgba(0,0,0,.3);font-weight:400">(ativo por padrão)</span></span>
     </div>
     <div style="background:#fff8f4;border:1px solid rgba(232,100,26,.3);border-radius:6px;padding:7px 10px;margin-bottom:10px;font-size:9px;line-height:1.55;color:#666">
@@ -572,8 +572,7 @@ function calcOverload(){
   let c,t;
   if(ov<0){c='#c0392b';t=`⚠ Inversor superdimensionado — placas ${(qty*pwr/1000).toFixed(2)} kWp < inversor ${totalInvKw} kW`;}
   else if(ov<=35){c='#27ae60';t=`✓ Overload ${ov.toFixed(1)}% — adequado (limite 35%)`;}
-  else if(ov<=55){c='#e67e22';t=`⚠ Overload ${ov.toFixed(1)}% — atenção (ideal até 35%)`;}
-  else{c='#c0392b';t=`✗ Overload ${ov.toFixed(1)}% — acima do limite seguro`;}
+  else{c='#c0392b';t=`✗ Overload ${ov.toFixed(1)}% — acima do limite (máx 35%)`;}
   el.textContent=t;
   el.style.cssText=`display:block;margin-top:4px;font-size:11px;font-weight:700;color:${c};padding:4px 8px;background:${c}18;border-radius:4px;border-left:3px solid ${c}`;
 }
@@ -825,7 +824,7 @@ function generateProposal(criarCard){
     (genKwhNum?' com geração estimada de '+fmtN(genKwhNum)+' kWh/mês':'')+'.'
   );
   const p1=`<div class="page p-capa">
-    <div class="capa-bg"></div>
+    <div class="capa-bg" style="background:linear-gradient(to bottom,rgba(5,5,5,.15) 0%,rgba(5,5,5,.05) 25%,rgba(10,10,10,.55) 60%,rgba(10,10,10,.85) 85%),url('${fotoUrl}') center top / cover no-repeat;background-color:#1a0f05"></div>
     ${corners()}
     ${topbar(pg++,tot)}
     <div class="capa-content">
