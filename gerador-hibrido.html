@@ -315,7 +315,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Nome do Cliente / Empresa <span class="req-star">*</span></label>
     <input class="fi" id="clientName" placeholder="Ex: João Silva / Empresa XYZ">
     <label class="fl">Telefone / WhatsApp <span style="color:var(--or)">*</span></label>
-    <input class="fi" id="clientPhone" placeholder="(XX) XXXXX-XXXX">
+    <input class="fi" id="clientPhone" placeholder="11 95668-4205" oninput="maskPhone(this)" maxlength="13">
     <label class="fl">Endereço / Cidade</label>
     <input class="fi" id="clientAddr" placeholder="São Paulo, SP">
     <label class="fl">Mensagem personalizada (opcional)</label>
@@ -532,6 +532,7 @@ function getHibridoValores(qty,pwr,precoKvp){
 function $(id){return document.getElementById(id);}
 function get(id){const el=$(id);return el?el.value.trim():'';}
 function getN(id){return parseFloat($(id)&&$(id).value)||0;}
+function maskPhone(el){let v=el.value.replace(/\D/g,'').slice(0,11);if(v.length>7)v=v.slice(0,2)+' '+v.slice(2,7)+'-'+v.slice(7);else if(v.length>2)v=v.slice(0,2)+' '+v.slice(2);el.value=v;}
 function fmtBRL(v){if(!v&&v!==0)return'—';return'R$\u00a0'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
 function topbar(n,t){
