@@ -234,7 +234,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <a href="https://refreshtime.github.io/gerador-solar-lumengrid/" target="_blank" class="btn bo" style="text-decoration:none">Proposta Solar On-Grid</a>
     <button class="btn bo" onclick="resetForm()">Limpar</button>
     <button class="btn" id="btnEstoque" onclick="toggleEstoque()" style="background:transparent;border:1.5px solid #e74c3c;color:#e74c3c;padding:9px 16px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Estoque Limitado</button>
-    <button class="btn bp" onclick="generateProposal()">Gerar Proposta</button>
+    <button class="btn bp" onclick="generateProposal(true)">Gerar Proposta</button>
+    <button class="btn" onclick="generateProposal(false)" style="background:transparent;border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.45);font-size:10px">Gerar sem CRM</button>
     <button class="bprint btn" onclick="printPDF()">Imprimir / Salvar PDF</button>
   </div>
 </div>
@@ -313,6 +314,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="fs-title">Cliente</div>
     <label class="fl">Nome do Cliente / Empresa <span class="req-star">*</span></label>
     <input class="fi" id="clientName" placeholder="Ex: João Silva / Empresa XYZ">
+    <label class="fl">Telefone / WhatsApp <span style="color:var(--or)">*</span></label>
+    <input class="fi" id="clientPhone" placeholder="(XX) XXXXX-XXXX">
     <label class="fl">Endereço / Cidade</label>
     <input class="fi" id="clientAddr" placeholder="São Paulo, SP">
     <label class="fl">Mensagem personalizada (opcional)</label>
@@ -485,6 +488,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="frg">
       <label class="frl"><input type="radio" name="vend" value="lucas" checked>Lucas Vieira</label>
       <label class="frl"><input type="radio" name="vend" value="hingrid">Hingrid Oliveira</label>
+      <label class="frl"><input type="radio" name="vend" value="giovani">Giovani</label>
       <label class="frl"><input type="radio" name="vend" value="custom">Personalizado</label>
     </div>
     <div id="vendCustom" style="display:none">
@@ -497,7 +501,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 <div class="form-sticky-btns">
   <button class="btn bo" onclick="resetForm()">Limpar</button>
-  <button class="btn bp" id="btnGerar" onclick="generateProposal()">Gerar Proposta</button>
+  <button class="btn bp" id="btnGerar" onclick="generateProposal(true)">Gerar Proposta</button>
+  <button class="btn bo" onclick="generateProposal(false)" style="font-size:10px">Gerar sem card no CRM</button>
   <button class="bprint btn" onclick="printPDF()">Imprimir / PDF</button>
 </div>
 </div><!-- /form-panel -->
@@ -859,11 +864,16 @@ function buildGenChart(genKwh){
 }
 
 // ── GENERATE PROPOSAL ──
-function generateProposal(){
+function generateProposal(criarCard){
+  if(criarCard===undefined)criarCard=true;
   // Validação obrigatória
   const erros=[];
   if(!get('invModel'))erros.push('Modelo do inversor h\u00edbrido');
   if(!getN('batteryKwh')&&!get('batModel'))erros.push('Bateria (capacidade em kWh ou modelo)');
+  if(criarCard&&!get('clientPhone')){
+    alert('Preencha o telefone do cliente para gerar o card no CRM.\n\nSe preferir gerar a proposta sem registrar no CRM, clique em "Gerar sem card no CRM".');
+    return;
+  }
   if(erros.length){alert('Preencha os campos obrigatórios antes de gerar a proposta:\n\n• '+erros.join('\n• '));return;}
 
   const name=get('clientName')||'Cliente';
@@ -900,6 +910,7 @@ function generateProposal(){
   if(vendRad){
     if(vendRad.value==='lucas'){vendNome='Lucas Vieira';vendFone='(11) 94556-0188';}
     else if(vendRad.value==='hingrid'){vendNome='Hingrid Oliveira';vendFone='(11) 99817-9824';}
+    else if(vendRad.value==='giovani'){vendNome='Giovani';vendFone='';}
     else{vendNome=get('vendNomeCustom')||'Consultor';vendFone=get('vendFoneCustom')||'';}
   }
 
@@ -1360,6 +1371,74 @@ function generateProposal(){
   $('preview').style.display='block';
   $('prevEmpty').style.display='none';
   $('prevPanel').scrollTop=0;
+
+  // ── SYNC CRM ──
+  if(criarCard){
+    syncToCRM({
+      nome:         name,
+      telefone:     get('clientPhone'),
+      cidade:       addr,
+      tipoSistema:  'Híbrido',
+      kWp:          kVp,
+      modQty:       modQty,
+      modModel:     modModel,
+      modPower:     modPower,
+      invModel:     invModel,
+      invQty:       invQty,
+      invPower:     invPower,
+      valor:        projectVal,
+      genKwh:       genKwhNum,
+      ecoMonthly:   ecoMonthly,
+      paybackStr:   paybackStr||'',
+      consultor:    vendNome,
+      consultorKey: vendRad?vendRad.value:'custom',
+      conexao:      conexao,
+      instType:     instType,
+      batKwh:       batKwh,
+      batModel:     batModel,
+      batQty:       batQty,
+    });
+  }
+}
+
+// ── CRM SYNC ──
+const CRM_GS_URL='https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
+
+function syncToCRM(dados){
+  const cbName='__crmCb'+Date.now();
+  const script=document.createElement('script');
+  const url=CRM_GS_URL+'?action=save_proposta&callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(dados));
+  window[cbName]=function(res){
+    delete window[cbName];
+    document.body.removeChild(script);
+    if(res&&res.ok){
+      showCRMToast(res.updated?'Card atualizado no CRM ✓':'Card criado no CRM ✓', res.updated?'#2563EB':'#16A34A');
+    }else{
+      showCRMToast('Erro ao registrar no CRM','#DC2626');
+    }
+  };
+  script.src=url;
+  script.onerror=function(){
+    delete window[cbName];
+    document.body.removeChild(script);
+    showCRMToast('Erro ao conectar com o CRM','#DC2626');
+  };
+  document.body.appendChild(script);
+}
+
+function showCRMToast(msg,color){
+  let t=document.getElementById('crm-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='crm-toast';
+    t.style.cssText='position:fixed;bottom:80px;right:20px;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:700;font-family:inherit;color:#fff;z-index:9999;transition:opacity .4s;box-shadow:0 4px 16px rgba(0,0,0,.25)';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.background=color;
+  t.style.opacity='1';
+  clearTimeout(t._timeout);
+  t._timeout=setTimeout(()=>{t.style.opacity='0';},3500);
 }
 
 // ── ESTOQUE LIMITADO ──
