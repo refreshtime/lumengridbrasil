@@ -382,6 +382,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
         <input class="fi" id="monthlyGen" placeholder="Ex: 720 kWh">
       </div>
     </div>
+    <div id="overloadInfo" style="display:none"></div>
   </div>
 
   <div class="fs">
@@ -561,6 +562,22 @@ function onValidModeChange(){
   $('validityDate').style.display=mode==='data'?'':'none';
 }
 
+// ── OVERLOAD ──
+function calcOverload(){
+  const el=$('overloadInfo');if(!el)return;
+  const qty=getN('modQty'),pwr=getN('modPower'),invPwr=getN('invPower'),invQtyVal=getN('invQty')||1;
+  if(!qty||!pwr||!invPwr){el.style.display='none';return;}
+  const totalInvKw=invPwr*invQtyVal;
+  const ov=((qty*pwr)/(totalInvKw*1000)-1)*100;
+  let c,t;
+  if(ov<0){c='#c0392b';t=`⚠ Inversor superdimensionado — placas ${(qty*pwr/1000).toFixed(2)} kWp < inversor ${totalInvKw} kW`;}
+  else if(ov<=35){c='#27ae60';t=`✓ Overload ${ov.toFixed(1)}% — adequado (limite 35%)`;}
+  else if(ov<=55){c='#e67e22';t=`⚠ Overload ${ov.toFixed(1)}% — atenção (ideal até 35%)`;}
+  else{c='#c0392b';t=`✗ Overload ${ov.toFixed(1)}% — acima do limite seguro`;}
+  el.textContent=t;
+  el.style.cssText=`display:block;margin-top:4px;font-size:11px;font-weight:700;color:${c};padding:4px 8px;background:${c}18;border-radius:4px;border-left:3px solid ${c}`;
+}
+
 // ── AUTO-CALC ──
 function getPrecoParams(){
   const isMicroNow=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
@@ -586,12 +603,15 @@ function autoCalc(){
   if(kVp>0)$('projectValue').value=Math.round(kVp*precoKvp);
   // Micro: 1 microinversor a cada 4 placas
   if(isMicro&&qty>0)$('invQty').value=Math.ceil(qty/4);
+  calcOverload();
 }
 document.querySelectorAll('input[name=invTipo]').forEach(r=>r.addEventListener('change',onInvTipoChange));
 $('modQty').addEventListener('input',autoCalc);
 $('modPower').addEventListener('input',autoCalc);
 $('precoKvp').addEventListener('input',autoCalc);
 $('monthlyGen').addEventListener('input',function(){this.dataset.manual='1';});
+$('invQty').addEventListener('input',calcOverload);
+$('invPower').addEventListener('input',calcOverload);
 
 // ── DROPDOWN HANDLERS ──
 function onModModelChange(sel){
