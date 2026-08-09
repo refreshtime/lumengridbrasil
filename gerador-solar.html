@@ -349,11 +349,16 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Inversor <span class="req-star">*</span></label>
     <select class="fsel" id="invModelSel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="GoodWe GW5000-NS On-Grid Monofásico 220V 5kW" data-power="5" selected>GoodWe GW5000-NS Monofásico 5kW ★ padrão</option>
-      <option value="GoodWe GW3000-NS On-Grid Monofásico 220V 3kW" data-power="3">GoodWe GW3000-NS Monofásico 3kW</option>
-      <option value="GoodWe GW6000-NS On-Grid Monofásico 220V 6kW" data-power="6">GoodWe GW6000-NS Monofásico 6kW</option>
-      <option value="GoodWe GW8000-DT On-Grid Trifásico 220V 8kW" data-power="8">GoodWe GW8000-DT Trifásico 8kW</option>
-      <option value="GoodWe GW10000-DT On-Grid Trifásico 220V 10kW" data-power="10">GoodWe GW10000-DT Trifásico 10kW</option>
+      <option value="GoodWe Premium On-Grid 3kW" data-power="3">GoodWe Premium On-Grid 3kW</option>
+      <option value="GoodWe Premium On-Grid 3.3kW" data-power="3.3">GoodWe Premium On-Grid 3.3kW</option>
+      <option value="GoodWe Premium On-Grid 5kW" data-power="5" selected>GoodWe Premium On-Grid 5kW ★ padrão</option>
+      <option value="GoodWe Premium On-Grid 6kW" data-power="6">GoodWe Premium On-Grid 6kW</option>
+      <option value="GoodWe Premium On-Grid 8kW" data-power="8">GoodWe Premium On-Grid 8kW</option>
+      <option value="GoodWe Premium On-Grid 10kW" data-power="10">GoodWe Premium On-Grid 10kW</option>
+      <option value="GoodWe Premium On-Grid 12kW" data-power="12">GoodWe Premium On-Grid 12kW</option>
+      <option value="GoodWe Premium On-Grid 15kW" data-power="15">GoodWe Premium On-Grid 15kW</option>
+      <option value="GoodWe Premium On-Grid 18kW" data-power="18">GoodWe Premium On-Grid 18kW</option>
+      <option value="GoodWe Premium On-Grid 20kW" data-power="20">GoodWe Premium On-Grid 20kW</option>
       <option value="Sofar Monofásico 220V 3.3kW" data-power="3.3">Sofar Monofásico 220V 3.3kW</option>
       <option value="Sungrow Trifásico 2MPPT 220V 3kW" data-power="3">Sungrow Trifásico 2MPPT 3kW</option>
       <option value="Sungrow Trifásico 2MPPT 220V 5kW" data-power="5">Sungrow Trifásico 2MPPT 5kW</option>
@@ -526,10 +531,11 @@ function fmtBRL(v){if(!v&&v!==0)return'—';return'R$\u00a0'+Number(v).toLocaleS
 function fmtN(v){return Number(v).toLocaleString('pt-BR');}
 
 // ── KITS PRÉ-DEFINIDOS ──
+const GOODWE_SIZES=[3,3.3,5,6,8,10,12,15,18,20];
 const SOLAR_KITS=[
-  {modQty:5,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:3,invModel:'GoodWe GW3000-NS On-Grid Monofásico 220V 3kW',tipo:'string'},
-  {modQty:8,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:5,invModel:'GoodWe GW5000-NS On-Grid Monofásico 220V 5kW',tipo:'string'},
-  {modQty:13,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:8,invModel:'GoodWe GW8000-DT On-Grid Trifásico 220V 8kW',tipo:'string'},
+  {modQty:5,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:3,invModel:'GoodWe Premium On-Grid 3kW',tipo:'string'},
+  {modQty:8,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:5,invModel:'GoodWe Premium On-Grid 5kW',tipo:'string'},
+  {modQty:13,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:6,invModel:'GoodWe Premium On-Grid 6kW',tipo:'string'},
   {modQty:4,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
   {modQty:8,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:2,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
   {modQty:12,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:3,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
@@ -560,6 +566,29 @@ function onValidModeChange(){
   const mode=document.querySelector('input[name=validMode]:checked')?.value;
   $('validityDays').style.display=mode==='dias'?'':'none';
   $('validityDate').style.display=mode==='data'?'':'none';
+}
+
+// ── AUTO-SELEÇÃO INVERSOR GOODWE ──
+function autoSelectInversor(){
+  const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
+  if(isMicro)return;
+  const qty=getN('modQty'),pwr=getN('modPower');
+  if(!qty||!pwr)return;
+  const kVp=qty*pwr/1000;
+  const minPower=kVp/1.35;
+  const size=GOODWE_SIZES.find(s=>s>=minPower);
+  if(!size)return;
+  const modelName=`GoodWe Premium On-Grid ${size}kW`;
+  $('invPower').value=size;
+  $('invQty').value=1;
+  const sel=$('invModelSel');
+  if(sel){
+    let found=false;
+    for(const o of sel.options){if(o.value===modelName){sel.value=modelName;found=true;break;}}
+    if(!found)sel.value='custom';
+  }
+  $('invModel').value=modelName;
+  $('invModel').style.display='none';
 }
 
 // ── OVERLOAD ──
@@ -602,6 +631,8 @@ function autoCalc(){
   if(kVp>0)$('projectValue').value=Math.round(kVp*precoKvp);
   // Micro: 1 microinversor a cada 4 placas
   if(isMicro&&qty>0)$('invQty').value=Math.ceil(qty/4);
+  // String: seleciona GoodWe ideal automaticamente
+  if(!isMicro)autoSelectInversor();
   calcOverload();
 }
 document.querySelectorAll('input[name=invTipo]').forEach(r=>r.addEventListener('change',onInvTipoChange));
@@ -812,7 +843,8 @@ function generateProposal(criarCard){
 
   const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
   const descontoAvista=get('descontoAvista')||'';
-  const fotoUrl=get('fotoUrl')||(hasWallbox?IMG_BASE+'handshake.png':isMicro?IMG_BASE+'hibrido.png':IMG_BASE+'familia.png');
+  const CAPA_SOLAR='https://raw.githubusercontent.com/refreshtime/lumengridbrasil/main/imagens/PROJETOS/capa-proposta-solar.png';
+  const fotoUrl=get('fotoUrl')||(hasWallbox?IMG_BASE+'handshake.png':CAPA_SOLAR);
   const waFoneDigits=vendFone.replace(/\D/g,'');
   const waMsg=encodeURIComponent('Olá, '+vendNome+'. Gostaria de conversar sobre a proposta de energia solar preparada para '+name+'.');
   const waUrl=waFoneDigits?'https://wa.me/55'+waFoneDigits+'?text='+waMsg:'';
