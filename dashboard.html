@@ -1425,11 +1425,7 @@ function renderRelatorio(){
 
 // ── TABS ──
 function showTab(name){
-  const PROTECTED=['despesas','receitas'];
-  if(PROTECTED.includes(name)&&!sessionStorage.getItem('lg_auth')){
-    location.replace('login.html?next=dashboard.html');
-    return;
-  }
+
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.querySelector(`[onclick="showTab('${name}')"]`).classList.add('active');
