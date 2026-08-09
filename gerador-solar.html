@@ -273,19 +273,19 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
   <div style="margin-bottom:14px">
     <div style="font-size:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--uit);margin-bottom:8px;display:flex;align-items:center;gap:8px">
-      <span style="flex:1;height:1px;background:var(--uib)"></span>Huawei · Jinko 620W · String<span style="flex:1;height:1px;background:var(--uib)"></span>
+      <span style="flex:1;height:1px;background:var(--uib)"></span>GoodWe · Jinko 620W · String<span style="flex:1;height:1px;background:var(--uib)"></span>
     </div>
     <div style="display:flex;flex-direction:column;gap:4px">
       <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
-        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">5 placas · 3,1 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 10.850 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· Huawei 3kW</span></div></div>
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">5 placas · 3,1 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 10.850 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· GoodWe 3kW</span></div></div>
         <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(0)">Aplicar</button>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
-        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">8 placas · 4,96 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 17.360 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· Huawei 5kW</span></div></div>
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">8 placas · 4,96 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 17.360 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· GoodWe 5kW</span></div></div>
         <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(1)">Aplicar</button>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
-        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">13 placas · 8,06 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 28.210 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· Huawei 8kW</span></div></div>
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">13 placas · 8,06 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 28.210 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· GoodWe 8kW</span></div></div>
         <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(2)">Aplicar</button>
       </div>
     </div>
@@ -349,10 +349,11 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Inversor <span class="req-star">*</span></label>
     <select class="fsel" id="invModelSel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="Huawei SUN2000-3KTL-L1 2MPPT 220V" data-power="3">Huawei SUN2000-3KTL-L1 3kW</option>
-      <option value="Huawei SUN2000-5KTL-L1 2MPPT 220V" data-power="5">Huawei SUN2000-5KTL-L1 5kW</option>
-      <option value="Huawei SUN2000-6KTL-L1 2MPPT 220V" data-power="6">Huawei SUN2000-6KTL-L1 6kW</option>
-      <option value="Huawei SUN2000-8KTL 3MPPT 220V" data-power="8">Huawei SUN2000-8KTL 8kW</option>
+      <option value="GoodWe GW5000-NS On-Grid Monofásico 220V 5kW" data-power="5" selected>GoodWe GW5000-NS Monofásico 5kW ★ padrão</option>
+      <option value="GoodWe GW3000-NS On-Grid Monofásico 220V 3kW" data-power="3">GoodWe GW3000-NS Monofásico 3kW</option>
+      <option value="GoodWe GW6000-NS On-Grid Monofásico 220V 6kW" data-power="6">GoodWe GW6000-NS Monofásico 6kW</option>
+      <option value="GoodWe GW8000-DT On-Grid Trifásico 220V 8kW" data-power="8">GoodWe GW8000-DT Trifásico 8kW</option>
+      <option value="GoodWe GW10000-DT On-Grid Trifásico 220V 10kW" data-power="10">GoodWe GW10000-DT Trifásico 10kW</option>
       <option value="Sofar Monofásico 220V 3.3kW" data-power="3.3">Sofar Monofásico 220V 3.3kW</option>
       <option value="Sungrow Trifásico 2MPPT 220V 3kW" data-power="3">Sungrow Trifásico 2MPPT 3kW</option>
       <option value="Sungrow Trifásico 2MPPT 220V 5kW" data-power="5">Sungrow Trifásico 2MPPT 5kW</option>
@@ -525,9 +526,9 @@ function fmtN(v){return Number(v).toLocaleString('pt-BR');}
 
 // ── KITS PRÉ-DEFINIDOS ──
 const SOLAR_KITS=[
-  {modQty:5,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:3,invModel:'Huawei SUN2000-3KTL-L1 2MPPT 220V',tipo:'string'},
-  {modQty:8,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:5,invModel:'Huawei SUN2000-5KTL-L1 2MPPT 220V',tipo:'string'},
-  {modQty:13,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:8,invModel:'Huawei SUN2000-8KTL 3MPPT 220V',tipo:'string'},
+  {modQty:5,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:3,invModel:'GoodWe GW3000-NS On-Grid Monofásico 220V 3kW',tipo:'string'},
+  {modQty:8,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:5,invModel:'GoodWe GW5000-NS On-Grid Monofásico 220V 5kW',tipo:'string'},
+  {modQty:13,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:8,invModel:'GoodWe GW8000-DT On-Grid Trifásico 220V 8kW',tipo:'string'},
   {modQty:4,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
   {modQty:8,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:2,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
   {modQty:12,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:3,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
