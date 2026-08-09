@@ -213,6 +213,12 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 .pay-img-lbl{font-size:8px;font-weight:800;letter-spacing:2px;color:var(--or);text-transform:uppercase;margin-bottom:8px}
 .pay-img-box img{max-width:100%;height:auto;display:block;margin:0 auto}
 
+.req-star{color:#e74c3c;font-size:11px}
+.fs-toggle{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.fs-arrow{font-size:10px;color:var(--or)}
+.fs-body.collapsed{display:none}
+.fs-body.expanded{display:block}
+
 /* ── PRINT STYLES ── */
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
@@ -261,9 +267,55 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 <div class="form-panel">
 <div class="form-inner">
 
+<!-- ── KITS PRÉ-DEFINIDOS ── -->
+<div style="margin:-20px -18px 20px;padding:16px 18px 18px;background:linear-gradient(135deg,rgba(232,100,26,.06),rgba(232,100,26,.02));border-bottom:2px solid rgba(232,100,26,.25)">
+  <div class="fs-title" style="margin-bottom:14px">&#9889; Kits Pré-Definidos — Inicie aqui</div>
+
+  <div style="margin-bottom:14px">
+    <div style="font-size:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--uit);margin-bottom:8px;display:flex;align-items:center;gap:8px">
+      <span style="flex:1;height:1px;background:var(--uib)"></span>Huawei · Jinko 620W · String<span style="flex:1;height:1px;background:var(--uib)"></span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">5 placas · 3,1 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 10.850 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· Huawei 3kW</span></div></div>
+        <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(0)">Aplicar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">8 placas · 4,96 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 17.360 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· Huawei 5kW</span></div></div>
+        <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(1)">Aplicar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">13 placas · 8,06 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 28.210 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· Huawei 8kW</span></div></div>
+        <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(2)">Aplicar</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:10px">
+    <div style="font-size:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--uit);margin-bottom:8px;display:flex;align-items:center;gap:8px">
+      <span style="flex:1;height:1px;background:var(--uib)"></span>FoxESS · Jinko 620W · Microinversor<span style="flex:1;height:1px;background:var(--uib)"></span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">4 placas · 2,48 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 9.424 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· 1× Micro 2.5kW</span></div></div>
+        <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(3)">Aplicar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">8 placas · 4,96 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 18.848 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· 2× Micro 2.5kW</span></div></div>
+        <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(4)">Aplicar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--uib);border-radius:6px;padding:7px 10px">
+        <div><div style="font-size:8.5px;font-weight:700;color:var(--uit)">12 placas · 7,44 kWp</div><div style="font-size:10.5px;font-weight:900;color:var(--or)">~R$ 28.272 <span style="font-size:7.5px;font-weight:400;color:var(--uim)">· 3× Micro 2.5kW</span></div></div>
+        <button class="btn bp" style="font-size:9px;padding:4px 11px" onclick="applyKit(5)">Aplicar</button>
+      </div>
+    </div>
+  </div>
+  <div style="font-size:7.5px;color:var(--uim)">Preços estimados. Ajuste o Valor Total conforme a negociação.</div>
+</div>
+
   <div class="fs">
     <div class="fs-title">Cliente</div>
-    <label class="fl">Nome do Cliente / Empresa *</label>
+    <label class="fl">Nome do Cliente / Empresa <span class="req-star">*</span></label>
     <input class="fi" id="clientName" placeholder="Ex: João Silva / Empresa XYZ">
     <label class="fl">Telefone / WhatsApp <span style="color:var(--or)">*</span></label>
     <input class="fi" id="clientPhone" placeholder="11 95668-4205" oninput="maskPhone(this)" maxlength="13">
@@ -279,9 +331,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <div><label class="fl">Qtd Módulos</label><input class="fi" type="number" id="modQty" placeholder="Ex: 10" min="0"></div>
       <div><label class="fl">Potência (W)</label><input class="fi" type="number" id="modPower" placeholder="Ex: 550" min="0"></div>
     </div>
-    <label class="fl">Modelo do Módulo</label>
-    <select class="fsel" onchange="onModModelChange(this)">
+    <label class="fl">Modelo do Módulo <span class="req-star">*</span></label>
+    <select class="fsel" id="modModelSel" onchange="onModModelChange(this)">
       <option value="">— Selecionar —</option>
+      <option value="JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)" data-power="620" selected>Jinko Bifacial 620W — JKM620N-66HL4M BDV (22.95%) ★ padrão</option>
       <option value="Maxeon Bifacial PERC 535W" data-power="535">Maxeon Bifacial PERC 535W</option>
       <option value="Maxeon Bifacial PERC 550W" data-power="550">Maxeon Bifacial PERC 550W</option>
       <option value="Ronma Solar N-Type 590W Black Frame" data-power="590">Ronma Solar N-Type 590W Black Frame</option>
@@ -293,8 +346,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <div><label class="fl">Qtd Inversores</label><input class="fi" type="number" id="invQty" placeholder="1" min="0"></div>
       <div><label class="fl">Potência (kW)</label><input class="fi" type="number" id="invPower" placeholder="Ex: 8" min="0"></div>
     </div>
-    <label class="fl">Modelo do Inversor</label>
-    <select class="fsel" onchange="onInvModelChange(this)">
+    <label class="fl">Modelo do Inversor <span class="req-star">*</span></label>
+    <select class="fsel" id="invModelSel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
       <option value="Huawei SUN2000-3KTL-L1 2MPPT 220V" data-power="3">Huawei SUN2000-3KTL-L1 3kW</option>
       <option value="Huawei SUN2000-5KTL-L1 2MPPT 220V" data-power="5">Huawei SUN2000-5KTL-L1 5kW</option>
@@ -313,6 +366,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="frg">
       <label class="frl"><input type="radio" name="invTipo" value="string" checked>String / Convencional</label>
       <label class="frl"><input type="radio" name="invTipo" value="micro">Microinversor</label>
+    </div>
+    <div class="ftw" style="margin-top:2px">
+      <label class="ftog"><input type="checkbox" id="isencaoICMS"><span class="sl"></span></label>
+      <span class="ftl">Isenção de ICMS <span style="font-size:9px;color:var(--uim);font-weight:400">(residencial — verificar elegibilidade)</span></span>
     </div>
     <div class="frow">
       <div>
@@ -344,6 +401,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
   <div class="fs">
     <div class="fs-title">Consumo & Economia</div>
+    <div class="ftw" style="margin-bottom:10px">
+      <label class="ftog"><input type="checkbox" id="showGenPage" checked><span class="sl"></span></label>
+      <span class="ftl">Incluir página de Geração de Energia <span style="font-size:9px;color:rgba(0,0,0,.3);font-weight:400">(ativo por padrão)</span></span>
+    </div>
     <div style="background:#fff8f4;border:1px solid rgba(232,100,26,.3);border-radius:6px;padding:7px 10px;margin-bottom:10px;font-size:9px;line-height:1.55;color:#666">
       <strong style="color:var(--or)">Parametro automatico:</strong> Se nao preencher nenhum campo abaixo, a economia sera estimada em <strong style="color:#333">R$130/kWp·mes</strong> (padrao LumenGrid — estimativa alta). Preencher a conta ou consumo+tarifa e mais preciso.
     </div>
@@ -364,7 +425,15 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <div><label class="fl">Valor Total (R$) *</label><input class="fi" type="number" id="projectValue" placeholder="Calculado auto"></div>
     </div>
     <div class="frow">
-      <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="7"></div>
+      <div>
+        <label class="fl">Validade da Proposta</label>
+        <div style="display:flex;gap:6px;margin-bottom:6px">
+          <label class="frl" style="flex:1;justify-content:center"><input type="radio" name="validMode" value="dias" checked onchange="onValidModeChange()"> Automático (dias)</label>
+          <label class="frl" style="flex:1;justify-content:center"><input type="radio" name="validMode" value="data" onchange="onValidModeChange()"> Data específica</label>
+        </div>
+        <input class="fi" type="number" id="validityDays" value="7" placeholder="Nº de dias" style="margin-bottom:0">
+        <input class="fi" type="date" id="validityDate" style="display:none;margin-bottom:0">
+      </div>
       <div><label class="fl">Prazo instalação (dias úteis)</label><input class="fi" type="number" id="prazoDias" value="20"></div>
     </div>
     <label class="fl">Desconto à vista (opcional)</label>
@@ -388,15 +457,17 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="fs">
-    <div class="fs-title">Wallbox (opcional)</div>
-    <div class="ftw">
-      <label class="ftog"><input type="checkbox" id="hasWallbox"><span class="sl"></span></label>
-      <span class="ftl">Incluir Carregador Veicular</span>
-    </div>
-    <div id="wallboxFields" style="display:none">
-      <div class="frow">
-        <div><label class="fl">Potência</label><input class="fi" id="wallboxPower" value="7,4 kW"></div>
-        <div><label class="fl">Valor (R$)</label><input class="fi" type="number" id="wallboxPrice" placeholder="Ex: 4800"></div>
+    <div class="fs-toggle" onclick="toggleSection(this)"><div class="fs-title">Wallbox <span style="font-size:9px;color:rgba(0,0,0,.25);font-weight:400;text-transform:none;letter-spacing:0">opcional</span></div><span class="fs-arrow">▼</span></div>
+    <div class="fs-body collapsed">
+      <div class="ftw">
+        <label class="ftog"><input type="checkbox" id="hasWallbox"><span class="sl"></span></label>
+        <span class="ftl">Incluir Carregador Veicular</span>
+      </div>
+      <div id="wallboxFields" style="display:none">
+        <div class="frow">
+          <div><label class="fl">Potência</label><input class="fi" id="wallboxPower" value="7,4 kW"></div>
+          <div><label class="fl">Valor (R$)</label><input class="fi" type="number" id="wallboxPrice" placeholder="Ex: 4800"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -452,6 +523,43 @@ function maskPhone(el){let v=el.value.replace(/\D/g,'').slice(0,11);if(v.length>
 function fmtBRL(v){if(!v&&v!==0)return'—';return'R$\u00a0'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtN(v){return Number(v).toLocaleString('pt-BR');}
 
+// ── KITS PRÉ-DEFINIDOS ──
+const SOLAR_KITS=[
+  {modQty:5,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:3,invModel:'Huawei SUN2000-3KTL-L1 2MPPT 220V',tipo:'string'},
+  {modQty:8,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:5,invModel:'Huawei SUN2000-5KTL-L1 2MPPT 220V',tipo:'string'},
+  {modQty:13,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:8,invModel:'Huawei SUN2000-8KTL 3MPPT 220V',tipo:'string'},
+  {modQty:4,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:1,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
+  {modQty:8,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:2,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
+  {modQty:12,modPower:620,modModel:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',invQty:3,invPower:2.5,invModel:'FoxESS Microinversor 4MPPT 220V 2.5kW',tipo:'micro'},
+];
+function applyKit(idx){
+  const k=SOLAR_KITS[idx];if(!k)return;
+  $('modQty').value=k.modQty;$('modPower').value=k.modPower;
+  $('modModel').value=k.modModel;$('modModel').style.display='none';
+  const ms=$('modModelSel');if(ms){for(const o of ms.options)if(o.value===k.modModel){ms.value=k.modModel;break;}}
+  $('invQty').value=k.invQty;$('invPower').value=k.invPower;
+  $('invModel').value=k.invModel;$('invModel').style.display='none';
+  const is=$('invModelSel');if(is){for(const o of is.options)if(o.value===k.invModel){is.value=k.invModel;break;}}
+  document.querySelector(`input[name=invTipo][value="${k.tipo}"]`).checked=true;
+  onInvTipoChange();autoCalc();
+}
+
+// ── TOGGLE SECTION ──
+function toggleSection(titleEl){
+  const body=titleEl.parentElement.querySelector('.fs-body');
+  const arrow=titleEl.querySelector('.fs-arrow');
+  if(!body)return;
+  body.classList.toggle('collapsed');body.classList.toggle('expanded');
+  if(arrow)arrow.textContent=body.classList.contains('expanded')?'▲':'▼';
+}
+
+// ── VALID MODE ──
+function onValidModeChange(){
+  const mode=document.querySelector('input[name=validMode]:checked')?.value;
+  $('validityDays').style.display=mode==='dias'?'':'none';
+  $('validityDate').style.display=mode==='data'?'':'none';
+}
+
 // ── AUTO-CALC ──
 function getPrecoParams(){
   const isMicroNow=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
@@ -502,15 +610,24 @@ function onInvModelChange(sel){
 $('hasWallbox').addEventListener('change',function(){$('wallboxFields').style.display=this.checked?'':'none';});
 document.querySelectorAll('input[name=vend]').forEach(r=>r.addEventListener('change',function(){$('vendCustom').style.display=this.value==='custom'?'':'none';}));
 
+// Inicializa modelo padrão Jinko 620W
+window.addEventListener('DOMContentLoaded',function(){
+  const ms=$('modModelSel');if(ms&&ms.value)onModModelChange(ms);
+});
+
 // ── RESET ──
 function resetForm(){
   document.querySelectorAll('.fi,.fta').forEach(i=>{if(i.type!=='radio'&&i.type!=='checkbox')i.value='';});
   $('validityDays').value=7;$('prazoDias').value=20;$('precoKvp').value=3500;$('precoKvp').removeAttribute('data-manual');delete $('precoKvp').dataset.manual;
   $('warPainel').value=25;$('warMicroinv').value=15;$('warInvStr').value=10;$('warInstalacao').value=1;$('warAssistencia').value='Inclusa';
   $('hasWallbox').checked=false;$('wallboxFields').style.display='none';
+  $('isencaoICMS').checked=false;
+  $('showGenPage').checked=true;
   $('monthlyGen').removeAttribute('data-manual');
   document.querySelector('input[name=installType][value="Residencial"]').checked=true;
   document.querySelector('input[name=vend][value="lucas"]').checked=true;
+  document.querySelector('input[name=validMode][value="dias"]').checked=true;
+  onValidModeChange();
   $('vendCustom').style.display='none';
   $('preview').style.display='none';$('prevEmpty').style.display='';
 }
@@ -529,6 +646,37 @@ function footer(today){
   </div>`;
 }
 function corners(){return'<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>';}
+
+// Generation month-by-month chart
+function buildGenChart(genKwhMonth){
+  if(!genKwhMonth)return'';
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const seasonal=[1.02,1.05,1.0,0.95,0.88,0.85,0.87,0.92,0.97,1.02,1.05,1.03];
+  const vals=seasonal.map(f=>Math.round(genKwhMonth*f));
+  const maxVal=Math.max(...vals);
+  const genAnualLocal=vals.reduce((a,b)=>a+b,0);
+  const co2t=(genAnualLocal*0.0817/1000).toFixed(2);
+  const trees=Math.round(genAnualLocal*0.0817/21);
+  const bars=months.map((m,i)=>{
+    const h=Math.round(72*vals[i]/maxVal);
+    return`<div class="bar-wrap">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;width:100%;gap:1px">
+        <div style="font-size:7px;font-weight:800;color:var(--or);text-align:center">${vals[i]}</div>
+        <div class="bar-inner" style="height:${h}px;background:var(--or)"></div>
+      </div>
+      <div class="bar-lbl">${m}</div>
+    </div>`;
+  }).join('');
+  return`<div class="chart-wrap" style="margin-bottom:0">
+    <div class="chart-title">Estimativa de Geração Mensal (kWh)</div>
+    <div class="chart-bars">${bars}</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;border-top:1px solid var(--lborder);padding-top:14px">
+      <div class="csumitem"><div class="csum-val" style="color:var(--or)">${fmtN(genAnualLocal)}</div><div class="csum-lbl">kWh gerados/ano</div></div>
+      <div class="csumitem"><div class="csum-val" style="color:#27ae60">${co2t} t</div><div class="csum-lbl">CO₂ evitado/ano</div></div>
+      <div class="csumitem"><div class="csum-val" style="color:var(--ltext)">${trees}</div><div class="csum-lbl">árvores equivalentes</div></div>
+    </div>
+  </div>`;
+}
 
 // Economy bar chart using inline SVG
 function buildChart(bill,genKwh,tarifa,minKwh,ecoMonthly){
@@ -593,6 +741,7 @@ function generateProposal(criarCard){
   const instType=document.querySelector('input[name=installType]:checked').value;
   const conexao=document.querySelector('input[name=conexao]:checked').value;
   const projectVal=getN('projectValue');
+  const validMode=document.querySelector('input[name=validMode]:checked')?.value||'dias';
   const validity=parseInt($('validityDays').value)||7;
   const prazo=parseInt($('prazoDias').value)||20;
   const warPainel=getN('warPainel')||25;
@@ -620,8 +769,15 @@ function generateProposal(criarCard){
   const paybackStr=paybackYears?(()=>{const a=Math.floor(paybackYears),m=Math.round((paybackYears-a)*12);if(a===0)return m+' meses';if(m===0)return a+' anos';return a+' anos e '+m+' meses';})():null;
   const genKwhNum=parseFloat(String(genKwh))||0;
   const today=new Date().toLocaleDateString('pt-BR');
-  const validUntil=new Date(Date.now()+validity*864e5).toLocaleDateString('pt-BR');
-  const tot=5;
+  let validUntil;
+  if(validMode==='data'){
+    const d=$('validityDate').value;
+    validUntil=d?new Date(d+'T12:00:00').toLocaleDateString('pt-BR'):'—';
+  }else{
+    validUntil=new Date(Date.now()+validity*864e5).toLocaleDateString('pt-BR');
+  }
+  const showGenPage=$('showGenPage').checked;
+  const tot=showGenPage?6:5;
   let pg=1;
 
   // Consultant
@@ -973,7 +1129,43 @@ function generateProposal(criarCard){
     ${footer(today)}
   </div>`;
 
-  const html=p1+p2+p3+p5+p6;
+  // ── PAGE 4: GERAÇÃO (opcional) ──
+  let pGen='';
+  if(showGenPage&&genKwhNum){
+    pGen=`<div class="page p-light">
+      ${corners()}
+      ${topbar(pg++,tot)}
+      <div class="p-body" style="justify-content:flex-start;gap:16px">
+        <div>
+          <div class="sec-eye">Produção Estimada</div>
+          <div class="sec-h2">Geração de <span style="color:var(--or)">energia solar</span></div>
+          <div class="sec-rule" style="margin-bottom:0"></div>
+        </div>
+        ${buildGenChart(genKwhNum)}
+        <div style="background:linear-gradient(135deg,rgba(232,100,26,.07),rgba(232,100,26,.03));border:1px solid rgba(232,100,26,.2);border-radius:10px;padding:14px 18px">
+          <div style="font-size:10px;font-weight:800;color:var(--or);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Como interpretar os dados</div>
+          <p style="font-size:11px;color:var(--lmuted);line-height:1.7">A geração mensal varia com a incidência solar ao longo do ano. Estimativa calculada com base em <strong style="color:var(--ltext)">${fmtN(genKwhNum)} kWh/mês</strong> de geração média com variação sazonal regional.</p>
+        </div>
+        ${paybackStr?`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div style="background:#fff;border:1.5px solid var(--lborder);border-top:3px solid var(--or);border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:9px;font-weight:700;color:var(--lmuted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Payback estimado</div>
+            <div style="font-size:20px;font-weight:900;color:var(--or)">${paybackStr}</div>
+          </div>
+          <div style="background:#fff;border:1.5px solid var(--lborder);border-top:3px solid #27ae60;border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:9px;font-weight:700;color:var(--lmuted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Economia/mês</div>
+            <div style="font-size:20px;font-weight:900;color:#27ae60">${fmtBRL(ecoMonthly)}</div>
+          </div>
+          <div style="background:#fff;border:1.5px solid var(--lborder);border-top:3px solid var(--ltext);border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:9px;font-weight:700;color:var(--lmuted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Economia em 25 anos</div>
+            <div style="font-size:20px;font-weight:900;color:var(--ltext)">${eco25}</div>
+          </div>
+        </div>`:''}
+      </div>
+      ${footer(today)}
+    </div>`;
+  }
+
+  const html=p1+p2+p3+pGen+p5+p6;
   $('preview').innerHTML=html;
   $('preview').style.display='block';
   $('prevEmpty').style.display='none';
