@@ -633,6 +633,25 @@ tbody tr td:first-child{font-weight:700}
 .empty-icon{font-size:28px;opacity:.35}
 .empty-txt{font-size:10px;color:var(--text3);text-align:center}
 
+/* ━━━ SERVIÇOS ━━━ */
+.srv-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.srv-board{overflow-x:auto;padding-bottom:14px}
+.srv-cols{display:flex;gap:10px;min-width:max-content}
+.srv-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 12px;cursor:pointer;transition:all .18s;box-shadow:var(--shadow)}
+.srv-card:hover{border-color:var(--teal-border);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
+.srv-tipo{font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--teal-pale);color:var(--teal);border:1px solid var(--teal-border);display:inline-block;margin-bottom:6px}
+.srv-nome{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
+.srv-meta{font-size:10px;color:var(--text2);margin-bottom:6px}
+.srv-bot{display:flex;align-items:center;justify-content:space-between}
+.srv-val{font-size:11px;font-weight:700;color:var(--teal)}
+.srv-date{font-size:10px;color:var(--text3)}
+.srv-cliente-opt{padding:9px 12px;font-size:12px;cursor:pointer;transition:background .15s}
+.srv-cliente-opt:hover{background:var(--gold-pale)}
+.ssc-0{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA}
+.ssc-1{background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE}
+.ssc-2{background:var(--teal-pale);color:var(--teal);border:1px solid var(--teal-border)}
+.ssc-3{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+
 /* ━━━ RESPONSIVE ━━━ */
 @media(max-width:768px){
   .dash-grid{grid-template-columns:1fr}
@@ -703,6 +722,7 @@ tbody tr td:first-child{font-weight:700}
       <button class="hn" onclick="showView('leads',this)">Todos os Leads</button>
       <button class="hn" onclick="showView('import',this)">Importar</button>
       <button class="hn" onclick="showView('docs',this)">Documentos</button>
+      <button class="hn" onclick="showView('servicos',this)">Serviços</button>
     </nav>
     <div class="hdr-right">
       <div class="hdr-search">
@@ -859,6 +879,18 @@ tbody tr td:first-child{font-weight:700}
   <div id="docsViewBody"><div style="color:var(--text3);font-size:12px">Carregando...</div></div>
 </div>
 
+<!-- SERVIÇOS VIEW -->
+<div id="v-servicos" class="view">
+  <div style="padding:22px 18px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+      <div style="font-size:20px;font-weight:900;color:var(--text)">Serviços <span style="color:var(--teal)">Pós-Venda</span></div>
+      <button class="btn btn-t" onclick="openAddServico()">+ Novo Serviço</button>
+    </div>
+    <div class="srv-kpis" id="srv-kpi-grid"></div>
+    <div class="srv-board" id="srv-kanban"></div>
+  </div>
+</div>
+
 <!-- ADD LEAD MODAL -->
 <div class="ov" id="ov-add">
   <div class="modal" style="max-width:520px">
@@ -943,6 +975,75 @@ tbody tr td:first-child{font-weight:700}
       <div style="display:flex;gap:7px">
         <button class="btn btn-s btn-sm" onclick="closeModal('ov-detail')">Fechar</button>
         <button class="btn btn-g btn-sm" onclick="saveLeadDetail()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SERVIÇO MODAL -->
+<div class="ov" id="ov-add-srv">
+  <div class="modal" style="max-width:520px">
+    <div class="mhd">
+      <div class="mhd-left"><div class="mhd-name">Novo Serviço</div></div>
+      <button class="mhd-close" onclick="closeModal('ov-add-srv')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="add-form">
+        <div class="fg af-full">
+          <div class="fg-lbl">Cliente *</div>
+          <input class="fg-inp" id="srv-cliente-inp" placeholder="Digite para buscar (clientes com venda fechada)..." oninput="filterSrvClientes(this.value)" autocomplete="off">
+          <input type="hidden" id="srv-leadId">
+          <input type="hidden" id="srv-clienteNome">
+          <div id="srv-cliente-list" style="display:none;border:1.5px solid var(--border);border-top:none;border-radius:0 0 7px 7px;background:var(--surface);max-height:180px;overflow-y:auto;margin-top:-2px;position:relative;z-index:10"></div>
+        </div>
+        <div class="fg af-full">
+          <div class="fg-lbl">Tipo de Serviço *</div>
+          <select class="fg-sel" id="srv-tipo">
+            <option value="">Selecione</option>
+            <option>Lavagem de Placas</option>
+            <option>Manutenção Preventiva</option>
+            <option>Reparo / Corretiva</option>
+            <option>Troca de Inversor</option>
+            <option>Expansão do Sistema</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="fg"><div class="fg-lbl">Valor (R$)</div><input class="fg-inp" id="srv-valor" type="number" placeholder="500"></div>
+        <div class="fg"><div class="fg-lbl">Data Desejada</div><input class="fg-inp" id="srv-data" type="date"></div>
+        <div class="fg"><div class="fg-lbl">Responsável</div>
+          <select class="fg-sel" id="srv-resp">
+            <option>Comercial Lumen</option><option>Lucas</option><option>Giovani</option><option>Hingrid</option>
+          </select>
+        </div>
+        <div class="fg af-full"><div class="fg-lbl">Observações</div><textarea class="fg-inp" id="srv-obs" rows="2" placeholder="Detalhes do serviço..."></textarea></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-s" onclick="closeModal('ov-add-srv')">Cancelar</button>
+      <button class="btn btn-t" onclick="saveNewServico()">Criar Serviço</button>
+    </div>
+  </div>
+</div>
+
+<!-- SERVIÇO DETAIL MODAL -->
+<div class="ov" id="ov-srv-detail">
+  <div class="modal">
+    <div class="mhd">
+      <div class="mhd-left">
+        <div class="mhd-name" id="srv-d-name"></div>
+        <div class="mhd-tags">
+          <span class="srv-tipo" id="srv-d-tipo"></span>
+          <span class="stage-tag" id="srv-d-stage"></span>
+        </div>
+      </div>
+      <button class="mhd-close" onclick="closeModal('ov-srv-detail')">✕</button>
+    </div>
+    <div class="mbody" id="srv-d-body"></div>
+    <div class="mft">
+      <button class="btn btn-d btn-sm" onclick="deleteServico()">Excluir</button>
+      <div style="display:flex;gap:7px">
+        <button class="btn btn-s btn-sm" onclick="closeModal('ov-srv-detail')">Fechar</button>
+        <button class="btn btn-t btn-sm" onclick="saveServicoDetail()">Salvar</button>
       </div>
     </div>
   </div>
@@ -1115,6 +1216,16 @@ const MESSAGES = {
   ],
 };
 
+const SERVICE_TYPES = ['Lavagem de Placas','Manutenção Preventiva','Reparo / Corretiva','Troca de Inversor','Expansão do Sistema','Outro'];
+const SERVICE_STAGES = ['Solicitado','Agendado','Executado','Concluído'];
+const SERVICE_STAGE_COLORS = ['#F97316','#3B82F6','#0D9488','#22C55E'];
+const SERVICE_SUBTASKS = {
+  0: ['Contato inicial com cliente realizado','Tipo de serviço definido','Data desejada coletada','Responsável designado'],
+  1: ['Data e hora confirmada com cliente','Equipe notificada','Deslocamento planejado','Confirmação enviada ao cliente'],
+  2: ['Serviço realizado no local','Fotos antes/depois tiradas','Problema resolvido (se corretivo)','Cliente validou o serviço'],
+  3: ['Relatório de serviço gerado','Pagamento recebido','NF emitida','Registro atualizado no sistema'],
+};
+
 const USERS = ['Comercial Lumen','Lucas','Giovani','Hingrid'];
 const ADMINS = ['Comercial Lumen','Hingrid'];
 const PASSWORDS = {'Comercial Lumen':'Lumen@2026','Lucas':'Lucas@2026','Giovani':'Giovani@2026','Hingrid':'Lumen@2026'};
@@ -1131,9 +1242,13 @@ let currentUser = null;
 let kanbanFilter = 'all';
 let leadsFilter = 'all';
 let editingId = null;
+let editingSrvId = null;
 let dragSrcId = null;
 
 /* ━━━ STORAGE ━━━ */
+function getServicos() { try { return JSON.parse(localStorage.getItem('lg_servicos')||'[]'); } catch { return []; } }
+function saveServicos(srvs) { localStorage.setItem('lg_servicos', JSON.stringify(srvs)); }
+
 function getAllLeadsRaw() { try { return JSON.parse(localStorage.getItem('lg_leads')||'[]'); } catch { return []; } }
 function getLeads() {
   const all = getAllLeadsRaw();
@@ -1279,6 +1394,50 @@ function logout() {
   location.reload();
 }
 
+/* ━━━ SERVIÇOS — RENDER ━━━ */
+function renderServicos() {
+  const srvs = getServicos();
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+  const counts = SERVICE_STAGES.map((_,i) => srvs.filter(sv => sv.stage === i).length);
+  const concluidos = srvs.filter(sv => sv.stage === 3 && sv.updatedAt >= startOfMonth).length;
+
+  document.getElementById('srv-kpi-grid').innerHTML = `
+    <div class="kpi"><div class="kpi-lbl">Solicitados</div><div class="kpi-val o">${counts[0]}</div><div class="kpi-note">aguardando agendamento</div></div>
+    <div class="kpi"><div class="kpi-lbl">Agendados</div><div class="kpi-val" style="color:var(--blue)">${counts[1]}</div><div class="kpi-note">data marcada</div></div>
+    <div class="kpi"><div class="kpi-lbl">Em Execução</div><div class="kpi-val t">${counts[2]}</div><div class="kpi-note">sendo realizado</div></div>
+    <div class="kpi"><div class="kpi-lbl">Concluídos (mês)</div><div class="kpi-val" style="color:var(--green)">${concluidos}</div><div class="kpi-note">finalizados este mês</div></div>
+  `;
+
+  document.getElementById('srv-kanban').innerHTML = `<div class="srv-cols">` +
+    SERVICE_STAGES.map((name, si) => {
+      const cards = srvs.filter(sv => sv.stage === si);
+      return `<div class="kb-col">
+        <div class="col-hd" style="border-top-color:${SERVICE_STAGE_COLORS[si]}">
+          <span class="col-nm">${name}</span>
+          <span class="col-ct pre" style="border-color:${SERVICE_STAGE_COLORS[si]}33;color:${SERVICE_STAGE_COLORS[si]};background:${SERVICE_STAGE_COLORS[si]}15">${cards.length}</span>
+        </div>
+        <div class="col-body">
+          ${cards.length === 0
+            ? '<div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">Nenhum serviço</div></div>'
+            : cards.map(sv => renderServicoCard(sv)).join('')}
+        </div>
+      </div>`;
+    }).join('') + `</div>`;
+}
+
+function renderServicoCard(srv) {
+  return `<div class="srv-card" onclick="openServicoDetail('${srv.id}')">
+    <div class="srv-tipo">${esc(srv.tipo)}</div>
+    <div class="srv-nome">${esc(srv.clienteNome)}</div>
+    <div class="srv-meta">${esc(srv.resp||'—')}</div>
+    <div class="srv-bot">
+      <div class="srv-val">${srv.valor ? 'R$'+Number(srv.valor).toLocaleString('pt-BR') : '—'}</div>
+      <div class="srv-date">${srv.dataAgendada || fmtDate(srv.createdAt)}</div>
+    </div>
+  </div>`;
+}
+
 /* ━━━ INIT ━━━ */
 function initApp() {
   const u = currentUser;
@@ -1312,6 +1471,7 @@ function showView(name, btn) {
   if (name==='leads') renderLeadsList();
   if (name==='dash') renderDashboard();
   if (name==='docs') renderDocsView();
+  if (name==='servicos') renderServicos();
 }
 
 /* ━━━ DASHBOARD ━━━ */
@@ -1337,6 +1497,7 @@ function renderDashboard() {
     <div class="kpi"><div class="kpi-lbl">Total Empresa</div><div class="kpi-val def">${all.length}</div><div class="kpi-note">todos os usuários</div></div>
     <div class="kpi"><div class="kpi-lbl">Valor Carteira</div><div class="kpi-val g">${totalVal>0?'R$'+totalVal.toLocaleString('pt-BR'):'—'}</div><div class="kpi-note">propostas ativas</div></div>
     <div class="kpi" style="border-left:3px solid #6366F1;cursor:pointer" onclick="showView('leads');renderLeadsList('stage-14')"><div class="kpi-lbl" style="color:#6366F1">Oport. Futuras</div><div class="kpi-val" style="color:#4338CA">${all.filter(l=>l.stage===14).length}</div><div class="kpi-note">${all.filter(l=>l.stage===14&&ofAging(l)?.cls==='old').length} precisam atenção</div></div>
+    <div class="kpi" style="border-left:3px solid var(--teal);cursor:pointer" onclick="showView('servicos',document.querySelector('.hn:last-of-type'))"><div class="kpi-lbl" style="color:var(--teal)">Serviços Ativos</div><div class="kpi-val t">${getServicos().filter(s=>s.stage<3).length}</div><div class="kpi-note">em aberto</div></div>
   `;
 
   const maxN = Math.max(1,...STAGES.map(s=>mine.filter(l=>l.stage===s.id).length));
@@ -1943,6 +2104,24 @@ function openDetail(id) {
     </div>
   </div>
 
+  ${lead.stage >= 13 ? (() => {
+    const srvs = getServicos().filter(sv => sv.leadId === lead.id);
+    return `<div class="ms">
+      <div class="ms-title t">Serviços deste Cliente</div>
+      ${srvs.length === 0
+        ? '<div style="font-size:11px;color:var(--teal);opacity:.7;margin-bottom:10px">Nenhum serviço cadastrado ainda.</div>'
+        : srvs.map(sv => `<div class="r-item" onclick="closeModal('ov-detail');openServicoDetail('${sv.id}')">
+            <div class="r-dot" style="background:${SERVICE_STAGE_COLORS[sv.stage]}"></div>
+            <div class="r-info">
+              <div class="r-name">${esc(sv.tipo)}</div>
+              <div class="r-stage">${SERVICE_STAGES[sv.stage]}${sv.dataAgendada?' · '+sv.dataAgendada:''}</div>
+            </div>
+            <div class="r-resp" style="color:var(--teal)">${esc(sv.resp||'—')}</div>
+          </div>`).join('')}
+      <button class="btn btn-t btn-sm" style="margin-top:8px" onclick="closeModal('ov-detail');openAddServico('${id}')">+ Novo Serviço</button>
+    </div>`;
+  })() : ''}
+
   <div class="ms">
     <div class="ms-title n">Histórico</div>
     <div class="hist" id="d-hist">
@@ -2497,11 +2676,240 @@ async function lancarPP(leadId) {
   toast(parceiro ? `Proposta enviada para ${parceiro}!` : 'Proposta salva no lead!', 'ok');
 }
 
+/* ━━━ SERVIÇOS — CRUD ━━━ */
+function openAddServico(leadId) {
+  document.getElementById('srv-leadId').value = leadId || '';
+  document.getElementById('srv-clienteNome').value = '';
+  document.getElementById('srv-cliente-inp').value = '';
+  document.getElementById('srv-tipo').value = '';
+  document.getElementById('srv-valor').value = '';
+  document.getElementById('srv-data').value = '';
+  document.getElementById('srv-resp').value = currentUser;
+  document.getElementById('srv-obs').value = '';
+  document.getElementById('srv-cliente-list').style.display = 'none';
+  if (leadId) {
+    const lead = getAllLeadsRaw().find(l => l.id === leadId);
+    if (lead) {
+      document.getElementById('srv-cliente-inp').value = lead.nome;
+      document.getElementById('srv-clienteNome').value = lead.nome;
+    }
+  }
+  openModal('ov-add-srv');
+}
+
+function filterSrvClientes(q) {
+  const list = document.getElementById('srv-cliente-list');
+  if (!q) { list.style.display = 'none'; return; }
+  const leads = getAllLeadsRaw().filter(l => l.stage >= 6 && l.nome.toLowerCase().includes(q.toLowerCase()));
+  if (leads.length === 0) { list.style.display = 'none'; return; }
+  list.style.display = 'block';
+  list.innerHTML = leads.slice(0,8).map(l =>
+    `<div class="srv-cliente-opt" onclick="selectSrvCliente('${l.id}')">
+      ${esc(l.nome)} <span style="color:var(--text3);font-size:10px">· ${STAGES[l.stage].name}</span>
+    </div>`).join('');
+}
+
+function selectSrvCliente(leadId) {
+  const lead = getAllLeadsRaw().find(l => l.id === leadId);
+  if (!lead) return;
+  document.getElementById('srv-leadId').value = lead.id;
+  document.getElementById('srv-clienteNome').value = lead.nome;
+  document.getElementById('srv-cliente-inp').value = lead.nome;
+  document.getElementById('srv-cliente-list').style.display = 'none';
+}
+
+function saveNewServico() {
+  const leadId = document.getElementById('srv-leadId').value;
+  const clienteNome = document.getElementById('srv-clienteNome').value || document.getElementById('srv-cliente-inp').value.trim();
+  const tipo = document.getElementById('srv-tipo').value;
+  if (!clienteNome) { toast('Selecione um cliente.','err'); return; }
+  if (!tipo) { toast('Selecione o tipo de serviço.','err'); return; }
+  const clienteTel = leadId ? (getAllLeadsRaw().find(l=>l.id===leadId)||{}).telefone||'' : '';
+  const srv = {
+    id: uid(), leadId: leadId||null, clienteNome, clienteTel, tipo, stage: 0,
+    valor: document.getElementById('srv-valor').value,
+    resp: document.getElementById('srv-resp').value,
+    obs: document.getElementById('srv-obs').value.trim(),
+    dataAgendada: document.getElementById('srv-data').value,
+    subtasks: {}, notes: [],
+    history: [{text:`Serviço criado por ${currentUser}`,user:currentUser,ts:Date.now()}],
+    createdAt: Date.now(), updatedAt: Date.now(),
+  };
+  const srvs = getServicos();
+  srvs.unshift(srv);
+  saveServicos(srvs);
+  closeModal('ov-add-srv');
+  toast('Serviço criado!','ok');
+  renderServicos();
+}
+
+function openServicoDetail(id) {
+  const srvs = getServicos();
+  const srv = srvs.find(s => s.id === id);
+  if (!srv) return;
+  editingSrvId = id;
+  const tasks = SERVICE_SUBTASKS[srv.stage] || [];
+  const doneTasks = srv.subtasks[srv.stage] || {};
+  const doneCount = Object.values(doneTasks).filter(Boolean).length;
+
+  document.getElementById('srv-d-name').textContent = srv.clienteNome;
+  document.getElementById('srv-d-tipo').textContent = srv.tipo;
+  const stageBadge = document.getElementById('srv-d-stage');
+  stageBadge.textContent = SERVICE_STAGES[srv.stage];
+  stageBadge.className = `stage-tag ssc-${srv.stage}`;
+
+  const notesHtml = `<div class="notes-panel">
+    <div class="notes-panel-title">Anotações</div>
+    ${(srv.notes||[]).length === 0
+      ? '<div style="font-size:10px;color:#B45309;opacity:.6">Nenhuma anotação ainda.</div>'
+      : srv.notes.slice().reverse().map(n => `<div class="note-item">
+          <div class="note-text">${esc(n.text)}</div>
+          <div class="note-meta">${esc(n.user)} · ${fmtDateTime(n.ts)}</div>
+        </div>`).join('')}
+    <div class="note-add-row">
+      <input class="note-inp" id="srv-note-inp" placeholder="Nova anotação..." onkeydown="if(event.key==='Enter')addServicoNote()">
+      <button class="btn btn-s btn-sm" onclick="addServicoNote()">+ Anotação</button>
+    </div>
+  </div>`;
+
+  document.getElementById('srv-d-body').innerHTML = notesHtml + `
+  <div class="ms">
+    <div class="ms-title t">Mover para Etapa</div>
+    <div class="stage-sel">
+      ${SERVICE_STAGES.map((s,i) => `<button class="ss-btn pos${srv.stage===i?' on':''}" onclick="changeServicoStage(${i},this)">${s}</button>`).join('')}
+    </div>
+  </div>
+
+  ${tasks.length > 0 ? `<div class="ms">
+    <div class="ms-title t">Checklist — ${SERVICE_STAGES[srv.stage]} (${doneCount}/${tasks.length})</div>
+    <div class="ck-list">
+      ${tasks.map((t,i) => {
+        const chk = doneTasks[i] === true;
+        return `<div class="ck-item pos-item" onclick="toggleServicoTask(${i})">
+          <div class="ck-box${chk?' on t':''}" id="sckb-${i}">
+            <svg class="ck-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="ck-text${chk?' done':''}" id="sckt-${i}">${esc(t)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>` : ''}
+
+  <div class="ms">
+    <div class="ms-title t">Informações</div>
+    <div class="info-grid">
+      <div class="if"><div class="if-lbl">Tipo</div>
+        <select class="if-sel" id="srv-d-tipo-sel">${SERVICE_TYPES.map(t=>`<option${srv.tipo===t?' selected':''}>${t}</option>`).join('')}</select>
+      </div>
+      <div class="if"><div class="if-lbl">Valor (R$)</div><input class="if-inp" id="srv-d-valor" type="number" value="${srv.valor||''}"></div>
+      <div class="if"><div class="if-lbl">Data Agendada</div><input class="if-inp" id="srv-d-data" type="date" value="${srv.dataAgendada||''}"></div>
+      <div class="if"><div class="if-lbl">Responsável</div>
+        <select class="if-sel" id="srv-d-resp">${USERS.map(u=>`<option${srv.resp===u?' selected':''}>${u}</option>`).join('')}</select>
+      </div>
+      <div class="if ig-full"><div class="if-lbl">Observações</div><textarea class="if-txt" id="srv-d-obs" rows="2">${esc(srv.obs||'')}</textarea></div>
+    </div>
+  </div>
+
+  ${srv.leadId ? `<div class="ms"><button class="btn btn-s btn-sm" onclick="closeModal('ov-srv-detail');openDetail('${srv.leadId}')">🔗 Ver Lead Original</button></div>` : ''}
+
+  <div class="ms">
+    <div class="ms-title n">Histórico</div>
+    <div class="hist">
+      ${(srv.history||[]).slice().reverse().map((h,i,a) => `<div class="h-row">
+        <div class="h-lwrap">
+          <div class="h-dot t"></div>
+          ${i<a.length-1?'<div class="h-vl"></div>':''}
+        </div>
+        <div class="h-content">
+          <div class="h-txt">${esc(h.text)}</div>
+          <div class="h-meta">${esc(h.user||'Sistema')} · ${fmtDateTime(h.ts)}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  openModal('ov-srv-detail');
+}
+
+function saveServicoDetail() {
+  const srvs = getServicos();
+  const srv = srvs.find(s => s.id === editingSrvId);
+  if (!srv) return;
+  srv.tipo = document.getElementById('srv-d-tipo-sel').value;
+  srv.valor = document.getElementById('srv-d-valor').value;
+  srv.dataAgendada = document.getElementById('srv-d-data').value;
+  srv.resp = document.getElementById('srv-d-resp').value;
+  srv.obs = document.getElementById('srv-d-obs').value.trim();
+  srv.updatedAt = Date.now();
+  saveServicos(srvs);
+  closeModal('ov-srv-detail');
+  toast('Serviço salvo!','ok');
+  renderServicos();
+}
+
+function changeServicoStage(newStage, btn) {
+  document.querySelectorAll('#ov-srv-detail .ss-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const srvs = getServicos();
+  const srv = srvs.find(s => s.id === editingSrvId);
+  if (!srv) return;
+  srv.history = srv.history || [];
+  srv.history.push({text:`Etapa → "${SERVICE_STAGES[newStage]}"`,user:currentUser,ts:Date.now()});
+  srv.stage = newStage;
+  srv.updatedAt = Date.now();
+  saveServicos(srvs);
+  const stageBadge = document.getElementById('srv-d-stage');
+  stageBadge.textContent = SERVICE_STAGES[newStage];
+  stageBadge.className = `stage-tag ssc-${newStage}`;
+  toast(`Movido para "${SERVICE_STAGES[newStage]}"`, 'ok');
+  renderServicos();
+}
+
+function toggleServicoTask(i) {
+  const srvs = getServicos();
+  const srv = srvs.find(s => s.id === editingSrvId);
+  if (!srv) return;
+  if (!srv.subtasks[srv.stage]) srv.subtasks[srv.stage] = {};
+  srv.subtasks[srv.stage][i] = !srv.subtasks[srv.stage][i];
+  srv.updatedAt = Date.now();
+  saveServicos(srvs);
+  const chk = srv.subtasks[srv.stage][i];
+  const box = document.getElementById('sckb-'+i);
+  const txt = document.getElementById('sckt-'+i);
+  if (box) box.className = 'ck-box'+(chk?' on t':'');
+  if (txt) txt.className = 'ck-text'+(chk?' done':'');
+}
+
+function addServicoNote() {
+  const inp = document.getElementById('srv-note-inp');
+  const text = inp.value.trim();
+  if (!text) return;
+  const srvs = getServicos();
+  const srv = srvs.find(s => s.id === editingSrvId);
+  if (!srv) return;
+  srv.notes = srv.notes || [];
+  srv.notes.push({text, user:currentUser, ts:Date.now()});
+  srv.updatedAt = Date.now();
+  saveServicos(srvs);
+  inp.value = '';
+  toast('Anotação adicionada!','ok');
+  openServicoDetail(editingSrvId);
+}
+
+function deleteServico() {
+  if (!confirm('Excluir este serviço permanentemente?')) return;
+  saveServicos(getServicos().filter(s => s.id !== editingSrvId));
+  closeModal('ov-srv-detail');
+  toast('Serviço excluído.','');
+  renderServicos();
+}
+
 /* ━━━ MODALS ━━━ */
 function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
 function closeModal(id) {
   document.getElementById(id).classList.remove('open'); document.body.style.overflow='';
   if (id==='ov-detail') { renderDashboard(); renderKanban(); renderLeadsList(); }
+  if (id==='ov-srv-detail') renderServicos();
 }
 document.querySelectorAll('.ov').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)closeModal(ov.id)}));
 
