@@ -299,6 +299,9 @@ a{text-decoration:none;color:inherit}
 .mhd-name{font-size:15px;font-weight:900;color:var(--text)}
 .mhd-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .stage-tag{font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.lk-btn{font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:999px;cursor:pointer;border:1px solid #C7D2FE;background:#EEF2FF;color:#4338CA;transition:all .15s}
+.lk-btn.active{background:#4338CA;color:#fff;border-color:#4338CA}
+.lk-card-badge{font-size:7px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;display:inline-block;margin-top:3px}
 .mhd-close{
   width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--border);
   cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -925,6 +928,7 @@ tbody tr td:first-child{font-weight:700}
         <div class="mhd-tags">
           <span class="stage-tag" id="d-stage-tag"></span>
           <span class="stage-tag" id="d-resp-tag"></span>
+          <button class="lk-btn" id="d-lk-btn" onclick="toggleLookalike()" style="display:none">◎ Lookalike</button>
         </div>
       </div>
       <button class="btn-fup" onclick="quickFup()" title="Registrar Follow-up">
@@ -1505,6 +1509,7 @@ function renderCard(l) {
   const propTag = l.proposta
     ? `<span class="prop-badge ${l.proposta.tipo==='Híbrido'?'hibr':'solar'}" style="margin-top:3px">${l.proposta.tipo==='Híbrido'?'⚡ Híbrido':'☀️ Solar'}</span>`
     : '';
+  const lkTag = l.lookalike ? `<span class="lk-card-badge">◉ Lookalike</span>` : '';
 
   return `<div class="lc${isPos?' pos':''}${isNew?' is-new':''}${isInactive?' inactive':''}${isWarn?' inactive-warn':''}"
     draggable="true"
@@ -1516,7 +1521,7 @@ function renderCard(l) {
       <div class="lc-name">${esc(l.nome)}</div>
       <div class="lc-orig ${origClass}">${l.origem||'Manual'}</div>
     </div>
-    ${propTag}
+    ${propTag}${lkTag}
     <div class="lc-info">
       ${l.telefone?`<div class="lc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .94h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>${esc(l.telefone)}</div>`:''}
       ${l.cidade?`<div class="lc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(l.cidade)}</div>`:''}
@@ -1729,6 +1734,10 @@ function openDetail(id) {
   const rTag = document.getElementById('d-resp-tag');
   rTag.textContent = lead.resp;
   rTag.style.cssText = `background:${USER_COLORS[lead.resp]||'#666'}22;color:${USER_COLORS[lead.resp]||'#666'};border:1px solid ${USER_COLORS[lead.resp]||'#666'}44`;
+  const lkBtn = document.getElementById('d-lk-btn');
+  lkBtn.style.display = 'inline-block';
+  lkBtn.textContent = lead.lookalike ? '◉ Lookalike ✓' : '◎ Lookalike';
+  lkBtn.className = 'lk-btn' + (lead.lookalike ? ' active' : '');
 
   const tasks = SUBTASKS[lead.stage] || [];
   const doneTasks = (lead.subtasks&&lead.subtasks[lead.stage]) || {};
@@ -1961,6 +1970,21 @@ function openDetail(id) {
   openModal('ov-detail');
 }
 
+function toggleLookalike() {
+  const leads = getLeads();
+  const lead = leads.find(l => l.id === editingId);
+  if (!lead) return;
+  lead.lookalike = !lead.lookalike;
+  lead.history = lead.history || [];
+  lead.history.push({ text: lead.lookalike ? 'Marcado como Lookalike' : 'Removido de Lookalike', user: currentUser, ts: Date.now() });
+  saveLeads(leads, lead);
+  const lkBtn = document.getElementById('d-lk-btn');
+  lkBtn.textContent = lead.lookalike ? '◉ Lookalike ✓' : '◎ Lookalike';
+  lkBtn.className = 'lk-btn' + (lead.lookalike ? ' active' : '');
+  toast(lead.lookalike ? '◉ Cliente marcado como Lookalike' : 'Lookalike removido', 'ok');
+  renderDashboard(); renderKanban(); renderLeadsList();
+}
+
 function changeStage(id, btn) {
   document.querySelectorAll('.ss-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
@@ -2174,9 +2198,10 @@ function renderLeadsList(f) {
     {k:'stage-12',label:'Homologação'},
     {k:'stage-13',label:'Concluídos'},
     {k:'stage-14',label:`⏳ Oportunidade Futura${ofCount?' ('+ofCount+')':''}`},
+    {k:'lookalike',label:`◉ Lookalike${all.filter(l=>l.lookalike).length?' ('+all.filter(l=>l.lookalike).length+')':''}`},
   ];
   document.getElementById('llChips').innerHTML = chips.map(c=>
-    `<div class="chip${leadsFilter===c.k?' on':''}${c.k==='stage-14'?'" style="border-color:#C7D2FE;color:#4338CA':''}" onclick="renderLeadsList('${c.k}')">${c.label}</div>`
+    `<div class="chip${leadsFilter===c.k?' on':''}${c.k==='stage-14'?'" style="border-color:#C7D2FE;color:#4338CA':c.k==='lookalike'?'" style="border-color:#C7D2FE;color:#4338CA':''}" onclick="renderLeadsList('${c.k}')">${c.label}</div>`
   ).join('');
 
   // Filtro de data para Oportunidade Futura
@@ -2214,6 +2239,7 @@ function renderLeadsList(f) {
     if (ate) filtered=filtered.filter(l=>l.oportunidadeDate && l.oportunidadeDate <= new Date(ate).getTime()+86399999);
   }
   else if (leadsFilter.startsWith('stage-')) { const sid=parseInt(leadsFilter.split('-')[1]); filtered=all.filter(l=>l.stage===sid); }
+  else if (leadsFilter==='lookalike') filtered=all.filter(l=>l.lookalike);
   else if (leadsFilter.startsWith('resp-')) { const r=leadsFilter.split('-')[1]; filtered=all.filter(l=>l.resp===r); }
   else if (leadsFilter.startsWith('of-age-')) {
     const cls=leadsFilter.replace('of-age-','');
