@@ -1800,7 +1800,7 @@ function openDetail(id) {
   </div>` : '';
 
   const _parc    = (lead.origem||'').startsWith('Parceiro — ') ? lead.origem.replace('Parceiro — ','') : (lead.parceiro||'');
-  const _parcSel = ['Michael','Jessica'].includes(_parc) ? _parc : (_parc ? 'outro' : '');
+  const _parcSel = ['Michael','Jessica','Orlando'].includes(_parc) ? _parc : (_parc ? 'outro' : '');
 
   // Seção da proposta (se existir)
   const propostaHtml = lead.proposta ? (() => {
@@ -1922,6 +1922,7 @@ function openDetail(id) {
             <option value="" ${_parcSel===''?'selected':''}>Sem parceiro</option>
             <option value="Michael" ${_parcSel==='Michael'?'selected':''}>Michael</option>
             <option value="Jessica" ${_parcSel==='Jessica'?'selected':''}>Jessica</option>
+            <option value="Orlando" ${_parcSel==='Orlando'?'selected':''}>Orlando</option>
             <option value="outro" ${_parcSel==='outro'?'selected':''}>Outro (digitar)</option>
           </select>
           <input id="pp-parceiro-outro" class="if-inp" placeholder="Nome do parceiro" style="margin-top:6px;display:${_parcSel==='outro'?'block':'none'}" value="${_parcSel==='outro'?_parc:''}">
