@@ -349,22 +349,25 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Inversor <span class="req-star">*</span></label>
     <select class="fsel" id="invModelSel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="GoodWe Premium On-Grid 3kW" data-power="3">GoodWe Premium On-Grid 3kW</option>
-      <option value="GoodWe Premium On-Grid 3.3kW" data-power="3.3">GoodWe Premium On-Grid 3.3kW</option>
-      <option value="GoodWe Premium On-Grid 5kW" data-power="5" selected>GoodWe Premium On-Grid 5kW ★ padrão</option>
-      <option value="GoodWe Premium On-Grid 6kW" data-power="6">GoodWe Premium On-Grid 6kW</option>
-      <option value="GoodWe Premium On-Grid 8kW" data-power="8">GoodWe Premium On-Grid 8kW</option>
-      <option value="GoodWe Premium On-Grid 10kW" data-power="10">GoodWe Premium On-Grid 10kW</option>
-      <option value="GoodWe Premium On-Grid 12kW" data-power="12">GoodWe Premium On-Grid 12kW</option>
-      <option value="GoodWe Premium On-Grid 15kW" data-power="15">GoodWe Premium On-Grid 15kW</option>
-      <option value="GoodWe Premium On-Grid 18kW" data-power="18">GoodWe Premium On-Grid 18kW</option>
-      <option value="GoodWe Premium On-Grid 20kW" data-power="20">GoodWe Premium On-Grid 20kW</option>
-      <option value="Sofar Monofásico 220V 3.3kW" data-power="3.3">Sofar Monofásico 220V 3.3kW</option>
-      <option value="Sungrow Trifásico 2MPPT 220V 3kW" data-power="3">Sungrow Trifásico 2MPPT 3kW</option>
-      <option value="Sungrow Trifásico 2MPPT 220V 5kW" data-power="5">Sungrow Trifásico 2MPPT 5kW</option>
-      <option value="Hoymiles MI-2250 Microinversor 220V" data-power="2.25" data-micro="1">Hoymiles MI-2250 Microinversor 2.25kW</option>
-      <option value="FoxESS Microinversor 4MPPT 220V 2.5kW" data-power="2.5" data-micro="1">FoxESS Microinversor 2.5kW</option>
-      <option value="Auxsol Monofásico 2MPPT 220V 5kW" data-power="5">Auxsol Monofásico 5kW</option>
+      <optgroup label="── String / Convencional ──">
+        <option value="GoodWe Premium On-Grid 3kW" data-power="3">GoodWe Premium On-Grid 3kW</option>
+        <option value="GoodWe Premium On-Grid 3.3kW" data-power="3.3">GoodWe Premium On-Grid 3.3kW</option>
+        <option value="GoodWe Premium On-Grid 5kW" data-power="5">GoodWe Premium On-Grid 5kW</option>
+        <option value="GoodWe Premium On-Grid 6kW" data-power="6">GoodWe Premium On-Grid 6kW</option>
+        <option value="GoodWe Premium On-Grid 8kW" data-power="8">GoodWe Premium On-Grid 8kW</option>
+        <option value="GoodWe Premium On-Grid 10kW" data-power="10">GoodWe Premium On-Grid 10kW</option>
+        <option value="GoodWe Premium On-Grid 12kW" data-power="12">GoodWe Premium On-Grid 12kW</option>
+        <option value="GoodWe Premium On-Grid 15kW" data-power="15">GoodWe Premium On-Grid 15kW</option>
+        <option value="GoodWe Premium On-Grid 18kW" data-power="18">GoodWe Premium On-Grid 18kW</option>
+        <option value="GoodWe Premium On-Grid 20kW" data-power="20">GoodWe Premium On-Grid 20kW</option>
+        <option value="Sofar Monofásico 220V 3.3kW" data-power="3.3">Sofar Monofásico 220V 3.3kW</option>
+        <option value="Sungrow Trifásico 2MPPT 220V 3kW" data-power="3">Sungrow Trifásico 2MPPT 3kW</option>
+        <option value="Sungrow Trifásico 2MPPT 220V 5kW" data-power="5">Sungrow Trifásico 2MPPT 5kW</option>
+      </optgroup>
+      <optgroup label="── Microinversores ──">
+        <option value="FoxESS Microinversor 4MPPT 220V 2.5kW" data-power="2.5" data-micro="1">FoxESS Microinversor 2.5kW</option>
+        <option value="Hoymiles MI-2250 Microinversor 220V" data-power="2.25" data-micro="1">Hoymiles MI-2250 Microinversor 2.25kW</option>
+      </optgroup>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none">
@@ -542,6 +545,7 @@ const SOLAR_KITS=[
 ];
 function applyKit(idx){
   const k=SOLAR_KITS[idx];if(!k)return;
+  delete $('invModelSel').dataset.manual;
   $('modQty').value=k.modQty;$('modPower').value=k.modPower;
   $('modModel').value=k.modModel;$('modModel').style.display='none';
   const ms=$('modModelSel');if(ms){for(const o of ms.options)if(o.value===k.modModel){ms.value=k.modModel;break;}}
@@ -572,6 +576,7 @@ function onValidModeChange(){
 function autoSelectInversor(){
   const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
   if(isMicro)return;
+  if($('invModelSel').dataset.manual)return; // usuário editou manualmente — respeitar
   const qty=getN('modQty'),pwr=getN('modPower');
   if(!qty||!pwr)return;
   const kVp=qty*pwr/1000;
@@ -650,6 +655,7 @@ function onModModelChange(sel){
   else{inp.style.display='none';inp.value=sel.value;const pw=sel.options[sel.selectedIndex].dataset.power;if(pw){$('modPower').value=pw;autoCalc();}}
 }
 function onInvModelChange(sel){
+  sel.dataset.manual='1'; // marca que o usuário editou manualmente
   const inp=$('invModel');
   const opt=sel.options[sel.selectedIndex];
   const isMicroSel=opt?.dataset?.micro==='1';
@@ -673,6 +679,7 @@ function resetForm(){
   $('warPainel').value=25;$('warMicroinv').value=15;$('warInvStr').value=10;$('warInstalacao').value=1;$('warAssistencia').value='Inclusa';
   $('hasWallbox').checked=false;$('wallboxFields').style.display='none';
   $('isencaoICMS').checked=false;
+  delete $('invModelSel').dataset.manual;
   $('showGenPage').checked=true;
   $('monthlyGen').removeAttribute('data-manual');
   document.querySelector('input[name=installType][value="Residencial"]').checked=true;
