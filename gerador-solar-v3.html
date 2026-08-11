@@ -96,7 +96,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   position:absolute;inset:0;z-index:0;
   background:
     linear-gradient(to bottom, rgba(5,5,5,.15) 0%, rgba(5,5,5,.05) 25%, rgba(10,10,10,.55) 60%, rgba(10,10,10,.85) 85%),
-    url('https://raw.githubusercontent.com/refreshtime/lumengrid-portal/main/imagens/instalador.jpg') center top / cover no-repeat;
+    url('https://raw.githubusercontent.com/refreshtime/lumengrid-portal/main/imagens/PESSOAS/instalador.png') center top / cover no-repeat;
   background-color:#1a0f05;
 }
 .capa-content{position:absolute;left:0;right:0;bottom:0;top:35%;z-index:10;padding:32px 48px 44px;display:flex;flex-direction:column;justify-content:flex-end}
@@ -385,7 +385,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="fs">
-    <div class="fs-title">Wallbox (opcional)</div>
+    <div class="fs-title">Carregador Veicular (Wallbox)</div>
     <div class="ftw">
       <label class="ftog"><input type="checkbox" id="hasWallbox"><span class="sl"></span></label>
       <span class="ftl">Incluir Carregador Veicular</span>
@@ -395,6 +395,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
         <div><label class="fl">Potência</label><input class="fi" id="wallboxPower" value="7,4 kW"></div>
         <div><label class="fl">Valor (R$)</label><input class="fi" type="number" id="wallboxPrice" placeholder="Ex: 4800"></div>
       </div>
+      <label class="fl">Modelo</label>
+      <input class="fi" id="wallboxModel" placeholder="Ex: ABB Terra AC 7,4kW">
+      <label class="fl">Observação</label>
+      <input class="fi" id="wallboxNote" placeholder="Ex: Instalação inclusa">
     </div>
   </div>
 
@@ -502,6 +506,7 @@ function resetForm(){
   $('validityDays').value=7;$('prazoDias').value=20;$('precoKvp').value=3500;$('precoKvp').removeAttribute('data-manual');delete $('precoKvp').dataset.manual;
   $('warPainel').value=25;$('warMicroinv').value=15;$('warInvStr').value=10;$('warInstalacao').value=1;$('warAssistencia').value='Inclusa';
   $('hasWallbox').checked=false;$('wallboxFields').style.display='none';
+  $('wallboxModel').value='';$('wallboxNote').value='';
   $('monthlyGen').removeAttribute('data-manual');
   document.querySelector('input[name=installType][value="Residencial"]').checked=true;
   document.querySelector('input[name=vend][value="lucas"]').checked=true;
@@ -592,6 +597,8 @@ function generateProposal(){
   const hasWallbox=$('hasWallbox').checked;
   const wallboxPower=get('wallboxPower')||'7,4 kW';
   const wallboxPrice=getN('wallboxPrice');
+  const wallboxModel=get('wallboxModel');
+  const wallboxNote=get('wallboxNote');
   const bill=getN('billValue');
   const consumoKwh=getN('consumo');
   const tarifa=getN('tarifa');
@@ -746,6 +753,7 @@ function generateProposal(){
     {label:'Sistema de Monitoramento', qty:'✓', spec:'App em tempo real'},
     {label:'ART / RRT',             qty:'✓', spec:'Engenheiro responsável CREA'},
     {label:'Homologação',           qty:'✓', spec:'Processo completo junto à concessionária'},
+    hasWallbox?{label:'Carregador Veicular (Wallbox)',qty:'1 un.',spec:(wallboxModel?wallboxModel+' — ':'')+wallboxPower}:null,
   ].filter(Boolean);
   const specRows=specItems.map((it,i)=>{
     const last=i===specItems.length-1;
@@ -861,9 +869,6 @@ function generateProposal(){
             ${['Acesso ao local de instalação','Documentação do titular (homologação)','Conta de energia atualizada','Infraestrutura civil, se necessária'].map(r=>`<div class="resp-item" style="font-size:11px">${r}</div>`).join('')}
           </div>
         </div>
-        ${hasWallbox?`<div style="margin-top:8px;background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.2);border-radius:7px;padding:8px 14px;font-size:11px;color:var(--lmuted)">
-          <strong style="color:var(--ltext)">Upgrade Wallbox ${wallboxPower}</strong>${wallboxPrice?' — '+fmtBRL(wallboxPrice):''}
-        </div>`:''}
       </div>
 
     </div>
@@ -884,6 +889,12 @@ function generateProposal(){
         <div class="inv-sub">${instType} &middot; ${kVp?kVp.toFixed(2)+' kVp':'—'} &middot; Proposta válida até ${validUntil}</div>
       </div>
       <div style="font-size:9px;color:var(--lmuted);font-style:italic;margin-bottom:14px;padding-left:2px">* Valor referente ao pagamento à vista (PIX / Boleto).</div>
+      ${hasWallbox?`<div style="background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--lmuted)">
+        <div style="font-weight:800;color:var(--ltext);margin-bottom:4px">⚡ Carregador Veicular (Wallbox)</div>
+        <div>${wallboxModel?wallboxModel+' &mdash; ':''}<span style="font-weight:700;color:var(--ltext)">${wallboxPower}</span></div>
+        ${wallboxPrice?`<div style="font-size:13px;font-weight:900;color:var(--or);margin-top:4px">${fmtBRL(wallboxPrice)}</div>`:''}
+        ${wallboxNote?`<div style="margin-top:4px;font-style:italic">${wallboxNote}</div>`:''}
+      </div>`:''}
       <div class="pay-img-box" style="flex:1;display:flex;flex-direction:column;min-height:0">
         <div class="pay-img-lbl">Formas de Pagamento</div>
         <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:4px 0">

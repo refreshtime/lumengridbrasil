@@ -412,6 +412,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
           <div><label class="fl">Potência</label><input class="fi" id="wallboxPower" value="7,4 kW"></div>
           <div><label class="fl">Valor (R$)</label><input class="fi" type="number" id="wallboxPrice" placeholder="Ex: 4800"></div>
         </div>
+        <label class="fl">Modelo</label>
+        <input class="fi" id="wallboxModel" placeholder="Ex: ABB Terra AC 7,4kW">
         <label class="fl">Observação</label>
         <input class="fi" id="wallboxNote" placeholder="Ex: Instalação junto ao sistema fotovoltaico">
       </div>
@@ -789,6 +791,7 @@ function resetForm(){
   $('batQty').value='1';$('precoKvp').value='5000';
   $('monthlyGen').removeAttribute('data-manual');
   $('hasWallbox').checked=false;$('wallboxField').style.display='none';
+  $('wallboxModel').value='';$('wallboxNote').value='';
   if($('showGenPage'))$('showGenPage').checked=true;
   document.querySelector('input[name=installType][value="Residencial"]').checked=true;
   document.querySelector('input[name=conexao][value="Bifasico"]').checked=true;
@@ -901,6 +904,8 @@ function generateProposal(criarCard){
   const hasWallbox=$('hasWallbox').checked;
   const wallboxPower=get('wallboxPower')||'7,4 kW';
   const wallboxPrice=getN('wallboxPrice');
+  const wallboxModel=get('wallboxModel');
+  const wallboxNote=get('wallboxNote');
   const bill=getN('billValue');
   const consumoKwh=getN('consumoAtual');
   const tarifa=getN('tarifa');
@@ -1043,6 +1048,7 @@ function generateProposal(criarCard){
     {label:'Sistema de Monitoramento',qty:'\u2713',spec:'App em tempo real (gera\u00e7\u00e3o / consumo / bateria)'},
     {label:'ART / RRT',qty:'\u2713',spec:'Engenheiro respons\u00e1vel CREA'},
     {label:'Homologa\u00e7\u00e3o',qty:'\u2713',spec:'Processo completo junto \u00e0 concession\u00e1ria'},
+    hasWallbox?{label:'Carregador Veicular (Wallbox)',qty:'1 un.',spec:(wallboxModel?wallboxModel+' \u2014 ':'')+wallboxPower}:null,
   ].filter(Boolean);
   const specRows=specItems.map((it,i)=>{
     const last=i===specItems.length-1;
@@ -1295,7 +1301,12 @@ function generateProposal(criarCard){
         <div class="inv-sub">${instType} &middot; ${kVp?kVp.toFixed(2)+' kVp':'—'}${batKwh?' + '+batKwh+' kWh':''} &middot; V\u00e1lida at\u00e9 ${validUntil}</div>
       </div>
       <div style="font-size:9px;color:var(--lmuted);font-style:italic;margin-bottom:14px;padding-left:2px">* Valor referente ao pagamento \u00e0 vista (PIX / Boleto).</div>
-      ${hasWallbox?`<div style="background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--lmuted)"><strong style="color:var(--ltext)">Upgrade Wallbox ${wallboxPower}</strong>${wallboxPrice?' &mdash; '+fmtBRL(wallboxPrice):''}${wallboxNote?' &mdash; '+wallboxNote:''}</div>`:''}
+      ${hasWallbox?`<div style="background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--lmuted)">
+        <div style="font-weight:800;color:var(--ltext);margin-bottom:4px">&#9889; Carregador Veicular (Wallbox)</div>
+        <div>${wallboxModel?wallboxModel+' &mdash; ':''}<span style="font-weight:700;color:var(--ltext)">${wallboxPower}</span></div>
+        ${wallboxPrice?`<div style="font-size:13px;font-weight:900;color:var(--or);margin-top:4px">${fmtBRL(wallboxPrice)}</div>`:''}
+        ${wallboxNote?`<div style="margin-top:4px;font-style:italic">${wallboxNote}</div>`:''}
+      </div>`:''}
       ${buildChart(bill,genKwhNum,tarifa,minKwh,ecoMonthly)}
       ${ecoTimelineHtml}
       <div class="pay-img-box" style="flex:1;display:flex;flex-direction:column;min-height:0">
