@@ -624,6 +624,7 @@ tbody tr td:first-child{font-weight:700}
 .of-badge.warm {background:#FEF9C3;color:#92400E}
 .of-badge.hot  {background:#FFEDD5;color:#C2410C}
 .of-badge.old  {background:#FEE2E2;color:#B91C1C}
+@keyframes retorno-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{opacity:.7;box-shadow:0 0 0 5px rgba(220,38,38,0)}}
 /* Kanban col oportunidade futura */
 .kb-col-of{border-top:3px solid #6366F1}
 .col-hd.of{color:#4338CA}
@@ -762,6 +763,10 @@ tbody tr td:first-child{font-weight:700}
       <div class="dash-card">
         <div class="dc-title">Atividades Recentes</div>
         <div class="recents" id="recentList"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dc-title" id="retornosPanelTitle">📅 Retornos Agendados</div>
+        <div class="recents" id="retornosList"></div>
       </div>
     </div>
   </div>
@@ -1227,7 +1232,7 @@ const SERVICE_SUBTASKS = {
 };
 
 const USERS = ['Comercial Lumen','Lucas','Giovani','Hingrid'];
-const ADMINS = ['Comercial Lumen','Hingrid'];
+const ADMINS = ['Comercial Lumen'];
 const PASSWORDS = {'Comercial Lumen':'Lumen@2026','Lucas':'Lucas@2026','Giovani':'Giovani@2026','Hingrid':'Lumen@2026'};
 const USER_COLORS = {'Comercial Lumen':'#F26522','Lucas':'#0D9488','Giovani':'#3B82F6','Hingrid':'#8B5CF6'};
 const USER_GRADIENTS = {
@@ -1498,6 +1503,7 @@ function renderDashboard() {
     <div class="kpi"><div class="kpi-lbl">Valor Carteira</div><div class="kpi-val g">${totalVal>0?'R$'+totalVal.toLocaleString('pt-BR'):'—'}</div><div class="kpi-note">propostas ativas</div></div>
     <div class="kpi" style="border-left:3px solid #6366F1;cursor:pointer" onclick="showView('leads');renderLeadsList('stage-14')"><div class="kpi-lbl" style="color:#6366F1">Oport. Futuras</div><div class="kpi-val" style="color:#4338CA">${all.filter(l=>l.stage===14).length}</div><div class="kpi-note">${all.filter(l=>l.stage===14&&ofAging(l)?.cls==='old').length} precisam atenção</div></div>
     <div class="kpi" style="border-left:3px solid var(--teal);cursor:pointer" onclick="showView('servicos',document.querySelector('.hn:last-of-type'))"><div class="kpi-lbl" style="color:var(--teal)">Serviços Ativos</div><div class="kpi-val t">${getServicos().filter(s=>s.stage<3).length}</div><div class="kpi-note">em aberto</div></div>
+    <div class="kpi" style="border-left:3px solid #6366F1;cursor:pointer" onclick="showView('leads');renderLeadsList('retorno-mes')"><div class="kpi-lbl" style="color:#6366F1">📅 Retornos Mês</div><div class="kpi-val" style="color:#4338CA">${all.filter(l=>l.retornoMonth===currentMonthStr()).length}</div><div class="kpi-note">retornos agendados</div></div>
   `;
 
   const maxN = Math.max(1,...STAGES.map(s=>mine.filter(l=>l.stage===s.id).length));
@@ -1523,6 +1529,27 @@ function renderDashboard() {
         </div>
         <div class="r-resp" style="color:${USER_COLORS[l.resp]||'#666'}">${l.resp}</div>
       </div>`).join('');
+
+  // Retornos agendados painel
+  const curMonth = currentMonthStr();
+  const nxtD = new Date(); nxtD.setMonth(nxtD.getMonth()+1);
+  const nxtMonth = nxtD.getFullYear() + '-' + String(nxtD.getMonth()+1).padStart(2,'0');
+  const retAgora = all.filter(l => l.retornoMonth === curMonth);
+  const retProx  = all.filter(l => l.retornoMonth === nxtMonth);
+  document.getElementById('retornosPanelTitle').textContent = `📅 Retornos — ${monthFull(curMonth)}`;
+  document.getElementById('retornosList').innerHTML = retAgora.length === 0
+    ? `<div style="font-size:10px;color:var(--text3);text-align:center;padding:18px">Nenhum retorno agendado para este mês</div>`
+    : retAgora.map(l=>`<div class="r-item" onclick="openDetail('${l.id}')">
+        <div class="r-dot" style="background:#6366F1"></div>
+        <div class="r-info">
+          <div class="r-name">${esc(l.nome)}</div>
+          <div class="r-stage">${esc(l.telefone||'—')}</div>
+        </div>
+        <div style="font-size:10px;color:#6366F1;font-weight:700">→</div>
+      </div>`).join('')
+    + (retProx.length>0
+      ? `<div style="font-size:9px;color:var(--text3);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">+ ${retProx.length} no próximo mês (${monthAbrev(nxtMonth)})</div>`
+      : '');
 }
 
 function goToNewLeads() {
@@ -1622,10 +1649,13 @@ function renderKanban() {
         ondrop="colDrop(event,14)">
         ${ofLeads.length===0?'<div style="height:32px"></div>':ofLeads.map(l=>{
           const ag=ofAging(l);
+          const rUrgency=l.retornoMonth?retornoUrgency(l.retornoMonth):null;
+          const rClr={late:'#7F1D1D',now:'#DC2626',next:'#D97706',future:'#3B82F6'}[rUrgency]||'';
+          const rBadge=l.retornoMonth?`<span style="font-size:8px;font-weight:700;background:${rClr}18;color:${rClr};border:1px solid ${rClr}45;border-radius:4px;padding:1px 5px;${rUrgency==='now'?'animation:retorno-pulse 1.5s ease-in-out infinite':''}">🔔 ${monthAbrev(l.retornoMonth)}</span>`:'';
           return`<div class="lc ${ag?ag.borderCls:''}" draggable="true" onclick="openDetail('${l.id}')" ondragstart="cardDragStart(event,'${l.id}')">
             <div class="lc-top">
               <div class="lc-name">${esc(l.nome)}</div>
-              ${ag?`<span class="of-badge ${ag.cls}">${ag.label}</span>`:''}
+              <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">${ag?`<span class="of-badge ${ag.cls}">${ag.label}</span>`:''}${rBadge}</div>
             </div>
             <div style="font-size:9px;color:var(--text3);margin-top:4px">${l.oportunidadeDate?'Desde '+fmtDate(l.oportunidadeDate):''}</div>
             <div class="lc-bot" style="margin-top:6px">
@@ -2049,6 +2079,13 @@ function openDetail(id) {
         <button class="ss-btn${lead.stage===14?' on':''}" style="border-color:#C7D2FE;color:#4338CA${lead.stage===14?';background:#EEF2FF':''}" onclick="changeStage(14,this)">⏳ Oportunidade Futura</button>
       </div>
       ${lead.oportunidadeDate?`<div style="font-size:9px;color:var(--text3);margin-top:5px">Registrado em: <strong>${fmtDate(lead.oportunidadeDate)}</strong>${(()=>{const ag=ofAging(lead);return ag?` — <span class="of-badge ${ag.cls}">${ag.label}</span>`:''})()}</div>`:''}
+      ${lead.stage===14?`<div style="margin-top:8px;display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+        <span style="font-size:9px;font-weight:700;color:#4338CA;letter-spacing:.5px">Mês de retorno:</span>
+        <select id="d-retorno" class="if-inp" style="font-size:10px;padding:3px 7px;border-color:#C7D2FE;color:#1e1b4b;cursor:pointer;min-width:155px" onchange="saveRetornoMonth(this.value)">
+          ${retornoMonthOptions(lead.retornoMonth||'')}
+        </select>
+        ${lead.retornoMonth?`<button onclick="saveRetornoMonth('')" style="font-size:9px;padding:2px 8px;background:#FEE2E2;color:#991B1B;border:1px solid #FECACA;border-radius:5px;cursor:pointer">✕ Limpar</button>`:''}
+      </div>`:''}
     </div>
   </div>
 
@@ -2310,6 +2347,7 @@ function saveLeadDetail() {
   lead.origem = document.getElementById('d-origem').value;
   lead.resp = document.getElementById('d-resp').value;
   lead.valor = document.getElementById('d-valor').value;
+  lead.retornoMonth = document.getElementById('d-retorno')?.value || lead.retornoMonth || '';
   lead.updatedAt = Date.now();
   saveLeads(leads, lead);
   closeModal('ov-detail');
@@ -2378,6 +2416,7 @@ function renderLeadsList(f) {
     {k:'stage-13',label:'Concluídos'},
     {k:'stage-14',label:`⏳ Oportunidade Futura${ofCount?' ('+ofCount+')':''}`},
     {k:'lookalike',label:`◉ Lookalike${all.filter(l=>l.lookalike).length?' ('+all.filter(l=>l.lookalike).length+')':''}`},
+    {k:'retorno-mes',label:`📅 Retorno este Mês${all.filter(l=>l.retornoMonth===currentMonthStr()).length?' ('+all.filter(l=>l.retornoMonth===currentMonthStr()).length+')':''}`},
   ];
   document.getElementById('llChips').innerHTML = chips.map(c=>
     `<div class="chip${leadsFilter===c.k?' on':''}${c.k==='stage-14'?'" style="border-color:#C7D2FE;color:#4338CA':c.k==='lookalike'?'" style="border-color:#C7D2FE;color:#4338CA':''}" onclick="renderLeadsList('${c.k}')">${c.label}</div>`
@@ -2419,6 +2458,7 @@ function renderLeadsList(f) {
   }
   else if (leadsFilter.startsWith('stage-')) { const sid=parseInt(leadsFilter.split('-')[1]); filtered=all.filter(l=>l.stage===sid); }
   else if (leadsFilter==='lookalike') filtered=all.filter(l=>l.lookalike);
+  else if (leadsFilter==='retorno-mes') filtered=all.filter(l=>l.retornoMonth===currentMonthStr());
   else if (leadsFilter.startsWith('resp-')) { const r=leadsFilter.split('-')[1]; filtered=all.filter(l=>l.resp===r); }
   else if (leadsFilter.startsWith('of-age-')) {
     const cls=leadsFilter.replace('of-age-','');
@@ -2927,6 +2967,57 @@ function toast(msg, type) {
 const esc = s => s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
 const fmtDate = ts => ts ? new Date(ts).toLocaleDateString('pt-BR') : '—';
 const fmtDateTime = ts => ts ? new Date(ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+
+/* ━━━ RETORNO MENSAL — helpers ━━━ */
+function currentMonthStr() {
+  const n = new Date();
+  return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0');
+}
+function retornoMonthOptions(selected) {
+  const now = new Date();
+  let opts = '<option value="">— Sem retorno agendado —</option>';
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth()+i, 1);
+    const val = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    const lbl = d.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+    opts += `<option value="${val}"${selected===val?' selected':''}>${lbl.charAt(0).toUpperCase()+lbl.slice(1)}</option>`;
+  }
+  return opts;
+}
+function monthAbrev(ym) {
+  if (!ym) return '';
+  const [y, m] = ym.split('-');
+  const s = new Date(parseInt(y), parseInt(m)-1, 1).toLocaleDateString('pt-BR', {month:'short'});
+  return s.replace('.','').toUpperCase().slice(0,3);
+}
+function monthFull(ym) {
+  if (!ym) return '';
+  const [y, m] = ym.split('-');
+  const s = new Date(parseInt(y), parseInt(m)-1, 1).toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function retornoUrgency(ym) {
+  if (!ym) return null;
+  const now = new Date();
+  const cur = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const nd = new Date(now.getFullYear(), now.getMonth()+1, 1);
+  const nxt = nd.getFullYear() + '-' + String(nd.getMonth()+1).padStart(2,'0');
+  if (ym < cur) return 'late';
+  if (ym === cur) return 'now';
+  if (ym === nxt) return 'next';
+  return 'future';
+}
+function saveRetornoMonth(val) {
+  const leads = getLeads();
+  const l = leads.find(x => x.id === editingId);
+  if (!l) return;
+  l.retornoMonth = val;
+  l.updatedAt = Date.now();
+  saveLeads(leads, l);
+  renderKanban();
+  renderDashboard();
+  openDetail(editingId);
+}
 
 // Oportunidade Futura — aging a cada 2 meses
 function ofAging(lead) {
