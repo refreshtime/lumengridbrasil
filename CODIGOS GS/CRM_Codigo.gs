@@ -33,10 +33,11 @@ function doGet(e) {
   const callback = (e && e.parameter && e.parameter.callback) || '';
   let result;
   try {
-    if      (action === 'leads_meta') result = getLeadsMeta();
-    else if (action === 'leads_crm')  result = getLeadsCRM();
-    else if (action === 'fin_data')   result = getFinData();
-    else if (action === 'save_lead')  result = saveOneLead(JSON.parse(e.parameter.data));
+    if      (action === 'leads_meta')    result = getLeadsMeta();
+    else if (action === 'leads_crm')     result = getLeadsCRM();
+    else if (action === 'fin_data')      result = getFinData();
+    else if (action === 'save_lead')     result = saveOneLead(JSON.parse(e.parameter.data));
+    else if (action === 'save_proposta') result = saveProposta(JSON.parse(e.parameter.data));
     else result = { error: 'Ação desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };
@@ -141,6 +142,111 @@ function saveOneLead(lead) {
 }
 
 // ────────────────────────────────────────────────
+// INTEGRAÇÃO GERADOR DE PROPOSTAS → CRM
+// Cria ou atualiza um lead quando proposta é gerada
+// ────────────────────────────────────────────────
+
+const CONSULTOR_TO_RESP = {
+  'lucas':   'Lucas',
+  'hingrid': 'Hingrid',
+  'giovani': 'Giovani',
+  'custom':  'Comercial Lumen'
+};
+
+function saveProposta(data) {
+  const leads = getLeadsCRM();
+
+  // Dedup por telefone (só dígitos)
+  const telLimpo = (data.telefone || '').replace(/\D/g, '');
+  let lead = null;
+  let updated = false;
+
+  if (telLimpo) {
+    lead = leads.find(l => (l.telefone || '').replace(/\D/g, '') === telLimpo);
+  }
+
+  const proposta = {
+    tipo:       data.tipoSistema || 'Solar',
+    kWp:        data.kWp        || 0,
+    modQty:     data.modQty     || 0,
+    modModel:   data.modModel   || '',
+    modPower:   data.modPower   || 0,
+    invModel:   data.invModel   || '',
+    invQty:     data.invQty     || 0,
+    invPower:   data.invPower   || 0,
+    valor:      data.valor      || 0,
+    genKwh:     data.genKwh     || 0,
+    ecoMonthly: data.ecoMonthly || 0,
+    paybackStr: data.paybackStr || '',
+    consultor:  data.consultor  || '',
+    batKwh:     data.batKwh     || null,
+    batModel:   data.batModel   || null,
+    batQty:     data.batQty     || null,
+    conexao:    data.conexao    || '',
+    instType:   data.instType   || '',
+    createdAt:  Date.now(),
+    updatedAt:  Date.now(),
+  };
+
+  if (lead) {
+    // Lead existente: atualiza proposta e valor
+    proposta.createdAt = (lead.proposta && lead.proposta.createdAt) || Date.now();
+    lead.proposta   = proposta;
+    lead.valor      = data.valor || lead.valor;
+    lead.updatedAt  = Date.now();
+    lead.history    = lead.history || [];
+    lead.history.push({
+      text: 'Proposta ' + proposta.tipo + ' atualizada por ' + (data.consultor || 'Sistema') +
+            ' — R$ ' + (data.valor ? Number(data.valor).toLocaleString('pt-BR') : '—') +
+            ' · ' + (data.kWp ? data.kWp.toFixed(2) + ' kWp' : ''),
+      user: data.consultor || 'Sistema',
+      ts: Date.now(),
+    });
+    updated = true;
+  } else {
+    // Lead novo
+    const resp = CONSULTOR_TO_RESP[data.consultorKey] || 'Comercial Lumen';
+    lead = {
+      id:        Utilities.getUuid(),
+      nome:      data.nome     || 'Cliente',
+      telefone:  data.telefone || '',
+      email:     '',
+      cidade:    data.cidade   || '',
+      kwh:       '',
+      tipo:      data.instType || '',
+      telhado:   '',
+      sistema:   data.tipoSistema === 'Híbrido' ? 'Híbrido' : 'String',
+      origem:    data.parceiro ? 'Parceiro — ' + data.parceiro : 'Proposta',
+      resp:      resp,
+      valor:     data.valor || 0,
+      stage:     15,
+      subtasks:  {},
+      proposta:  proposta,
+      history:   [{
+        text: 'Proposta ' + proposta.tipo + ' gerada por ' + (data.consultor || resp) +
+              ' — R$ ' + (data.valor ? Number(data.valor).toLocaleString('pt-BR') : '—') +
+              ' · ' + (data.kWp ? data.kWp.toFixed(2) + ' kWp' : ''),
+        user: data.consultor || 'Sistema',
+        ts: Date.now(),
+      }],
+      notes:     [],
+      docs:      [],
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      seenBy:    [],
+    };
+    leads.unshift(lead);
+  }
+
+  saveLeadsCRM(leads);
+  // Disparar sync ao portal do parceiro quando proposta é gerada com parceiro selecionado
+  if ((lead.origem || '').startsWith('Parceiro — ')) {
+    atualizarPortalParceiro(lead);
+  }
+  return { ok: true, leadId: lead.id, updated: updated };
+}
+
+// ────────────────────────────────────────────────
 // INTEGRAÇÃO CRM → PORTAL DO PARCEIRO
 // Atualiza status, etapa e última anotação no
 // portal sempre que o CRM salvar o lead
@@ -156,7 +262,7 @@ function atualizarPortalParceiro(lead) {
       'Proposta Enviada','Negociação','Venda Fechada',
       'Agendar Visita','Estruturação Projeto','Comprar Equipamento',
       'Compra Realizada','Agendar Instalação','Homologação','Projeto Concluído',
-      'Oportunidade Futura'
+      'Oportunidade Futura','Proposta Gerada'
     ];
     const status = STAGE_NOMES[lead.stage] || 'Atualizado';
 
@@ -180,7 +286,10 @@ function atualizarPortalParceiro(lead) {
 
     const leadNome = (lead.nome      || '').trim().toLowerCase();
     const leadTel  = (lead.telefone  || '').replace(/\D/g, '');
+    const valorProjeto = lead.valor || (lead.proposta && lead.proposta.valor) || 0;
+    const kWpProposta  = (lead.proposta && lead.proposta.kWp) || lead.kwp || 0;
 
+    let matched = false;
     for (let i = 1; i < data.length; i++) {
       const rowNome = String(data[i][nomeCol] || '').trim().toLowerCase();
       const rowTel  = String(data[i][telCol]  || '').replace(/\D/g, '');
@@ -190,10 +299,24 @@ function atualizarPortalParceiro(lead) {
       const row = i + 1;
       if (statCol > 0) sheet.getRange(row, statCol).setValue(status);
       if (obsCol  > 0 && ultimaNota) sheet.getRange(row, obsCol).setValue(ultimaNota);
-      if (kwpCol  > 0 && lead.kwp)             sheet.getRange(row, kwpCol).setValue(lead.kwp);
-      if (valCol  > 0 && lead.valorProjeto)    sheet.getRange(row, valCol).setValue(lead.valorProjeto);
+      if (kwpCol  > 0 && kWpProposta)     sheet.getRange(row, kwpCol).setValue(kWpProposta);
+      if (valCol  > 0 && valorProjeto)    sheet.getRange(row, valCol).setValue(valorProjeto);
       if (comCol  > 0 && lead.comissaoEstimada) sheet.getRange(row, comCol).setValue(lead.comissaoEstimada);
+      matched = true;
       break;
+    }
+
+    // Se o cliente ainda não existe no portal do parceiro, cria a linha
+    if (!matched) {
+      const idCol = headers.indexOf('ID') + 1;
+      const newId = parceiro.substring(0, 2).toUpperCase() + Date.now().toString(36).toUpperCase();
+      const dataHoje = new Date().toLocaleDateString('pt-BR');
+      sheet.appendRow([
+        newId, lead.nome || '', lead.telefone || '', lead.email || '',
+        '', lead.cidade || '', dataHoje, status,
+        kWpProposta, valorProjeto,
+        '', '', '', '', '', '', '', '', '', '', '', '', ultimaNota
+      ]);
     }
   } catch(e) {
     Logger.log('atualizarPortalParceiro: ' + e.message);
@@ -208,12 +331,13 @@ function gravarTabelaLegivel(sheet, leads) {
       'Proposta Enviada','Negociação','Venda Fechada',
       'Agendar Visita','Estruturação Projeto','Comprar Equipamento',
       'Compra Realizada','Agendar Instalação','Homologação','Projeto Concluído',
-      'Oportunidade Futura'
+      'Oportunidade Futura','Proposta Gerada'
     ];
     const headers = [
       'ID','Nome','Telefone','E-mail','Cidade','kWh Mensal','Tipo','Telhado','Sistema','Etapa','Responsável','Origem',
       'kWp','Valor Projeto','Custo Equipamento','Custo Instalação','Impostos','Margem Bruta','Pós-Venda (20%)','% Comissão','Comissão Estimada','Lucro Empresa','Parceiro',
-      'Criado em','Atualizado em'
+      'Criado em','Atualizado em',
+      'Tipo Proposta','kWp Proposta','Geração kWh/mês','Valor Proposta','Payback','Data Proposta'
     ];
     const rows = leads.map(l => [
       l.id, l.nome, l.telefone, l.email, l.cidade, l.kwh, l.tipo, l.telhado, l.sistema,
@@ -223,6 +347,12 @@ function gravarTabelaLegivel(sheet, leads) {
       l.comissaoEstimada||'', l.lucroEmpresa||'', l.parceiro||'',
       l.createdAt ? new Date(l.createdAt).toLocaleString('pt-BR') : '',
       l.updatedAt ? new Date(l.updatedAt).toLocaleString('pt-BR') : '',
+      l.proposta ? l.proposta.tipo : '',
+      l.proposta ? l.proposta.kWp : '',
+      l.proposta ? l.proposta.genKwh : '',
+      l.proposta ? l.proposta.valor : '',
+      l.proposta ? l.proposta.paybackStr : '',
+      l.proposta ? new Date(l.proposta.createdAt).toLocaleString('pt-BR') : '',
     ]);
     sheet.getRange(1, 3, 1, headers.length).setValues([headers]);
     if (rows.length > 0) {

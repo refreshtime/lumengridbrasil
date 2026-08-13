@@ -486,6 +486,17 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="fs">
+    <div class="fs-title">Parceiro / Indicação</div>
+    <div class="frg">
+      <label class="frl"><input type="radio" name="parceiro" value="" checked>Nenhum (lead direto)</label>
+      <label class="frl"><input type="radio" name="parceiro" value="Orlando">Orlando</label>
+      <label class="frl"><input type="radio" name="parceiro" value="Jessica">Jessica</label>
+      <label class="frl"><input type="radio" name="parceiro" value="DDEG">DDEG</label>
+      <label class="frl"><input type="radio" name="parceiro" value="Michael">99 Parcerias (Michael)</label>
+    </div>
+  </div>
+
+  <div class="fs">
     <div class="fs-title">Consultor</div>
     <div class="frg">
       <label class="frl"><input type="radio" name="vend" value="lucas" checked>Lucas Vieira</label>
@@ -919,6 +930,8 @@ function generateProposal(criarCard){
     else if(vendRad.value==='giovani'){vendNome='Giovani';vendFone='';}
     else{vendNome=get('vendNomeCustom')||'Consultor';vendFone=get('vendFoneCustom')||'';}
   }
+  const parceiroRad=document.querySelector('input[name=parceiro]:checked');
+  const parceiroNome=parceiroRad?parceiroRad.value:'';
 
   const kVp=modQty&&modPower?modQty*modPower/1000:0;
   const genKwh=get('monthlyGen')||(modQty?Math.round(modQty*65):'');
@@ -1409,6 +1422,7 @@ function generateProposal(criarCard){
       batKwh:       batKwh,
       batModel:     batModel,
       batQty:       batQty,
+      parceiro:     parceiroNome,
     });
   }
 }
