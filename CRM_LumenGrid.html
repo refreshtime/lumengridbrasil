@@ -1331,6 +1331,14 @@ async function loadFromSheets(silent = false) {
   try {
     const data = await jsonpFetch(cfg.gsUrl + '?action=leads_crm');
     if (Array.isArray(data) && data.length > 0) {
+      const local = getAllLeadsRaw();
+      // Proteção contra perda de dados: só sobrescreve se o servidor tiver >= leads que o local
+      if (data.length < local.length) {
+        console.warn('[CRM] Sync bloqueado: servidor tem ' + data.length + ' leads, local tem ' + local.length + '. Ignorando para proteger dados locais.');
+        return;
+      }
+      // Salva backup antes de sobrescrever
+      localStorage.setItem('lg_leads_backup', localStorage.getItem('lg_leads') || '[]');
       localStorage.setItem('lg_leads', JSON.stringify(data));
       if (!silent) return;
       // Re-renderiza a view ativa após sync automático
