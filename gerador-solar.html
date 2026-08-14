@@ -483,6 +483,17 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   </div>
 
   <div class="fs">
+    <div class="fs-title">Parceiro / Indicação</div>
+    <div class="frg">
+      <label class="frl"><input type="radio" name="parceiro" value="" checked>Nenhum (lead direto)</label>
+      <label class="frl"><input type="radio" name="parceiro" value="Orlando">Orlando</label>
+      <label class="frl"><input type="radio" name="parceiro" value="Jessica">Jessica</label>
+      <label class="frl"><input type="radio" name="parceiro" value="DDEG">DDEG</label>
+      <label class="frl"><input type="radio" name="parceiro" value="Michael">99 Parcerias (Michael)</label>
+    </div>
+  </div>
+
+  <div class="fs">
     <div class="fs-title">Consultor</div>
     <div class="frg">
       <label class="frl"><input type="radio" name="vend" value="lucas" checked>Lucas Vieira</label>
@@ -847,6 +858,8 @@ function generateProposal(criarCard){
     else if(vendRad.value==='giovani'){vendNome='Giovani';vendFone='';}
     else{vendNome=get('vendNome')||'Consultor';vendFone=get('vendFone')||'';}
   }
+  const parceiroRad=document.querySelector('input[name=parceiro]:checked');
+  const parceiroNome=parceiroRad?parceiroRad.value:'';
 
   const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
   const descontoAvista=get('descontoAvista')||'';
@@ -1263,6 +1276,7 @@ function generateProposal(criarCard){
       batKwh:       null,
       batModel:     null,
       batQty:       null,
+      parceiro:     parceiroNome,
     });
   }
 }
