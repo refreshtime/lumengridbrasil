@@ -149,7 +149,7 @@ function saveOneLead(lead) {
 const CONSULTOR_TO_RESP = {
   'lucas':   'Lucas',
   'hingrid': 'Hingrid',
-  'giovani': 'Giovani',
+  'kelly':   'Kelly',
   'custom':  'Comercial Lumen'
 };
 

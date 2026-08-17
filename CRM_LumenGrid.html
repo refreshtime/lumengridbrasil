@@ -1324,34 +1324,34 @@ function jsonpFetch(url) {
   });
 }
 
-// Carrega leads do Sheets na inicialização (se URL configurada)
+// Carrega leads do Sheets e faz merge inteligente com localStorage
 async function loadFromSheets(silent = false) {
   const cfg = getConfig();
   if (!cfg.gsUrl) return;
   try {
     const data = await jsonpFetch(cfg.gsUrl + '?action=leads_crm');
-    if (Array.isArray(data) && data.length > 0) {
-      const local = getAllLeadsRaw();
-      // Proteção contra perda de dados: só sobrescreve se o servidor tiver >= leads que o local
-      if (data.length < local.length) {
-        console.warn('[CRM] Sync bloqueado: servidor tem ' + data.length + ' leads, local tem ' + local.length + '. Ignorando para proteger dados locais.');
-        return;
-      }
-      // Salva backup antes de sobrescrever
-      localStorage.setItem('lg_leads_backup', localStorage.getItem('lg_leads') || '[]');
-      localStorage.setItem('lg_leads', JSON.stringify(data));
-      if (!silent) return;
-      // Re-renderiza a view ativa após sync automático
-      const activeView = document.querySelector('.view.active');
-      if (activeView) {
-        const id = activeView.id;
-        if (id === 'v-kanban') renderKanban();
-        else if (id === 'v-leads') renderLeadsList();
-        else if (id === 'v-dash') renderDashboard();
-        else if (id === 'v-docs') renderDocsView();
-      }
-      setSyncStatus('ok');
+    if (!Array.isArray(data)) return;
+    const local = getAllLeadsRaw();
+    // Merge por ID: leads do servidor têm prioridade (versão mais recente vinda do GAS)
+    // Leads locais que não existem no servidor são preservados
+    const serverById = {};
+    data.forEach(l => { if (l.id) serverById[l.id] = l; });
+    const merged = [...data];
+    local.forEach(l => { if (l.id && !serverById[l.id]) merged.push(l); });
+    merged.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    localStorage.setItem('lg_leads_backup', localStorage.getItem('lg_leads') || '[]');
+    localStorage.setItem('lg_leads', JSON.stringify(merged));
+    if (!silent) return;
+    // Re-renderiza a view ativa após sync automático
+    const activeView = document.querySelector('.view.active');
+    if (activeView) {
+      const id = activeView.id;
+      if (id === 'v-kanban') renderKanban();
+      else if (id === 'v-leads') renderLeadsList();
+      else if (id === 'v-dash') renderDashboard();
+      else if (id === 'v-docs') renderDocsView();
     }
+    setSyncStatus('ok');
   } catch(_) {}
 }
 
