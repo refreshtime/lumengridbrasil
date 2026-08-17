@@ -96,7 +96,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   position:absolute;inset:0;z-index:0;
   background:
     linear-gradient(to bottom, rgba(5,5,5,.15) 0%, rgba(5,5,5,.05) 25%, rgba(10,10,10,.55) 60%, rgba(10,10,10,.85) 85%),
-    url('https://lumengridbrasil.com.br/imagens/PESSOAS/instalador.png') center top / cover no-repeat;
+    url('https://lumengridbrasil.com.br/imagens/PROJETOS/capa-proposta-solar.png') center top / cover no-repeat;
   background-color:#1a0f05;
 }
 .capa-content{position:absolute;left:0;right:0;bottom:0;top:35%;z-index:10;padding:32px 48px 44px;display:flex;flex-direction:column;justify-content:flex-end}
@@ -766,7 +766,7 @@ function generateProposal(criarCard=true){
 
   const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
   const descontoAvista=get('descontoAvista')||'';
-  const fotoUrl=get('fotoUrl')||(hasWallbox?IMG_BASE+'PESSOAS/handshake.png':isMicro?IMG_BASE+'PROJETOS/capa-hibrido.png':IMG_BASE+'PESSOAS/familia.png');
+  const fotoUrl=get('fotoUrl')||(hasWallbox?IMG_BASE+'PESSOAS/handshake.png':isMicro?IMG_BASE+'PROJETOS/capa-hibrido.png':IMG_BASE+'PROJETOS/capa-proposta-solar.png');
   const waFoneDigits=vendFone.replace(/\D/g,'');
   const waMsg=encodeURIComponent('Olá, '+vendNome+'. Gostaria de conversar sobre a proposta de energia solar preparada para '+name+'.');
   const waUrl=waFoneDigits?'https://wa.me/55'+waFoneDigits+'?text='+waMsg:'';
