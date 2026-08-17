@@ -362,6 +362,14 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <div><label class="fl">Preço por kVp (R$) <span id="precoKvpTag" class="auto-tag">mín R$3.100 — string</span></label><input class="fi" type="number" id="precoKvp" value="3500" min="3100" max="6000" step="100"></div>
       <div><label class="fl">Valor Total (R$) *</label><input class="fi" type="number" id="projectValue" placeholder="Calculado auto"></div>
     </div>
+    <!-- Indicador de nível de preço -->
+    <div id="nivelPrecoStrip" style="display:none;background:#f8f9fc;border:1px solid var(--uib);border-radius:6px;padding:8px 10px;margin-bottom:8px;font-size:9px">
+      <div style="font-size:8px;font-weight:800;letter-spacing:1.5px;color:var(--or);text-transform:uppercase;margin-bottom:5px">Nível de Preço</div>
+      <div style="display:flex;gap:6px">
+        <button id="btnNivelCheio" onclick="setNivelSolar('cheio')" style="flex:1;padding:5px 4px;border-radius:5px;font-size:8.5px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px solid var(--or);background:var(--or);color:#fff;transition:all .2s">Preço Cheio<br><span id="lblCheio" style="font-size:10px;font-weight:900"></span></button>
+        <button id="btnNivelMinimo" onclick="setNivelSolar('minimo')" style="flex:1;padding:5px 4px;border-radius:5px;font-size:8.5px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px solid #e67e22;background:transparent;color:#e67e22;transition:all .2s">Preço Mínimo<br><span id="lblMinimo" style="font-size:10px;font-weight:900"></span></button>
+      </div>
+    </div>
     <div class="frow">
       <div><label class="fl">Validade (dias)</label><input class="fi" type="number" id="validityDays" value="7"></div>
       <div><label class="fl">Prazo instalação (dias úteis)</label><input class="fi" type="number" id="prazoDias" value="20"></div>
@@ -489,12 +497,47 @@ function autoCalc(){
   if(kVp>0)$('projectValue').value=Math.round(kVp*precoKvp);
   // Micro: 1 microinversor a cada 4 placas
   if(isMicro&&qty>0)$('invQty').value=Math.ceil(qty/4);
+  // Atualiza strip de nível de preço
+  updateNivelSolarStrip();
+}
+
+function updateNivelSolarStrip(){
+  const p=getPrecoParams();
+  const qty=getN('modQty'),pwr=getN('modPower');
+  const kVp=qty&&pwr?qty*pwr/1000:0;
+  const strip=$('nivelPrecoStrip');
+  if(!strip)return;
+  if(!kVp){strip.style.display='none';return;}
+  const vCheio=Math.round(kVp*p.def);
+  const vMin=Math.round(kVp*p.min);
+  const fmtBR=v=>'R$\u00a0'+v.toLocaleString('pt-BR');
+  strip.style.display='block';
+  const lblC=$('lblCheio');const lblM=$('lblMinimo');
+  if(lblC)lblC.textContent=fmtBR(vCheio);
+  if(lblM)lblM.textContent=fmtBR(vMin);
+  // Highlight ativo
+  const pv=getN('projectValue');
+  const atMin=pv<=vMin+50&&pv>=vMin-50;
+  const btnC=$('btnNivelCheio');const btnM=$('btnNivelMinimo');
+  if(btnC){btnC.style.background=(!atMin)?'var(--or)':'transparent';btnC.style.color=(!atMin)?'#fff':'var(--or)';}
+  if(btnM){btnM.style.background=(atMin)?'#e67e22':'transparent';btnM.style.color=(atMin)?'#fff':'#e67e22';}
+}
+
+function setNivelSolar(nivel){
+  const p=getPrecoParams();
+  const qty=getN('modQty'),pwr=getN('modPower');
+  const kVp=qty&&pwr?qty*pwr/1000:0;
+  if(!kVp)return;
+  if(nivel==='cheio')$('projectValue').value=Math.round(kVp*p.def);
+  else $('projectValue').value=Math.round(kVp*p.min);
+  updateNivelSolarStrip();
 }
 document.querySelectorAll('input[name=invTipo]').forEach(r=>r.addEventListener('change',onInvTipoChange));
 $('modQty').addEventListener('input',autoCalc);
 $('modPower').addEventListener('input',autoCalc);
 $('precoKvp').addEventListener('input',autoCalc);
 $('monthlyGen').addEventListener('input',function(){this.dataset.manual='1';});
+$('projectValue').addEventListener('input',updateNivelSolarStrip);
 
 // ── DROPDOWN HANDLERS ──
 function onModModelChange(sel){
@@ -526,6 +569,7 @@ function resetForm(){
   document.querySelector('input[name=vend][value="lucas"]').checked=true;
   $('vendCustom').style.display='none';
   $('preview').style.display='none';$('prevEmpty').style.display='';
+  const _strip=$('nivelPrecoStrip');if(_strip)_strip.style.display='none';
 }
 
 // ── PAGE BUILDERS ──
@@ -588,6 +632,16 @@ function generateProposal(criarCard=true){
   if(!get('invModel'))erros.push('Modelo do inversor');
   if(erros.length){
     alert('Preencha os campos obrigatórios antes de gerar a proposta:\n\n• '+erros.join('\n• '));
+    return;
+  }
+
+  // ── VALIDAÇÃO PREÇO MÍNIMO ──
+  const _qty=getN('modQty'),_pwr=getN('modPower');
+  const _kVp=_qty&&_pwr?_qty*_pwr/1000:0;
+  const _pMin=getPrecoParams().min;
+  const _pv=getN('projectValue');
+  if(_kVp>0&&_pv>0&&_pv<_kVp*_pMin-50){
+    alert('⚠ ATENÇÃO: PREÇO ABAIXO DO MÍNIMO PERMITIDO\n\nO valor informado ('+fmtBRL(_pv)+') está abaixo do Preço Mínimo para este sistema ('+fmtBRL(Math.round(_kVp*_pMin))+').\n\nAjuste o valor antes de gerar a proposta.');
     return;
   }
 
