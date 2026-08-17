@@ -514,8 +514,8 @@ function autoSelectInverter(kVp,isAuto){
   const sel=$('invModelSel');
   if(!sel||sel.dataset.manual)return;
   if(!kVp){sel.value='';$('invModel').value='';$('invPower').value='';$('invQty').value='';return;}
-  // Permite oversize de até 30%: inversor kW >= kVp / 1.3
-  const needed=kVp/1.3;
+  // Permite oversize de até 40%: inversor kW >= kVp / 1.4
+  const needed=kVp/1.4;
   const inv=INV_AUTO.find(i=>i.kw>=needed);
   if(inv){$('invQty').value=1;sel.value=inv.v;onInvModelChange(sel,true);}
   else{// Dois inversores de 20kW para sistemas grandes
@@ -586,7 +586,14 @@ $('projectValue').addEventListener('input',updateNivelSolarStrip);
 function onModModelChange(sel){
   const inp=$('modModel');
   if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}
-  else{inp.style.display='none';inp.value=sel.value;const pw=sel.options[sel.selectedIndex].dataset.power;if(pw){$('modPower').value=pw;autoCalc();}}
+  else{
+    inp.style.display='none';inp.value=sel.value;
+    const pw=sel.options[sel.selectedIndex].dataset.power;
+    if(pw){$('modPower').value=pw;autoCalc();}
+    // Garantia automática por modelo
+    const isJinko=sel.value.toLowerCase().includes('jinko');
+    $('warPainel').value=isJinko?30:25;
+  }
 }
 function onInvModelChange(sel,isAuto){
   if(!isAuto)sel.dataset.manual='1'; // usuário escolheu manualmente — travar auto-select
