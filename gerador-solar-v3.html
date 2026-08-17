@@ -96,7 +96,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   position:absolute;inset:0;z-index:0;
   background:
     linear-gradient(to bottom, rgba(5,5,5,.15) 0%, rgba(5,5,5,.05) 25%, rgba(10,10,10,.55) 60%, rgba(10,10,10,.85) 85%),
-    url('https://raw.githubusercontent.com/refreshtime/lumengrid-portal/main/imagens/PESSOAS/instalador.png') center top / cover no-repeat;
+    url('https://raw.githubusercontent.com/refreshtime/lumengridbrasil/main/imagens/PESSOAS/instalador.png') center top / cover no-repeat;
   background-color:#1a0f05;
 }
 .capa-content{position:absolute;left:0;right:0;bottom:0;top:35%;z-index:10;padding:32px 48px 44px;display:flex;flex-direction:column;justify-content:flex-end}
@@ -463,7 +463,7 @@ const PARC_RATES=[
   {n:5,ac:0.0720},{n:6,ac:0.0820},{n:7,ac:0.0940},{n:8,ac:0.1060},
   {n:9,ac:0.1185},{n:10,ac:0.1310},{n:12,ac:0.1580},{n:18,ac:0.1780},{n:24,ac:0.2105},
 ];
-const IMG_BASE='https://raw.githubusercontent.com/refreshtime/lumengrid-portal/main/imagens/';
+const IMG_BASE='https://raw.githubusercontent.com/refreshtime/lumengridbrasil/main/imagens/';
 
 // ── HELPERS ──
 const $=(id)=>document.getElementById(id);
@@ -701,7 +701,7 @@ function generateProposal(criarCard=true){
 
   const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
   const descontoAvista=get('descontoAvista')||'';
-  const fotoUrl=get('fotoUrl')||(hasWallbox?IMG_BASE+'handshake.png':isMicro?IMG_BASE+'hibrido.png':IMG_BASE+'familia.png');
+  const fotoUrl=get('fotoUrl')||(hasWallbox?IMG_BASE+'PESSOAS/handshake.png':isMicro?IMG_BASE+'PROJETOS/capa-hibrido.png':IMG_BASE+'PESSOAS/familia.png');
   const waFoneDigits=vendFone.replace(/\D/g,'');
   const waMsg=encodeURIComponent('Olá, '+vendNome+'. Gostaria de conversar sobre a proposta de energia solar preparada para '+name+'.');
   const waUrl=waFoneDigits?'https://wa.me/55'+waFoneDigits+'?text='+waMsg:'';
@@ -968,7 +968,7 @@ function generateProposal(criarCard=true){
       <div class="pay-img-box" style="flex:1;display:flex;flex-direction:column;min-height:0">
         <div class="pay-img-lbl">Formas de Pagamento</div>
         <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:4px 0">
-          <img src="${IMG_BASE}formas_pagamento.jpg" alt="Formas de pagamento" style="max-width:100%;max-height:100%;object-fit:contain;display:block">
+          <img src="${IMG_BASE}PROCESSO/formas-pagamento.png" alt="Formas de pagamento" style="max-width:100%;max-height:100%;object-fit:contain;display:block">
         </div>
       </div>
     </div>
