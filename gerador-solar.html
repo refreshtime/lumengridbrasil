@@ -571,11 +571,6 @@ function setNivelSolar(nivel){
   updateNivelSolarStrip();
 }
 document.querySelectorAll('input[name=invTipo]').forEach(r=>r.addEventListener('change',onInvTipoChange));
-// Inicializa modModel e invModel com o valor default dos selects
-(function initDropdowns(){
-  const ms=$('modModelSel');if(ms&&ms.value&&ms.value!=='custom')onModModelChange(ms);
-  const is=$('invModelSel');if(is&&is.value&&is.value!=='custom')onInvModelChange(is,true);
-})();
 $('modQty').addEventListener('input',autoCalc);
 $('modPower').addEventListener('input',autoCalc);
 $('precoKvp').addEventListener('input',autoCalc);
@@ -607,6 +602,16 @@ function onInvModelChange(sel,isAuto){
 }
 $('hasWallbox').addEventListener('change',function(){$('wallboxFields').style.display=this.checked?'':'none';});
 document.querySelectorAll('input[name=vend]').forEach(r=>r.addEventListener('change',function(){$('vendCustom').style.display=this.value==='custom'?'':'none';}));
+
+// Inicializa após o browser restaurar estado do formulário
+window.addEventListener('load',function(){
+  const ms=$('modModelSel');
+  if(ms){
+    // Garante Jinko como padrão se nada selecionado
+    if(!ms.value||ms.value==='')ms.selectedIndex=1;
+    if(ms.value&&ms.value!=='custom')onModModelChange(ms);
+  }
+});
 
 // ── RESET ──
 function resetForm(){
@@ -683,7 +688,11 @@ function generateProposal(criarCard=true){
   // ── VALIDAÇÃO OBRIGATÓRIA ──
   const erros=[];
   if(!getN('modQty'))erros.push('Quantidade de módulos (placas)');
+  // Sincroniza modModel com o select se estiver vazio
+  if(!get('modModel')){const ms=$('modModelSel');if(ms&&ms.value&&ms.value!=='custom')onModModelChange(ms);}
   if(!get('modModel'))erros.push('Modelo do módulo (placa)');
+  // Sincroniza invModel com o select se estiver vazio
+  if(!get('invModel')){const is=$('invModelSel');if(is&&is.value&&is.value!=='custom')onInvModelChange(is,true);}
   if(!get('invModel'))erros.push('Modelo do inversor');
   if(erros.length){
     alert('Preencha os campos obrigatórios antes de gerar a proposta:\n\n• '+erros.join('\n• '));
