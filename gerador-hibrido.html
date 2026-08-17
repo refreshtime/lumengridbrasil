@@ -1586,9 +1586,8 @@ function printPDF(){
   if(!pages.length){alert('Gere a proposta antes de imprimir.');return;}
   const cliente=(get('clientName')||'Cliente').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9\s]/g,'').trim().toUpperCase().replace(/\s+/g,' ');
   const orig=document.title;
-  document.title='Proposta LumenGrid - '+cliente+' - HIBRIDO';
-  window.print();
-  document.title=orig;
+  document.title='Proposta Híbrida LumenGrid - '+cliente;
+  setTimeout(()=>{window.print();setTimeout(()=>{document.title=orig;},1500);},120);
 }
 
 // ── AUTO CALC ──
