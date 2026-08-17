@@ -510,18 +510,19 @@ const INV_AUTO=[
   {v:'GoodWe Premium On-Grid 18kW',  kw:18},
   {v:'GoodWe Premium On-Grid 20kW',  kw:20},
 ];
-function autoSelectInverter(kVp,isAuto){
+function autoSelectInverter(kVp){
   const sel=$('invModelSel');
   if(!sel||sel.dataset.manual)return;
   if(!kVp){sel.value='';$('invModel').value='';$('invPower').value='';$('invQty').value='';return;}
   // Permite oversize de até 40%: inversor kW >= kVp / 1.4
   const needed=kVp/1.4;
-  const inv=INV_AUTO.find(i=>i.kw>=needed);
-  if(inv){$('invQty').value=1;sel.value=inv.v;onInvModelChange(sel,true);}
-  else{// Dois inversores de 20kW para sistemas grandes
-    const last=INV_AUTO[INV_AUTO.length-1];
-    $('invQty').value=2;sel.value=last.v;onInvModelChange(sel,true);
-  }
+  const inv=INV_AUTO.find(i=>i.kw>=needed)||INV_AUTO[INV_AUTO.length-1];
+  const qty=INV_AUTO.find(i=>i.kw>=needed)?1:2;
+  // Evitar recursão: setar diretamente sem chamar onInvModelChange
+  if(sel.value===inv.v&&$('invQty').value==qty)return;
+  $('invQty').value=qty;sel.value=inv.v;
+  $('invModel').value=inv.v;$('invPower').value=inv.kw;
+  document.querySelector('input[name=invTipo][value="string"]').checked=true;
 }
 function autoCalc(){
   const p=getPrecoParams();
@@ -534,7 +535,7 @@ function autoCalc(){
   if(kVp>0)$('projectValue').value=Math.round(kVp*precoKvp);
   // Micro: 1 microinversor a cada 4 placas
   if(isMicro&&qty>0)$('invQty').value=Math.ceil(qty/4);
-  else if(!isMicro)autoSelectInverter(kVp,true);
+  else if(!isMicro)autoSelectInverter(kVp);
   // Atualiza strip de nível de preço
   updateNivelSolarStrip();
 }
