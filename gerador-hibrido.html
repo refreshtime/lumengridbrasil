@@ -258,6 +258,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
         <option value="0">GoodWe GW5K — 5 kW · Jinko 620W</option>
         <option value="1">GoodWe GW7.5K — 7,5 kW · Jinko 620W</option>
         <option value="2">Sofar HYD-7.5K — 7,5 kW · Jinko 620W</option>
+        <option value="3">GoodWe GW12K Trifásico — 12 kW · Leapton 600W</option>
       </select>
     </div>
     <div>
@@ -321,6 +322,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <option value="Maxeon Bifacial PERC 550W" data-power="550">Maxeon Bifacial PERC 550W</option>
       <option value="Ronma Solar N-Type 590W Black Frame" data-power="590">Ronma Solar N-Type 590W Black Frame</option>
       <option value="Leapton LP182-199-M-66-NB-590W Bifacial 590W Frame Composto" data-power="590">Leapton Bifacial 590W Frame Composto (22.84%)</option>
+      <option value="Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)" data-power="600">Leapton Bifacial 600W Frame Composto (23.22%)</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="modModel" placeholder="Modelo personalizado" style="display:none">
@@ -337,6 +339,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <option value="FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW" data-power="5.7">FoxESS US Híbrido Bifásico 5.7kW</option>
       <option value="Sofar HYD-5K-LSP1 Híbrido Bifásico 127/220V 5kW" data-power="5">Sofar HYD-5K-LSP1 Híbrido 5kW</option>
       <option value="Sofar HYD-7.5K-LSP1 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5">Sofar HYD-7.5K-LSP1 Híbrido 7.5kW</option>
+      <option value="GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW" data-power="12">GoodWe GW12K-ET-L-G10 Híbrido Trifásico 12kW</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none" oninput="autoCalcHibrido()">
@@ -684,8 +687,9 @@ function renderKitPreview(ki,ci,pl){
   const kit=KITS_DATA[ki];const conf=kit.configs[ci];
   const precos=dynKitPrecos(ki,ci,pl);
   const fmt=v=>'R$\u00a0'+Math.round(v).toLocaleString('pt-BR');
-  const invName=['GoodWe GW5K','GoodWe GW7.5K','Sofar HYD-7.5K'][ki];
-  $('kitPreviewInfo').innerHTML=`<strong>${invName}</strong> &nbsp;·&nbsp; ${pl} pl. Jinko 620W &nbsp;·&nbsp; ${conf.nbat} bat${conf.nbat>1?'s':''} · ${(kit.batKwh*conf.nbat).toFixed(0)} kWh &nbsp;·&nbsp; <strong>${(pl*0.62).toFixed(2)} kVp</strong>`;
+  const invName=['GoodWe GW5K','GoodWe GW7.5K','Sofar HYD-7.5K','GoodWe GW12K Tri'][ki];
+  const modLabel=kit.modPwr+'W '+(kit.modVal.includes('JINKO')||kit.modVal.includes('Jinko')?'Jinko':kit.modVal.includes('Leapton')?'Leapton':'módulo');
+  $('kitPreviewInfo').innerHTML=`<strong>${invName}</strong> &nbsp;·&nbsp; ${pl} pl. ${modLabel} &nbsp;·&nbsp; ${conf.nbat} bat${conf.nbat>1?'s':''} · ${(kit.batKwh*conf.nbat).toFixed(0)} kWh &nbsp;·&nbsp; <strong>${(pl*kit.modPwr/1000).toFixed(2)} kVp</strong>`;
   $('kitPreviewPrices').innerHTML=`
     <button class="btn bp" style="flex:1;font-size:9px;padding:6px 4px;text-align:center" onclick="applyKit(${ki},${ci},'cheio')">Cheio<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.cheio)}</span></button>
     <button class="btn" style="flex:1;font-size:9px;padding:6px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(${ki},${ci},'minimo')">Mínimo<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.minimo)}</span></button>
@@ -721,6 +725,13 @@ const KITS_DATA=[
    configs:[
      {nbat:1,qty:9, preco:43700,precoMin:41080,precoBomba:37300},
      {nbat:2,qty:16,preco:59740,precoMin:56160,precoBomba:50990},
+   ]},
+  // 3: GoodWe GW12K Trifásico
+  {invVal:'GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW',invPwr:12,
+   modVal:'Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)',modPwr:600,
+   batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:11,extras:850,
+   configs:[
+     {nbat:1,qty:11,preco:50140,precoMin:47130,precoBomba:42790},
    ]},
 ];
 
