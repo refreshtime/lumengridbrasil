@@ -838,11 +838,14 @@ function generateProposal(criarCard=true){
   // ── VALIDAÇÃO PREÇO MÍNIMO ──
   const _qty=getN('modQty'),_pwr=getN('modPower');
   const _kVp=_qty&&_pwr?_qty*_pwr/1000:0;
-  const _pMin=getPrecoParams().min;
   const _pv=getN('projectValue');
-  if(_kVp>0&&_pv>0&&_pv<_kVp*_pMin-50){
-    alert('⚠ ATENÇÃO: PREÇO ABAIXO DO MÍNIMO PERMITIDO\n\nO valor informado ('+fmtBRL(_pv)+') está abaixo do Preço Mínimo para este sistema ('+fmtBRL(Math.round(_kVp*_pMin))+').\n\nAjuste o valor antes de gerar a proposta.');
-    return;
+  if(_qty>0&&_pv>0){
+    const{isJinko:_isJ,isMicro:_isM}=_getModFlags();
+    const _kp=getKitPrecos(_qty,_isJ,_isM);
+    if(_pv<_kp.minimo-50){
+      alert('⚠ ATENÇÃO: PREÇO ABAIXO DO MÍNIMO PERMITIDO\n\nO valor informado ('+fmtBRL(_pv)+') está abaixo do Preço Mínimo para este sistema ('+fmtBRL(_kp.minimo)+').\n\nAjuste o valor antes de gerar a proposta.');
+      return;
+    }
   }
 
   const name=get('clientName')||'Cliente';
