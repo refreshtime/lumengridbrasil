@@ -642,7 +642,7 @@ function numPorExtenso(v){
   const cent=Math.round((v-inteiro)*100);
   const n=numInt(inteiro);
   const c=cent>0?' e '+numInt(cent)+' centavo'+(cent!==1?'s':''):'';
-  return n+' real'+(inteiro!==1?'s es':'')+c;
+  return n+' '+(inteiro===1?'real':'reais')+c;
 }
 function numInt(n){
   if(n===0)return'zero';
@@ -652,8 +652,15 @@ function numInt(n){
   if(n===100)return'cem';
   if(n<20)return u[n];
   if(n<100)return d[Math.floor(n/10)]+(n%10?' e '+u[n%10]:'');
-  const r=n%100;
-  return c[Math.floor(n/100)]+(r?' e '+(r<20?u[r]:d[Math.floor(r/10)]+(r%10?' e '+u[r%10]:'')):'');
+  if(n<1000){const r=n%100;return c[Math.floor(n/100)]+(r?' e '+(r<20?u[r]:d[Math.floor(r/10)]+(r%10?' e '+u[r%10]:'')):'');}
+  if(n<1000000){
+    const mil=Math.floor(n/1000),r=n%1000;
+    const pre=mil===1?'mil':numInt(mil)+' mil';
+    return pre+(r?(r<100?' e ':' ')+numInt(r):'');
+  }
+  const mi=Math.floor(n/1000000),r=n%1000000;
+  const pre=mi===1?'um milhão':numInt(mi)+' milhões';
+  return pre+(r?(r<100000?' e ':' ')+numInt(r):'');
 }
 function numPorExtensoInt(n){return numInt(n);}
 
