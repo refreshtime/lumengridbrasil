@@ -1,30 +1,42 @@
 # LUMENGRID — Instruções para Claude
 
+## Repositório e Deploy
+
+- Git repo hospedado em lumengridbrasil.com.br
+- `portal.html` = painel central de navegação — todos os links devem ser acessíveis a partir dele
+- URL: https://lumengridbrasil.com.br/portal.html
+
 ## Estrutura do Projeto
 
 ```
 LUMENGRID/
-├── index.html              # Página inicial / landing
-├── site.html               # Site principal
-├── login.html              # Login do portal
-├── portal.html             # Portal do cliente
-├── dashboard.html          # Dashboard interno
-├── CRM_LumenGrid.html      # CRM
-├── solicitacoes.html       # Solicitações
-├── indicacao.html          # Programa de indicação
-├── margem.html             # Cálculo de margem
-├── contrato.html           # Gerador de contratos
-├── gerador.html            # Gerador solar (backup original)
-├── gerador-solar-v2.html   # Gerador On-Grid v2
-├── gerador-solar-v3.html   # Gerador On-Grid v3 (mais recente)
-├── gerador-hibrido.html    # Gerador Híbrido
+├── index.html                  # Página inicial / landing
+├── site.html                   # Site principal
+├── login.html                  # Login do portal
+├── portal.html                 # Painel central de navegação
+├── dashboard.html              # Dashboard interno
+├── CRM_LumenGrid.html          # CRM
+├── solicitacoes.html           # Solicitações
+├── indicacao.html              # Programa de indicação
+├── margem.html                 # Cálculo de margem
+├── contrato.html               # Gerador de contratos
+├── gerador.html                # Gerador solar (backup original — nunca sobrescrever)
+├── gerador-solar.html          # Gerador On-Grid
+├── gerador-solar-v2.html       # Gerador On-Grid v2
+├── gerador-solar-v3.html       # Gerador On-Grid v3 (mais recente)
+├── gerador-hibrido.html        # Gerador Híbrido
+├── arte_etiqueta_inversor.html
+├── post01_bemvindo.html
+├── post02_missao.html
 ├── MANUAL_CRM.html
 ├── MANUAL_LUCAS.html
-├── GUIA_DESIGN_LUMENGRID.html
+├── CNAME
+├── alteração FINANCEIRO.md
 ├── CODIGOS GS/
-│   ├── Codigo.gs           # Backend principal
+│   ├── Codigo.gs                   # Backend principal
 │   ├── CRM_Codigo.gs
 │   ├── PARCEIROS_Codigo.gs
+│   ├── PARCEIROS_Codigo_antigo.gs
 │   ├── CONTRATOS_Codigo.gs
 │   └── FINANCEIRO_Codigo.gs
 ├── FACEBOOK/
@@ -32,21 +44,52 @@ LUMENGRID/
 │   ├── facebook_capa.html
 │   └── facebook_pagina.html
 ├── INSTAGRAM LUMENGRID/
-│   ├── POSTS/              # Posts sem imagem
-│   └── POSTS COM IMAGENS - GPT/  # Posts com imagem gerada por IA
+│   ├── GUIA_DESIGN_POSTS.md
+│   ├── PLANEJAMENTO_FEED.md
+│   ├── MANUAL_ORGANIZACAO.html
+│   ├── legendas.md
+│   ├── PUBLICACOES/            # Posts finalizados e publicados
+│   ├── RASCUNHOS/              # Posts em desenvolvimento
+│   ├── POSTS PARA POSTAR/      # Prontos, aguardando postagem
+│   ├── WPP/                    # Artes para WhatsApp
+│   └── _SCRIPTS/               # Scripts de automação
 ├── PARCEIROS/
 │   ├── michael.html
-│   └── jessica.html
-├── propostas/
-│   └── giovani.html
-└── imagens/                # Assets visuais
+│   ├── jessica.html
+│   ├── ddeg.html
+│   └── orlando.html
+├── RELATORIOS/
+│   └── relatorio_visita_tecnica.html
+├── DESPESAS/
+├── FOTOS PARA SITE/
+└── imagens/                    # Assets visuais
+    ├── LOGOS/
+    ├── PESSOAS/
+    ├── PROJETOS/
+    ├── TECNOLOGIA/
+    ├── PROCESSO/
+    └── NAO_UTILIZADAS/
 ```
 
 ## Regras Obrigatórias
 
-- Todo arquivo HTML deve ter rodape "Feito por Domani Consultoria"
+- Todo arquivo HTML deve ter rodapé "Feito por Domani Consultoria"
 - Sempre que editar o frontend, verificar se o backend correspondente em `CODIGOS GS/` precisa ser atualizado
 - Nunca sobrescrever `gerador.html` (é o backup original)
+- **`gerador-solar.html` = URL canônica pública** (`lumengridbrasil.com.br/gerador-solar.html`). Sempre mantê-lo sincronizado com `gerador-solar-v3.html`. Ao editar qualquer um deles, copiar para o outro: `cp gerador-solar-v3.html gerador-solar.html`
+
+## Workflow de Versionamento
+
+Antes de qualquer edição:
+1. Criar cópia local da versão atual como backup
+2. Fazer as alterações
+3. Subir para o repositório (`git push`)
+4. Após confirmar que subiu com sucesso, perguntar ao usuário se pode apagar a versão anterior local
+
+## Verificação de Bugs
+
+- Sempre que for feita uma alteração em qualquer arquivo, passar um agente revisando o arquivo alterado em busca de bugs antes de finalizar
+- A revisão deve checar: lógica quebrada, referências a arquivos inexistentes, JS com erros de sintaxe, e consistência com o backend correspondente
 
 ## Calculos do Gerador Solar
 
@@ -59,5 +102,5 @@ LUMENGRID/
 
 ## Design
 
-- Consultar `GUIA_DESIGN_LUMENGRID.html` para paleta de cores, tipografia e padroes visuais
-- Posts Instagram: ver `INSTAGRAM LUMENGRID/GUIA_DESIGN_POSTS.md`
+- Posts Instagram: consultar `INSTAGRAM LUMENGRID/GUIA_DESIGN_POSTS.md`
+- Logo: `logo-icone.png` com glow filter laranja + HTML "LUMEN"(#F26522) + "GRID"(#FAFAFA) + "Energia Inteligente" (8px laranja)

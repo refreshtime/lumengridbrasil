@@ -279,7 +279,7 @@ a{text-decoration:none;color:inherit}
 /* ━━━ USER COLORS ━━━ */
 .c-comercial{color:var(--gold-d)}
 .c-lucas{color:var(--teal)}
-.c-giovani{color:#2563EB}
+.c-kelly{color:#2563EB}
 .c-hingrid{color:#7C3AED}
 
 /* ━━━ MODALS ━━━ */
@@ -682,9 +682,9 @@ tbody tr td:first-child{font-weight:700}
       <div class="lg-avatar av-l">L</div>
       <div class="lg-uname">Lucas</div>
     </div>
-    <div class="lg-user" onclick="selectUser('Giovani')">
-      <div class="lg-avatar av-g">G</div>
-      <div class="lg-uname">Giovani</div>
+    <div class="lg-user" onclick="selectUser('Kelly')">
+      <div class="lg-avatar av-g">K</div>
+      <div class="lg-uname">Kelly</div>
     </div>
     <div class="lg-user" onclick="selectUser('Hingrid')">
       <div class="lg-avatar av-h">H</div>
@@ -779,7 +779,7 @@ tbody tr td:first-child{font-weight:700}
         <button class="kf kf-all on" onclick="filterKanban('all',this)">Todos</button>
         <button class="kf kf-cl" onclick="filterKanban('Comercial Lumen',this)">Comercial</button>
         <button class="kf kf-l" onclick="filterKanban('Lucas',this)">Lucas</button>
-        <button class="kf kf-g" onclick="filterKanban('Giovani',this)">Giovani</button>
+        <button class="kf kf-g" onclick="filterKanban('Kelly',this)">Kelly</button>
         <button class="kf kf-h" onclick="filterKanban('Hingrid',this)">Hingrid</button>
       </div>
     </div>
@@ -942,7 +942,7 @@ tbody tr td:first-child{font-weight:700}
         </div>
         <div class="fg"><div class="fg-lbl">Responsável</div>
           <select class="fg-sel" id="af-resp">
-            <option>Comercial Lumen</option><option>Lucas</option><option>Giovani</option><option>Hingrid</option>
+            <option>Comercial Lumen</option><option>Lucas</option><option>Kelly</option><option>Hingrid</option>
           </select>
         </div>
         <div class="fg"><div class="fg-lbl">Valor Estimado (R$)</div><input class="fg-inp" id="af-valor" type="number" placeholder="25000"></div>
@@ -1017,7 +1017,7 @@ tbody tr td:first-child{font-weight:700}
         <div class="fg"><div class="fg-lbl">Data Desejada</div><input class="fg-inp" id="srv-data" type="date"></div>
         <div class="fg"><div class="fg-lbl">Responsável</div>
           <select class="fg-sel" id="srv-resp">
-            <option>Comercial Lumen</option><option>Lucas</option><option>Giovani</option><option>Hingrid</option>
+            <option>Comercial Lumen</option><option>Lucas</option><option>Kelly</option><option>Hingrid</option>
           </select>
         </div>
         <div class="fg af-full"><div class="fg-lbl">Observações</div><textarea class="fg-inp" id="srv-obs" rows="2" placeholder="Detalhes do serviço..."></textarea></div>
@@ -1231,17 +1231,17 @@ const SERVICE_SUBTASKS = {
   3: ['Relatório de serviço gerado','Pagamento recebido','NF emitida','Registro atualizado no sistema'],
 };
 
-const USERS = ['Comercial Lumen','Lucas','Giovani','Hingrid'];
+const USERS = ['Comercial Lumen','Lucas','Kelly','Hingrid'];
 const ADMINS = ['Comercial Lumen'];
-const PASSWORDS = {'Comercial Lumen':'Lumen@2026','Lucas':'Lucas@2026','Giovani':'Giovani@2026','Hingrid':'Lumen@2026'};
-const USER_COLORS = {'Comercial Lumen':'#F26522','Lucas':'#0D9488','Giovani':'#3B82F6','Hingrid':'#8B5CF6'};
+const PASSWORDS = {'Comercial Lumen':'Lumen@2026','Lucas':'Lucas@2026','Kelly':'Kelly@2026','Hingrid':'Lumen@2026'};
+const USER_COLORS = {'Comercial Lumen':'#F26522','Lucas':'#0D9488','Kelly':'#3B82F6','Hingrid':'#8B5CF6'};
 const USER_GRADIENTS = {
   'Comercial Lumen':'linear-gradient(135deg,#F47A3A,#C94E0F)',
   'Lucas':'linear-gradient(135deg,#34D399,#059669)',
-  'Giovani':'linear-gradient(135deg,#60A5FA,#2563EB)',
+  'Kelly':'linear-gradient(135deg,#60A5FA,#2563EB)',
   'Hingrid':'linear-gradient(135deg,#A78BFA,#7C3AED)',
 };
-const USER_INITIALS = {'Comercial Lumen':'C','Lucas':'L','Giovani':'G','Hingrid':'H'};
+const USER_INITIALS = {'Comercial Lumen':'C','Lucas':'L','Kelly':'K','Hingrid':'H'};
 
 let currentUser = null;
 let kanbanFilter = 'all';
@@ -1639,7 +1639,7 @@ function renderKanban() {
 
   // OPORTUNIDADE FUTURA
   const ofLeads = leads.filter(l=>l.stage===14);
-  if (ofLeads.length > 0) {
+  {
     html += `<div class="phase-sep" style="margin-top:20px"><span class="phase-tag" style="background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE">⏳ Oportunidade Futura (${ofLeads.length})</span><div class="ph-line"></div></div>`;
     html += `<div class="kb-cols">`;
     const s14 = STAGES[14];

@@ -248,102 +248,30 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
 <!-- ── KITS PRÉ-DEFINIDOS ── -->
 <div style="margin:-20px -18px 20px;padding:16px 18px 18px;background:linear-gradient(135deg,rgba(232,100,26,.06),rgba(232,100,26,.02));border-bottom:2px solid rgba(232,100,26,.25)">
-  <div class="fs-title" style="margin-bottom:6px">&#9889; Kits Pré-Definidos — Inicie aqui</div>
-  <div style="font-size:8px;color:var(--uim);margin-bottom:12px;line-height:1.55">
-    Selecione o nível de preço antes de aplicar o kit.<br>
-    <span style="color:#e74c3c;font-weight:700">Preço Bomba</span> exige confirmação e somente após visita técnica.
+  <div class="fs-title" style="margin-bottom:10px">&#9889; Kits Pré-Definidos — Inicie aqui</div>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
+    <div>
+      <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Inversor</div>
+      <select id="kitInvSel" class="fi" style="width:100%;font-size:11px;padding:7px 10px" onchange="onKitInvChange()">
+        <option value="">— Selecionar Inversor —</option>
+        <option value="0">GoodWe GW5K — 5 kW · Jinko 620W</option>
+        <option value="1">GoodWe GW7.5K — 7,5 kW · Jinko 620W</option>
+        <option value="2">Sofar HYD-7.5K — 7,5 kW · Jinko 620W</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Baterias</div>
+      <select id="kitBatSel" class="fi" style="width:100%;font-size:11px;padding:7px 10px" onchange="onKitBatChange()" disabled>
+        <option value="">— Selecionar Baterias —</option>
+      </select>
+    </div>
   </div>
 
-  <!-- GOODWE -->
-  <div style="margin-bottom:14px">
-    <div style="font-size:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--uit);margin-bottom:8px;display:flex;align-items:center;gap:8px">
-      <span style="flex:1;height:1px;background:var(--uib)"></span>GoodWe · Jinko 620W · Bateria GoodWe<span style="flex:1;height:1px;background:var(--uib)"></span>
-    </div>
-    <!-- GW5K -->
-    <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:5px">Inversor GW5K — 5 kW · 9 placas base</div>
-    <div style="display:flex;flex-direction:column;gap:6px">
-      <!-- GW5K 1 bat -->
-      <div style="background:#fff;border:1px solid var(--uib);border-radius:6px;padding:8px 10px">
-        <div style="font-size:8.5px;font-weight:700;color:var(--uit);margin-bottom:5px">1 Bat · 5 kWh</div>
-        <div style="display:flex;gap:4px">
-          <button class="btn bp" style="flex:1;font-size:9px;padding:5px 4px;text-align:center" onclick="applyKit(0,0,'cheio')">Cheio<br><span style="font-size:10px;font-weight:900">R$41.446</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(0,0,'minimo')">Mínimo<br><span style="font-size:10px;font-weight:900">R$37.336</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(0,0,'bomba')">Bomba<br><span style="font-size:10px;font-weight:900">R$33.900</span></button>
-        </div>
-      </div>
-      <!-- GW5K 2 bat -->
-      <div style="background:#fff;border:1px solid var(--uib);border-radius:6px;padding:8px 10px">
-        <div style="font-size:8.5px;font-weight:700;color:var(--uit);margin-bottom:5px">2 Bat · 10 kWh</div>
-        <div style="display:flex;gap:4px">
-          <button class="btn bp" style="flex:1;font-size:9px;padding:5px 4px;text-align:center" onclick="applyKit(0,1,'cheio')">Cheio<br><span style="font-size:10px;font-weight:900">R$48.446</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(0,1,'minimo')">Mínimo<br><span style="font-size:10px;font-weight:900">R$44.336</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(0,1,'bomba')">Bomba<br><span style="font-size:10px;font-weight:900">R$40.250</span></button>
-        </div>
-      </div>
-    </div>
-    <div style="font-size:7.5px;color:var(--uim);margin-top:4px;margin-bottom:10px">+R$850 por placa extra acima de 9</div>
-
-    <!-- GW7.5K -->
-    <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:5px">Inversor GW7.5K — 7,5 kW · 9 placas base</div>
-    <div style="display:flex;flex-direction:column;gap:6px">
-      <!-- GW7.5K 1 bat -->
-      <div style="background:#fff;border:1px solid var(--uib);border-radius:6px;padding:8px 10px">
-        <div style="font-size:8.5px;font-weight:700;color:var(--uit);margin-bottom:5px">1 Bat · 5 kWh</div>
-        <div style="display:flex;gap:4px">
-          <button class="btn bp" style="flex:1;font-size:9px;padding:5px 4px;text-align:center" onclick="applyKit(1,0,'cheio')">Cheio<br><span style="font-size:10px;font-weight:900">R$47.000</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(1,0,'minimo')">Mínimo<br><span style="font-size:10px;font-weight:900">R$43.500</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(1,0,'bomba')">Bomba<br><span style="font-size:10px;font-weight:900">R$39.490</span></button>
-        </div>
-      </div>
-      <!-- GW7.5K 2 bat -->
-      <div style="background:#fff;border:1px solid var(--uib);border-radius:6px;padding:8px 10px">
-        <div style="font-size:8.5px;font-weight:700;color:var(--uit);margin-bottom:5px">2 Bat · 10 kWh</div>
-        <div style="display:flex;gap:4px">
-          <button class="btn bp" style="flex:1;font-size:9px;padding:5px 4px;text-align:center" onclick="applyKit(1,1,'cheio')">Cheio<br><span style="font-size:10px;font-weight:900">R$54.270</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(1,1,'minimo')">Mínimo<br><span style="font-size:10px;font-weight:900">R$52.000</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(1,1,'bomba')">Bomba<br><span style="font-size:10px;font-weight:900">R$47.210</span></button>
-        </div>
-      </div>
-      <!-- GW7.5K 3 bat -->
-      <div style="background:#fff;border:1px solid var(--uib);border-radius:6px;padding:8px 10px">
-        <div style="font-size:8.5px;font-weight:700;color:var(--uit);margin-bottom:5px">3 Bat · 15 kWh</div>
-        <div style="display:flex;gap:4px">
-          <button class="btn bp" style="flex:1;font-size:9px;padding:5px 4px;text-align:center" onclick="applyKit(1,2,'cheio')">Cheio<br><span style="font-size:10px;font-weight:900">R$61.000</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(1,2,'minimo')">Mínimo<br><span style="font-size:10px;font-weight:900">R$58.700</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(1,2,'bomba')">Bomba<br><span style="font-size:10px;font-weight:900">R$52.520</span></button>
-        </div>
-      </div>
-    </div>
-    <div style="font-size:7.5px;color:var(--uim);margin-top:4px">+R$850 por placa extra acima de 9</div>
-  </div>
-
-  <!-- SOFAR -->
-  <div style="margin-bottom:14px">
-    <div style="font-size:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--uit);margin-bottom:8px;display:flex;align-items:center;gap:8px">
-      <span style="flex:1;height:1px;background:var(--uib)"></span>Sofar · Jinko 620W · Bateria GoodWe<span style="flex:1;height:1px;background:var(--uib)"></span>
-    </div>
-    <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:5px">Inversor HYD-7.5K — 7,5 kW</div>
-    <div style="display:flex;flex-direction:column;gap:6px">
-      <!-- Sofar 1 bat, 9pl -->
-      <div style="background:#fff;border:1px solid var(--uib);border-radius:6px;padding:8px 10px">
-        <div style="font-size:8.5px;font-weight:700;color:var(--uit);margin-bottom:5px">1 Bat · 9 placas · 5 kWh</div>
-        <div style="display:flex;gap:4px">
-          <button class="btn bp" style="flex:1;font-size:9px;padding:5px 4px;text-align:center" onclick="applyKit(2,0,'cheio')">Cheio<br><span style="font-size:10px;font-weight:900">R$43.700</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(2,0,'minimo')">Mínimo<br><span style="font-size:10px;font-weight:900">R$41.080</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(2,0,'bomba')">Bomba<br><span style="font-size:10px;font-weight:900">R$37.300</span></button>
-        </div>
-      </div>
-      <!-- Sofar 2 bat, 16pl -->
-      <div style="background:#fff;border:1px solid var(--uib);border-radius:6px;padding:8px 10px">
-        <div style="font-size:8.5px;font-weight:700;color:var(--uit);margin-bottom:5px">2 Bat · 16 placas · 10 kWh</div>
-        <div style="display:flex;gap:4px">
-          <button class="btn bp" style="flex:1;font-size:9px;padding:5px 4px;text-align:center" onclick="applyKit(2,1,'cheio')">Cheio<br><span style="font-size:10px;font-weight:900">R$59.740</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(2,1,'minimo')">Mínimo<br><span style="font-size:10px;font-weight:900">R$56.160</span></button>
-          <button class="btn" style="flex:1;font-size:9px;padding:5px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(2,1,'bomba')">Bomba<br><span style="font-size:10px;font-weight:900">R$50.990</span></button>
-        </div>
-      </div>
-    </div>
-    <div style="font-size:7.5px;color:var(--uim);margin-top:4px">+R$850 por placa extra acima do base</div>
+  <div id="kitPreviewCard" style="display:none;margin-bottom:10px">
+    <div id="kitPreviewInfo" style="font-size:8.5px;color:var(--uim);margin-bottom:8px;line-height:1.6;background:rgba(255,255,255,.04);border-radius:5px;padding:7px 9px;border:1px solid var(--uib)"></div>
+    <div id="kitPreviewPrices" style="display:flex;gap:4px"></div>
+    <div style="font-size:7.5px;color:var(--uim);margin-top:5px;line-height:1.5">Ajuste <strong>Qtd. Módulos</strong> no formulário abaixo — preço atualiza automaticamente.</div>
   </div>
 
   <div style="background:rgba(231,76,60,.08);border-left:3px solid #e74c3c;border-radius:4px;padding:8px 10px;font-size:8.5px;line-height:1.65;color:#c0392b">
@@ -545,7 +473,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="frg">
       <label class="frl"><input type="radio" name="vend" value="lucas" checked>Lucas Vieira</label>
       <label class="frl"><input type="radio" name="vend" value="hingrid">Hingrid Oliveira</label>
-      <label class="frl"><input type="radio" name="vend" value="giovani">Giovani</label>
+      <label class="frl"><input type="radio" name="vend" value="kelly">Kelly</label>
       <label class="frl"><input type="radio" name="vend" value="custom">Personalizado</label>
     </div>
     <div id="vendCustom" style="display:none">
@@ -707,6 +635,65 @@ function onBatModelChange(sel){
 // ── KITS PRÉ-DEFINIDOS ──
 let kitAtivo=false;
 let kitAtual=null;
+
+// Baterias disponíveis por inversor (ki → [{nbat, ci, label}])
+const KIT_BATS=[
+  [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh'}],
+  [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh'},{nbat:3,ci:2,label:'3 Baterias · 15 kWh'}],
+  [{nbat:1,ci:0,label:'1 Bateria · 5 kWh (9 placas)'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh (16 placas)'}],
+];
+
+// Calcula preços Cheio/Mínimo/Bomba para qualquer qtd de placas
+function dynKitPrecos(ki,ci,pl){
+  const kit=KITS_DATA[ki];const conf=kit.configs[ci];
+  const basePl=conf.qty||kit.baseQty||9;
+  const delta=pl-basePl;
+  const nbat=conf.nbat;
+  const margem=nbat>=5?0.33:nbat>=3?0.32:0.31;
+  const minDelta=Math.round(1010/(1-margem)/10)*10;
+  const bomDelta=Math.round(1010/0.76/10)*10;
+  const cheiDelta=Math.round(minDelta/0.94/10)*10;
+  return{cheio:conf.preco+delta*cheiDelta,minimo:conf.precoMin+delta*minDelta,bomba:conf.precoBomba+delta*bomDelta};
+}
+
+function onKitInvChange(){
+  const ki=parseInt($('kitInvSel').value);
+  const batSel=$('kitBatSel');
+  batSel.innerHTML='<option value="">— Selecionar Baterias —</option>';
+  $('kitPreviewCard').style.display='none';
+  if(isNaN(ki)){batSel.disabled=true;return;}
+  batSel.disabled=false;
+  KIT_BATS[ki].forEach(b=>{
+    const o=document.createElement('option');
+    o.value=JSON.stringify({ki,ci:b.ci});
+    o.textContent=b.label;
+    batSel.appendChild(o);
+  });
+}
+
+function onKitBatChange(){
+  const v=$('kitBatSel').value;
+  if(!v){$('kitPreviewCard').style.display='none';return;}
+  const{ki,ci}=JSON.parse(v);
+  const conf=KITS_DATA[ki].configs[ci];
+  const pl=conf.qty||KITS_DATA[ki].baseQty||9;
+  renderKitPreview(ki,ci,pl);
+}
+
+function renderKitPreview(ki,ci,pl){
+  const kit=KITS_DATA[ki];const conf=kit.configs[ci];
+  const precos=dynKitPrecos(ki,ci,pl);
+  const fmt=v=>'R$\u00a0'+Math.round(v).toLocaleString('pt-BR');
+  const invName=['GoodWe GW5K','GoodWe GW7.5K','Sofar HYD-7.5K'][ki];
+  $('kitPreviewInfo').innerHTML=`<strong>${invName}</strong> &nbsp;·&nbsp; ${pl} pl. Jinko 620W &nbsp;·&nbsp; ${conf.nbat} bat${conf.nbat>1?'s':''} · ${(kit.batKwh*conf.nbat).toFixed(0)} kWh &nbsp;·&nbsp; <strong>${(pl*0.62).toFixed(2)} kVp</strong>`;
+  $('kitPreviewPrices').innerHTML=`
+    <button class="btn bp" style="flex:1;font-size:9px;padding:6px 4px;text-align:center" onclick="applyKit(${ki},${ci},'cheio')">Cheio<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.cheio)}</span></button>
+    <button class="btn" style="flex:1;font-size:9px;padding:6px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(${ki},${ci},'minimo')">Mínimo<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.minimo)}</span></button>
+    <button class="btn" style="flex:1;font-size:9px;padding:6px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(${ki},${ci},'bomba')">Bomba<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.bomba)}</span></button>
+  `;
+  $('kitPreviewCard').style.display='block';
+}
+
 // precoMin = preço mínimo (31% margem s/ NEG)
 // precoBomba = custo direto / 0.76 (margem mínima 24% — somente após visita técnica)
 const KITS_DATA=[
@@ -765,14 +752,14 @@ function applyKit(ki,ci,nivel){
   $('isencaoICMS').checked=true;
   $('totalPower').value=(qty*kit.modPwr/1000).toFixed(2)+' kVp';
   if(!$('monthlyGen').dataset.manual)$('monthlyGen').value=Math.round(qty*65);
-  // Define preço conforme nível selecionado
-  const precoFinal=nivel==='bomba'?conf.precoBomba:nivel==='minimo'?conf.precoMin:conf.preco;
+  // Define preço via dynKitPrecos (respeita qtd de placas atual)
+  const precos=dynKitPrecos(ki,ci,qty);
+  const precoFinal=nivel==='bomba'?precos.bomba:nivel==='minimo'?precos.minimo:precos.cheio;
   $('projectValue').value=precoFinal;
-  // Atualiza indicador visual de nível
   const tag=$('projectValueTag');
   const nLabel=nivel==='bomba'?'BOMBA':nivel==='minimo'?'Mínimo':'Cheio';
-  if(tag)tag.textContent='kit · '+nLabel+' · +R$850/placa extra';
-  updateNivelIndicator(conf,nivel);
+  if(tag)tag.textContent='kit · '+nLabel+' · preço dinâmico';
+  updateNivelIndicator({preco:precos.cheio,precoMin:precos.minimo,precoBomba:precos.bomba},nivel);
   recalcAutonomy();
 }
 
@@ -821,12 +808,15 @@ function onBatQtyChange(){
       kitAtual={kit:kitAtual.kit,conf,nivel,ki:kitAtual.ki,ci};
       if(conf.qty)$('modQty').value=conf.qty;
       $('batteryKwh').value=(kitAtual.kit.batKwh*conf.nbat).toFixed(1);
-      const precoFinal=nivel==='bomba'?conf.precoBomba:nivel==='minimo'?conf.precoMin:conf.preco;
+      const pl=Math.max(1,getN('modQty')||conf.qty||kitAtual.kit.baseQty||9);
+      const precos=dynKitPrecos(kitAtual.ki,ci,pl);
+      const precoFinal=nivel==='bomba'?precos.bomba:nivel==='minimo'?precos.minimo:precos.cheio;
       $('projectValue').value=precoFinal;
       const tag=$('projectValueTag');
       const nLabel=nivel==='bomba'?'BOMBA':nivel==='minimo'?'Mínimo':'Cheio';
-      if(tag)tag.textContent='kit · '+nLabel+' · +R$850/placa extra';
-      updateNivelIndicator(conf,nivel);
+      if(tag)tag.textContent='kit · '+nLabel+' · preço dinâmico';
+      updateNivelIndicator({preco:precos.cheio,precoMin:precos.minimo,precoBomba:precos.bomba},nivel);
+      renderKitPreview(kitAtual.ki,ci,pl);
       recalcAutonomy();return;
     }else{kitAtivo=false;const el=$('kitNivelStrip');if(el)el.style.display='none';}
   }
@@ -914,6 +904,10 @@ function resetForm(){
   $('vendCustom').style.display='none';
   $('preview').style.display='none';$('prevEmpty').style.display='';
   const nivelEl=$('kitNivelStrip');if(nivelEl)nivelEl.style.display='none';
+  kitAtivo=false;kitAtual=null;
+  const invSelK=$('kitInvSel');if(invSelK)invSelK.selectedIndex=0;
+  const batSelK=$('kitBatSel');if(batSelK){batSelK.innerHTML='<option value="">— Selecionar Baterias —</option>';batSelK.disabled=true;}
+  const prevCard=$('kitPreviewCard');if(prevCard)prevCard.style.display='none';
   const sel=$('modModelSel');sel.selectedIndex=1;onModModelChange(sel);
   const isel=$('invModelSel');isel.selectedIndex=1;onInvModelChange(isel);
   equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
@@ -1036,7 +1030,7 @@ function generateProposal(criarCard){
   if(vendRad){
     if(vendRad.value==='lucas'){vendNome='Lucas Vieira';vendFone='(11) 94556-0188';}
     else if(vendRad.value==='hingrid'){vendNome='Hingrid Oliveira';vendFone='(11) 99817-9824';}
-    else if(vendRad.value==='giovani'){vendNome='Giovani';vendFone='';}
+    else if(vendRad.value==='kelly'){vendNome='Kelly';vendFone='';}
     else{vendNome=get('vendNomeCustom')||'Consultor';vendFone=get('vendFoneCustom')||'';}
   }
   const parceiroRad=document.querySelector('input[name=parceiro]:checked');
@@ -1600,12 +1594,18 @@ function printPDF(){
 // ── AUTO CALC ──
 function onModQtyChange(){
   if(kitAtivo&&kitAtual){
-    autoCalcHibrido();// atualiza totalPower/gen
-    const baseQty=kitAtual.conf.qty||kitAtual.kit.baseQty||9;
-    const extra=Math.max(0,getN('modQty')-baseQty);
-    // SEMPRE +850 por placa extra (independente do kit)
-    $('projectValue').value=kitAtual.conf.preco+extra*850;
-    const tag=$('projectValueTag');if(tag)tag.textContent='kit · +R$850/placa extra';
+    autoCalcHibrido();
+    const pl=Math.max(1,getN('modQty')||1);
+    const precos=dynKitPrecos(kitAtual.ki,kitAtual.ci,pl);
+    const nivel=kitAtual.nivel||'cheio';
+    const precoFinal=nivel==='bomba'?precos.bomba:nivel==='minimo'?precos.minimo:precos.cheio;
+    $('projectValue').value=precoFinal;
+    const tag=$('projectValueTag');
+    const nLabel=nivel==='bomba'?'BOMBA':nivel==='minimo'?'Mínimo':'Cheio';
+    if(tag)tag.textContent='kit · '+nLabel+' · preço dinâmico';
+    updateNivelIndicator({preco:precos.cheio,precoMin:precos.minimo,precoBomba:precos.bomba},nivel);
+    // Atualiza preview card com novo preço
+    renderKitPreview(kitAtual.ki,kitAtual.ci,pl);
   }else{kitAtivo=false;autoCalcHibrido();}
 }
 $('modQty').addEventListener('input',onModQtyChange);
