@@ -497,6 +497,32 @@ function onInvTipoChange(){
   if(tag)tag.textContent=p.label;
   autoCalc();
 }
+// Tabela de inversores GoodWe para auto-seleção por kWp
+const INV_AUTO=[
+  {v:'GoodWe Premium On-Grid 3kW',   kw:3},
+  {v:'GoodWe Premium On-Grid 3.3kW', kw:3.3},
+  {v:'GoodWe Premium On-Grid 5kW',   kw:5},
+  {v:'GoodWe Premium On-Grid 6kW',   kw:6},
+  {v:'GoodWe Premium On-Grid 8kW',   kw:8},
+  {v:'GoodWe Premium On-Grid 10kW',  kw:10},
+  {v:'GoodWe Premium On-Grid 12kW',  kw:12},
+  {v:'GoodWe Premium On-Grid 15kW',  kw:15},
+  {v:'GoodWe Premium On-Grid 18kW',  kw:18},
+  {v:'GoodWe Premium On-Grid 20kW',  kw:20},
+];
+function autoSelectInverter(kVp,isAuto){
+  const sel=$('invModelSel');
+  if(!sel||sel.dataset.manual)return;
+  if(!kVp){sel.value='';$('invModel').value='';$('invPower').value='';$('invQty').value='';return;}
+  // Permite oversize de até 30%: inversor kW >= kVp / 1.3
+  const needed=kVp/1.3;
+  const inv=INV_AUTO.find(i=>i.kw>=needed);
+  if(inv){$('invQty').value=1;sel.value=inv.v;onInvModelChange(sel,true);}
+  else{// Dois inversores de 20kW para sistemas grandes
+    const last=INV_AUTO[INV_AUTO.length-1];
+    $('invQty').value=2;sel.value=last.v;onInvModelChange(sel,true);
+  }
+}
 function autoCalc(){
   const p=getPrecoParams();
   const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
@@ -508,6 +534,7 @@ function autoCalc(){
   if(kVp>0)$('projectValue').value=Math.round(kVp*precoKvp);
   // Micro: 1 microinversor a cada 4 placas
   if(isMicro&&qty>0)$('invQty').value=Math.ceil(qty/4);
+  else if(!isMicro)autoSelectInverter(kVp,true);
   // Atualiza strip de nível de preço
   updateNivelSolarStrip();
 }
@@ -544,6 +571,11 @@ function setNivelSolar(nivel){
   updateNivelSolarStrip();
 }
 document.querySelectorAll('input[name=invTipo]').forEach(r=>r.addEventListener('change',onInvTipoChange));
+// Inicializa modModel e invModel com o valor default dos selects
+(function initDropdowns(){
+  const ms=$('modModelSel');if(ms&&ms.value&&ms.value!=='custom')onModModelChange(ms);
+  const is=$('invModelSel');if(is&&is.value&&is.value!=='custom')onInvModelChange(is,true);
+})();
 $('modQty').addEventListener('input',autoCalc);
 $('modPower').addEventListener('input',autoCalc);
 $('precoKvp').addEventListener('input',autoCalc);
@@ -556,7 +588,8 @@ function onModModelChange(sel){
   if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}
   else{inp.style.display='none';inp.value=sel.value;const pw=sel.options[sel.selectedIndex].dataset.power;if(pw){$('modPower').value=pw;autoCalc();}}
 }
-function onInvModelChange(sel){
+function onInvModelChange(sel,isAuto){
+  if(!isAuto)sel.dataset.manual='1'; // usuário escolheu manualmente — travar auto-select
   const inp=$('invModel');
   const opt=sel.options[sel.selectedIndex];
   const isMicroSel=opt?.dataset?.micro==='1';
@@ -576,6 +609,10 @@ function resetForm(){
   $('hasWallbox').checked=false;$('wallboxFields').style.display='none';
   $('wallboxModel').value='';$('wallboxNote').value='';
   $('monthlyGen').removeAttribute('data-manual');
+  const _is=$('invModelSel');if(_is){_is.value='';delete _is.dataset.manual;}
+  $('invModel').value='';$('invModel').style.display='none';
+  const _ms=$('modModelSel');if(_ms){_ms.value='JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)';onModModelChange(_ms);}
+
   document.querySelector('input[name=installType][value="Residencial"]').checked=true;
   document.querySelector('input[name=vend][value="lucas"]').checked=true;
   $('vendCustom').style.display='none';
