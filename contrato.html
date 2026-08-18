@@ -353,6 +353,13 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
   </div>
 
   <div class="fs">
+    <div class="fs-title">Documentos Anexos ao Contrato</div>
+    <div style="font-size:10px;color:rgba(255,255,255,.35);line-height:1.5;margin-bottom:10px">Cole links de Google Drive, Dropbox ou qualquer URL. Uma página de anexos clicável é gerada no final do contrato — os links funcionam no PDF também.</div>
+    <div id="anexosList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+    <button type="button" class="btn" style="background:transparent;border:1px dashed rgba(232,100,26,.4);color:rgba(232,100,26,.7);width:100%;font-size:10px;padding:8px" onclick="addAnexo()">+ Adicionar Documento Anexo</button>
+  </div>
+
+  <div class="fs">
     <div class="fs-title" style="display:flex;justify-content:space-between;align-items:center">
       Documentos do Cliente
       <span style="font-size:9px;font-weight:400;color:rgba(255,255,255,.4)">Exigidos para salvar no Drive</span>
@@ -530,7 +537,11 @@ function generateContract(){
   const obs=escapeHTML(ext('cObs'));
   const adendo=escapeHTML(ext('cAdendo'));
   const adendoTitulo=escapeHTML(ext('cAdendoTitulo'))||'Adendo ao Contrato';
-  const tot=adendo?7:6;
+  const anexos=[...document.querySelectorAll('.anexo-row')].map(r=>{
+    const ins=r.querySelectorAll('input');
+    return{nome:ins[0].value.trim(),url:ins[1].value.trim()};
+  }).filter(a=>a.nome&&a.url);
+  const tot=6+(adendo?1:0)+(anexos.length?1:0);
   const tipoSisVal=ext('tipoSistema')||'solar';
   const hasBat=tipoSisVal==='solar_bateria';
   const tipoSistemaOutroTxt=ext('tipoSistemaOutro')||'';
@@ -664,8 +675,45 @@ function generateContract(){
     '</div>'+
     footer(7,tot)+'</div>':'';
 
-    document.getElementById('prevPanel').innerHTML=pg1+pg2+pg3+pg4+pg5+pg6+pg7;
+  // PAGE ANEXOS (condicional)
+  const pgAnexosNum=6+(adendo?1:0)+1;
+  const pgAnexos=anexos.length?'<div class="cpage-cont">'+header()+
+    '<div style="text-align:center;margin-bottom:32px">'+
+      '<div style="display:inline-block;background:#fff8f2;border:2px solid #E8641A;border-radius:8px;padding:10px 28px;margin-bottom:10px">'+
+        '<span style="font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#E8641A">&#128206; DOCUMENTOS ANEXOS</span>'+
+      '</div>'+
+      '<div style="font-size:15px;font-weight:700;font-family:\'Montserrat\',sans-serif;text-transform:uppercase;letter-spacing:1px;color:#111;margin-top:8px">Documentos Vinculados ao Contrato</div>'+
+      '<div style="font-size:11px;color:#888;margin-top:4px;font-style:italic">Contrato N\u00BA '+num+' &mdash; '+cliNome+'</div>'+
+    '</div>'+
+    '<p style="font-size:11px;color:#555;margin-bottom:20px;text-align:justify">Os documentos listados abaixo integram o presente contrato e podem ser acessados pelos links indicados. As partes declaram ciência e concordância com o conteúdo de cada documento.</p>'+
+    anexos.map((a,i)=>
+      '<a href="'+a.url+'" target="_blank" style="display:flex;align-items:center;gap:14px;padding:14px 18px;margin-bottom:10px;background:#f9f9f9;border:1px solid #e0e0e0;border-left:4px solid #E8641A;border-radius:6px;text-decoration:none;color:#111;">'+
+        '<span style="font-size:22px;flex-shrink:0">&#128196;</span>'+
+        '<div style="flex:1;min-width:0">'+
+          '<div style="font-weight:700;font-size:13px;margin-bottom:3px;">'+(i+1)+'. '+a.nome+'</div>'+
+          '<div style="font-size:9px;color:#999;word-break:break-all;font-family:monospace;">'+a.url+'</div>'+
+        '</div>'+
+        '<span style="font-size:10px;font-weight:700;color:#E8641A;white-space:nowrap;flex-shrink:0">Acessar &#8599;</span>'+
+      '</a>'
+    ).join('')+
+    footer(pgAnexosNum,tot)+'</div>':'';
+
+    document.getElementById('prevPanel').innerHTML=pg1+pg2+pg3+pg4+pg5+pg6+pg7+pgAnexos;
   document.title = cliNome + ' - ' + num + ' - LUMENGRID';
+}
+
+function addAnexo(){
+  const list=document.getElementById('anexosList');
+  const row=document.createElement('div');
+  row.className='anexo-row';
+  row.style.cssText='background:#0a0c10;border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:6px;';
+  row.innerHTML=
+    '<input class="fi" style="margin-bottom:0" placeholder="Nome do documento (ex: Laudo Técnico, Data Sheet Módulo...)">'+
+    '<div style="display:flex;gap:6px;align-items:center">'+
+      '<input class="fi" style="margin-bottom:0;flex:1" placeholder="Link (Google Drive, Dropbox, URL...)">'+
+      '<button type="button" onclick="this.closest(\'.anexo-row\').remove()" style="background:rgba(255,80,80,.12);border:1px solid rgba(255,80,80,.3);color:rgba(255,100,100,.8);border-radius:5px;padding:6px 10px;cursor:pointer;font-size:13px;line-height:1;flex-shrink:0">✕</button>'+
+    '</div>';
+  list.appendChild(row);
 }
 
 function numPorExtenso(v){
