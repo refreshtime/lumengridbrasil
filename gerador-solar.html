@@ -319,6 +319,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none">
+    <div id="overloadInfo" style="display:none"></div>
     <label class="fl">Tipo de Inversor</label>
     <div class="frg">
       <label class="frl"><input type="radio" name="invTipo" value="string" checked>String / Convencional</label>
@@ -364,6 +365,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="frow">
       <div><label class="fl">Tarifa (R$/kWh)</label><input class="fi" type="number" id="tarifa" placeholder="Ex: 0.95" step="0.01"></div>
       <div><label class="fl">Economia mensal (R$) <span class="auto-tag">auto</span></label><input class="fi" type="number" id="ecoOverride" placeholder="Calculado auto"></div>
+    </div>
+    <div class="ftw" style="margin-bottom:10px">
+      <label class="ftog"><input type="checkbox" id="showGenPage" checked><span class="sl"></span></label>
+      <span class="ftl">Incluir página de Geração de Energia na proposta <span style="font-size:9px;color:rgba(0,0,0,.3);font-weight:400">(ativo por padrão)</span></span>
     </div>
   </div>
 
@@ -675,6 +680,7 @@ function autoCalc(){
   else if(!isMicro)autoSelectInverter(kVp);
   // Atualiza strip de nível de preço
   updateNivelSolarStrip();
+  calcOverload();
 }
 
 function updateNivelSolarStrip(){
@@ -712,6 +718,7 @@ $('modPower').addEventListener('input',autoCalc);
 $('precoKvp').addEventListener('input',autoCalc);
 $('monthlyGen').addEventListener('input',function(){this.dataset.manual='1';});
 $('projectValue').addEventListener('input',updateNivelSolarStrip);
+$('invPower').addEventListener('input',calcOverload);
 
 // ── DROPDOWN HANDLERS ──
 function onModModelChange(sel){
@@ -819,6 +826,50 @@ function buildChart(bill,genKwh,tarifa,minKwh,ecoMonthly){
   </div>`;
 }
 
+// ── OVERLOAD ──
+function calcOverload(){
+  const el=$('overloadInfo');if(!el)return;
+  const qty=getN('modQty'),pwr=getN('modPower'),invPwr=getN('invPower');
+  if(!qty||!pwr||!invPwr){el.style.display='none';return;}
+  const ov=((qty*pwr)/(invPwr*1000)-1)*100;
+  let c,t;
+  if(ov<0){c='#c0392b';t=`⚠ Inversor superdimensionado (placas = ${(qty*pwr/1000).toFixed(2)} kWp < inversor ${invPwr} kW)`;}
+  else if(ov<=40){c='#27ae60';t=`✓ Overload ${ov.toFixed(1)}% — adequado (≤ 40%)`;}
+  else if(ov<=55){c='#e67e22';t=`⚠ Overload ${ov.toFixed(1)}% — atenção (ideal até 40%)`;}
+  else{c='#c0392b';t=`✗ Overload ${ov.toFixed(1)}% — acima do limite seguro`;}
+  el.textContent=t;el.style.cssText=`display:block;margin-top:4px;font-size:11px;font-weight:700;color:${c};padding:4px 8px;background:${c}18;border-radius:4px;border-left:3px solid ${c}`;
+}
+
+// ── GERAÇÃO MÊS A MÊS ──
+function buildGenChart(genKwh){
+  if(!genKwh)return'';
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const factors=[1.08,1.06,1.02,0.97,0.93,0.91,0.93,0.97,1.00,1.04,1.06,1.09];
+  const vals=factors.map(f=>Math.round(genKwh*f));
+  const maxVal=Math.max(...vals,1);
+  const bars=months.map((m,i)=>{
+    const h=Math.round(76*vals[i]/maxVal);
+    return`<div class="bar-wrap">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;width:100%">
+        <div class="bar-inner" style="height:${h}px;background:var(--or)"></div>
+      </div>
+      <div class="bar-lbl">${m}</div>
+    </div>`;
+  }).join('');
+  const totalAnual=vals.reduce((a,b)=>a+b,0);
+  return`<div class="chart-wrap">
+    <div class="chart-title">Estimativa de Geração Mês a Mês</div>
+    <div class="chart-bars">${bars}</div>
+    <div class="chart-legend">
+      <div class="cleg"><div class="cleg-dot" style="background:var(--or)"></div>kWh gerado pelo sistema</div>
+    </div>
+    <div class="chart-summary">
+      <div class="csumitem"><div class="csum-val" style="color:var(--or)">${genKwh.toLocaleString('pt-BR')} kWh</div><div class="csum-lbl">Média mensal</div></div>
+      <div class="csumitem"><div class="csum-val" style="color:var(--ltext)">${totalAnual.toLocaleString('pt-BR')} kWh</div><div class="csum-lbl">Total anual estimado</div></div>
+    </div>
+  </div>`;
+}
+
 // ── MAIN GENERATE ──
 function generateProposal(criarCard=true){
   // ── VALIDAÇÃO OBRIGATÓRIA ──
@@ -888,7 +939,8 @@ function generateProposal(criarCard=true){
   const genKwhNum=parseFloat(String(genKwh))||0;
   const today=new Date().toLocaleDateString('pt-BR');
   const validUntil=new Date(Date.now()+validity*864e5).toLocaleDateString('pt-BR');
-  const tot=5;
+  const showGenPage=$('showGenPage')&&$('showGenPage').checked;
+  const tot=showGenPage?6:5;
   let pg=1;
 
   // Consultant
@@ -1148,6 +1200,72 @@ function generateProposal(criarCard=true){
     ${footer(today)}
   </div>`;
 
+  // ── PAGE 3B: GERAÇÃO DE ENERGIA ──
+  const co2Arvores=Math.round(co2/22);
+  const p3b=showGenPage?`<div class="page p-light">
+    ${corners()}
+    ${topbar(pg++,tot)}
+    <div class="p-body" style="justify-content:flex-start;gap:18px">
+      <div>
+        <div class="sec-eye">Geração de Energia</div>
+        <div class="sec-h2">O que seu sistema vai <span style="color:var(--or)">produzir</span></div>
+        <div class="sec-rule"></div>
+      </div>
+
+      <!-- 3 KPIs principais -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="background:#fff;border:1.5px solid var(--lborder);border-top:4px solid var(--or);border-radius:10px;padding:18px 14px;text-align:center">
+          <div style="font-size:9px;font-weight:800;color:var(--or);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Geração Mensal</div>
+          <div style="font-size:34px;font-weight:900;color:var(--ltext);line-height:1">${genKwhNum>0?genKwhNum.toLocaleString('pt-BR'):'—'}</div>
+          <div style="font-size:11px;font-weight:600;color:var(--lmuted);margin-top:4px">kWh / mês</div>
+        </div>
+        <div style="background:#fff;border:1.5px solid var(--lborder);border-top:4px solid var(--or);border-radius:10px;padding:18px 14px;text-align:center">
+          <div style="font-size:9px;font-weight:800;color:var(--or);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Geração Anual</div>
+          <div style="font-size:34px;font-weight:900;color:var(--ltext);line-height:1">${genAnual>0?genAnual.toLocaleString('pt-BR'):'—'}</div>
+          <div style="font-size:11px;font-weight:600;color:var(--lmuted);margin-top:4px">kWh / ano</div>
+        </div>
+        <div style="background:#fff;border:1.5px solid var(--lborder);border-top:4px solid #27ae60;border-radius:10px;padding:18px 14px;text-align:center">
+          <div style="font-size:9px;font-weight:800;color:#27ae60;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">CO₂ Evitado</div>
+          <div style="font-size:34px;font-weight:900;color:var(--ltext);line-height:1">${co2>0?(co2/1000).toFixed(1):'—'}</div>
+          <div style="font-size:11px;font-weight:600;color:var(--lmuted);margin-top:4px">ton CO₂ / ano</div>
+        </div>
+      </div>
+
+      <!-- Projeção de economia -->
+      ${ecoAnual?`
+      <div style="background:linear-gradient(135deg,rgba(232,100,26,.07),rgba(232,100,26,.03));border:1px solid rgba(232,100,26,.2);border-radius:10px;padding:16px 18px">
+        <div style="font-size:10px;font-weight:800;color:var(--or);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Projeção de Economia</div>
+        <div style="font-size:11px;color:var(--lmuted);margin-bottom:14px">Com geração própria de energia, veja quanto você pode economizar ao longo dos anos.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;margin-bottom:10px">
+          <div><div style="font-size:15px;font-weight:900;color:var(--ltext)">${fmtBRL(ecoAnual*5)}</div><div style="font-size:9px;color:var(--lmuted)">em 5 anos</div></div>
+          <div><div style="font-size:18px;font-weight:900;color:var(--ltext)">${fmtBRL(ecoAnual*10)}</div><div style="font-size:9px;color:var(--lmuted)">em 10 anos</div></div>
+          <div><div style="font-size:22px;font-weight:900;color:var(--or)">${fmtBRL(ecoAnual*25*0.9)}</div><div style="font-size:9px;font-weight:700;color:var(--or)">em 25 anos</div></div>
+        </div>
+        <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;height:56px">
+          <div style="position:absolute;left:calc(100%/6);right:calc(100%/6);top:50%;height:2px;background:linear-gradient(to right,rgba(232,100,26,.35),var(--or));transform:translateY(-50%);z-index:0"></div>
+          <div style="display:flex;justify-content:center;position:relative;z-index:1"><div style="width:40px;height:40px;border-radius:50%;background:#fff;border:2.5px solid rgba(232,100,26,.5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--or)">5</div></div>
+          <div style="display:flex;justify-content:center;position:relative;z-index:1"><div style="width:48px;height:48px;border-radius:50%;background:#fff;border:2.5px solid rgba(232,100,26,.75);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--or)">10</div></div>
+          <div style="display:flex;justify-content:center;position:relative;z-index:1"><div style="width:56px;height:56px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff">25</div></div>
+        </div>
+        <div style="font-size:8px;color:var(--lmuted);font-style:italic;border-top:1px solid rgba(232,100,26,.15);padding-top:8px;margin-top:8px">Projeção estimada. Resultados reais podem variar conforme consumo, tarifas e desempenho do sistema.</div>
+      </div>`:''}
+
+      <!-- Gráfico geração mês a mês -->
+      ${buildGenChart(genKwhNum)}
+
+      <!-- Impacto ambiental -->
+      ${co2>0?`
+      <div style="background:rgba(39,174,96,.06);border:1px solid rgba(39,174,96,.25);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:28px">🌱</div>
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#1a7a3c;margin-bottom:2px">Impacto Ambiental Positivo</div>
+          <div style="font-size:11px;color:#2d8a50;line-height:1.5">Seu sistema evitará a emissão de <strong>${(co2/1000).toFixed(1)} ton de CO₂</strong> por ano — equivalente a aproximadamente <strong>${co2Arvores} árvores</strong> plantadas.</div>
+        </div>
+      </div>`:''}
+    </div>
+    ${footer(today)}
+  </div>`:'';
+
   // ── PAGE 4: INVESTIMENTO ──
   const p5=`<div class="page p-light">
     ${corners()}
@@ -1245,7 +1363,7 @@ function generateProposal(criarCard=true){
     ${footer(today)}
   </div>`;
 
-  const html=p1+p2+p3+p5+p6;
+  const html=p1+p2+p3+p3b+p5+p6;
   $('preview').innerHTML=html;
   $('preview').style.display='block';
   $('prevEmpty').style.display='none';
