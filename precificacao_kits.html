@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precificação de Kits FV — LumenGrid</title>
+<style>
+:root {
+  --orange: #F26522;
+  --orange-dim: rgba(242,101,34,0.15);
+  --white: #FAFAFA;
+  --dark:  #111111;
+  --dark2: #1c1c1c;
+  --dark3: #272727;
+  --dark4: #313131;
+  --border:#3a3a3a;
+  --muted: #888;
+  --green: #4caf50;
+  --yellow:#ffc107;
+  --red:   #f44336;
+  --purple:#ce93d8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--dark);color:var(--white);font-size:13px;min-height:100vh}
+
+/* ── HEADER ── */
+header{background:var(--dark2);border-bottom:2px solid var(--orange);padding:14px 24px;display:flex;align-items:center;gap:20px}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo-text{font-size:20px;font-weight:900;letter-spacing:1px}
+.logo-text .l{color:var(--orange)}.logo-text .g{color:var(--white)}
+.logo-sub{font-size:9px;color:var(--orange);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.header-sep{width:1px;height:36px;background:var(--border)}
+.header-info h1{font-size:15px;font-weight:700;color:var(--white)}
+.header-info p{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ── TABS ── */
+.tab-nav{background:var(--dark2);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:1px;padding:0 16px}
+.tab-btn{background:transparent;border:none;color:var(--muted);padding:10px 13px;cursor:pointer;font-size:10px;font-weight:700;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.6px;transition:all .15s;white-space:nowrap}
+.tab-btn:hover{color:var(--white)}
+.tab-btn.active{color:var(--orange);border-bottom-color:var(--orange)}
+
+/* ── CONTENT ── */
+.tab-pane{display:none;padding:24px}
+.tab-pane.active{display:block}
+
+/* ── SECTION ── */
+.section{margin-bottom:32px}
+.section-title{font-size:11px;font-weight:700;color:var(--orange);margin-bottom:14px;padding-bottom:7px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1.5px}
+.section-note{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6}
+
+/* ── TABLES ── */
+.tbl-wrap{overflow-x:auto;border-radius:6px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead th{background:var(--dark3);color:var(--orange);padding:9px 10px;text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--orange);white-space:nowrap}
+tbody td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--orange-dim)}
+td.num{text-align:right;font-family:'Courier New',monospace}
+td.em{color:var(--orange);font-weight:700;text-align:right;font-family:'Courier New',monospace}
+td.green{color:var(--green);font-family:'Courier New',monospace;text-align:right}
+td.yellow{color:var(--yellow);font-family:'Courier New',monospace;text-align:right}
+td.red-cell{color:var(--red);font-family:'Courier New',monospace;text-align:right}
+td.center{text-align:center}
+.group-header td{background:var(--dark4);color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:5px 10px}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.b-real{background:rgba(76,175,80,.2);color:var(--green)}
+.b-est {background:rgba(255,193,7,.2);color:var(--yellow)}
+.b-inv {background:rgba(244,67,54,.2);color:var(--red)}
+.b-rev {background:rgba(206,147,216,.2);color:var(--purple)}
+.b-ok  {background:rgba(76,175,80,.15);color:var(--green)}
+
+/* ── PARAM CARDS ── */
+.param-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.param-card{background:var(--dark2);border:1px solid var(--border);border-radius:6px;padding:16px}
+.param-card label{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px}
+.param-card .val{color:var(--orange);font-size:24px;font-weight:800;font-family:'Courier New',monospace}
+.param-card .desc{color:var(--muted);font-size:10px;margin-top:5px;line-height:1.4}
+
+/* ── FORMULA BOX ── */
+.formula-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-bottom:24px}
+.formula-box{background:var(--dark3);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:4px;padding:12px 14px}
+.formula-box .f-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.formula-box .f-formula{font-family:'Courier New',monospace;font-size:12px;color:var(--white)}
+.formula-box .f-desc{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* ── COMMISSION ── */
+.comm-layout{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start}
+.comm-form{background:var(--dark2);border:1px solid var(--border);border-radius:6px;padding:20px}
+.field-label{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px}
+select,input[type=number]{background:var(--dark3);border:1px solid var(--border);color:var(--white);padding:8px 12px;border-radius:4px;font-size:12px;width:100%;margin-bottom:14px}
+select:focus,input:focus{outline:none;border-color:var(--orange)}
+.comm-result{background:var(--dark2);border:1px solid var(--border);border-radius:6px;padding:20px}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.result-row:last-child{border-bottom:none}
+.result-label{color:var(--muted)}
+.result-value{font-family:'Courier New',monospace;font-weight:700;color:var(--orange)}
+.result-value.g{color:var(--green)}
+.big-value{font-size:22px;color:var(--orange);font-family:'Courier New',monospace;font-weight:800;display:block;margin-top:8px}
+
+/* ── COTACOES ── */
+.cot-table-wrap{margin-bottom:16px}
+.btn{background:var(--orange);border:none;color:#fff;padding:8px 18px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.btn:hover{background:#d4551a}
+.btn-sm{padding:4px 10px;font-size:10px}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:20px;color:var(--muted);font-size:11px;border-top:1px solid var(--border);margin-top:8px}
+footer span{color:var(--orange);font-weight:600}
+
+/* ── UTILS ── */
+.chip{display:inline-block;background:var(--dark3);border:1px solid var(--border);border-radius:3px;padding:2px 7px;font-size:10px;color:var(--muted);font-family:'Courier New',monospace}
+.highlight-row td{background:rgba(242,101,34,.08)!important}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <div>
+      <div class="logo-text"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+      <div class="logo-sub">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="header-sep"></div>
+  <div class="header-info">
+    <h1>Planilha de Precificação — Kits Fotovoltaicos</h1>
+    <p>Modelo baseado em custo real de equipamentos · Módulo 620 Wp · 9 faixas de kit</p>
+  </div>
+</header>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('parametros')">Parâmetros</button>
+  <button class="tab-btn" onclick="showTab('kits')">Kits / Precificação</button>
+  <button class="tab-btn" onclick="showTab('inversores')">Inversores</button>
+  <button class="tab-btn" onclick="showTab('faixas')">Faixas de Instalação</button>
+  <button class="tab-btn" onclick="showTab('cotacoes')">Cotações</button>
+  <button class="tab-btn" onclick="showTab('comissoes')">Comissões</button>
+  <button class="tab-btn" onclick="showTab('resumo')">Resumo Comercial</button>
+  <button class="tab-btn" onclick="showTab('backend')">Backend</button>
+  <button class="tab-btn" onclick="showTab('validacao')">Validação Técnica</button>
+  <button class="tab-btn" onclick="showTab('fontes')">Fontes</button>
+  <button class="tab-btn" onclick="showTab('hibridos')">Kits Híbridos</button>
+</nav>
+
+<!-- ══════════════════════════════════════════ TAB: PARÂMETROS ══ -->
+<div id="tab-parametros" class="tab-pane active">
+  <div class="section">
+    <div class="section-title">Constantes do Modelo</div>
+    <div class="param-grid" id="param-cards"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Fórmulas Base</div>
+    <div class="formula-grid">
+      <div class="formula-box">
+        <div class="f-label">Custo Direto</div>
+        <div class="f-formula">Custo Equip + Instalação + Homologação</div>
+        <div class="f-desc">Custo total antes da margem</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Preço Mínimo</div>
+        <div class="f-formula">Custo Direto ÷ (1 − Margem Bruta)</div>
+        <div class="f-desc">Piso de venda — não vender abaixo disso. Kits REAL usam o preço âncora confirmado; kits ESTIMADOS usam a fórmula.</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Preço Cheio</div>
+        <div class="f-formula">Preço Mínimo ÷ (1 − % Negociação)</div>
+        <div class="f-desc">Preço apresentado ao cliente para negociação. Sempre acima do Preço Mínimo.</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Imposto</div>
+        <div class="f-formula">Preço Mínimo × 10%</div>
+        <div class="f-desc">Tributação sobre receita (cenário conservador — pior caso)</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">CASH</div>
+        <div class="f-formula">(Preço Mínimo − Custo Direto − Imposto) × 80%</div>
+        <div class="f-desc">Caixa disponível após gestão (20%) — calculado sobre o piso</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Gestão</div>
+        <div class="f-formula">(Preço Mínimo − Custo Direto − Imposto) × 20%</div>
+        <div class="f-desc">Reserva operacional / administração</div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Margem Bruta por Porte de Kit</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Placas</th><th>kWp</th><th>Margem-Alvo</th><th>% Negociação</th><th>Lógica</th></tr>
+        </thead>
+        <tbody id="margem-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: KITS ══ -->
+<div id="tab-kits" class="tab-pane">
+  <div class="section">
+    <div class="section-note">
+      Kits com <span class="badge b-real">REAL</span> têm preço âncora confirmado. Kits <span class="badge b-est">ESTIMADO</span> usam custo interpolado e margem de referência — atualizar quando obtiver cotação.
+      <b>Preço Mínimo</b> = piso de venda (não vender abaixo). <b>Preço Cheio</b> = o que você apresenta ao cliente para negociar — cliente negocia de Cheio → Mínimo.
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Placas</th><th>kWp</th><th>Inversor</th><th>Módulo</th>
+            <th>Equip (R$)</th><th>Instal (R$)</th><th>Custo Direto</th>
+            <th>Margem</th><th>Preço Mínimo</th>
+            <th>Preço Cheio</th>
+            <th>Imposto</th><th>Gestão</th><th>CASH</th>
+            <th>R$/kWp</th><th>Fonte</th>
+          </tr>
+        </thead>
+        <tbody id="kits-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: INVERSORES ══ -->
+<div id="tab-inversores" class="tab-pane">
+  <div class="section">
+    <div class="section-title">GoodWe — Inversores String</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Modelo</th><th>Potência AC</th><th>Max DC</th><th>MPPT</th><th>Strings/MPPT</th><th>Tensão Max DC</th><th>Placas Ideais (620Wp)</th><th>Overload</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>GoodWe GW3000-XS</td><td class="num">3.000 W</td><td class="num">4.500 W</td><td class="num">1</td><td class="num">1</td><td class="num">500 V</td><td class="num">4–6 placas</td><td class="num">0 – 24%</td></tr>
+          <tr><td>GoodWe GW5000-XS</td><td class="num">5.000 W</td><td class="num">7.500 W</td><td class="num">2</td><td class="num">1</td><td class="num">500 V</td><td class="num">7–10 placas</td><td class="num">0 – 36%</td></tr>
+          <tr><td>GoodWe GW7500-XS</td><td class="num">7.500 W</td><td class="num">11.250 W</td><td class="num">2</td><td class="num">1</td><td class="num">500 V</td><td class="num">12–14 placas</td><td class="num">0 – 16%</td></tr>
+          <tr><td>GoodWe GW10000-XS</td><td class="num">10.000 W</td><td class="num">14.000 W</td><td class="num">2</td><td class="num">2</td><td class="num">550 V</td><td class="num">16–20 placas</td><td class="num">0 – 24%</td></tr>
+          <tr><td>GoodWe GW12000-XS</td><td class="num">12.000 W</td><td class="num">16.800 W</td><td class="num">2</td><td class="num">2</td><td class="num">550 V</td><td class="num">20–24 placas</td><td class="num">0 – 24%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">FoxESS Micro — Microinversor</div>
+    <div class="section-note">Requer múltiplos de 4 placas. Cada unidade atende 4 placas (2 MPPT × 2 módulos). Sem ponto único de falha.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Modelo</th><th>AC por Unidade</th><th>Módulos/Unid</th><th>DC por Unid (620Wp×4)</th><th>Overload/Unid</th><th>Kits Válidos</th><th>Unidades Necessárias</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>FoxESS Micro H4</td><td class="num">2.400 W</td><td class="num">4</td><td class="num">2.480 W</td><td class="num">3,3%</td><td class="num">8 / 12 / 16 / 20 / 24 / 28 / 32 / 36 / 40</td><td class="num">placas ÷ 4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px" class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Placas</th><th>kWp DC</th><th>Unidades</th><th>kW AC Total</th><th>Overload Total</th><th>Válido?</th></tr>
+        </thead>
+        <tbody id="foxess-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: FAIXAS ══ -->
+<div id="tab-faixas" class="tab-pane">
+  <div class="section">
+    <div class="section-title">Tabela de Instalação por Faixa de kWp</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Faixa kWp</th><th>R$/Wp</th><th>Homologação</th><th>Exemplo: custo p/ mínimo da faixa</th><th>Exemplo: custo p/ máximo da faixa</th></tr>
+        </thead>
+        <tbody id="faixas-table"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Custo de Instalação por Kit (referência)</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Placas</th><th>kWp</th><th>Faixa</th><th>R$/Wp</th><th>Homologação</th><th>Custo Instalação Total</th></tr>
+        </thead>
+        <tbody id="instalacao-kits-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: COTAÇÕES ══ -->
+<div id="tab-cotacoes" class="tab-pane">
+  <div class="section">
+    <div class="section-title">Registro de Cotações de Fornecedores</div>
+    <div class="section-note">Use esta tabela para registrar cotações recebidas. Compare com os custos âncora para atualizar os preços dos kits.</div>
+    <div class="tbl-wrap cot-table-wrap">
+      <table id="cotacoes-tbl">
+        <thead>
+          <tr><th>Data</th><th>Fornecedor</th><th>Item</th><th>Qtd</th><th>Preço Unit (R$)</th><th>Total (R$)</th><th>Kit(s)</th><th>Obs</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="chip">2025-01</span></td>
+            <td>Fornecedor A</td>
+            <td>Jinko 620W Tiger Neo</td>
+            <td class="num">100</td>
+            <td class="num">—</td>
+            <td class="num">—</td>
+            <td>Todos</td>
+            <td style="color:var(--muted)">Cotação de referência — atualizar</td>
+          </tr>
+          <tr>
+            <td><span class="chip">2025-01</span></td>
+            <td>Fornecedor B</td>
+            <td>Leapton 620W</td>
+            <td class="num">100</td>
+            <td class="num">—</td>
+            <td class="num">—</td>
+            <td>Todos</td>
+            <td style="color:var(--muted)">Cotação de referência — atualizar</td>
+          </tr>
+          <tr>
+            <td><span class="chip">2025-01</span></td>
+            <td>GoodWe Brasil</td>
+            <td>GW5000-XS / GW7500 / GW10000</td>
+            <td class="num">—</td>
+            <td class="num">—</td>
+            <td class="num">—</td>
+            <td>8–24</td>
+            <td style="color:var(--muted)">Verificar tabela de distribuidor</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button class="btn btn-sm" style="margin-top:10px" onclick="addCotacaoRow()">+ Linha</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: COMISSÕES ══ -->
+<div id="tab-comissoes" class="tab-pane">
+  <div class="section">
+    <div class="section-title">Calculadora de Comissão por Venda</div>
+    <div class="comm-layout">
+      <div class="comm-form">
+        <label class="field-label">Kit / Configuração</label>
+        <select id="comm-kit" onchange="calcComm()"></select>
+        <label class="field-label">% Comissão do Vendedor</label>
+        <input type="number" id="comm-pct" value="3" step="0.5" min="0" max="20" onchange="calcComm()">
+        <label class="field-label">Preço de Venda (R$) — opcional</label>
+        <input type="number" id="comm-preco" placeholder="Deixar 0 para usar Preço Mínimo" step="100" min="0" onchange="calcComm()">
+      </div>
+      <div class="comm-result" id="comm-result">
+        <div style="color:var(--muted);font-size:12px">Selecione um kit para calcular</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: RESUMO ══ -->
+<div id="tab-resumo" class="tab-pane">
+  <div class="section">
+    <div class="section-title">Resumo Comercial — Todos os Kits</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Placas</th><th>kWp</th><th>Configuração</th><th>Preço Cheio</th><th>Preço Mínimo</th><th>R$/kWp</th><th>CASH (R$)</th><th>Margem Real</th><th>Fonte</th></tr>
+        </thead>
+        <tbody id="resumo-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: BACKEND ══ -->
+<div id="tab-backend" class="tab-pane">
+  <div class="section">
+    <div class="section-title">Dados para Integração — gerador-solar-v3.html</div>
+    <div class="section-note">Tabela limpa com 1 linha por kit/configuração. Formato pronto para substituir o modelo R$/kWp fixo. Copiar objeto JS abaixo para o gerador.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>placas</th><th>kwp</th><th>inversor</th><th>modulo</th><th>custoEquip</th><th>custoDireto</th><th>precoMinimo</th><th>precoCheio</th><th>cash</th><th>fonte</th></tr>
+        </thead>
+        <tbody id="backend-table"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:16px">
+      <div class="section-title" style="margin-top:0">Objeto JS (copiar para gerador)</div>
+      <pre id="js-export" style="background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:16px;font-size:10.5px;overflow-x:auto;color:#ccc;line-height:1.6;max-height:400px;overflow-y:auto"></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: VALIDAÇÃO ══ -->
+<div id="tab-validacao" class="tab-pane">
+  <div class="section">
+    <div class="section-title">Validação Técnica dos Kits</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Placas</th><th>Inversor</th><th>kWp DC</th><th>kW AC</th><th>Overload</th><th>Status Overload</th><th>FoxESS Mult.4</th><th>Mín. Real vs Fórmula</th><th>Status Geral</th></tr>
+        </thead>
+        <tbody id="validacao-table"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Legenda de Status</div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <span><span class="badge b-ok">OK</span> — Todos os critérios válidos</span>
+      <span><span class="badge b-est">REVISAR</span> — Preço histórico conflita com modelo, mas foi mantido</span>
+      <span><span class="badge b-inv">INVÁLIDO</span> — Overload acima de 40% ou FoxESS não é múltiplo de 4</span>
+      <span><span class="badge b-real">REAL</span> — Dados confirmados por cotação/venda real</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: FONTES ══ -->
+<div id="tab-fontes" class="tab-pane">
+  <div class="section">
+    <div class="section-title">Referências e Fontes</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Referência</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Preços 8 placas</td><td>Cotações diretas / vendas reais LumenGrid</td><td>FoxESS Micro + Jinko: R$14.880 · GoodWe + Jinko: R$14.380 · FoxESS Micro + Leapton: R$14.270</td></tr>
+          <tr><td>Preços 16 placas</td><td>Cotações diretas / vendas reais LumenGrid</td><td>GoodWe 7,5 + Leapton: R$27.800 · GoodWe 7,5 + Jinko: R$28.990 · FoxESS + Jinko: R$30.119 · FoxESS + Leapton: R$28.799</td></tr>
+          <tr><td>Preços 20 placas</td><td>Cotações diretas / vendas reais LumenGrid</td><td>GoodWe 10 + Leapton: R$32.690 · GoodWe 10 + Jinko: R$34.490 · FoxESS + Leapton: R$34.590 · FoxESS + Jinko: R$36.290</td></tr>
+          <tr><td>Módulo referência</td><td>Jinko Tiger Neo / Leapton</td><td>620 Wp por placa · preço por módulo a confirmar com fornecedor</td></tr>
+          <tr><td>Tabela de instalação</td><td>Tabela interna LumenGrid</td><td>R$/Wp por faixa de kWp + homologação</td></tr>
+          <tr><td>FoxESS Micro</td><td>Especificações FoxESS H4</td><td>Múltiplos de 4 placas obrigatório · overload ~3,3% por unidade</td></tr>
+          <tr><td>GoodWe String</td><td>Especificações GoodWe XS Series</td><td>Max overload 40% conforme datasheet</td></tr>
+          <tr><td>Impostos</td><td>Regime tributário LumenGrid</td><td>10% sobre faturamento</td></tr>
+          <tr><td>Gestão</td><td>Política interna Domani/LumenGrid</td><td>20% do lucro líquido para reserva operacional</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: KITS HÍBRIDOS ══ -->
+<div id="tab-hibridos" class="tab-pane">
+
+  <div class="section">
+    <div class="section-title">Parâmetros — Sistema Híbrido</div>
+    <div class="param-grid">
+      <div class="param-card"><label>Margem 1–2 baterias</label><div class="val">31%</div><div class="desc">Kits pequenos</div></div>
+      <div class="param-card"><label>Margem 3–4 baterias</label><div class="val">32%</div><div class="desc">Kits médios</div></div>
+      <div class="param-card"><label>Margem 5+ baterias</label><div class="val">33%</div><div class="desc">Kits grandes</div></div>
+      <div class="param-card"><label>% Negociação (NEG)</label><div class="val">6%</div><div class="desc">Todos os kits híbridos</div></div>
+      <div class="param-card"><label>ICMS sem isenção</label><div class="val">25%</div><div class="desc">Sobre equipamento (cenário sem solar)</div></div>
+      <div class="param-card"><label>Homologação ≤10kW</label><div class="val">R$500</div><div class="desc">Todos os kits abaixo</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--dark3);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:4px;padding:12px 14px">
+      <label class="field-label" style="margin:0;white-space:nowrap">Mín. placas p/ isenção ICMS (cenário 2):</label>
+      <input type="number" id="hi-min-placas" value="4" min="1" max="20" style="width:70px;margin:0" onchange="renderHibridos()">
+      <span style="color:var(--muted);font-size:11px">← A definir com Hingrid. Enquanto kit tiver ≥ este número de placas, cenário 2 = ICMS 0% (mesmo resultado financeiro que cenário 1).</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">DEG — Fórmula de Instalação Híbrida</div>
+    <div class="formula-grid">
+      <div class="formula-box">
+        <div class="f-label">Base Fixa</div>
+        <div class="f-formula">R$ 4.000</div>
+        <div class="f-desc">Visita técnica + fixos</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Por Painel</div>
+        <div class="f-formula">R$ 350 / placa</div>
+        <div class="f-desc">Instalação dos módulos</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Por Bateria</div>
+        <div class="f-formula">R$ 1.200 / bat</div>
+        <div class="f-desc">Instalação e configuração de armazenamento</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Adicional Híbrido</div>
+        <div class="f-formula">R$ 400</div>
+        <div class="f-desc">Inversor híbrido vs string on-grid</div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Total DEG</div>
+        <div class="f-formula">4.000 + (350 × pl) + (1.200 × bat) + 400</div>
+        <div class="f-desc">Ex: 8pl + 1bat = R$ 8.400 · 16pl + 2bat = R$ 11.200</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Precificação — Kits Híbridos (Solfácil Pix)</div>
+    <div class="section-note">
+      <b>Cenário 1 — Com Solar:</b> kit completo com placas, ICMS isento.
+      <b>Cenário 3 — Sem Solar:</b> apenas inversor + baterias sem isenção, ICMS 25% sobre equipamento (conservador — sem breakdown de preço isolado).
+      Kits <span class="badge b-real">REAL COT</span> têm preços reais Solfácil Pix.
+    </div>
+    <div style="margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+      <div>
+        <label class="field-label" style="display:inline-block;margin-right:8px;margin-bottom:0">Cenário ICMS:</label>
+        <select id="hi-cenario" onchange="renderHibridos()" style="width:auto;margin:0">
+          <option value="1">Cenário 1 — Com Solar (ICMS 0%)</option>
+          <option value="3">Cenário 3 — Sem Solar (ICMS 25%)</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" style="display:inline-block;margin-right:8px;margin-bottom:0">Inversor:</label>
+        <select id="hi-filter-inv" onchange="renderHibridos()" style="width:auto;margin:0">
+          <option value="">Todos</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" style="display:inline-block;margin-right:8px;margin-bottom:0">Baterias:</label>
+        <select id="hi-filter-bats" onchange="renderHibridos()" style="width:auto;margin:0">
+          <option value="">Todas</option>
+          <option value="1">1 bateria</option>
+          <option value="2">2 baterias</option>
+          <option value="3">3 baterias</option>
+        </select>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Kit</th><th>Placas</th><th>kWp</th><th>Inversor</th><th>Módulo</th><th>Bats</th><th>Bat Modelo</th>
+            <th>Equip Pix</th><th>Instal DEG</th><th>Homo</th><th>Custo Direto</th>
+            <th>Margem</th><th style="color:#f44336">Preço Bomba</th><th style="color:#f44336">CASH Bomba</th><th>Preço Mínimo</th><th>Preço Cheio</th>
+            <th>Imposto</th><th>Gestão</th><th>CASH</th><th>Fonte</th>
+          </tr>
+        </thead>
+        <tbody id="hibridos-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Comparativo DEG vs S+ — Instalação Híbrida</div>
+    <div class="section-note">
+      S+ híbrido cobre apenas o sistema de armazenamento (inversor + baterias). Instalação dos painéis é cobrada à parte pela tabela on-grid S+ c/ material.
+      Comparação usada: DEG (total) vs S+ (bat + painéis c/ material). Painéis ≤10 placas = R$3.500 fixo · 12+ placas = R$320/placa.
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Kit</th><th>Config</th><th>Placas</th>
+            <th>DEG Total</th>
+            <th>S+ Config Bat</th><th>S+ Bat</th><th>S+ Painéis</th><th>S+ Total</th>
+            <th>Diferença</th><th>Mais Barato</th>
+          </tr>
+        </thead>
+        <tbody id="hibridos-comp-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tabela S+ — Instalação Híbrida (referência)</div>
+    <div class="section-note">Custo do sistema de armazenamento (inversor + baterias) — NÃO inclui instalação dos painéis solares.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Configuração</th><th>Custo S+</th></tr>
+        </thead>
+        <tbody id="splus-hi-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>Feito por <span>Domani Consultoria</span> · LumenGrid Energia Inteligente</footer>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  DADOS BASE
+// ══════════════════════════════════════════════════════════════
+
+const PARAMS = { imposto: 0.10, gestao: 0.20, overloadMax: 0.40, margemRef: 0.24 };
+const WP = 620; // Wp por placa
+
+const FAIXAS = [
+  { min: 0,  max: 3,  rwp: 0.84, homo: 500  },
+  { min: 3,  max: 6,  rwp: 0.60, homo: 500  },
+  { min: 6,  max: 9,  rwp: 0.50, homo: 800  },
+  { min: 9,  max: 12, rwp: 0.44, homo: 950  },
+  { min: 12, max: 20, rwp: 0.42, homo: 1050 },
+  { min: 20, max: 45, rwp: 0.38, homo: 1450 },
+];
+
+const MARGEM = {
+  4:0.24,  5:0.24,  6:0.24,  7:0.24,           // mesma margem do kit de 8 placas
+  8:0.24,  9:0.25, 10:0.26, 11:0.27, 12:0.28,
+  13:0.285,14:0.29, 15:0.295,16:0.30,
+  17:0.30, 18:0.30, 19:0.30, 20:0.30,
+  21:0.305,22:0.31, 23:0.31, 24:0.31,
+  25:0.31, 26:0.31, 27:0.31,                    // GW12kW — mesmo nível do 24pl
+  28:0.32, 29:0.32, 30:0.32, 31:0.32, 32:0.32, 33:0.32, // GW15kW — inversor maior
+  34:0.33, 35:0.33, 36:0.33, 37:0.33, 38:0.33, 39:0.33, 40:0.33 // GW20kW
+};
+const NEG = {
+  4:0.08,  5:0.08,  6:0.08,  7:0.08,           // 8% — margem ampla para desconto em kits pequenos
+  8:0.05,  9:0.05, 10:0.05, 11:0.05, 12:0.05,
+  13:0.05, 14:0.05, 15:0.05, 16:0.05,
+  17:0.05, 18:0.05, 19:0.06, 20:0.06,
+  21:0.06, 22:0.06, 23:0.06, 24:0.06,
+  25:0.06, 26:0.06, 27:0.06, 28:0.06,
+  29:0.06, 30:0.06, 31:0.06, 32:0.06,
+  33:0.06, 34:0.06, 35:0.06, 36:0.06,
+  37:0.06, 38:0.06, 39:0.06, 40:0.06
+};
+
+// Potência nominal AC dos inversores (W)
+const INVERSOR_AC = {
+  'FoxESS Micro': (p) => Math.ceil(p / 4) * 2400,   // 2.4kW por grupo de 4 placas
+  'GoodWe 3kW':   3000,
+  'GoodWe 5kW':   5000,
+  'GoodWe 6kW':   6000,
+  'GoodWe 7.5kW': 7500,
+  'GoodWe 10kW':  10000,
+  'GoodWe 12kW':  12000,
+  'GoodWe 15kW':  15000,
+  'GoodWe 20kW':  20000,
+};
+
+function getInversorAC(inv, placas) {
+  const v = INVERSOR_AC[inv];
+  return typeof v === 'function' ? v(placas) : (v || 0);
+}
+
+// Kits — dados reais (REAL) e estimados (ESTIMADO)
+// Custo equip estimado: Jinko ~R$500/placa, Leapton ~R$430/placa + inversor
+// Delta Jinko→Leapton: R$70/placa (kits 4–40pl)
+// GW3kW ~R$2.800 | GW5kW ~R$3.400 | GW7.5kW ~R$7.025 | GW10kW ~R$7.900 | GW12kW ~R$9.000 | GW15kW ~R$11.750 | GW20kW ~R$16.300
+const KITS = [
+  // ── 4 PLACAS ── ESTIMADO (2,48 kWp · GW3kW · faixa 0-3)
+  { placas:4,  inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:4800,  promo:null, src:'ESTIMADO' },
+  { placas:4,  inv:'GoodWe 3kW',  mod:'Leapton 620W', equip:4520,  promo:null, src:'ESTIMADO' },
+  // ── 5 PLACAS ── ESTIMADO (3,10 kWp · GW3kW · faixa 3-6 · overload 3,3%)
+  { placas:5,  inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:5300,  promo:null, src:'ESTIMADO' },
+  { placas:5,  inv:'GoodWe 3kW',  mod:'Leapton 620W', equip:4950,  promo:null, src:'ESTIMADO' },
+  // ── 6 PLACAS ── ESTIMADO (3,72 kWp · GW3kW · faixa 3-6 · overload 24%)
+  { placas:6,  inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:5800,  promo:null, src:'ESTIMADO' },
+  { placas:6,  inv:'GoodWe 3kW',  mod:'Leapton 620W', equip:5380,  promo:null, src:'ESTIMADO' },
+  // ── 7 PLACAS ── ESTIMADO (4,34 kWp · GW5kW · faixa 3-6)
+  { placas:7,  inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:6900,  promo:null, src:'ESTIMADO' },
+  { placas:7,  inv:'GoodWe 5kW',  mod:'Leapton 620W', equip:6410,  promo:null, src:'ESTIMADO' },
+  // ── 8 PLACAS ── REAL
+  { placas:8,  inv:'FoxESS Micro', mod:'Jinko 620W',   equip:7832,  promo:14880, src:'REAL' },
+  { placas:8,  inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:7400,  promo:14380, src:'REAL' },
+  { placas:8,  inv:'FoxESS Micro', mod:'Leapton 620W', equip:7356,  promo:14270, src:'REAL' },
+  // ── 9 PLACAS ── ESTIMADO (5,58 kWp · GW5kW · faixa 3-6 · overload 11,6%)
+  { placas:9,  inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:7900,  promo:null,  src:'ESTIMADO' },
+  { placas:9,  inv:'GoodWe 5kW',  mod:'Leapton 620W', equip:7270,  promo:null,  src:'ESTIMADO' },
+  // ── 10 PLACAS ── ESTIMADO
+  { placas:10, inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:8400,  promo:null,  src:'ESTIMADO' },
+  { placas:10, inv:'GoodWe 5kW',  mod:'Leapton 620W', equip:7770,  promo:null,  src:'ESTIMADO' },
+  // ── 11 PLACAS ── ESTIMADO (6,82 kWp · GW7.5kW · faixa 6-9)
+  { placas:11, inv:'GoodWe 7.5kW', mod:'Jinko 620W',  equip:12525, promo:null,  src:'ESTIMADO' },
+  { placas:11, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:11755, promo:null,  src:'ESTIMADO' },
+  // ── 12 PLACAS ── ESTIMADO
+  { placas:12, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:11800, promo:null,  src:'ESTIMADO' },
+  { placas:12, inv:'GoodWe 6kW',   mod:'Jinko 620W',  equip:12121, promo:21755, src:'REAL'     },
+  { placas:12, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:12185, promo:null,  src:'ESTIMADO' },
+  { placas:12, inv:'FoxESS Micro', mod:'Leapton 620W', equip:11000, promo:null,  src:'ESTIMADO' },
+  // ── 13 PLACAS ── ESTIMADO (8,06 kWp · GW7.5kW · faixa 6-9 · overload 7,5%)
+  { placas:13, inv:'GoodWe 7.5kW', mod:'Jinko 620W',  equip:13525, promo:null,  src:'ESTIMADO' },
+  { placas:13, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:12615, promo:null,  src:'ESTIMADO' },
+  // ── 14 PLACAS ── ESTIMADO
+  { placas:14, inv:'GoodWe 7.5kW', mod:'Jinko 620W',  equip:14025, promo:null,  src:'ESTIMADO' },
+  { placas:14, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:13045, promo:null,  src:'ESTIMADO' },
+  // ── 15 PLACAS ── ESTIMADO (9,30 kWp · GW10kW · faixa 9-12)
+  { placas:15, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:15400, promo:null,  src:'ESTIMADO' },
+  { placas:15, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:14350, promo:null,  src:'ESTIMADO' },
+  // ── 16 PLACAS ── REAL
+  { placas:16, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:13892, promo:27800, src:'REAL' },
+  { placas:16, inv:'GoodWe 7.5kW', mod:'Jinko 620W',  equip:15025, promo:28990, src:'REAL' },
+  { placas:16, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:16000, promo:30119, src:'REAL' },
+  { placas:16, inv:'FoxESS Micro', mod:'Leapton 620W', equip:14800, promo:28799, src:'REAL' },
+  // ── 17 PLACAS ── ESTIMADO (10,54 kWp · GW10kW · faixa 9-12 · overload 5,4%)
+  { placas:17, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:16400, promo:null,  src:'ESTIMADO' },
+  { placas:17, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:15210, promo:null,  src:'ESTIMADO' },
+  // ── 18 PLACAS ── ESTIMADO
+  { placas:18, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:16900, promo:null,  src:'ESTIMADO' },
+  { placas:18, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:15640, promo:null,  src:'ESTIMADO' },
+  // ── 19 PLACAS ── ESTIMADO (11,78 kWp · GW10kW · faixa 9-12 · overload 17,8%)
+  { placas:19, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:17400, promo:null,  src:'ESTIMADO' },
+  { placas:19, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:16070, promo:null,  src:'ESTIMADO' },
+  // ── 20 PLACAS ── REAL
+  { placas:20, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:16300, promo:32690, src:'REAL' },
+  { placas:20, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:17900, promo:34490, src:'REAL' },
+  { placas:20, inv:'FoxESS Micro', mod:'Leapton 620W', equip:18000, promo:34590, src:'REAL' },
+  { placas:20, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:19500, promo:36290, src:'REAL' },
+  // ── 21 PLACAS ── ESTIMADO (13,02 kWp · GW10kW · faixa 12-20 · overload 30,2%)
+  // Midpoint entre 20pl (R$17.900) e 22pl (R$19.500)
+  { placas:21, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:18700, promo:null,  src:'ESTIMADO' },
+  { placas:21, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:17230, promo:null,  src:'ESTIMADO' },
+  // ── 22 PLACAS ── ESTIMADO (13,64 kWp · GW12kW · faixa 12-20 · overload 13,7%)
+  { placas:22, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:19500, promo:null,  src:'ESTIMADO' },
+  { placas:22, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:17960, promo:null,  src:'ESTIMADO' },
+  // ── 23 PLACAS ── ESTIMADO (14,26 kWp · GW12kW · faixa 12-20 · overload 18,8%)
+  // Midpoint entre 22pl (R$19.500) e 24pl (R$21.000)
+  { placas:23, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:20250, promo:null,  src:'ESTIMADO' },
+  { placas:23, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:18640, promo:null,  src:'ESTIMADO' },
+  // ── 24 PLACAS ── ESTIMADO
+  { placas:24, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:23000, promo:null,  src:'ESTIMADO' },
+  { placas:24, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:21000, promo:null,  src:'ESTIMADO' },
+  { placas:24, inv:'FoxESS Micro', mod:'Leapton 620W', equip:21320, promo:null,  src:'ESTIMADO' },
+  // ── 25 PLACAS ── ESTIMADO (15,50 kWp · GW12kW · overload 29%)
+  { placas:25, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:21500, promo:null,  src:'ESTIMADO' },
+  { placas:25, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:19750, promo:null,  src:'ESTIMADO' },
+  // ── 26 PLACAS ── ESTIMADO (16,12 kWp · GW12kW · overload 34%)
+  { placas:26, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:22000, promo:null,  src:'ESTIMADO' },
+  { placas:26, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:20180, promo:null,  src:'ESTIMADO' },
+  // ── 27 PLACAS ── ESTIMADO (16,74 kWp · GW12kW · overload 39%)
+  { placas:27, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:22500, promo:null,  src:'ESTIMADO' },
+  { placas:27, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:20610, promo:null,  src:'ESTIMADO' },
+  // ── 28 PLACAS ── ESTIMADO (17,36 kWp · GW15kW overload 16% · FoxESS ×7 overload 3%)
+  { placas:28, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:25750, promo:null,  src:'ESTIMADO' },
+  { placas:28, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:23790, promo:null,  src:'ESTIMADO' },
+  { placas:28, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:27300, promo:null,  src:'ESTIMADO' },
+  { placas:28, inv:'FoxESS Micro', mod:'Leapton 620W', equip:25340, promo:null,  src:'ESTIMADO' },
+  // ── 29 PLACAS ── ESTIMADO (17,98 kWp · GW15kW · overload 20%)
+  { placas:29, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:26250, promo:null,  src:'ESTIMADO' },
+  { placas:29, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:24220, promo:null,  src:'ESTIMADO' },
+  // ── 30 PLACAS ── ESTIMADO (18,60 kWp · GW15kW · overload 24%)
+  { placas:30, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:26750, promo:null,  src:'ESTIMADO' },
+  { placas:30, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:24650, promo:null,  src:'ESTIMADO' },
+  // ── 31 PLACAS ── ESTIMADO (19,22 kWp · GW15kW · overload 28%)
+  { placas:31, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:27250, promo:null,  src:'ESTIMADO' },
+  { placas:31, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:25080, promo:null,  src:'ESTIMADO' },
+  // ── 32 PLACAS ── ESTIMADO (19,84 kWp · GW15kW overload 32% · FoxESS ×8 overload 3%)
+  { placas:32, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:27750, promo:null,  src:'ESTIMADO' },
+  { placas:32, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:25510, promo:null,  src:'ESTIMADO' },
+  { placas:32, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:31200, promo:null,  src:'ESTIMADO' },
+  { placas:32, inv:'FoxESS Micro', mod:'Leapton 620W', equip:28960, promo:null,  src:'ESTIMADO' },
+  // ── 33 PLACAS ── ESTIMADO (20,46 kWp · GW15kW · overload 36%)
+  { placas:33, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:28250, promo:null,  src:'ESTIMADO' },
+  { placas:33, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:25940, promo:null,  src:'ESTIMADO' },
+  // ── 34 PLACAS ── ESTIMADO (21,08 kWp · GW20kW · overload 5%)
+  { placas:34, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:33300, promo:null,  src:'ESTIMADO' },
+  { placas:34, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:30920, promo:null,  src:'ESTIMADO' },
+  // ── 35 PLACAS ── ESTIMADO (21,70 kWp · GW20kW · overload 9%)
+  { placas:35, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:33800, promo:null,  src:'ESTIMADO' },
+  { placas:35, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:31350, promo:null,  src:'ESTIMADO' },
+  // ── 36 PLACAS ── ESTIMADO (22,32 kWp · GW20kW overload 12% · FoxESS ×9 overload 3%)
+  { placas:36, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:34300, promo:null,  src:'ESTIMADO' },
+  { placas:36, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:31780, promo:null,  src:'ESTIMADO' },
+  { placas:36, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:35100, promo:null,  src:'ESTIMADO' },
+  { placas:36, inv:'FoxESS Micro', mod:'Leapton 620W', equip:32580, promo:null,  src:'ESTIMADO' },
+  // ── 37 PLACAS ── ESTIMADO (22,94 kWp · GW20kW · overload 15%)
+  { placas:37, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:34800, promo:null,  src:'ESTIMADO' },
+  { placas:37, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:32210, promo:null,  src:'ESTIMADO' },
+  // ── 38 PLACAS ── ESTIMADO (23,56 kWp · GW20kW · overload 18%)
+  { placas:38, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:35300, promo:null,  src:'ESTIMADO' },
+  { placas:38, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:32640, promo:null,  src:'ESTIMADO' },
+  // ── 39 PLACAS ── ESTIMADO (24,18 kWp · GW20kW · overload 21%)
+  { placas:39, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:35800, promo:null,  src:'ESTIMADO' },
+  { placas:39, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:33070, promo:null,  src:'ESTIMADO' },
+  // ── 40 PLACAS ── ESTIMADO + REAL_COTAÇÃO (24,80 kWp · GW20kW overload 24% · FoxESS ×10 overload 3%)
+  { placas:40, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:36300, promo:null,  src:'ESTIMADO' },
+  { placas:40, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:33500, promo:null,  src:'ESTIMADO' },
+  { placas:40, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:39000, promo:null,  src:'ESTIMADO' },
+  { placas:40, inv:'FoxESS Micro', mod:'Leapton 620W', equip:36200, promo:null,  src:'ESTIMADO' },
+  { placas:40, inv:'GoodWe 20kW',  mod:'Hanersun 610W', equip:32016, promo:null, src:'REAL_COTAÇÃO' },
+  { placas:40, inv:'FoxESS Micro', mod:'Hanersun 610W', equip:34697, promo:null, src:'REAL_COTAÇÃO' },
+];
+
+// ══════════════════════════════════════════════════════════════
+//  FUNÇÕES DE CÁLCULO
+// ══════════════════════════════════════════════════════════════
+
+function getFaixa(kwp) {
+  return FAIXAS.find(f => kwp > f.min && kwp <= f.max) || FAIXAS[FAIXAS.length - 1];
+}
+
+function calcKit(k) {
+  const wp      = k.placas * WP;
+  const kwp     = wp / 1000;
+  const faixa   = getFaixa(kwp);
+  const instal  = faixa.rwp * wp + faixa.homo;
+  const direto  = k.equip + instal;
+  const margem  = MARGEM[k.placas];
+  const neg     = NEG[k.placas];
+  // Preço Mínimo: âncora real para kits REAL, fórmula para ESTIMADOS
+  const formulaMin = direto / (1 - margem);
+  const minimo  = k.promo !== null ? k.promo : Math.round(formulaMin / 10) * 10;
+  // Preço Cheio: sempre acima do mínimo — margem comercial de negociação
+  const cheio   = minimo / (1 - neg);
+  // CASH/Imposto/Gestão calculados sobre o Preço Mínimo (cenário conservador)
+  const imp     = minimo * PARAMS.imposto;
+  const liquido = minimo - direto - imp;
+  const gestao  = liquido * PARAMS.gestao;
+  const cash    = liquido * (1 - PARAMS.gestao);
+  const mrealPct= (minimo - direto) / minimo;
+  const rwkwp   = minimo / kwp;
+  const acW     = getInversorAC(k.inv, k.placas);
+  const overload= acW > 0 ? (wp / acW - 1) : 0;
+  const isFox   = k.inv === 'FoxESS Micro';
+  const foxOk   = !isFox || (k.placas % 4 === 0);
+  const overOk  = overload <= PARAMS.overloadMax;
+  // delta: para kits REAL, compara preço real (mínimo) vs fórmula — divergência indica revisão
+  const delta   = k.promo !== null ? ((minimo - formulaMin) / formulaMin) : 0;
+  let status = 'OK';
+  if (!overOk || !foxOk) status = 'INVÁLIDO';
+  else if (delta < -0.03) status = 'REVISAR'; // mínimo mais de 3% abaixo da fórmula
+  return { wp, kwp, faixa, instal, direto, margem, neg, formulaMin, minimo, cheio, imp, gestao, cash, mrealPct, rwkwp, acW, overload, overOk, foxOk, isFox, delta, status };
+}
+
+const CALC = KITS.map(k => ({ ...k, ...calcKit(k) }));
+
+// ══════════════════════════════════════════════════════════════
+//  FORMATAÇÃO
+// ══════════════════════════════════════════════════════════════
+
+const R = (v, d=0) => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits:d, maximumFractionDigits:d });
+const P = (v)      => (v * 100).toFixed(1) + '%';
+const N = (v, d=2) => v.toLocaleString('pt-BR', { minimumFractionDigits:d, maximumFractionDigits:d });
+
+function badge(src) {
+  const map = { REAL:'b-real', ESTIMADO:'b-est', INVÁLIDO:'b-inv', REVISAR:'b-rev', OK:'b-ok', 'REAL_COTAÇÃO':'b-real' };
+  return `<span class="badge ${map[src]||'b-est'}">${src}</span>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER — PARÂMETROS
+// ══════════════════════════════════════════════════════════════
+
+document.getElementById('param-cards').innerHTML = `
+  <div class="param-card"><label>Imposto</label><div class="val">10%</div><div class="desc">Sobre a receita bruta (NF)</div></div>
+  <div class="param-card"><label>Reserva de Gestão</label><div class="val">20%</div><div class="desc">Do lucro líquido para operação</div></div>
+  <div class="param-card"><label>CASH</label><div class="val">80%</div><div class="desc">Do lucro líquido disponível</div></div>
+  <div class="param-card"><label>Overload Máximo</label><div class="val">40%</div><div class="desc">DC/AC — limite técnico dos inversores</div></div>
+  <div class="param-card"><label>Margem Ref (8 pl.)</label><div class="val">24%</div><div class="desc">Referência base — cresce com o kit</div></div>
+  <div class="param-card"><label>Módulo</label><div class="val">620</div><div class="desc">Wp por placa (Jinko / Leapton)</div></div>
+`;
+
+(function renderMargemTable() {
+  const tb = document.getElementById('margem-table');
+  Object.keys(MARGEM).forEach(p => {
+    const kwp = (parseInt(p) * WP / 1000).toFixed(2);
+    const m = MARGEM[p]; const n = NEG[p];
+    tb.innerHTML += `<tr>
+      <td>${p} pl.</td>
+      <td class="num">${kwp} kWp</td>
+      <td class="em">${P(m)}</td>
+      <td class="num">${P(n)}</td>
+      <td style="color:var(--muted);font-size:10px">${m===0.24?'Referência base':m===0.31?'Maior porte — maior fixo':'Margem crescente'}</td>
+    </tr>`;
+  });
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER — KITS
+// ══════════════════════════════════════════════════════════════
+
+(function renderKits() {
+  const tb = document.getElementById('kits-table');
+  let lastPlacas = null;
+  CALC.forEach(c => {
+    if (c.placas !== lastPlacas) {
+      tb.innerHTML += `<tr class="group-header"><td colspan="16">${c.placas} PLACAS — ${N(c.kwp,2)} kWp</td></tr>`;
+      lastPlacas = c.placas;
+    }
+    const minimoFlag = c.src === 'REAL' && c.delta < -0.03
+      ? `<span style="color:var(--red)" title="Mín. real ${(c.delta*100).toFixed(1)}% abaixo da fórmula"> ⚠</span>` : '';
+    const minimoCell = c.delta >= 0 || c.src !== 'REAL'
+      ? `<td class="green">${R(c.minimo)}${minimoFlag}</td>`
+      : `<td class="red-cell">${R(c.minimo)}${minimoFlag}</td>`;
+    tb.innerHTML += `<tr${c.src==='REAL'?' class="highlight-row"':''}>
+      <td>${c.placas}</td>
+      <td class="num">${N(c.kwp,2)}</td>
+      <td>${c.inv}</td>
+      <td>${c.mod}</td>
+      <td class="num">${R(c.equip)}</td>
+      <td class="num">${R(c.instal)}</td>
+      <td class="num">${R(c.direto)}</td>
+      <td class="num">${P(c.margem)}</td>
+      ${minimoCell}
+      <td class="em">${R(c.cheio)}</td>
+      <td class="num">${R(c.imp)}</td>
+      <td class="yellow">${R(c.gestao)}</td>
+      <td class="green">${R(c.cash)}</td>
+      <td class="num">${R(c.rwkwp)}</td>
+      <td>${badge(c.src)}</td>
+    </tr>`;
+  });
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER — INVERSORES (FoxESS por kit)
+// ══════════════════════════════════════════════════════════════
+
+(function renderFoxESS() {
+  const tb = document.getElementById('foxess-table');
+  [8, 12, 16, 20, 24, 28, 32, 36, 40].forEach(p => {
+    const wp = p * WP;
+    const kwp = wp / 1000;
+    const units = p / 4;
+    const ac = units * 2400;
+    const over = (wp / ac - 1) * 100;
+    const valid = over <= 40;
+    tb.innerHTML += `<tr>
+      <td>${p}</td>
+      <td class="num">${N(kwp,2)} kWp</td>
+      <td class="num">${units}</td>
+      <td class="num">${N(ac/1000,1)} kW</td>
+      <td class="num${valid?'':' red-cell'}">${N(over,1)}%</td>
+      <td class="center">${valid ? badge('OK') : badge('INVÁLIDO')}</td>
+    </tr>`;
+  });
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER — FAIXAS
+// ══════════════════════════════════════════════════════════════
+
+(function renderFaixas() {
+  const tb = document.getElementById('faixas-table');
+  FAIXAS.forEach(f => {
+    const exMin = f.rwp * f.min * 1000 + f.homo;
+    const exMax = f.rwp * f.max * 1000 + f.homo;
+    tb.innerHTML += `<tr>
+      <td>${f.min}–${f.max} kWp</td>
+      <td class="num">R$ ${f.rwp.toFixed(2)}/Wp</td>
+      <td class="num">${R(f.homo)}</td>
+      <td class="num">${f.min===0?'—':R(exMin)}</td>
+      <td class="num">${R(exMax)}</td>
+    </tr>`;
+  });
+  const tb2 = document.getElementById('instalacao-kits-table');
+  Object.keys(MARGEM).forEach(p => {
+    const wp = parseInt(p) * WP;
+    const kwp = wp / 1000;
+    const f = getFaixa(kwp);
+    const ins = f.rwp * wp + f.homo;
+    tb2.innerHTML += `<tr>
+      <td>${p} pl.</td>
+      <td class="num">${N(kwp,2)} kWp</td>
+      <td>${f.min}–${f.max} kWp</td>
+      <td class="num">R$ ${f.rwp.toFixed(2)}/Wp</td>
+      <td class="num">${R(f.homo)}</td>
+      <td class="em">${R(ins)}</td>
+    </tr>`;
+  });
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER — COMISSÕES
+// ══════════════════════════════════════════════════════════════
+
+(function populateCommSelect() {
+  const sel = document.getElementById('comm-kit');
+  CALC.forEach((c, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${c.placas}pl · ${c.inv} · ${c.mod} — ${R(c.minimo)} ${c.src==='REAL'?'✓':'~'}`;
+    sel.appendChild(opt);
+  });
+  calcComm();
+})();
+
+function calcComm() {
+  const idx  = parseInt(document.getElementById('comm-kit').value);
+  const pct  = parseFloat(document.getElementById('comm-pct').value) / 100;
+  const preco0 = parseFloat(document.getElementById('comm-preco').value) || 0;
+  const c = CALC[idx];
+  const preco = preco0 > 0 ? preco0 : c.minimo;
+  const imp   = preco * PARAMS.imposto;
+  const liq   = preco - c.direto - imp;
+  const gest  = liq * PARAMS.gestao;
+  const cash  = liq * (1 - PARAMS.gestao);
+  const comm  = preco * pct;
+  const cashLiq = cash - comm;
+  const mreal = (preco - c.direto) / preco;
+  document.getElementById('comm-result').innerHTML = `
+    <div class="result-row"><span class="result-label">Kit</span><span class="result-value">${c.placas} pl · ${c.inv} · ${c.mod}</span></div>
+    <div class="result-row"><span class="result-label">Preço de Venda</span><span class="result-value">${R(preco)}</span></div>
+    <div class="result-row"><span class="result-label">Custo Direto</span><span class="result-value">${R(c.direto)}</span></div>
+    <div class="result-row"><span class="result-label">Imposto (10%)</span><span class="result-value">${R(imp)}</span></div>
+    <div class="result-row"><span class="result-label">Lucro Líquido</span><span class="result-value">${R(liq)}</span></div>
+    <div class="result-row"><span class="result-label">Gestão (20%)</span><span class="result-value">${R(gest)}</span></div>
+    <div class="result-row"><span class="result-label">CASH bruto</span><span class="result-value g">${R(cash)}</span></div>
+    <div class="result-row"><span class="result-label">Comissão (${(pct*100).toFixed(1)}% s/ preço)</span><span class="result-value" style="color:var(--red)">− ${R(comm)}</span></div>
+    <div class="result-row"><span class="result-label">Margem Real</span><span class="result-value">${P(mreal)}</span></div>
+    <div class="result-row" style="border-top:2px solid var(--orange);margin-top:6px;padding-top:10px">
+      <span class="result-label" style="font-weight:700;color:var(--white)">CASH Líquido</span>
+      <span class="big-value">${R(cashLiq)}</span>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER — RESUMO
+// ══════════════════════════════════════════════════════════════
+
+(function renderResumo() {
+  const tb = document.getElementById('resumo-table');
+  let lastP = null;
+  CALC.forEach(c => {
+    if (c.placas !== lastP) {
+      tb.innerHTML += `<tr class="group-header"><td colspan="9">${c.placas} Placas — ${N(c.kwp,2)} kWp</td></tr>`;
+      lastP = c.placas;
+    }
+    tb.innerHTML += `<tr>
+      <td>${c.placas}</td>
+      <td class="num">${N(c.kwp,2)}</td>
+      <td>${c.inv} · ${c.mod}</td>
+      <td class="em">${R(c.cheio)}</td>
+      <td class="num">${R(c.minimo)}</td>
+      <td class="num">${R(c.rwkwp)}</td>
+      <td class="green">${R(c.cash)}</td>
+      <td class="num">${P(c.mrealPct)}</td>
+      <td>${badge(c.src)}</td>
+    </tr>`;
+  });
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER — BACKEND
+// ══════════════════════════════════════════════════════════════
+
+(function renderBackend() {
+  const tb = document.getElementById('backend-table');
+  CALC.forEach(c => {
+    tb.innerHTML += `<tr>
+      <td class="num">${c.placas}</td>
+      <td class="num">${N(c.kwp,2)}</td>
+      <td>${c.inv}</td>
+      <td>${c.mod}</td>
+      <td class="num">${Math.round(c.equip)}</td>
+      <td class="num">${Math.round(c.direto)}</td>
+      <td class="num">${Math.round(c.minimo)}</td>
+      <td class="em">${Math.round(c.cheio)}</td>
+      <td class="green">${Math.round(c.cash)}</td>
+      <td>${badge(c.src)}</td>
+    </tr>`;
+  });
+
+  const obj = CALC.map(c => ({
+    placas: c.placas,
+    kwp: parseFloat(N(c.kwp, 2).replace(',','.')),
+    inversor: c.inv,
+    modulo: c.mod,
+    custoEquip: Math.round(c.equip),
+    custoDireto: Math.round(c.direto),
+    precoMinimo: Math.round(c.minimo),
+    precoCheio: Math.round(c.cheio),
+    cash: Math.round(c.cash),
+    fonte: c.src
+  }));
+  document.getElementById('js-export').textContent =
+    'const KITS_PRECOS = ' + JSON.stringify(obj, null, 2) + ';';
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER — VALIDAÇÃO
+// ══════════════════════════════════════════════════════════════
+
+(function renderValidacao() {
+  const tb = document.getElementById('validacao-table');
+  CALC.forEach(c => {
+    const overStr = c.acW > 0
+      ? `${(c.overload * 100).toFixed(1)}%`
+      : 'N/A';
+    const overCell = c.overOk
+      ? `<td class="green">${overStr}</td><td class="center">${badge('OK')}</td>`
+      : `<td class="red-cell">${overStr}</td><td class="center">${badge('INVÁLIDO')}</td>`;
+    const foxCell = !c.isFox
+      ? `<td class="center" style="color:var(--muted)">N/A</td>`
+      : c.foxOk
+        ? `<td class="center">${badge('OK')}</td>`
+        : `<td class="center">${badge('INVÁLIDO')}</td>`;
+    const diffPct = c.src === 'REAL' ? `${(c.delta*100).toFixed(1)}%` : '—';
+    const diffCell = c.src !== 'REAL'
+      ? `<td class="center" style="color:var(--muted)">ESTIMADO</td>`
+      : c.delta >= -0.03
+        ? `<td class="center">${badge('OK')} Δ${diffPct}</td>`
+        : `<td class="center">${badge('REVISAR')} Δ${diffPct} (real abaixo da fórmula)</td>`;
+    tb.innerHTML += `<tr>
+      <td>${c.placas} pl</td>
+      <td>${c.inv}</td>
+      <td class="num">${N(c.kwp,2)} kWp</td>
+      <td class="num">${c.acW > 0 ? N(c.acW/1000,1)+' kW' : 'N/A'}</td>
+      ${overCell}
+      ${foxCell}
+      ${diffCell}
+      <td class="center">${badge(c.status)}</td>
+    </tr>`;
+  });
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  COTAÇÕES — Linha nova
+// ══════════════════════════════════════════════════════════════
+
+function addCotacaoRow() {
+  const tb = document.querySelector('#cotacoes-tbl tbody');
+  tb.insertAdjacentHTML('beforeend', `<tr>
+    <td contenteditable style="min-width:80px">__/__</td>
+    <td contenteditable>Fornecedor</td>
+    <td contenteditable>Item</td>
+    <td contenteditable class="num">1</td>
+    <td contenteditable class="num">0</td>
+    <td contenteditable class="num">0</td>
+    <td contenteditable>—</td>
+    <td contenteditable>—</td>
+  </tr>`);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  HÍBRIDOS — DADOS
+// ══════════════════════════════════════════════════════════════
+
+// Deltas derivados de dados reais Solfácil:
+//   Leapton 590W: R$560/pl · Jinko 620W: R$660/pl · Unipower bat: R$4.308/bat
+const KITS_HIBRIDOS = [
+  // ── GoodWe 3.5kW Híbrido — Lynx A (GoodWe) — máx 8pl ───────────────────
+  { id:'GW35-6J',    placas:6,  inv:'GoodWe 3.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:13873, status:'ESTIMADO'    },
+  { id:'GW35-7J',    placas:7,  inv:'GoodWe 3.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:14533, status:'ESTIMADO'    },
+  { id:'GW35-8J',    placas:8,  inv:'GoodWe 3.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:15193, status:'REAL_COTAÇÃO' },
+  { id:'GW35-8A',    placas:8,  inv:'GoodWe 3.5kW Híbrido', mod:'Astron 575W',  bats:1, batMod:'Lynx A (GoodWe)', equip:14334, status:'REAL_COTAÇÃO' },
+  // ── GoodWe 5kW Híbrido — Lynx A (GoodWe) — máx 11pl ────────────────────
+  { id:'GW5-7J',     placas:7,  inv:'GoodWe 5kW Híbrido',   mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:17252, status:'ESTIMADO'    },
+  { id:'GW5-8J',     placas:8,  inv:'GoodWe 5kW Híbrido',   mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:17912, status:'REAL_COTAÇÃO' },
+  { id:'GW5-9J',     placas:9,  inv:'GoodWe 5kW Híbrido',   mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:18572, status:'ESTIMADO'    },
+  { id:'GW5-10J',    placas:10, inv:'GoodWe 5kW Híbrido',   mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:19232, status:'ESTIMADO'    },
+  { id:'GW5-11J',    placas:11, inv:'GoodWe 5kW Híbrido',   mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:19892, status:'ESTIMADO'    },
+  // ── GoodWe 7.5kW Híbrido — 1 Unipower — 9–16pl ─────────────────────────
+  { id:'GW75-9L-1',  placas:9,  inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:18149, status:'REAL_COTAÇÃO' },
+  { id:'GW75-9J-1',  placas:9,  inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:19049, status:'ESTIMADO'    },
+  { id:'GW75-10L-1', placas:10, inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:18709, status:'ESTIMADO'    },
+  { id:'GW75-10J-1', placas:10, inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:19709, status:'ESTIMADO'    },
+  { id:'GW75-11L-1', placas:11, inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:19269, status:'ESTIMADO'    },
+  { id:'GW75-11J-1', placas:11, inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:20369, status:'ESTIMADO'    },
+  { id:'GW75-12L-1', placas:12, inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:19829, status:'ESTIMADO'    },
+  { id:'GW75-12J-1', placas:12, inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21029, status:'ESTIMADO'    },
+  { id:'GW75-13L-1', placas:13, inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20389, status:'ESTIMADO'    },
+  { id:'GW75-13J-1', placas:13, inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21689, status:'ESTIMADO'    },
+  { id:'GW75-14L-1', placas:14, inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20949, status:'ESTIMADO'    },
+  { id:'GW75-14J-1', placas:14, inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:22349, status:'ESTIMADO'    },
+  { id:'GW75-15L-1', placas:15, inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:21509, status:'ESTIMADO'    },
+  { id:'GW75-15J-1', placas:15, inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:23009, status:'ESTIMADO'    },
+  { id:'GW75-16L-1', placas:16, inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:22069, status:'ESTIMADO'    },
+  { id:'GW75-16J-1', placas:16, inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:23669, status:'ESTIMADO'    },
+  // ── GoodWe 7.5kW Híbrido — 2 Unipower ──────────────────────────────────
+  { id:'GW75-9L-2',  placas:9,  inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:22457, status:'REAL_COTAÇÃO' },
+  { id:'GW75-9J-2',  placas:9,  inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:23357, status:'ESTIMADO'    },
+  { id:'GW75-16L-2', placas:16, inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:26377, status:'ESTIMADO'    },
+  { id:'GW75-16J-2', placas:16, inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:27977, status:'ESTIMADO'    },
+  // ── GoodWe 7.5kW Híbrido — 3 Unipower ──────────────────────────────────
+  { id:'GW75-9L-3',  placas:9,  inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:3, batMod:'Unipower', equip:26765, status:'REAL_COTAÇÃO' },
+  { id:'GW75-9J-3',  placas:9,  inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:3, batMod:'Unipower', equip:27665, status:'ESTIMADO'    },
+  // ── Sofar 7.5kW Híbrido — 1 Unipower — 9–16pl ──────────────────────────
+  { id:'SF75-9L-1',  placas:9,  inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:17579, status:'REAL_COTAÇÃO' },
+  { id:'SF75-9J-1',  placas:9,  inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:18479, status:'ESTIMADO'    },
+  { id:'SF75-10L-1', placas:10, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:18139, status:'ESTIMADO'    },
+  { id:'SF75-10J-1', placas:10, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:19139, status:'ESTIMADO'    },
+  { id:'SF75-11L-1', placas:11, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:18699, status:'ESTIMADO'    },
+  { id:'SF75-11J-1', placas:11, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:19799, status:'ESTIMADO'    },
+  { id:'SF75-12L-1', placas:12, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:19259, status:'ESTIMADO'    },
+  { id:'SF75-12J-1', placas:12, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:20459, status:'ESTIMADO'    },
+  { id:'SF75-13L-1', placas:13, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:19819, status:'ESTIMADO'    },
+  { id:'SF75-13J-1', placas:13, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21119, status:'ESTIMADO'    },
+  { id:'SF75-14L-1', placas:14, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20379, status:'ESTIMADO'    },
+  { id:'SF75-14J-1', placas:14, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21779, status:'ESTIMADO'    },
+  { id:'SF75-15L-1', placas:15, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20939, status:'ESTIMADO'    },
+  { id:'SF75-15J-1', placas:15, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:22439, status:'ESTIMADO'    },
+  { id:'SF75-16L-1', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:21499, status:'ESTIMADO'    },
+  { id:'SF75-16J-1', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:23099, status:'ESTIMADO'    },
+  // ── Sofar 7.5kW Híbrido — 2 Unipower ───────────────────────────────────
+  { id:'SF75-9L-2',  placas:9,  inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:21874, status:'ESTIMADO'    },
+  { id:'SF75-9J-2',  placas:9,  inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:22774, status:'ESTIMADO'    },
+  { id:'SF75-16L-2', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:25794, status:'REAL_COTAÇÃO' },
+  { id:'SF75-16J-2', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:27394, status:'ESTIMADO'    },
+];
+
+// S+ tabela fixa — instalação do sistema de armazenamento (sem painéis)
+const SPLUS_HI = [
+  { inv:1, bat:1, descr:'1INV 1BAT 6CKT 1QD',  custo:4600  },
+  { inv:1, bat:2, descr:'1INV 2BAT 8CKT 1QD',  custo:5550  },
+  { inv:1, bat:3, descr:'1INV 3BAT 10CKT 1QD', custo:6400  },
+  { inv:1, bat:4, descr:'1INV 4BAT 12CKT 2QD', custo:8350  },
+  { inv:2, bat:4, descr:'2INV 4BAT 16CKT 2QD', custo:10000 },
+  { inv:2, bat:6, descr:'2INV 6BAT 20CKT 2QD', custo:11850 },
+  { inv:2, bat:8, descr:'2INV 8BAT 24CKT 2QD', custo:13600 },
+  { inv:3, bat:6, descr:'3INV 6BAT 24CKT 3QD', custo:14200 },
+  { inv:3, bat:9, descr:'3INV 9BAT 32CKT 3QD', custo:17950 },
+];
+
+function getModWpHi(mod) {
+  if (mod.includes('590')) return 590;
+  if (mod.includes('575')) return 575;
+  if (mod.includes('610')) return 610;
+  return 620;
+}
+
+function margemHi(bats) {
+  if (bats <= 2) return 0.31;
+  if (bats <= 4) return 0.32;
+  return 0.33;
+}
+
+// DEG instalação híbrida: base + por placa + por bateria + adicional híbrido
+function degInstalHi(placas, bats) {
+  return 4000 + placas * 350 + bats * 1200 + 400;
+}
+
+// Menor configuração S+ que atende ao número de inversores e baterias
+function splusHiLookup(bats, numInv) {
+  numInv = numInv || 1;
+  return SPLUS_HI.find(r => r.inv >= numInv && r.bat >= bats) || SPLUS_HI[0];
+}
+
+// S+ painéis c/ material: ≤10pl = R$3.500 fixo · 12+ pl = R$320/pl
+function splusPaineisHi(placas) {
+  return placas <= 10 ? 3500 : placas * 320;
+}
+
+function calcHibrido(k, cenario) {
+  const wpUnit = getModWpHi(k.mod);
+  const kwp = k.placas * wpUnit / 1000;
+  const instalDEG = degInstalHi(k.placas, k.bats);
+  const homo = 500; // ≤10kW
+  const custoDireto = k.equip + instalDEG + homo;
+  const icms = cenario === 3 ? Math.round(k.equip * 0.25) : 0;
+  const custoTotal = custoDireto + icms;
+  const margem = margemHi(k.bats);
+  const minimo = Math.round(custoTotal / (1 - margem) / 10) * 10;
+  const bomba      = Math.round(custoTotal / (1 - 0.24) / 10) * 10; // margem mínima de referência — o mais baixo possível
+  const cashBomba  = Math.round((bomba - custoTotal - bomba * 0.10) * 0.80);
+  const cheio = minimo / (1 - 0.06);
+  const imp = Math.round(minimo * 0.10);
+  const liquido = minimo - custoDireto - icms - imp;
+  const gestao = Math.round(liquido * 0.20);
+  const cash = Math.round(liquido * 0.80);
+  const spHiConfig = splusHiLookup(k.bats);
+  const spPaineis = splusPaineisHi(k.placas);
+  const spTotal = spHiConfig.custo + spPaineis;
+  return { kwp, instalDEG, homo, custoDireto, icms, custoTotal, margem, bomba, cashBomba, minimo, cheio, imp, liquido, gestao, cash, spHiConfig, spPaineis, spTotal };
+}
+
+// ══════════════════════════════════════════════════════════════
+//  HÍBRIDOS — RENDER
+// ══════════════════════════════════════════════════════════════
+
+(function initHibridosFilters() {
+  const sel = document.getElementById('hi-filter-inv');
+  [...new Set(KITS_HIBRIDOS.map(k => k.inv))].forEach(inv => {
+    const opt = document.createElement('option');
+    opt.value = inv; opt.textContent = inv;
+    sel.appendChild(opt);
+  });
+})();
+
+function renderHibridos() {
+  const cenario  = parseInt(document.getElementById('hi-cenario').value);
+  const filterInv  = document.getElementById('hi-filter-inv').value;
+  const filterBats = document.getElementById('hi-filter-bats').value;
+
+  const filtered = KITS_HIBRIDOS.filter(k => {
+    if (filterInv  && k.inv  !== filterInv)           return false;
+    if (filterBats && k.bats !== parseInt(filterBats)) return false;
+    return true;
+  });
+
+  // ── Tabela de precificação
+  const tb = document.getElementById('hibridos-table');
+  tb.innerHTML = '';
+  let lastInv = null;
+  filtered.forEach(k => {
+    if (k.inv !== lastInv) {
+      const kwStr = k.inv.match(/[\d.]+kW/)?.[0] || '';
+      tb.innerHTML += `<tr class="group-header"><td colspan="20">── ${k.inv} · ${kwStr} · Bateria: ${k.batMod}</td></tr>`;
+      lastInv = k.inv;
+    }
+    const c = calcHibrido(k, cenario);
+    const cashCls  = c.cash >= 0 ? 'green' : 'red-cell';
+    tb.innerHTML += `<tr${k.status==='REAL_COTAÇÃO'?' class="highlight-row"':''}>
+      <td><strong>${k.id}</strong></td>
+      <td class="center">${k.placas}</td>
+      <td class="num">${c.kwp.toFixed(2)}</td>
+      <td>${k.inv}</td>
+      <td>${k.mod}</td>
+      <td class="center"><strong>${k.bats}</strong></td>
+      <td>${k.batMod}</td>
+      <td class="num">${R(k.equip)}</td>
+      <td class="num">${R(c.instalDEG)}</td>
+      <td class="num">${R(c.homo)}</td>
+      <td class="num">${R(c.custoDireto)}</td>
+      <td class="num">${P(c.margem)}</td>
+      <td class="red-cell">${R(c.bomba)}</td>
+      <td class="red-cell">${R(c.cashBomba)}</td>
+      <td class="green">${R(c.minimo)}</td>
+      <td class="em">${R(c.cheio)}</td>
+      <td class="num">${R(c.imp)}</td>
+      <td class="yellow">${R(c.gestao)}</td>
+      <td class="${cashCls}">${R(c.cash)}</td>
+      <td>${badge(k.status)}</td>
+    </tr>`;
+  });
+
+  // ── Tabela comparativa DEG vs S+
+  const tb2 = document.getElementById('hibridos-comp-table');
+  tb2.innerHTML = '';
+  filtered.forEach(k => {
+    const c = calcHibrido(k, 1); // comparativo sempre c/ cenário 1 (com solar)
+    const degWins = c.instalDEG <= c.spTotal;
+    const diff = Math.abs(c.instalDEG - c.spTotal);
+    const winBadge = degWins
+      ? `<span class="badge" style="background:rgba(242,101,34,.2);color:var(--orange)">DEG −${R(diff)}</span>`
+      : `<span class="badge b-ok">S+ −${R(diff)}</span>`;
+    tb2.innerHTML += `<tr>
+      <td><strong>${k.id}</strong></td>
+      <td style="font-size:10px">${k.inv.replace(' Híbrido','')} · ${k.bats}bat · ${k.placas}pl</td>
+      <td class="center">${k.placas}</td>
+      <td class="${degWins ? 'em' : 'num'}">${R(c.instalDEG)}</td>
+      <td style="font-size:10px;color:var(--muted)">${c.spHiConfig.descr}</td>
+      <td class="num">${R(c.spHiConfig.custo)}</td>
+      <td class="num">${R(c.spPaineis)}</td>
+      <td class="${degWins ? 'num' : 'green'}">${R(c.spTotal)}</td>
+      <td class="num">${R(diff)}</td>
+      <td class="center">${winBadge}</td>
+    </tr>`;
+  });
+}
+
+(function renderSplusHiTableBody() {
+  const tb = document.getElementById('splus-hi-table-body');
+  SPLUS_HI.forEach((row, i) => {
+    tb.innerHTML += `<tr>
+      <td class="center">${i + 1}</td>
+      <td>${row.descr}</td>
+      <td class="em">${R(row.custo)}</td>
+    </tr>`;
+  });
+  renderHibridos();
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  TAB NAVIGATION
+// ══════════════════════════════════════════════════════════════
+
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
