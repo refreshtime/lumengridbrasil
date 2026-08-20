@@ -96,6 +96,56 @@ Antes de qualquer edição:
 - **On-Grid:** R$ 3.500 / kWp, 65 kWh/placa/mes
 - **Hibrido:** R$ 5.000 / kWp, minimo R$ 28.000, 65 kWh/placa/mes
 
+## Precificação de Kits — Lógica Obrigatória
+
+Arquivo fonte: `precificacao_kits.html` (array `KITS` / `KITS_OG`).
+
+### Componentes do Custo Direto
+```
+Custo Direto = Equipamentos (equip) + Instalação (rwp × Wp + homo)
+```
+
+**Faixas de instalação (On-Grid):**
+| kWp | R$/Wp (rwp) | Homologação |
+|-----|------------|-------------|
+| 0–3 | 0,84 | R$ 500 |
+| 3–6 | 0,60 | R$ 500 |
+| 6–9 | 0,50 | R$ 800 |
+| 9–12 | 0,44 | R$ 950 |
+| 12–20 | 0,42 | R$ 1.050 |
+| 20–45 | 0,38 | R$ 1.450 |
+
+### DRE do Kit (cascata obrigatória)
+```
+Preço de Venda (Cheio)          = 100%
+(−) Custo Direto                = equip + instalação + homologação
+(−) Impostos                    = 10% do preço de venda
+(−) Gestão OP                   = 20% da margem bruta (receita − custo direto − impostos)
+= MARGEM CASH
+(−) Comissão Vendedor           = 5% da Margem Cash
+= MARGEM LÍQUIDA FINAL
+```
+
+### Margens-alvo por porte (Preço Mínimo)
+- 8 pl → 24% | 9 pl → 25% | 10 pl → 26% | 11 pl → 27% | 12 pl → 28%
+- 13 pl → 28,5% | 14–16 pl → 29–30% | 17–27 pl → 30–31% | 28+ pl → 32–33%
+
+### Campo `promo` vs fórmula
+- `promo: null` → preço mínimo calculado pela fórmula: `direto / (1 − margem)`
+- `promo: VALOR` → sobrescreve o preço mínimo com valor real cotado/negociado
+- Preço Cheio sempre = `precoMinimo / (1 − 0,05)` (spread de negociação de 5%)
+
+### Regra de sincronização — OBRIGATÓRIO
+**Sempre que alterar preço em `precificacao_kits.html`:**
+1. Se o kit for **On-Grid** → atualizar `KITS_OG` em `gerador-solar-v3.html` e copiar para `gerador-solar.html`
+2. Se o kit for **Híbrido** → atualizar o array correspondente em `gerador-hibrido.html`
+3. Fazer `git push` após todas as alterações
+
+### Overload de Inversor
+- On-Grid: limite ≤ 40% (`(placas × Wp / invW − 1) × 100`)
+- Híbrido: limite ≤ 40%
+- Alertas: ≤ 40% = verde | ≤ 55% = laranja | > 55% = vermelho
+
 ## Geracao de PDF
 
 - Usa `html2canvas` (scale: 2, allowTaint: true) + `jsPDF`
