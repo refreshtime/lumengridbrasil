@@ -563,7 +563,7 @@ function verificarNovosLeadsMeta() {
       ? headers.indexOf('responsavel')
       : 4; // coluna E por padrão
 
-    const VENDEDORES_VALIDOS = ['Lucas', 'Giovani', 'Hingrid', 'Comercial Lumen'];
+    const VENDEDORES_VALIDOS = ['Lucas', 'Kelly', 'Hingrid', 'Comercial Lumen'];
 
     const crmLeads = getLeadsCRM();
     const existingTels = new Set(crmLeads.map(l => (l.tel||l.telefone||'').replace(/\D/g,'')));
