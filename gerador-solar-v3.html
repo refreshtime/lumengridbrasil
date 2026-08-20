@@ -444,6 +444,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="frg">
       <label class="frl"><input type="radio" name="vend" value="lucas" checked>Lucas Vieira</label>
       <label class="frl"><input type="radio" name="vend" value="hingrid">Hingrid Oliveira</label>
+      <label class="frl"><input type="radio" name="vend" value="kelly">Kelly</label>
       <label class="frl"><input type="radio" name="vend" value="custom">Personalizado</label>
     </div>
     <div id="vendCustom" style="display:none">
@@ -949,6 +950,7 @@ function generateProposal(criarCard=true){
   if(vendRad){
     if(vendRad.value==='lucas'){vendNome='Lucas Vieira';vendFone='(11) 94556-0188';}
     else if(vendRad.value==='hingrid'){vendNome='Hingrid Oliveira';vendFone='(11) 99817-9824';}
+    else if(vendRad.value==='kelly'){vendNome='Kelly';vendFone='';}
     else{vendNome=get('vendNome')||'Consultor';vendFone=get('vendFone')||'';}
   }
   const parceiroRad=document.querySelector('input[name=parceiro]:checked');
