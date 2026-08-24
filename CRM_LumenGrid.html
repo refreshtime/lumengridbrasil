@@ -871,7 +871,7 @@ tbody tr td:first-child{font-weight:700}
           <button class="btn btn-s" onclick="exportCSV()">Exportar CSV</button>
           <button class="btn btn-s" onclick="document.getElementById('importJSON').click()">Restaurar Backup</button>
           <input type="file" id="importJSON" accept=".json" style="display:none" onchange="importBackup(event)">
-          <button class="btn btn-s" style="background:#EF4444;color:#fff;border-color:#EF4444" onclick="if(confirm('Remover todos os cards duplicados do localStorage e sincronizar com o servidor?'))limparDuplicatas()">🧹 Limpar Duplicatas</button>
+          <button class="btn btn-s" style="background:#EF4444;color:#fff;border-color:#EF4444" onclick="if(!ADMINS.includes(currentUser)){toast('Apenas o admin pode limpar duplicatas.','err');return;}if(confirm('Remover todos os cards duplicados do localStorage e sincronizar com o servidor?'))limparDuplicatas()">🧹 Limpar Duplicatas</button>
         </div>
       </div>
     </div>
