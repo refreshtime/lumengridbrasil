@@ -1066,6 +1066,7 @@ const STAGES = [
   {id:3,name:'Enviar Orçamento',   phase:'pre',color:'#A8893C'},
   {id:4,name:'Proposta Enviada',   phase:'pre',color:'#CA8A04'},
   {id:5,name:'Negociação',         phase:'pre',color:'#8B5CF6'},
+  {id:16,name:'Visita Comercial',  phase:'pre',color:'#0EA5E9'},
   {id:6,name:'Venda Fechada',      phase:'pre',color:'#16A34A'},
   {id:7,name:'Agendar Visita',     phase:'pos',color:'#2563EB'},
   {id:8,name:'Estrut. Projeto',    phase:'pos',color:'#1E40AF'},
@@ -1259,7 +1260,17 @@ function getAllLeadsRaw() { try { return JSON.parse(localStorage.getItem('lg_lea
 function getLeads() {
   const all = getAllLeadsRaw();
   if (ADMINS.includes(currentUser)) return all;
-  return all.filter(l => l.resp === currentUser || STAGES[l.stage]?.phase === 'pos');
+  if (currentUser === 'Kelly') {
+    // Kelly vê só os próprios + Visita Comercial de todos
+    return all.filter(l => l.resp === 'Kelly' || l.stage === 16);
+  }
+  // Lucas e Hingrid: próprios + leads da Kelly + pós-venda de todos + Visita Comercial de todos
+  return all.filter(l =>
+    l.resp === currentUser ||
+    l.resp === 'Kelly' ||
+    STAGES[l.stage]?.phase === 'pos' ||
+    l.stage === 16
+  );
 }
 function saveLeads(leads, changedLead) {
   if (ADMINS.includes(currentUser)) {
@@ -1523,7 +1534,7 @@ function renderDashboard() {
   `;
 
   const maxN = Math.max(1,...STAGES.map(s=>mine.filter(l=>l.stage===s.id).length));
-  document.getElementById('funnelChart').innerHTML = STAGES.slice(0,7).map(s=>{
+  document.getElementById('funnelChart').innerHTML = STAGES.filter(s=>s.phase==='pre').map(s=>{
     const n = mine.filter(l=>l.stage===s.id).length;
     const pct = Math.max(3,Math.round((n/maxN)*100));
     return `<div class="f-row">
