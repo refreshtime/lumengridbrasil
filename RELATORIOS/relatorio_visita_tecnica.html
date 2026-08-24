@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatório de Visita Técnica — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #E8E8E8;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 0;
+}
+
+/* ─── PÁGINA A4 ─── */
+.page {
+  width: 794px;
+  min-height: 1123px;
+  background: #FAFAFA;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 40px rgba(0,0,0,.18);
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: #0f0f0f;
+  padding: 36px 52px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid #F26522;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-logo {
+  height: 48px;
+  width: auto;
+  filter: drop-shadow(0 0 12px rgba(242,101,34,.70)) drop-shadow(0 0 5px rgba(242,101,34,.40));
+}
+.header-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.header-wm-line {
+  display: flex;
+  align-items: baseline;
+  line-height: 1;
+}
+.wm-l {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #F26522;
+  letter-spacing: -.3px;
+}
+.wm-g {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #FAFAFA;
+  letter-spacing: -.3px;
+}
+.header-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .3em;
+  color: rgba(242,101,34,.80);
+}
+.header-doc {
+  text-align: right;
+}
+.header-doc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(250,250,250,.55);
+  margin-bottom: 4px;
+}
+.header-doc-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #FAFAFA;
+  letter-spacing: -.3px;
+}
+
+/* ─── FICHA DO CLIENTE ─── */
+.ficha {
+  background: #161616;
+  padding: 24px 52px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+.ficha-item {}
+.ficha-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(242,101,34,.75);
+  margin-bottom: 5px;
+}
+.ficha-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #FAFAFA;
+  line-height: 1.4;
+}
+
+/* ─── CORPO ─── */
+.body {
+  padding: 44px 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* ─── PÁGINA 2 — SÓ FOTO ─── */
+.page-foto {
+  display: flex;
+  flex-direction: column;
+}
+.foto-topo {
+  background: #0f0f0f;
+  padding: 18px 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #F26522;
+}
+.foto-topo-esq {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(250,250,250,.45);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.foto-topo-dir {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(242,101,34,.70);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.foto-wrap {
+  flex: 1;
+  padding: 40px 52px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.foto-wrap img {
+  width: 100%;
+  max-height: 820px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,.10);
+  display: block;
+}
+.foto-legenda-box {
+  background: rgba(242,101,34,.06);
+  border: 1px solid rgba(242,101,34,.20);
+  border-left: 4px solid #F26522;
+  border-radius: 6px;
+  padding: 14px 18px;
+}
+.foto-legenda-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #F26522;
+  margin-bottom: 5px;
+}
+.foto-legenda-txt {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #3a3a3a;
+  line-height: 1.60;
+}
+
+/* ─── SEÇÃO ─── */
+.secao {
+  display: flex;
+  gap: 24px;
+}
+.secao-numero {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: #F26522;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #FAFAFA;
+  margin-top: 2px;
+}
+.secao-conteudo {
+  flex: 1;
+  border-top: 1px solid rgba(242,101,34,.25);
+  padding-top: 10px;
+}
+.secao-titulo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f0f0f;
+  letter-spacing: -.2px;
+  margin-bottom: 14px;
+}
+.secao-intro {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #3a3a3a;
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+.secao-texto {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #3a3a3a;
+  line-height: 1.70;
+}
+.secao-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.lista-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.lista-marker {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #F26522;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.lista-marker-dot { display: none; }
+.lista-texto {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #2a2a2a;
+  line-height: 1.60;
+}
+
+/* ─── OBSERVAÇÕES ─── */
+.obs-box {
+  background: rgba(242,101,34,.06);
+  border: 1px solid rgba(242,101,34,.20);
+  border-left: 4px solid #F26522;
+  border-radius: 6px;
+  padding: 16px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #3a3a3a;
+  line-height: 1.65;
+}
+.obs-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #F26522;
+  margin-bottom: 6px;
+}
+
+/* ─── ASSINATURAS ─── */
+.assinaturas {
+  margin-top: auto;
+  padding: 44px 52px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+.assinatura-bloco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.assinatura-linha {
+  width: 100%;
+  height: 1px;
+  background: #c0c0c0;
+}
+.assinatura-nome {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.assinatura-cargo {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: #888;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  background: #0f0f0f;
+  padding: 16px 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+  border-top: 2px solid #F26522;
+}
+.footer-left {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(250,250,250,.35);
+  letter-spacing: .5px;
+}
+.footer-right {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(250,250,250,.25);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ─── PRINT ─── */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    background: white;
+    padding: 0;
+    margin: 0;
+    display: block;
+  }
+  .page {
+    width: 210mm;
+    min-height: auto;
+    box-shadow: none;
+    margin: 0 !important;
+    display: block;
+  }
+  .page-foto {
+    display: block !important;
+    break-before: page;
+    page-break-before: always;
+  }
+  .foto-wrap {
+    flex: none;
+    display: block;
+    padding: 40px 52px 28px;
+  }
+  .body {
+    flex: none;
+  }
+  .secao {
+    page-break-inside: avoid;
+  }
+  .footer {
+    margin-top: 32px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="page" id="page"></div>
+<div class="page page-foto" id="page2" style="display:none;margin-top:32px;"></div>
+
+<script>
+/* ════════════════════════════════════════════════
+   BLOCO DE DADOS — trocar aqui para gerar novo relatório
+   ════════════════════════════════════════════════ */
+const dados = {
+  numero:    "3847/2026",
+  data:      "04/08/2026",
+  cliente:   "João",
+  endereco:  "Rua Dos Aliados, 1088",
+  bairro:    "Alto da Lapa — São Paulo/SP",
+  tecnico:   "—",
+
+  secoes: [
+    {
+      titulo: "Padrão de entrada",
+      intro:  "Foram identificadas as seguintes adequações necessárias:",
+      itens: [
+        "Instalação de uma haste de aterramento, com interligação ao neutro;",
+        "Substituição do disjuntor existente por um disjuntor bipolar de 80 A;",
+        "Instalação de DPS Classe I/II;",
+        "Retirada do disjuntor excedente."
+      ],
+      texto_pos: null
+    },
+    {
+      titulo: "Telhado e estrutura",
+      intro:  null,
+      itens:  [],
+      texto_pos: "O telhado e sua estrutura encontram-se em perfeitas condições para a instalação dos módulos fotovoltaicos."
+    },
+    {
+      titulo: "Local de instalação do inversor",
+      intro:  "O cliente ficará responsável por providenciar previamente:",
+      itens: [
+        "As passagens dos cabos de corrente contínua (CC) até o telhado;",
+        "As passagens dos cabos de corrente alternada (CA) até o quadro elétrico."
+      ],
+      texto_pos: "Dessa forma, no momento da instalação, nossa equipe poderá realizar o encaminhamento e a conexão dos cabeamentos nos locais definidos."
+    }
+  ],
+
+  observacoes: null,  /* Texto livre — null para ocultar o bloco */
+
+  imagem_telhado:  "telhado_joao.jpg",
+  imagem_legenda:  "Layout considerando instalação das 16 placas do projeto híbrido + 8 placas (mudança de endereço)."
+};
+
+/* ════════════════════════════════════════════════
+   RENDERIZAÇÃO — não alterar abaixo
+   ════════════════════════════════════════════════ */
+function renderSecao(s, idx) {
+  const itensHTML = s.itens.map(item => `
+    <div class="lista-item">
+      <div class="lista-marker"></div>
+      <span class="lista-texto">${item}</span>
+    </div>`).join('');
+
+  return `
+    <div class="secao">
+      <div class="secao-numero">${idx + 1}</div>
+      <div class="secao-conteudo">
+        <div class="secao-titulo">${s.titulo}</div>
+        ${s.intro  ? `<p class="secao-intro">${s.intro}</p>` : ''}
+        ${s.itens.length ? `<div class="secao-lista">${itensHTML}</div>` : ''}
+        ${s.texto_pos ? `<p class="secao-texto">${s.texto_pos}</p>` : ''}
+      </div>
+    </div>`;
+}
+
+function render(d) {
+  const secoesHTML = d.secoes.map((s, i) => renderSecao(s, i)).join('');
+  const obsHTML = d.observacoes ? `
+    <div class="obs-box">
+      <div class="obs-label">Observações</div>
+      ${d.observacoes}
+    </div>` : '';
+
+  /* ── PÁGINA 1: relatório sem foto ── */
+  document.getElementById('page').innerHTML = `
+    <div class="header">
+      <div class="header-brand">
+        <img class="header-logo" src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="header-wordmark">
+          <div class="header-wm-line">
+            <span class="wm-l">LUMEN</span><span class="wm-g">GRID</span>
+          </div>
+          <div class="header-tagline">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="header-doc">
+        <div class="header-doc-title">Documento</div>
+        <div class="header-doc-name">Relatório de Visita Técnica</div>
+      </div>
+    </div>
+    <div class="ficha">
+      <div class="ficha-item">
+        <div class="ficha-label">Cliente</div>
+        <div class="ficha-value">${d.cliente}</div>
+      </div>
+      <div class="ficha-item">
+        <div class="ficha-label">Endereço</div>
+        <div class="ficha-value">${d.endereco}<br>${d.bairro}</div>
+      </div>
+      <div class="ficha-item" style="text-align:right;">
+        <div class="ficha-label">Data da visita</div>
+        <div class="ficha-value">${d.data}</div>
+        <div class="ficha-label" style="margin-top:10px;">Nº do relatório</div>
+        <div class="ficha-value">${d.numero}</div>
+      </div>
+    </div>
+    <div class="body">
+      ${secoesHTML}
+      ${obsHTML}
+    </div>
+    <div class="assinaturas">
+      <div class="assinatura-bloco">
+        <div class="assinatura-linha"></div>
+        <div class="assinatura-nome">LumenGrid Energia Inteligente</div>
+        <div class="assinatura-cargo">Responsável Técnico</div>
+      </div>
+      <div class="assinatura-bloco">
+        <div class="assinatura-linha"></div>
+        <div class="assinatura-nome">João Carlos Rodrigues Kuntz</div>
+        <div class="assinatura-cargo">Cliente</div>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span>
+      <span class="footer-right">${d.numero}</span>
+    </div>
+  `;
+
+  /* ── PÁGINA 2: só a foto (se existir) ── */
+  const p2 = document.getElementById('page2');
+  if (d.imagem_telhado) {
+    p2.style.display = 'flex';
+    p2.innerHTML = `
+      <div class="foto-topo">
+        <span class="foto-topo-esq">LumenGrid &nbsp;·&nbsp; ${d.cliente}</span>
+        <span class="foto-topo-dir">Anexo — Layout do Telhado</span>
+      </div>
+      <div class="foto-wrap">
+        <img src="${d.imagem_telhado}" alt="Layout do telhado">
+        <div class="foto-legenda-box">
+          <div class="foto-legenda-label">Observação</div>
+          <div class="foto-legenda-txt">${d.imagem_legenda}</div>
+        </div>
+      </div>
+      <div class="footer">
+        <span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span>
+        <span class="footer-right">${d.numero}</span>
+      </div>
+    `;
+  }
+}
+
+render(dados);
+</script>
+</body>
+</html>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Gerador de Relatório — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body { height:100%; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  background: #111;
+  overflow: hidden;
+}
+
+/* ════════════════════════════════
+   PAINEL EDITOR (esquerda)
+════════════════════════════════ */
+.editor {
+  width: 400px;
+  flex-shrink: 0;
+  background: #0f0f0f;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 2px solid #F26522;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #0f0f0f;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(242,101,34,.22);
+}
+
+.editor-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 3px;
+}
+
+.editor-brand img {
+  height: 28px;
+  filter: drop-shadow(0 0 8px rgba(242,101,34,.7));
+}
+
+.editor-brand-wm {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+.editor-brand-wm .l { color: #F26522; }
+.editor-brand-wm .g { color: #FAFAFA; }
+
+.editor-sub {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(242,101,34,.55);
+}
+
+.editor-body {
+  padding: 18px 20px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── GRUPOS ─── */
+.grupo { display: flex; flex-direction: column; gap: 9px; }
+
+.grupo-titulo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #F26522;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(242,101,34,.16);
+}
+
+/* ─── CAMPOS ─── */
+.campo { display: flex; flex-direction: column; gap: 4px; }
+
+.campo label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(250,250,250,.38);
+}
+
+.campo input,
+.campo textarea {
+  background: #1b1b1b;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 6px;
+  padding: 8px 11px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #FAFAFA;
+  outline: none;
+  width: 100%;
+  transition: border-color .18s;
+}
+
+.campo input:focus,
+.campo textarea:focus { border-color: rgba(242,101,34,.5); }
+
+.campo textarea { min-height: 52px; resize: vertical; }
+
+.campo-numero input {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #F26522;
+  letter-spacing: 1px;
+}
+
+.campos-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+
+/* ─── SEÇÕES ─── */
+#secoes-lista { display: flex; flex-direction: column; gap: 10px; }
+
+.secao-card {
+  background: #1b1b1b;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.secao-card-header {
+  background: #222;
+  padding: 8px 11px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sec-badge {
+  background: #F26522;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sec-preview-label {
+  flex: 1;
+  font-size: 12px;
+  color: rgba(250,250,250,.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-rem-sec {
+  background: none;
+  border: none;
+  color: rgba(255,80,80,.45);
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 4px;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.btn-rem-sec:hover { color: #ff5050; }
+
+.secao-card-body {
+  padding: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sec-flabel {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(250,250,250,.32);
+  margin-bottom: 3px;
+}
+
+.sec-input, .sec-textarea {
+  width: 100%;
+  background: #111;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 5px;
+  padding: 7px 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #FAFAFA;
+  outline: none;
+  transition: border-color .15s;
+}
+.sec-input:focus, .sec-textarea:focus { border-color: rgba(242,101,34,.4); }
+.sec-textarea { min-height: 44px; resize: vertical; }
+
+.items-lista { display: flex; flex-direction: column; gap: 4px; }
+
+.item-row { display: flex; gap: 5px; align-items: center; }
+
+.item-row input {
+  flex: 1;
+  background: #111;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 5px;
+  padding: 6px 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #FAFAFA;
+  outline: none;
+  transition: border-color .15s;
+}
+.item-row input:focus { border-color: rgba(242,101,34,.35); }
+
+.btn-rem-item {
+  background: none;
+  border: none;
+  color: rgba(255,80,80,.38);
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 2px;
+  transition: color .15s;
+}
+.btn-rem-item:hover { color: #ff5050; }
+
+/* ─── BOTÕES ─── */
+.btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: all .18s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(242,101,34,.28);
+  color: rgba(242,101,34,.7);
+}
+.btn-ghost:hover { background: rgba(242,101,34,.07); border-color: #F26522; color: #F26522; }
+
+.btn-mini { padding: 5px 10px; font-size: 9px; }
+
+.btn-primary { background: #F26522; color: #fff; }
+.btn-primary:hover { background: #d9561a; }
+
+.btn-dark {
+  background: #1e1e1e;
+  border: 1px solid rgba(255,255,255,.09);
+  color: rgba(250,250,250,.6);
+}
+.btn-dark:hover { background: #2a2a2a; color: #fff; }
+
+.btn-danger-soft {
+  background: transparent;
+  border: 1px solid rgba(255,80,80,.2);
+  color: rgba(255,100,100,.6);
+}
+.btn-danger-soft:hover { background: rgba(255,80,80,.07); border-color: rgba(255,80,80,.5); color: #ff6060; }
+
+.acoes { display: flex; flex-direction: column; gap: 7px; }
+
+.img-thumb {
+  width: 100%;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid rgba(242,101,34,.18);
+  margin-top: 5px;
+  display: none;
+}
+
+/* ─── ÁREA DE PREVIEW ─── */
+.preview-area {
+  flex: 1;
+  overflow-y: auto;
+  background: #d4d4d4;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ════════════════════════════════
+   ESTILOS DO RELATÓRIO (preview)
+════════════════════════════════ */
+.page {
+  width: 794px;
+  min-height: 1123px;
+  background: #FAFAFA;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 40px rgba(0,0,0,.18);
+}
+
+.header {
+  background: #0f0f0f;
+  padding: 36px 52px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid #F26522;
+}
+.header-brand { display: flex; align-items: center; gap: 16px; }
+.header-logo {
+  height: 48px;
+  filter: drop-shadow(0 0 12px rgba(242,101,34,.70)) drop-shadow(0 0 5px rgba(242,101,34,.40));
+}
+.header-wordmark { display: flex; flex-direction: column; gap: 3px; }
+.header-wm-line { display: flex; align-items: baseline; line-height: 1; }
+.wm-l { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; color:#F26522; letter-spacing:-.3px; }
+.wm-g { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; color:#FAFAFA; letter-spacing:-.3px; }
+.header-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .3em;
+  color: rgba(242,101,34,.80);
+}
+.header-doc { text-align: right; }
+.header-doc-title {
+  font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase; color:rgba(250,250,250,.55); margin-bottom:4px;
+}
+.header-doc-name {
+  font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700;
+  color:#FAFAFA; letter-spacing:-.3px;
+}
+
+.ficha {
+  background: #161616;
+  padding: 24px 52px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+.ficha-label {
+  font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase; color:rgba(242,101,34,.75); margin-bottom:5px;
+}
+.ficha-value {
+  font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:500; color:#FAFAFA; line-height:1.4;
+}
+
+.body {
+  padding: 44px 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.secao { display: flex; gap: 24px; }
+.secao-numero {
+  flex-shrink: 0; width: 36px; height: 36px; border-radius: 6px;
+  background: #F26522; display: flex; align-items: center; justify-content: center;
+  font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; color:#FAFAFA; margin-top:2px;
+}
+.secao-conteudo {
+  flex: 1;
+  border-top: 1px solid rgba(242,101,34,.25);
+  padding-top: 10px;
+}
+.secao-titulo {
+  font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:700;
+  color:#0f0f0f; letter-spacing:-.2px; margin-bottom:14px;
+}
+.secao-intro {
+  font-family:'DM Sans',sans-serif; font-size:14px; color:#3a3a3a; line-height:1.65; margin-bottom:14px;
+}
+.secao-texto {
+  font-family:'DM Sans',sans-serif; font-size:14px; color:#3a3a3a; line-height:1.70;
+}
+.secao-lista { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.lista-item { display: flex; align-items: flex-start; gap: 12px; }
+.lista-marker {
+  width: 6px; height: 6px; border-radius: 50%; background: #F26522;
+  flex-shrink: 0; margin-top: 7px;
+}
+.lista-texto {
+  font-family:'DM Sans',sans-serif; font-size:14px; color:#2a2a2a; line-height:1.60;
+}
+
+.obs-box {
+  background: rgba(242,101,34,.06);
+  border: 1px solid rgba(242,101,34,.20);
+  border-left: 4px solid #F26522;
+  border-radius: 6px;
+  padding: 16px 20px;
+  font-family:'DM Sans',sans-serif; font-size:13px; color:#3a3a3a; line-height:1.65;
+}
+.obs-label {
+  font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase; color:#F26522; margin-bottom:6px;
+}
+
+.footer {
+  background: #0f0f0f;
+  padding: 16px 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 2px solid #F26522;
+  margin-top: auto;
+}
+.footer-left { font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(250,250,250,.35); letter-spacing:.5px; }
+.footer-right { font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(250,250,250,.25); letter-spacing:1px; text-transform:uppercase; }
+
+/* Página 2 — foto */
+.page-foto { display: flex; flex-direction: column; }
+.foto-topo {
+  background: #0f0f0f;
+  padding: 18px 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #F26522;
+}
+.foto-topo-esq {
+  font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600;
+  color:rgba(250,250,250,.45); letter-spacing:2px; text-transform:uppercase;
+}
+.foto-topo-dir {
+  font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(242,101,34,.70); letter-spacing:1px; text-transform:uppercase;
+}
+.foto-wrap {
+  flex: 1;
+  padding: 40px 52px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.foto-wrap img {
+  width: 100%;
+  max-height: 820px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,.10);
+  display: block;
+}
+.foto-legenda-box {
+  background: rgba(242,101,34,.06);
+  border: 1px solid rgba(242,101,34,.20);
+  border-left: 4px solid #F26522;
+  border-radius: 6px;
+  padding: 14px 18px;
+}
+.foto-legenda-label {
+  font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase; color:#F26522; margin-bottom:5px;
+}
+.foto-legenda-txt {
+  font-family:'DM Sans',sans-serif; font-size:13px; color:#3a3a3a; line-height:1.60;
+}
+
+/* ─── PRINT ─── */
+@page { size: A4 portrait; margin: 0; }
+
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  .editor { display: none !important; }
+
+  html, body {
+    height: auto;
+    overflow: visible;
+    display: block;
+    background: white;
+  }
+
+  .preview-area {
+    display: block;
+    background: white;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: auto;
+    box-shadow: none;
+    margin: 0 !important;
+    display: block;
+  }
+
+  #page2 {
+    display: block !important;
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .foto-wrap { flex: none; display: block; }
+  .body { flex: none; }
+  .secao { page-break-inside: avoid; }
+  .footer { margin-top: 32px; }
+  .assinaturas { padding-bottom: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ PAINEL EDITOR ════════════ -->
+<div class="editor">
+  <div class="editor-header">
+    <div class="editor-brand">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+      <div class="editor-brand-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+    </div>
+    <div class="editor-sub">Gerador de Relatório de Visita Técnica</div>
+  </div>
+
+  <div class="editor-body">
+
+    <!-- IDENTIFICAÇÃO -->
+    <div class="grupo">
+      <div class="grupo-titulo">Identificação</div>
+
+      <div class="campos-row">
+        <div class="campo campo-numero">
+          <label>Nº do Relatório</label>
+          <input type="text" id="campo-numero" placeholder="0001/2026">
+        </div>
+        <div class="campo">
+          <label>Data da Visita</label>
+          <input type="text" id="campo-data" placeholder="DD/MM/AAAA">
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTE -->
+    <div class="grupo">
+      <div class="grupo-titulo">Cliente</div>
+
+      <div class="campo">
+        <label>Nome do Cliente</label>
+        <input type="text" id="campo-cliente" placeholder="Nome completo">
+      </div>
+      <div class="campo">
+        <label>Endereço</label>
+        <input type="text" id="campo-endereco" placeholder="Rua, número">
+      </div>
+      <div class="campo">
+        <label>Bairro / Cidade</label>
+        <input type="text" id="campo-bairro" placeholder="Bairro — Cidade/UF">
+      </div>
+      <div class="campo">
+        <label>Técnico Responsável</label>
+        <input type="text" id="campo-tecnico" placeholder="Nome do técnico">
+      </div>
+    </div>
+
+    <!-- SEÇÕES -->
+    <div class="grupo">
+      <div class="grupo-titulo">Seções do Relatório</div>
+
+      <div id="secoes-lista"></div>
+
+      <button class="btn btn-ghost btn-mini" onclick="adicionarSecao()">+ Adicionar seção</button>
+    </div>
+
+    <!-- OBSERVAÇÕES -->
+    <div class="grupo">
+      <div class="grupo-titulo">Observações (opcional)</div>
+      <div class="campo">
+        <label>Texto livre</label>
+        <textarea id="campo-obs" placeholder="Deixe em branco para ocultar o bloco de observações..."></textarea>
+      </div>
+    </div>
+
+    <!-- IMAGEM DO TELHADO -->
+    <div class="grupo">
+      <div class="grupo-titulo">Imagem do Telhado (página 2)</div>
+
+      <div class="campo">
+        <label>Selecionar imagem</label>
+        <input type="file" id="campo-imagem" accept="image/*" style="color:rgba(250,250,250,.5)">
+      </div>
+      <img id="img-thumb" class="img-thumb" alt="Preview da imagem">
+      <div class="campo">
+        <label>Legenda / Observação da imagem</label>
+        <textarea id="campo-legenda" placeholder="Descrição do layout ou observações sobre o telhado..."></textarea>
+      </div>
+      <button class="btn btn-danger-soft btn-mini" onclick="removerImagem()" id="btn-rem-img" style="display:none;">Remover imagem</button>
+    </div>
+
+    <!-- AÇÕES -->
+    <div class="grupo">
+      <div class="grupo-titulo">Ações</div>
+      <div class="acoes">
+        <button class="btn btn-primary" onclick="imprimir()">Imprimir / Salvar PDF</button>
+        <button class="btn btn-dark" onclick="salvarHTML()">Baixar como HTML</button>
+        <button class="btn btn-ghost" onclick="novoRelatorio()">Novo Relatório</button>
+      </div>
+    </div>
+
+    <div style="font-size:10px; color:rgba(255,255,255,.15); text-align:center; letter-spacing:1px; text-transform:uppercase; padding-top:4px;">
+      Feito por Domani Consultoria
+    </div>
+
+  </div><!-- /editor-body -->
+</div><!-- /editor -->
+
+<!-- ════════════ PREVIEW DO RELATÓRIO ════════════ -->
+<div class="preview-area">
+  <div class="page" id="page"></div>
+  <div class="page page-foto" id="page2" style="display:none; margin-top:32px;"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   ESTADO
+═══════════════════════════════════════════════════ */
+let imageDataURL = null;
+let secaoCounter = 0;
+
+/* ═══════════════════════════════════════════════════
+   INICIALIZAÇÃO
+═══════════════════════════════════════════════════ */
+(function init() {
+  // Auto-número
+  const ano = new Date().getFullYear();
+  const seq = parseInt(localStorage.getItem('lg_rel_seq') || '0') + 1;
+  localStorage.setItem('lg_rel_seq', seq);
+  document.getElementById('campo-numero').value = `${String(seq).padStart(4,'0')}/${ano}`;
+
+  // Data de hoje
+  const hoje = new Date();
+  const dd = String(hoje.getDate()).padStart(2,'0');
+  const mm = String(hoje.getMonth()+1).padStart(2,'0');
+  const aaaa = hoje.getFullYear();
+  document.getElementById('campo-data').value = `${dd}/${mm}/${aaaa}`;
+
+  // Seção inicial padrão
+  adicionarSecao('Padrão de entrada', 'Foram identificadas as seguintes adequações necessárias:', [], null);
+
+  // Eventos globais de input para preview ao vivo
+  document.querySelector('.editor').addEventListener('input', debounce(atualizaPreview, 200));
+
+  // Imagem
+  document.getElementById('campo-imagem').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      imageDataURL = ev.target.result;
+      const thumb = document.getElementById('img-thumb');
+      thumb.src = imageDataURL;
+      thumb.style.display = 'block';
+      document.getElementById('btn-rem-img').style.display = 'inline-flex';
+      atualizaPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  atualizaPreview();
+})();
+
+/* ═══════════════════════════════════════════════════
+   SEÇÕES
+═══════════════════════════════════════════════════ */
+function adicionarSecao(titulo='', intro='', itens=[], textPos='') {
+  secaoCounter++;
+  const lista = document.getElementById('secoes-lista');
+  const idx = lista.children.length;
+
+  const card = document.createElement('div');
+  card.className = 'secao-card';
+  card.dataset.id = secaoCounter;
+
+  card.innerHTML = `
+    <div class="secao-card-header" onclick="toggleSecao(this)">
+      <div class="sec-badge">${idx + 1}</div>
+      <div class="sec-preview-label">${titulo || 'Nova seção'}</div>
+      <button class="btn-rem-sec" onclick="removerSecao(event, this)" title="Remover seção">✕</button>
+    </div>
+    <div class="secao-card-body">
+      <div>
+        <span class="sec-flabel">Título da seção</span>
+        <input class="sec-input inp-titulo" type="text" value="${escHtml(titulo)}" placeholder="Ex: Padrão de entrada"
+          oninput="this.closest('.secao-card').querySelector('.sec-preview-label').textContent = this.value || 'Nova seção'; atualizaPreview();">
+      </div>
+      <div>
+        <span class="sec-flabel">Texto introdutório (opcional)</span>
+        <textarea class="sec-textarea inp-intro" placeholder="Ex: Foram identificadas as seguintes adequações...">${escHtml(intro)}</textarea>
+      </div>
+      <div>
+        <span class="sec-flabel">Itens da lista (opcional)</span>
+        <div class="items-lista"></div>
+        <button class="btn btn-ghost btn-mini" style="margin-top:5px;" onclick="adicionarItem(this)">+ Item</button>
+      </div>
+      <div>
+        <span class="sec-flabel">Texto após a lista (opcional)</span>
+        <textarea class="sec-textarea inp-texto" placeholder="Ex: O telhado encontra-se em perfeitas condições..."></textarea>
+      </div>
+    </div>`;
+
+  lista.appendChild(card);
+
+  // Preencher itens
+  const itemsContainer = card.querySelector('.items-lista');
+  if (itens && itens.length > 0) {
+    itens.forEach(item => adicionarItemNaLista(itemsContainer, item));
+  }
+
+  if (textPos) card.querySelector('.inp-texto').value = textPos;
+
+  renumerarSecoes();
+  atualizaPreview();
+}
+
+function removerSecao(e, btn) {
+  e.stopPropagation();
+  btn.closest('.secao-card').remove();
+  renumerarSecoes();
+  atualizaPreview();
+}
+
+function renumerarSecoes() {
+  document.querySelectorAll('.secao-card').forEach((card, i) => {
+    card.querySelector('.sec-badge').textContent = i + 1;
+  });
+}
+
+function toggleSecao(header) {
+  const body = header.nextElementSibling;
+  body.style.display = body.style.display === 'none' ? 'flex' : 'none';
+}
+
+/* ═══════════════════════════════════════════════════
+   ITENS
+═══════════════════════════════════════════════════ */
+function adicionarItem(btn) {
+  const container = btn.previousElementSibling;
+  adicionarItemNaLista(container, '');
+  atualizaPreview();
+}
+
+function adicionarItemNaLista(container, valor) {
+  const row = document.createElement('div');
+  row.className = 'item-row';
+  row.innerHTML = `<input type="text" value="${escHtml(valor)}" placeholder="Descreva o item...">
+    <button class="btn-rem-item" onclick="this.parentElement.remove(); atualizaPreview();" title="Remover">✕</button>`;
+  container.appendChild(row);
+}
+
+/* ═══════════════════════════════════════════════════
+   COLETA DE DADOS DO FORMULÁRIO
+═══════════════════════════════════════════════════ */
+function coletaDados() {
+  const secoes = [];
+  document.querySelectorAll('.secao-card').forEach(card => {
+    const titulo   = card.querySelector('.inp-titulo').value.trim();
+    const intro    = card.querySelector('.inp-intro').value.trim();
+    const textPos  = card.querySelector('.inp-texto').value.trim();
+    const itens    = [...card.querySelectorAll('.items-lista .item-row input')]
+                      .map(i => i.value.trim()).filter(Boolean);
+    secoes.push({
+      titulo,
+      intro:     intro || null,
+      itens,
+      texto_pos: textPos || null
+    });
+  });
+
+  return {
+    numero:          document.getElementById('campo-numero').value.trim(),
+    data:            document.getElementById('campo-data').value.trim(),
+    cliente:         document.getElementById('campo-cliente').value.trim() || '—',
+    endereco:        document.getElementById('campo-endereco').value.trim() || '—',
+    bairro:          document.getElementById('campo-bairro').value.trim() || '',
+    tecnico:         document.getElementById('campo-tecnico').value.trim() || '—',
+    secoes,
+    observacoes:     document.getElementById('campo-obs').value.trim() || null,
+    imagem_telhado:  imageDataURL,
+    imagem_legenda:  document.getElementById('campo-legenda').value.trim(),
+  };
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDERIZAÇÃO
+═══════════════════════════════════════════════════ */
+function renderSecao(s, idx) {
+  const itensHTML = s.itens.map(item => `
+    <div class="lista-item">
+      <div class="lista-marker"></div>
+      <span class="lista-texto">${item}</span>
+    </div>`).join('');
+
+  return `
+    <div class="secao">
+      <div class="secao-numero">${idx + 1}</div>
+      <div class="secao-conteudo">
+        <div class="secao-titulo">${s.titulo || '—'}</div>
+        ${s.intro  ? `<p class="secao-intro">${s.intro}</p>` : ''}
+        ${s.itens.length ? `<div class="secao-lista">${itensHTML}</div>` : ''}
+        ${s.texto_pos ? `<p class="secao-texto">${s.texto_pos}</p>` : ''}
+      </div>
+    </div>`;
+}
+
+function render(d) {
+  const secoesHTML = d.secoes.map((s, i) => renderSecao(s, i)).join('');
+
+  const obsHTML = d.observacoes ? `
+    <div class="obs-box">
+      <div class="obs-label">Observações</div>
+      ${d.observacoes}
+    </div>` : '';
+
+  // ── Página 1 ──
+  document.getElementById('page').innerHTML = `
+    <div class="header">
+      <div class="header-brand">
+        <img class="header-logo" src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="header-wordmark">
+          <div class="header-wm-line">
+            <span class="wm-l">LUMEN</span><span class="wm-g">GRID</span>
+          </div>
+          <div class="header-tagline">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="header-doc">
+        <div class="header-doc-title">Documento</div>
+        <div class="header-doc-name">Relatório de Visita Técnica</div>
+      </div>
+    </div>
+
+    <div class="ficha">
+      <div class="ficha-item">
+        <div class="ficha-label">Cliente</div>
+        <div class="ficha-value">${d.cliente}</div>
+      </div>
+      <div class="ficha-item">
+        <div class="ficha-label">Endereço</div>
+        <div class="ficha-value">${d.endereco}${d.bairro ? '<br>' + d.bairro : ''}</div>
+      </div>
+      <div class="ficha-item" style="text-align:right;">
+        <div class="ficha-label">Data da visita</div>
+        <div class="ficha-value">${d.data}</div>
+        <div class="ficha-label" style="margin-top:10px;">Nº do relatório</div>
+        <div class="ficha-value">${d.numero}</div>
+      </div>
+    </div>
+
+    <div class="body">
+      ${secoesHTML}
+      ${obsHTML}
+    </div>
+
+    <div class="footer">
+      <span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span>
+      <span class="footer-right">${d.numero}</span>
+    </div>`;
+
+  // ── Página 2: foto ──
+  const p2 = document.getElementById('page2');
+  if (d.imagem_telhado) {
+    p2.style.display = 'flex';
+    p2.innerHTML = `
+      <div class="foto-topo">
+        <span class="foto-topo-esq">LumenGrid &nbsp;·&nbsp; ${d.cliente}</span>
+        <span class="foto-topo-dir">Anexo — Layout do Telhado</span>
+      </div>
+      <div class="foto-wrap">
+        <img src="${d.imagem_telhado}" alt="Layout do telhado">
+        ${d.imagem_legenda ? `
+        <div class="foto-legenda-box">
+          <div class="foto-legenda-label">Observação</div>
+          <div class="foto-legenda-txt">${d.imagem_legenda}</div>
+        </div>` : ''}
+      </div>
+      <div class="footer">
+        <span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span>
+        <span class="footer-right">${d.numero}</span>
+      </div>`;
+  } else {
+    p2.style.display = 'none';
+  }
+}
+
+function atualizaPreview() {
+  render(coletaDados());
+}
+
+/* ═══════════════════════════════════════════════════
+   AÇÕES
+═══════════════════════════════════════════════════ */
+function imprimir() {
+  atualizaPreview();
+  setTimeout(() => window.print(), 100);
+}
+
+function removerImagem() {
+  imageDataURL = null;
+  document.getElementById('campo-imagem').value = '';
+  const thumb = document.getElementById('img-thumb');
+  thumb.src = '';
+  thumb.style.display = 'none';
+  document.getElementById('btn-rem-img').style.display = 'none';
+  atualizaPreview();
+}
+
+function novoRelatorio() {
+  if (!confirm('Limpar o formulário e iniciar um novo relatório?')) return;
+
+  // Novo número
+  const ano = new Date().getFullYear();
+  const seq = parseInt(localStorage.getItem('lg_rel_seq') || '0') + 1;
+  localStorage.setItem('lg_rel_seq', seq);
+  document.getElementById('campo-numero').value = `${String(seq).padStart(4,'0')}/${ano}`;
+
+  // Limpar campos
+  ['campo-cliente','campo-endereco','campo-bairro','campo-tecnico','campo-obs','campo-legenda'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+
+  // Resetar seções
+  document.getElementById('secoes-lista').innerHTML = '';
+  adicionarSecao();
+
+  // Resetar imagem
+  removerImagem();
+
+  atualizaPreview();
+}
+
+function salvarHTML() {
+  const d = coletaDados();
+  const html = gerarHTMLRelatorio(d);
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const nomeCliente = d.cliente.replace(/[^a-zA-Z0-9À-ú ]/g,'').trim().replace(/ +/g,'_');
+  a.href     = url;
+  a.download = `Relatorio_${d.numero.replace('/','_')}_${nomeCliente || 'LumenGrid'}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ═══════════════════════════════════════════════════
+   GERADOR DE HTML STANDALONE (para download)
+═══════════════════════════════════════════════════ */
+function gerarHTMLRelatorio(d) {
+  const imgTag = d.imagem_telhado
+    ? `<img src="${d.imagem_telhado}" alt="Layout do telhado">`
+    : '';
+
+  const secoesJS = JSON.stringify(d.secoes, null, 2);
+
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatório de Visita Técnica — ${escHtml(d.cliente)} — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E8E8E8;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column;align-items:center;padding:40px 20px;gap:0}
+.page{width:794px;min-height:1123px;background:#FAFAFA;position:relative;display:flex;flex-direction:column;box-shadow:0 4px 40px rgba(0,0,0,.18)}
+.header{background:#0f0f0f;padding:36px 52px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #F26522}
+.header-brand{display:flex;align-items:center;gap:16px}
+.header-logo{height:48px;filter:drop-shadow(0 0 12px rgba(242,101,34,.70)) drop-shadow(0 0 5px rgba(242,101,34,.40))}
+.header-wordmark{display:flex;flex-direction:column;gap:3px}
+.header-wm-line{display:flex;align-items:baseline;line-height:1}
+.wm-l{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;color:#F26522;letter-spacing:-.3px}
+.wm-g{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;color:#FAFAFA;letter-spacing:-.3px}
+.header-tagline{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.80)}
+.header-doc{text-align:right}
+.header-doc-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(250,250,250,.55);margin-bottom:4px}
+.header-doc-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#FAFAFA;letter-spacing:-.3px}
+.ficha{background:#161616;padding:24px 52px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.ficha-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(242,101,34,.75);margin-bottom:5px}
+.ficha-value{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500;color:#FAFAFA;line-height:1.4}
+.body{padding:44px 52px;display:flex;flex-direction:column;gap:36px}
+.secao{display:flex;gap:24px}
+.secao-numero{flex-shrink:0;width:36px;height:36px;border-radius:6px;background:#F26522;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#FAFAFA;margin-top:2px}
+.secao-conteudo{flex:1;border-top:1px solid rgba(242,101,34,.25);padding-top:10px}
+.secao-titulo{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:#0f0f0f;letter-spacing:-.2px;margin-bottom:14px}
+.secao-intro{font-family:'DM Sans',sans-serif;font-size:14px;color:#3a3a3a;line-height:1.65;margin-bottom:14px}
+.secao-texto{font-family:'DM Sans',sans-serif;font-size:14px;color:#3a3a3a;line-height:1.70}
+.secao-lista{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.lista-item{display:flex;align-items:flex-start;gap:12px}
+.lista-marker{width:6px;height:6px;border-radius:50%;background:#F26522;flex-shrink:0;margin-top:7px}
+.lista-texto{font-family:'DM Sans',sans-serif;font-size:14px;color:#2a2a2a;line-height:1.60}
+.obs-box{background:rgba(242,101,34,.06);border:1px solid rgba(242,101,34,.20);border-left:4px solid #F26522;border-radius:6px;padding:16px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:#3a3a3a;line-height:1.65}
+.obs-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F26522;margin-bottom:6px}
+.footer{background:#0f0f0f;padding:16px 52px;display:flex;align-items:center;justify-content:space-between;border-top:2px solid #F26522;margin-top:auto}
+.footer-left{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(250,250,250,.35);letter-spacing:.5px}
+.footer-right{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(250,250,250,.25);letter-spacing:1px;text-transform:uppercase}
+.page-foto{display:flex;flex-direction:column;margin-top:32px}
+.foto-topo{background:#0f0f0f;padding:18px 52px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #F26522}
+.foto-topo-esq{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:rgba(250,250,250,.45);letter-spacing:2px;text-transform:uppercase}
+.foto-topo-dir{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(242,101,34,.70);letter-spacing:1px;text-transform:uppercase}
+.foto-wrap{flex:1;padding:40px 52px 28px;display:flex;flex-direction:column;gap:20px}
+.foto-wrap img{width:100%;max-height:820px;object-fit:contain;border-radius:8px;border:1px solid rgba(0,0,0,.10);display:block}
+.foto-legenda-box{background:rgba(242,101,34,.06);border:1px solid rgba(242,101,34,.20);border-left:4px solid #F26522;border-radius:6px;padding:14px 18px}
+.foto-legenda-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F26522;margin-bottom:5px}
+.foto-legenda-txt{font-family:'DM Sans',sans-serif;font-size:13px;color:#3a3a3a;line-height:1.60}
+@page{size:A4 portrait;margin:0}
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{background:white;padding:0;margin:0;display:block}.page{width:210mm;min-height:auto;box-shadow:none;margin:0!important;display:block}.page-foto{display:block!important;break-before:page;page-break-before:always}.foto-wrap{flex:none;display:block}.body{flex:none}.secao{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div id="page"></div>
+<div id="page2" style="display:none"></div>
+<script>
+var dados = {
+  numero: ${JSON.stringify(d.numero)},
+  data: ${JSON.stringify(d.data)},
+  cliente: ${JSON.stringify(d.cliente)},
+  endereco: ${JSON.stringify(d.endereco)},
+  bairro: ${JSON.stringify(d.bairro)},
+  tecnico: ${JSON.stringify(d.tecnico)},
+  secoes: ${secoesJS},
+  observacoes: ${JSON.stringify(d.observacoes)},
+  imagem_telhado: ${JSON.stringify(d.imagem_telhado)},
+  imagem_legenda: ${JSON.stringify(d.imagem_legenda)}
+};
+
+function renderSecao(s,idx){
+  var itens=s.itens.map(function(i){return'<div class="lista-item"><div class="lista-marker"></div><span class="lista-texto">'+i+'</span></div>'}).join('');
+  return'<div class="secao"><div class="secao-numero">'+(idx+1)+'</div><div class="secao-conteudo"><div class="secao-titulo">'+(s.titulo||'—')+'</div>'+(s.intro?'<p class="secao-intro">'+s.intro+'</p>':'')+(s.itens.length?'<div class="secao-lista">'+itens+'</div>':'')+(s.texto_pos?'<p class="secao-texto">'+s.texto_pos+'</p>':'')+'</div></div>';
+}
+
+var secoesHTML=dados.secoes.map(renderSecao).join('');
+var obsHTML=dados.observacoes?'<div class="obs-box"><div class="obs-label">Observações</div>'+dados.observacoes+'</div>':'';
+document.getElementById('page').innerHTML='<div class="header"><div class="header-brand"><img class="header-logo" src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid"><div class="header-wordmark"><div class="header-wm-line"><span class="wm-l">LUMEN</span><span class="wm-g">GRID</span></div><div class="header-tagline">Energia Inteligente</div></div></div><div class="header-doc"><div class="header-doc-title">Documento</div><div class="header-doc-name">Relatório de Visita Técnica</div></div></div><div class="ficha"><div class="ficha-item"><div class="ficha-label">Cliente</div><div class="ficha-value">'+dados.cliente+'</div></div><div class="ficha-item"><div class="ficha-label">Endereço</div><div class="ficha-value">'+dados.endereco+(dados.bairro?'<br>'+dados.bairro:'')+'</div></div><div class="ficha-item" style="text-align:right"><div class="ficha-label">Data da visita</div><div class="ficha-value">'+dados.data+'</div><div class="ficha-label" style="margin-top:10px">Nº do relatório</div><div class="ficha-value">'+dados.numero+'</div></div></div><div class="body">'+secoesHTML+obsHTML+'</div>'+'<div class="footer"><span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span><span class="footer-right">'+dados.numero+'</span></div>';
+
+if(dados.imagem_telhado){
+  var p2=document.getElementById('page2');
+  p2.style.display='flex';
+  p2.className='page page-foto';
+  p2.innerHTML='<div class="foto-topo"><span class="foto-topo-esq">LumenGrid &nbsp;·&nbsp; '+dados.cliente+'</span><span class="foto-topo-dir">Anexo — Layout do Telhado</span></div><div class="foto-wrap"><img src="'+dados.imagem_telhado+'" alt="Layout do telhado">'+(dados.imagem_legenda?'<div class="foto-legenda-box"><div class="foto-legenda-label">Observação</div><div class="foto-legenda-txt">'+dados.imagem_legenda+'</div></div>':'')+'</div><div class="footer"><span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span><span class="footer-right">'+dados.numero+'</span></div>';
+}
+<\/script>
+<!-- Feito por Domani Consultoria -->
+</body>
+</html>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   UTILIDADES
+═══════════════════════════════════════════════════ */
+function debounce(fn, delay) {
+  let t;
+  return function(...args) {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+<!-- Feito por Domani Consultoria -->
+</body>
+</html>
