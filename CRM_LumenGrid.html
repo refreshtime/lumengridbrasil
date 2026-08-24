@@ -871,6 +871,7 @@ tbody tr td:first-child{font-weight:700}
           <button class="btn btn-s" onclick="exportCSV()">Exportar CSV</button>
           <button class="btn btn-s" onclick="document.getElementById('importJSON').click()">Restaurar Backup</button>
           <input type="file" id="importJSON" accept=".json" style="display:none" onchange="importBackup(event)">
+          <button class="btn btn-s" style="background:#EF4444;color:#fff;border-color:#EF4444" onclick="if(confirm('Remover todos os cards duplicados do localStorage e sincronizar com o servidor?'))limparDuplicatas()">🧹 Limpar Duplicatas</button>
         </div>
       </div>
     </div>
@@ -1336,7 +1337,13 @@ async function loadFromSheets(silent = false) {
     // Leads locais que não existem no servidor são preservados
     const serverById = {};
     data.forEach(l => { if (l.id) serverById[l.id] = l; });
-    const merged = [...data];
+    // Deduplica dados do servidor por ID (evita duplicatas vindas do Sheets)
+    const seenIds = new Set();
+    const merged = [];
+    data.forEach(l => {
+      if (!l.id) { merged.push(l); return; }
+      if (!seenIds.has(l.id)) { seenIds.add(l.id); merged.push(l); }
+    });
     local.forEach(l => { if (l.id && !serverById[l.id]) merged.push(l); });
     merged.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
     localStorage.setItem('lg_leads_backup', localStorage.getItem('lg_leads') || '[]');
@@ -2604,6 +2611,22 @@ function importCSVData(text) {
   saveLeads(ex); toast(`${added} lead(s) importados!`,'ok');
   renderDashboard(); renderKanban(); renderLeadsList();
 }
+function limparDuplicatas() {
+  const all = getAllLeadsRaw();
+  const seen = new Set();
+  const uniq = all.filter(l => {
+    if (!l.id) return true;
+    if (seen.has(l.id)) return false;
+    seen.add(l.id); return true;
+  });
+  const removed = all.length - uniq.length;
+  if (removed === 0) { toast('Nenhuma duplicata encontrada.', ''); return; }
+  localStorage.setItem('lg_leads', JSON.stringify(uniq));
+  syncToSheets();
+  renderDashboard(); renderKanban(); renderLeadsList();
+  toast(`${removed} card(s) duplicado(s) removido(s)!`, 'ok');
+}
+
 function exportJSON() {
   const d={leads:getLeads(),config:getConfig(),exportedAt:new Date().toISOString()};
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
