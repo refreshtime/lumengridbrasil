@@ -1259,13 +1259,14 @@ function getAllLeadsRaw() { try { return JSON.parse(localStorage.getItem('lg_lea
 function getLeads() {
   const all = getAllLeadsRaw();
   if (ADMINS.includes(currentUser)) return all;
-  return all.filter(l => l.resp === currentUser);
+  return all.filter(l => l.resp === currentUser || STAGES[l.stage]?.phase === 'pos');
 }
 function saveLeads(leads, changedLead) {
   if (ADMINS.includes(currentUser)) {
     localStorage.setItem('lg_leads', JSON.stringify(leads));
   } else {
-    const others = getAllLeadsRaw().filter(l => l.resp !== currentUser);
+    const leadIds = new Set(leads.map(l => l.id));
+    const others = getAllLeadsRaw().filter(l => !leadIds.has(l.id));
     localStorage.setItem('lg_leads', JSON.stringify([...leads, ...others]));
   }
   if (changedLead) syncOneLead(changedLead);
