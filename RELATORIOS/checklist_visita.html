@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist de Visita Técnica — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --or: #F26522;
+  --or-dim: rgba(242,101,34,.18);
+  --or-border: rgba(242,101,34,.28);
+  --bg: #0a0a0a;
+  --panel: #0f0f0f;
+  --card: #1a1a1a;
+  --card2: #141414;
+  --border: rgba(255,255,255,.08);
+  --t1: #FAFAFA;
+  --t2: rgba(250,250,250,.62);
+  --t3: rgba(250,250,250,.35);
+  --t4: rgba(250,250,250,.18);
+  --ok: #22c55e;
+  --nok: #ef4444;
+  --warn: #f59e0b;
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--t1);
+  display: flex;
+  overflow: hidden;
+}
+
+/* ════════════════════════════════
+   EDITOR (esquerda)
+════════════════════════════════ */
+.editor {
+  width: 420px;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--panel);
+  border-right: 2px solid var(--or);
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--panel);
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--or-border);
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 2px;
+}
+.brand-row img {
+  height: 28px;
+  filter: drop-shadow(0 0 8px rgba(242,101,34,.75));
+}
+.brand-wm {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+.brand-wm .l { color: var(--or); }
+.brand-wm .g { color: var(--t1); }
+.brand-sub {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(242,101,34,.52);
+}
+.tool-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-top: 6px;
+}
+
+.editor-body {
+  padding: 18px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  flex: 1;
+}
+
+/* ─── GRUPOS ─── */
+.grupo { display: flex; flex-direction: column; gap: 10px; }
+
+.grupo-titulo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--or);
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(242,101,34,.16);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.grupo-titulo svg {
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+}
+
+/* ─── CAMPOS ─── */
+.campo { display: flex; flex-direction: column; gap: 4px; }
+.campo label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+.campo input,
+.campo select,
+.campo textarea {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 11px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--t1);
+  outline: none;
+  width: 100%;
+  transition: border-color .18s;
+  -webkit-appearance: none;
+}
+.campo select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+  cursor: pointer;
+}
+.campo select option { background: #1a1a1a; }
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus { border-color: rgba(242,101,34,.5); }
+.campo textarea { min-height: 52px; resize: vertical; }
+.campo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.campo-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px; }
+
+/* ─── CHECKBOXES STATUS ─── */
+.check-list { display: flex; flex-direction: column; gap: 6px; }
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 9px 11px;
+  transition: border-color .15s;
+}
+.check-item:hover { border-color: rgba(255,255,255,.13); }
+.check-item-label {
+  flex: 1;
+  font-size: 12px;
+  color: var(--t2);
+  line-height: 1.4;
+}
+.status-toggle {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.st-btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--t3);
+  cursor: pointer;
+  transition: all .15s;
+}
+.st-btn.ok { background: rgba(34,197,94,.15); border-color: rgba(34,197,94,.4); color: var(--ok); }
+.st-btn.nok { background: rgba(239,68,68,.15); border-color: rgba(239,68,68,.4); color: var(--nok); }
+
+/* ─── FOTOS ─── */
+.fotos-drop {
+  border: 2px dashed var(--or-border);
+  border-radius: 8px;
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .18s, background .18s;
+}
+.fotos-drop:hover { border-color: var(--or); background: var(--or-dim); }
+.fotos-drop input[type=file] { display: none; }
+.fotos-drop-text { font-size: 12px; color: var(--t3); line-height: 1.6; }
+.fotos-drop-icon { font-size: 22px; margin-bottom: 6px; }
+.fotos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+.foto-mini {
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+.foto-mini img {
+  width: 100%;
+  height: 72px;
+  object-fit: cover;
+  display: block;
+}
+.foto-mini-label {
+  padding: 4px 7px;
+  background: var(--card2);
+}
+.foto-mini-label input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-size: 10px;
+  color: var(--t2);
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-rem-foto {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: rgba(0,0,0,.7);
+  border: none;
+  color: rgba(255,80,80,.8);
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── ADEQUAÇÕES ─── */
+.adeq-lista { display: flex; flex-direction: column; gap: 7px; }
+.adeq-item {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 9px 11px;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.adeq-item select, .adeq-item input {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 6px 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--t1);
+  outline: none;
+  transition: border-color .15s;
+  -webkit-appearance: none;
+}
+.adeq-item select:focus, .adeq-item input:focus { border-color: rgba(242,101,34,.4); }
+.adeq-item select { flex: 1; min-width: 0; cursor: pointer; }
+.adeq-item .val-input { width: 80px; flex-shrink: 0; font-family: 'Space Grotesk', sans-serif; color: var(--or); font-weight: 600; text-align: right; }
+.btn-rem-adeq {
+  background: none;
+  border: none;
+  color: rgba(255,80,80,.4);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.btn-rem-adeq:hover { color: var(--nok); }
+.adeq-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 11px;
+  background: var(--or-dim);
+  border: 1px solid var(--or-border);
+  border-radius: 7px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.adeq-total-val { font-size: 15px; color: var(--or); }
+
+/* ─── ASSINATURA ─── */
+.sig-wrap {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+}
+.sig-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 120px;
+  cursor: crosshair;
+  touch-action: none;
+}
+.sig-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 4px;
+}
+.sig-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+/* ─── DECLARAÇÃO / TERMOS ─── */
+.declaracao {
+  background: var(--or-dim);
+  border: 1px solid var(--or-border);
+  border-left: 3px solid var(--or);
+  border-radius: 7px;
+  padding: 12px 14px;
+  font-size: 11px;
+  color: var(--t2);
+  line-height: 1.65;
+  font-style: italic;
+}
+.termos-wrap {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 13px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.termos-texto {
+  font-size: 11px;
+  color: var(--t2);
+  line-height: 1.7;
+  font-style: italic;
+}
+.termos-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.termos-check-row input[type=checkbox] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--or);
+  margin-top: 1px;
+  cursor: pointer;
+}
+.termos-check-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--t1);
+  line-height: 1.5;
+  cursor: pointer;
+}
+.termos-aviso {
+  font-size: 10px;
+  color: rgba(239,68,68,.7);
+  display: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: rgba(239,68,68,.08);
+  border: 1px solid rgba(239,68,68,.2);
+}
+.termos-aviso.show { display: block; }
+/* Botões bloqueados até aceitar termos */
+.btn-bloqueado { opacity: .35; pointer-events: none; }
+
+/* ─── HYBRID ─── */
+.secao-hibrido { display: none; }
+.secao-hibrido.ativa { display: flex; flex-direction: column; gap: 10px; }
+.cargas-lista { display: flex; flex-direction: column; gap: 6px; }
+.carga-item {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px 10px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.carga-item input, .carga-item select {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 6px 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--t1);
+  outline: none;
+  -webkit-appearance: none;
+  transition: border-color .15s;
+}
+.carga-item input:focus, .carga-item select:focus { border-color: rgba(242,101,34,.4); }
+.carga-item .carga-nome { flex: 1; min-width: 0; }
+.carga-item .carga-circ { width: 90px; flex-shrink: 0; cursor: pointer; }
+.carga-item .carga-pot { width: 70px; flex-shrink: 0; text-align: right; }
+.btn-rem-carga {
+  background: none; border: none; color: rgba(255,80,80,.4);
+  cursor: pointer; font-size: 16px; line-height: 1; flex-shrink: 0; transition: color .15s;
+}
+.btn-rem-carga:hover { color: var(--nok); }
+
+/* ─── BOTÕES ─── */
+.btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all .18s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn svg { width: 14px; height: 14px; }
+.btn-primary { background: var(--or); color: #fff; }
+.btn-primary:hover { background: #d9561a; }
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--or-border);
+  color: rgba(242,101,34,.75);
+}
+.btn-ghost:hover { background: var(--or-dim); border-color: var(--or); color: var(--or); }
+.btn-dark {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--t2);
+}
+.btn-dark:hover { background: var(--card2); color: var(--t1); }
+.btn-mini { padding: 6px 10px; font-size: 9px; }
+.btn-danger {
+  background: transparent;
+  border: 1px solid rgba(239,68,68,.2);
+  color: rgba(239,68,68,.6);
+}
+.btn-danger:hover { background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.5); color: var(--nok); }
+
+.acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 6px;
+}
+.acoes-row { display: flex; gap: 8px; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1a1a1a;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 12px 18px;
+  font-size: 13px;
+  color: var(--t1);
+  z-index: 9999;
+  display: none;
+  gap: 8px;
+  align-items: center;
+  max-width: 320px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+.toast.show { display: flex; }
+.toast.ok { border-color: rgba(34,197,94,.35); }
+.toast.err { border-color: rgba(239,68,68,.35); }
+
+/* ════════════════════════════════
+   PREVIEW (direita)
+════════════════════════════════ */
+.preview {
+  flex: 1;
+  background: #e8e8e8;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0 48px;
+}
+
+/* ─── PÁGINA A4 ─── */
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  background: white;
+  box-shadow: 0 8px 40px rgba(0,0,0,.2);
+  border-radius: 2px;
+  padding: 14mm 14mm 18mm;
+  color: #1a1a1a;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+}
+
+/* ── Header PDF ── */
+.pdf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #F26522;
+  margin-bottom: 12px;
+}
+.pdf-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pdf-brand img { height: 36px; }
+.pdf-brand-wm {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+.pdf-brand-wm .l { color: #F26522; }
+.pdf-brand-wm .g { color: #1a1a1a; }
+.pdf-brand-sub {
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(242,101,34,.6);
+}
+.pdf-doc-info { text-align: right; }
+.pdf-doc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+.pdf-doc-sub { font-size: 9px; color: #888; margin-top: 2px; }
+
+/* ── Seções PDF ── */
+.pdf-secao {
+  margin-bottom: 12px;
+}
+.pdf-secao-titulo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #F26522;
+  padding: 5px 9px;
+  background: rgba(242,101,34,.06);
+  border-left: 3px solid #F26522;
+  margin-bottom: 7px;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── Grid de dados ── */
+.pdf-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px 10px;
+}
+.pdf-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.pdf-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.pdf-campo { display: flex; flex-direction: column; gap: 1px; }
+.pdf-campo-full { grid-column: 1 / -1; }
+.pdf-campo-label {
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #999;
+  font-weight: 600;
+}
+.pdf-campo-val {
+  font-size: 11px;
+  color: #1a1a1a;
+  border-bottom: 1px solid #e8e8e8;
+  padding-bottom: 3px;
+  min-height: 16px;
+  line-height: 1.4;
+}
+
+/* ── Checklist PDF ── */
+.pdf-check-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 10px;
+}
+.pdf-check-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #2a2a2a;
+  padding: 3px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.pdf-check-badge {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+.badge-ok { background: #dcfce7; color: #16a34a; }
+.badge-nok { background: #fee2e2; color: #dc2626; }
+.badge-nd { background: #f3f4f6; color: #9ca3af; }
+
+/* ── Fotos PDF ── */
+.pdf-fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.pdf-foto-item { display: flex; flex-direction: column; gap: 3px; }
+.pdf-foto-item img {
+  width: 100%;
+  height: 52mm;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  display: block;
+}
+.pdf-foto-leg {
+  font-size: 8px;
+  color: #777;
+  text-align: center;
+}
+
+/* ── Adequações PDF ── */
+.pdf-adeq-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+.pdf-adeq-table th {
+  background: rgba(242,101,34,.08);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #F26522;
+  padding: 5px 8px;
+  text-align: left;
+  border-bottom: 1px solid rgba(242,101,34,.2);
+}
+.pdf-adeq-table td { padding: 5px 8px; border-bottom: 1px solid #f0f0f0; color: #2a2a2a; }
+.pdf-adeq-table tr:last-child td { border-bottom: none; }
+.pdf-adeq-total {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 8px;
+  background: rgba(242,101,34,.06);
+  border-top: 2px solid rgba(242,101,34,.2);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 16px;
+}
+.pdf-adeq-total span { color: #F26522; }
+
+/* ── Parecer PDF ── */
+.pdf-parecer-box {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 8px;
+}
+.pdf-parecer-label {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #999;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.pdf-parecer-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+.parecer-aprovado { color: #16a34a; border-color: #bbf7d0; }
+.parecer-aprovado-ressalvas { color: #d97706; border-color: #fde68a; }
+.parecer-reprovado-obra { color: #ea580c; border-color: #fed7aa; }
+.parecer-reprovado { color: #dc2626; border-color: #fecaca; }
+
+/* ── Assinatura PDF ── */
+.pdf-assinatura {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+.pdf-assinatura-box {
+  width: 64mm;
+  border-top: 1.5px solid #1a1a1a;
+  text-align: center;
+  padding-top: 5px;
+  font-size: 9px;
+  color: #555;
+}
+.pdf-assinatura-img {
+  height: 20mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.pdf-assinatura-img img { max-height: 100%; max-width: 100%; }
+
+/* ── Footer PDF ── */
+.pdf-footer {
+  position: absolute;
+  bottom: 8mm;
+  left: 14mm;
+  right: 14mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 7px;
+  color: #aaa;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 5px;
+}
+
+/* ════════════════════════════════
+   MOBILE
+════════════════════════════════ */
+@media (max-width: 900px) {
+  body { flex-direction: column; overflow: auto; }
+  .editor { width: 100%; height: auto; overflow: visible; border-right: none; border-bottom: 2px solid var(--or); }
+  .preview { display: none; }
+}
+
+/* ════════════════════════════════
+   PRINT / PDF
+════════════════════════════════ */
+@page { size: A4 portrait; margin: 0; }
+
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .editor { display: none !important; }
+  .toast { display: none !important; }
+  html, body {
+    background: white !important;
+    overflow: visible !important;
+    display: block !important;
+    height: auto !important;
+  }
+  .preview {
+    display: block !important;
+    background: white !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .page {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 12mm 14mm 22mm !important;
+  }
+  .pdf-secao { page-break-inside: avoid; }
+  .pdf-fotos-grid { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     EDITOR (esquerda)
+══════════════════════════════════════════ -->
+<div class="editor">
+  <div class="editor-header">
+    <div class="brand-row">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+      <div>
+        <div class="brand-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+        <div class="brand-sub">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="tool-name">Checklist de Visita Técnica</div>
+  </div>
+
+  <div class="editor-body">
+
+    <!-- ─── 1. DADOS DA VISITA ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        1. Dados da Visita
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Instalador</label>
+          <input type="text" id="instalador" placeholder="Seu nome">
+        </div>
+        <div class="campo">
+          <label>Data da Visita</label>
+          <input type="date" id="dataVisita">
+        </div>
+      </div>
+      <div class="campo">
+        <label>Nome do Cliente</label>
+        <input type="text" id="cliente" placeholder="Ex: João da Silva">
+      </div>
+      <div class="campo">
+        <label>Endereço Completo</label>
+        <input type="text" id="endereco" placeholder="Rua, número, bairro">
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Cidade / UF</label>
+          <input type="text" id="cidadeUF" placeholder="Ex: Curitiba / PR">
+        </div>
+        <div class="campo">
+          <label>Tipo de Projeto</label>
+          <select id="tipoProjeto">
+            <option value="On-Grid">On-Grid (String)</option>
+            <option value="Híbrido">Híbrido</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 2. TELHADO ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        2. Telhado
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Tipo de Telhado</label>
+          <select id="tipoTelhado">
+            <option value="">Selecione</option>
+            <option>Cerâmico</option>
+            <option>Fibrocimento</option>
+            <option>Metálico</option>
+            <option>Laje</option>
+            <option>Solo</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Acesso ao Telhado</label>
+          <select id="acessoTelhado">
+            <option value="">Selecione</option>
+            <option>Fácil</option>
+            <option>Moderado</option>
+            <option>Difícil</option>
+          </select>
+        </div>
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Orientação Principal</label>
+          <select id="orientacao">
+            <option value="">Selecione</option>
+            <option>Norte</option>
+            <option>Nordeste</option>
+            <option>Noroeste</option>
+            <option>Leste</option>
+            <option>Oeste</option>
+            <option>Sul</option>
+            <option>Sudeste</option>
+            <option>Sudoeste</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Inclinação Estimada</label>
+          <select id="inclinacao">
+            <option value="">Selecione</option>
+            <option>Plano (0°–5°)</option>
+            <option>Suave (5°–15°)</option>
+            <option>Moderado (15°–30°)</option>
+            <option>Inclinado (30°–45°)</option>
+            <option>Acentuado (+45°)</option>
+          </select>
+        </div>
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Sombreamento</label>
+          <select id="sombreamento">
+            <option value="">Selecione</option>
+            <option>Nenhum</option>
+            <option>Parcial manhã</option>
+            <option>Parcial tarde</option>
+            <option>Significativo</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Área Disponível (m²)</label>
+          <input type="number" id="areaDisponivel" placeholder="Ex: 40" min="0">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Estrutura para compra</label>
+        <input type="text" id="estruturaCompra" placeholder="Ex: Trilho alumínio, gancho cerâmico, parafuso inox...">
+      </div>
+
+      <div class="campo">
+        <label>Observações da estrutura</label>
+        <textarea id="obsEstrutura" placeholder="Sinais de infiltração, telhas quebradas, madeiramento, pontos de fixação..."></textarea>
+      </div>
+
+      <div class="check-list" style="margin-top:4px">
+        <div class="check-item">
+          <div class="check-item-label" style="font-weight:600;color:var(--t1)">Telhado apto para instalação?</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="telhadoApto" data-val="SIM">SIM</button>
+            <button class="st-btn" data-id="telhadoApto" data-val="NÃO">NÃO</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="ajusteTelhadoWrap" style="display:none">
+        <div class="campo">
+          <label>Ajuste necessário no telhado</label>
+          <textarea id="ajusteTelhado" placeholder="Descreva o que precisa ser feito antes da instalação..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 3. PADRÃO DE ENTRADA ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        3. Padrão de Entrada — Homologação
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Tipo de Ligação</label>
+          <select id="tipoLigacao">
+            <option value="">Selecione</option>
+            <option>Monofásico</option>
+            <option>Bifásico</option>
+            <option>Trifásico</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Disjuntor Geral (A)</label>
+          <input type="number" id="disjuntorAmperagem" placeholder="Ex: 63" min="0">
+        </div>
+      </div>
+
+      <div class="check-list">
+        <div class="check-item">
+          <div class="check-item-label">Disjuntor geral em bom estado</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="disjuntorBomEstado" data-val="OK">OK</button>
+            <button class="st-btn" data-id="disjuntorBomEstado" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Disjuntor geral compatível com sistema solar</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="disjuntorCompativel" data-val="OK">OK</button>
+            <button class="st-btn" data-id="disjuntorCompativel" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Aterramento existente e funcional</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="aterramento" data-val="OK">OK</button>
+            <button class="st-btn" data-id="aterramento" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Haste de aterramento com interligação ao neutro</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="hasteAterramento" data-val="OK">OK</button>
+            <button class="st-btn" data-id="hasteAterramento" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">DPS (Proteção contra Surtos) instalado</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="dpsInstalado" data-val="OK">OK</button>
+            <button class="st-btn" data-id="dpsInstalado" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">DPS Classe I/II presente</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="dpsClasseI" data-val="OK">OK</button>
+            <button class="st-btn" data-id="dpsClasseI" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Quadro de distribuição em bom estado</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="quadroBomEstado" data-val="OK">OK</button>
+            <button class="st-btn" data-id="quadroBomEstado" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Espaço no quadro para disjuntor do sistema solar</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="espacoQuadro" data-val="OK">OK</button>
+            <button class="st-btn" data-id="espacoQuadro" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Fiação do padrão em bom estado</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="fiacaoBomEstado" data-val="OK">OK</button>
+            <button class="st-btn" data-id="fiacaoBomEstado" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Medidor bidirecional ou compatível com troca</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="medidorBidirecional" data-val="OK">OK</button>
+            <button class="st-btn" data-id="medidorBidirecional" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Caixa do padrão com espaço para String Box</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="espacoStringBox" data-val="OK">OK</button>
+            <button class="st-btn" data-id="espacoStringBox" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-item-label">Padrão dentro das normas da concessionária</div>
+          <div class="status-toggle">
+            <button class="st-btn" data-id="dentroDasNormas" data-val="OK">OK</button>
+            <button class="st-btn" data-id="dentroDasNormas" data-val="NÃO OK">NÃO</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── 4. INVERSOR E SISTEMA ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        4. Inversor e Sistema
+      </div>
+
+      <div class="campo">
+        <label>Local de Instalação do Inversor</label>
+        <input type="text" id="localInversor" placeholder="Ex: Garagem, parede lateral, área de serviço...">
+      </div>
+      <div class="campo">
+        <label>Observações do local</label>
+        <textarea id="obsLocalInversor" placeholder="Distância do padrão, exposição ao sol, ventilação..."></textarea>
+      </div>
+
+      <!-- Seção exclusiva para sistema híbrido -->
+      <div class="secao-hibrido" id="secaoHibrido">
+        <div class="grupo-titulo" style="margin-top:4px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Separação de Cargas (Híbrido)
+        </div>
+        <div class="check-list">
+          <div class="check-item">
+            <div class="check-item-label" style="font-weight:600;color:var(--t1)">Haverá separação de cargas?</div>
+            <div class="status-toggle">
+              <button class="st-btn" data-id="temSeparacaoCargas" data-val="SIM">SIM</button>
+              <button class="st-btn" data-id="temSeparacaoCargas" data-val="NÃO">NÃO</button>
+            </div>
+          </div>
+        </div>
+        <div id="cargasListaWrap" style="display:none">
+          <div style="font-size:11px;color:var(--t3);margin:8px 0 4px">Liste as cargas e indique o circuito de destino (backup = bateria).</div>
+          <div class="cargas-lista" id="cargasLista"></div>
+          <button class="btn btn-ghost btn-mini" onclick="addCarga()" style="margin-top:4px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar Carga
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 5. FOTOS ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        5. Registro Fotográfico
+      </div>
+
+      <!-- Foto do local de instalação — slot dedicado -->
+      <div class="campo">
+        <label>📍 Local de Instalação</label>
+        <div class="fotos-drop" id="localInstDrop" onclick="document.getElementById('localInstInput').click()" style="padding:12px">
+          <input type="file" id="localInstInput" accept="image/*">
+          <div class="fotos-drop-text">Foto do local onde o inversor / string box será instalado</div>
+        </div>
+        <div id="localInstPreview" style="margin-top:6px;display:none">
+          <div class="foto-mini" style="max-width:100%">
+            <img id="localInstImg" src="" alt="Local de instalação" style="width:100%;height:100px;object-fit:cover">
+            <div class="foto-mini-label" style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px">
+              <span style="font-size:10px;color:var(--t2)">Local de instalação</span>
+              <button class="btn-rem-foto" style="position:static;width:auto;height:auto;padding:2px 6px" onclick="removerLocalInst()">×</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outras fotos -->
+      <div class="fotos-drop" id="fotoDrop" onclick="document.getElementById('fotoInput').click()">
+        <input type="file" id="fotoInput" accept="image/*" multiple>
+        <div class="fotos-drop-icon">📷</div>
+        <div class="fotos-drop-text">Toque para adicionar fotos<br><small style="color:var(--t4)">Padrão de entrada, telhado, quadro, disjuntores, medidor</small></div>
+      </div>
+      <div class="fotos-grid" id="fotosGrid"></div>
+
+      <!-- Vídeo direto -->
+      <div class="campo">
+        <label>Vídeo do Padrão de Entrada</label>
+        <div class="fotos-drop" id="videoDrop" onclick="document.getElementById('videoInput').click()" style="padding:12px">
+          <input type="file" id="videoInput" accept="video/*">
+          <div class="fotos-drop-text">Toque para anexar o vídeo do padrão</div>
+        </div>
+        <div id="videoPreview" style="margin-top:6px;display:none">
+          <video id="videoEl" controls style="width:100%;border-radius:6px;max-height:160px;background:#000"></video>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+            <span id="videoNome" style="font-size:10px;color:var(--t2)"></span>
+            <button class="btn btn-danger btn-mini" onclick="removerVideo()">Remover</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 5. ADEQUAÇÕES ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        6. Adequações Necessárias
+      </div>
+      <div class="adeq-lista" id="adeqLista"></div>
+      <div class="adeq-total">
+        <span>Total de Adequações</span>
+        <span class="adeq-total-val" id="adeqTotal">R$ 0,00</span>
+      </div>
+      <button class="btn btn-ghost btn-mini" onclick="addAdeq()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar Adequação
+      </button>
+    </div>
+
+    <!-- ─── 6. CUSTOS ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        7. Custos de Instalação
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Custo de Instalação (R$)</label>
+          <input type="number" id="custoInstalacao" placeholder="0,00" min="0">
+        </div>
+        <div class="campo">
+          <label>Custo de Homologação (R$)</label>
+          <input type="number" id="custoHomologacao" placeholder="0,00" min="0">
+        </div>
+      </div>
+      <div class="campo">
+        <label>Observações de Custo</label>
+        <textarea id="obsCustos" placeholder="Condições, formas de pagamento, prazo..."></textarea>
+      </div>
+    </div>
+
+    <!-- ─── 7. PARECER ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        8. Parecer do Instalador
+      </div>
+      <div class="campo">
+        <label>Parecer Geral</label>
+        <select id="parecerGeral">
+          <option value="">Selecione o parecer</option>
+          <option value="Aprovado sem ressalvas">Aprovado sem ressalvas</option>
+          <option value="Aprovado com adequações">Aprovado com adequações</option>
+          <option value="Reprovado — necessita obra civil">Reprovado — necessita obra civil</option>
+          <option value="Reprovado — inviável">Reprovado — inviável</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label>Observações Finais</label>
+        <textarea id="obsFinais" placeholder="Prazo estimado, recomendações, pontos de atenção..."></textarea>
+      </div>
+
+      <div class="campo">
+        <label>Nome do Responsável (assinatura)</label>
+        <input type="text" id="nomeAssinatura" placeholder="Nome completo do instalador">
+      </div>
+
+      <div class="termos-wrap">
+        <div class="termos-texto">
+          Declaro que realizei a vistoria técnica no local acima e que as informações aqui prestadas são verdadeiras. Me responsabilizo pela avaliação técnica das condições do telhado, padrão de entrada e adequações listadas. <strong style="color:var(--t1)">Caso alguma informação seja marcada como apta sem que a devida conferência tenha sido realizada, e isso gere custos adicionais ao projeto, a responsabilidade financeira será integralmente do instalador responsável pela vistoria.</strong>
+        </div>
+        <label class="termos-check-row">
+          <input type="checkbox" id="termoCheck" onchange="atualizarTermos()">
+          <span class="termos-check-label">Li e estou ciente das responsabilidades descritas acima. Confirmo que todas as informações preenchidas foram verificadas presencialmente.</span>
+        </label>
+        <div class="termos-aviso" id="termoAviso">Você precisa confirmar os termos para gerar o PDF ou enviar o checklist.</div>
+      </div>
+
+      <div>
+        <div class="sig-label">Assinatura Digital</div>
+        <div class="sig-wrap">
+          <canvas id="sigCanvas" width="760" height="200"></canvas>
+        </div>
+        <div class="sig-actions">
+          <button class="btn btn-dark btn-mini" onclick="clearSig()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Limpar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── AÇÕES ─── -->
+    <div class="acoes">
+      <button class="btn btn-primary btn-bloqueado" id="btnPDF" onclick="gerarPDF()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Gerar PDF
+      </button>
+      <div class="acoes-row">
+        <button class="btn btn-ghost btn-bloqueado" id="btnEnviar" style="flex:1" onclick="enviarChecklist()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar para Planilha
+        </button>
+        <button class="btn btn-dark" onclick="salvarRascunho()" title="Salvar rascunho local">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Rascunho
+        </button>
+      </div>
+      <button class="btn btn-danger btn-mini" onclick="limparFormulario()">Limpar tudo</button>
+    </div>
+
+  </div><!-- /editor-body -->
+</div><!-- /editor -->
+
+<!-- ══════════════════════════════════════════
+     PREVIEW (direita) — também é o que imprime
+══════════════════════════════════════════ -->
+<div class="preview">
+  <div class="page" id="pdfPage">
+
+    <!-- Header -->
+    <div class="pdf-header">
+      <div class="pdf-brand">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div>
+          <div class="pdf-brand-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+          <div class="pdf-brand-sub">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="pdf-doc-info">
+        <div class="pdf-doc-title">Checklist de Visita Técnica</div>
+        <div class="pdf-doc-sub" id="pdf-data-header"></div>
+      </div>
+    </div>
+
+    <!-- 1. Dados -->
+    <div class="pdf-secao">
+      <div class="pdf-secao-titulo">1. Dados da Visita</div>
+      <div class="pdf-grid pdf-grid-4">
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Instalador</div>
+          <div class="pdf-campo-val" id="pdf-instalador">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Data da Visita</div>
+          <div class="pdf-campo-val" id="pdf-dataVisita">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Cliente</div>
+          <div class="pdf-campo-val" id="pdf-cliente">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Tipo de Projeto</div>
+          <div class="pdf-campo-val" id="pdf-tipoProjeto">—</div>
+        </div>
+        <div class="pdf-campo pdf-campo-full">
+          <div class="pdf-campo-label">Endereço</div>
+          <div class="pdf-campo-val" id="pdf-endereco">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Telhado -->
+    <div class="pdf-secao">
+      <div class="pdf-secao-titulo">2. Telhado</div>
+      <div class="pdf-grid">
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Tipo</div>
+          <div class="pdf-campo-val" id="pdf-tipoTelhado">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Orientação</div>
+          <div class="pdf-campo-val" id="pdf-orientacao">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Inclinação</div>
+          <div class="pdf-campo-val" id="pdf-inclinacao">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Sombreamento</div>
+          <div class="pdf-campo-val" id="pdf-sombreamento">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Área disponível</div>
+          <div class="pdf-campo-val" id="pdf-area">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Acesso</div>
+          <div class="pdf-campo-val" id="pdf-acesso">—</div>
+        </div>
+      </div>
+      <div style="margin-top:6px">
+        <div class="pdf-campo-label" style="font-size:7px;letter-spacing:1px;text-transform:uppercase;color:#999;font-weight:600;margin-bottom:3px">Estrutura para compra</div>
+        <div style="font-size:10px;color:#2a2a2a;border-bottom:1px solid #f0f0f0;padding-bottom:3px;min-height:14px" id="pdf-estruturaCompra">—</div>
+      </div>
+      <div id="pdf-obsEstrutura-wrap" style="margin-top:5px">
+        <div class="pdf-campo-label" style="font-size:7px;letter-spacing:1px;text-transform:uppercase;color:#999;font-weight:600;margin-bottom:3px">Observações da estrutura</div>
+        <div style="font-size:10px;color:#444;line-height:1.5;padding:4px 0;border-bottom:1px solid #f0f0f0;min-height:14px" id="pdf-obsEstrutura"></div>
+      </div>
+      <div class="pdf-check-grid" style="margin-top:6px">
+        <div class="pdf-check-item" style="grid-column:1/-1;font-weight:600">
+          <span id="pdf-telhado-apto-badge" class="pdf-check-badge badge-nd">N/A</span>
+          Telhado apto para instalação
+        </div>
+      </div>
+      <div id="pdf-ajusteTelhado-wrap" style="margin-top:5px;display:none">
+        <div class="pdf-campo-label" style="font-size:7px;letter-spacing:1px;text-transform:uppercase;color:#dc2626;font-weight:600;margin-bottom:3px">Ajuste necessário</div>
+        <div style="font-size:10px;color:#dc2626;line-height:1.5;padding:4px 8px;background:#fff5f5;border:1px solid #fecaca;border-radius:4px" id="pdf-ajusteTelhado"></div>
+      </div>
+    </div>
+
+    <!-- 3. Padrão de Entrada -->
+    <div class="pdf-secao">
+      <div class="pdf-secao-titulo">3. Padrão de Entrada — Homologação</div>
+      <div class="pdf-grid pdf-grid-2" style="margin-bottom:6px">
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Tipo de Ligação</div>
+          <div class="pdf-campo-val" id="pdf-tipoLigacao">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Disjuntor Geral</div>
+          <div class="pdf-campo-val" id="pdf-disjuntor">—</div>
+        </div>
+      </div>
+      <div class="pdf-check-grid" id="pdf-checks-padrao"></div>
+    </div>
+
+    <!-- 4. Inversor e Sistema -->
+    <div class="pdf-secao">
+      <div class="pdf-secao-titulo">4. Inversor e Sistema</div>
+      <div class="pdf-campo" style="margin-bottom:6px">
+        <div class="pdf-campo-label">Local de Instalação do Inversor</div>
+        <div class="pdf-campo-val" id="pdf-localInversor">—</div>
+      </div>
+      <div id="pdf-obsLocalInversor-wrap" style="display:none;margin-bottom:6px">
+        <div class="pdf-campo-label" style="font-size:7px;letter-spacing:1px;text-transform:uppercase;color:#999;font-weight:600;margin-bottom:2px">Observações do local</div>
+        <div style="font-size:10px;color:#444;line-height:1.5;border-bottom:1px solid #f0f0f0;padding-bottom:3px" id="pdf-obsLocalInversor"></div>
+      </div>
+      <div id="pdf-hibrido-secao" style="display:none">
+        <div class="pdf-campo-label" style="font-size:7px;letter-spacing:1px;text-transform:uppercase;color:#F26522;font-weight:600;margin:6px 0 4px">Separação de Cargas (Híbrido)</div>
+        <table class="pdf-adeq-table">
+          <thead>
+            <tr>
+              <th>Carga</th>
+              <th style="width:90px">Circuito</th>
+              <th style="text-align:right;width:80px">Potência</th>
+            </tr>
+          </thead>
+          <tbody id="pdf-cargas-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 5. Fotos -->
+    <div class="pdf-secao" id="pdf-fotos-secao" style="display:none">
+      <div class="pdf-secao-titulo">5. Registro Fotográfico</div>
+      <div id="pdf-local-inst-wrap" style="display:none;margin-bottom:8px">
+        <div class="pdf-campo-label" style="font-size:7px;letter-spacing:1px;text-transform:uppercase;color:#F26522;font-weight:600;margin-bottom:4px">Local de Instalação</div>
+        <img id="pdf-local-inst-img" src="" alt="Local de instalação" style="width:100%;max-height:55mm;object-fit:cover;border-radius:4px;border:1px solid #e0e0e0;display:block">
+      </div>
+      <div class="pdf-fotos-grid" id="pdf-fotos-grid"></div>
+      <div id="pdf-video-info" style="margin-top:6px;display:none">
+        <span style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#999;font-weight:600">Vídeo do padrão: </span>
+        <span style="font-size:9px;color:#444" id="pdf-video-nome-val">anexado</span>
+      </div>
+    </div>
+
+    <!-- 5. Adequações -->
+    <div class="pdf-secao" id="pdf-adeq-secao" style="display:none">
+      <div class="pdf-secao-titulo">6. Adequações Necessárias</div>
+      <table class="pdf-adeq-table">
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th style="text-align:right;width:100px">Valor</th>
+          </tr>
+        </thead>
+        <tbody id="pdf-adeq-body"></tbody>
+      </table>
+      <div class="pdf-adeq-total">
+        <span>Total</span>
+        <span id="pdf-adeq-total-val">R$ 0,00</span>
+      </div>
+    </div>
+
+    <!-- 6. Custos -->
+    <div class="pdf-secao">
+      <div class="pdf-secao-titulo">7. Custos de Instalação</div>
+      <div class="pdf-grid pdf-grid-2">
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Custo de Instalação</div>
+          <div class="pdf-campo-val" id="pdf-custoInstalacao">—</div>
+        </div>
+        <div class="pdf-campo">
+          <div class="pdf-campo-label">Custo de Homologação</div>
+          <div class="pdf-campo-val" id="pdf-custoHomologacao">—</div>
+        </div>
+        <div class="pdf-campo pdf-campo-full">
+          <div class="pdf-campo-label">Observações</div>
+          <div class="pdf-campo-val" id="pdf-obsCustos">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Parecer -->
+    <div class="pdf-secao">
+      <div class="pdf-secao-titulo">8. Parecer do Instalador</div>
+      <div class="pdf-parecer-box" id="pdf-parecer-box">
+        <div class="pdf-parecer-label">Parecer Geral</div>
+        <div class="pdf-parecer-val" id="pdf-parecer">—</div>
+      </div>
+      <div class="pdf-campo-label" style="font-size:7px;letter-spacing:1px;text-transform:uppercase;color:#999;font-weight:600;margin-bottom:3px">Observações Finais</div>
+      <div style="font-size:10px;color:#444;line-height:1.55;padding:4px 0;border-bottom:1px solid #f0f0f0;min-height:14px;margin-bottom:10px" id="pdf-obsFinais"></div>
+
+      <div style="background:rgba(242,101,34,.04);border:1px solid rgba(242,101,34,.15);border-left:3px solid #F26522;border-radius:6px;padding:9px 13px;font-size:9px;color:#555;line-height:1.65;font-style:italic;margin-bottom:12px">
+        Declaro que realizei a vistoria técnica no local acima e que as informações aqui prestadas são verdadeiras. Me responsabilizo pela avaliação técnica das condições do telhado, padrão de entrada e adequações listadas. <strong style="color:#1a1a1a">Caso alguma informação seja marcada como apta sem que a devida conferência tenha sido realizada, e isso gere custos adicionais ao projeto, a responsabilidade financeira será integralmente do instalador responsável pela vistoria.</strong>
+        <div style="margin-top:7px;font-style:normal;font-weight:600;color:#F26522;font-size:8px;letter-spacing:1px">✓ TERMOS LIDOS E ACEITOS PELO INSTALADOR</div>
+      </div>
+
+      <div class="pdf-assinatura">
+        <div class="pdf-assinatura-box">
+          <div class="pdf-assinatura-img" id="pdf-sig-img"></div>
+          <div id="pdf-nome-assinatura">_________________________</div>
+          <div style="font-size:8px;color:#999;margin-top:2px">Instalador Responsável</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="pdf-footer">
+      <span>LumenGrid Energia Inteligente — lumengridbrasil.com.br</span>
+      <span>Feito por Domani Consultoria</span>
+    </div>
+
+  </div><!-- /page -->
+</div><!-- /preview -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+// CONFIGURAÇÃO
+// ══════════════════════════════════════════════════
+
+// Cole aqui a URL do seu Web App do Apps Script após implantar
+const ENDPOINT = 'COLE_A_URL_DO_APPS_SCRIPT_AQUI';
+
+// ══════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════
+
+const state = {
+  checks: {},         // id -> valor string
+  fotos: [],          // [{dataUrl, label}]
+  adeqs: [],          // [{desc, val}]
+  cargas: [],         // [{nome, circuito, potencia}] — híbrido
+  sigImg: null,       // dataUrl da assinatura
+  localInstImg: null, // dataUrl da foto do local de instalação
+  videoNome: null,    // nome do arquivo de vídeo
+  videoBlob: null     // blob do vídeo para upload
+};
+
+const CHECKS_PADRAO = [
+  { id: 'disjuntorBomEstado',   label: 'Disjuntor geral em bom estado' },
+  { id: 'disjuntorCompativel',  label: 'Disjuntor compatível com sistema solar' },
+  { id: 'aterramento',          label: 'Aterramento existente e funcional' },
+  { id: 'hasteAterramento',     label: 'Haste de aterramento c/ interligação ao neutro' },
+  { id: 'dpsInstalado',         label: 'DPS instalado' },
+  { id: 'dpsClasseI',           label: 'DPS Classe I/II presente' },
+  { id: 'quadroBomEstado',      label: 'Quadro de distribuição em bom estado' },
+  { id: 'espacoQuadro',         label: 'Espaço no quadro para disjuntor solar' },
+  { id: 'fiacaoBomEstado',      label: 'Fiação do padrão em bom estado' },
+  { id: 'medidorBidirecional',  label: 'Medidor bidirecional / compatível' },
+  { id: 'espacoStringBox',      label: 'Espaço para String Box' },
+  { id: 'dentroDasNormas',      label: 'Dentro das normas da concessionária' },
+];
+
+const ADEQS_PADRAO = [
+  'Instalação de haste de aterramento',
+  'Substituição de disjuntor geral',
+  'Instalação de DPS Classe I/II',
+  'Retirada de disjuntor excedente',
+  'Troca de padrão de entrada',
+  'Adequação do quadro de distribuição',
+  'Aumento de carga contratada',
+  'Regularização de fiação',
+  'Outro',
+];
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Data atual
+  const hoje = new Date();
+  document.getElementById('dataVisita').value = hoje.toISOString().split('T')[0];
+
+  // Listeners de campos
+  const campos = ['instalador','dataVisita','cliente','endereco','cidadeUF','tipoProjeto',
+    'tipoTelhado','acessoTelhado','orientacao','inclinacao','sombreamento','areaDisponivel',
+    'estruturaCompra','obsEstrutura','ajusteTelhado',
+    'tipoLigacao','disjuntorAmperagem',
+    'localInversor','obsLocalInversor',
+    'custoInstalacao','custoHomologacao','obsCustos',
+    'parecerGeral','obsFinais','nomeAssinatura'];
+  campos.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', atualizarPreview);
+    if (el) el.addEventListener('change', atualizarPreview);
+  });
+
+  // Tipo de projeto → mostrar/ocultar seção híbrido
+  document.getElementById('tipoProjeto').addEventListener('change', () => {
+    const hibrido = document.getElementById('tipoProjeto').value === 'Híbrido';
+    document.getElementById('secaoHibrido').classList.toggle('ativa', hibrido);
+    atualizarPreview();
+  });
+
+  // Foto do local de instalação
+  document.getElementById('localInstInput').addEventListener('change', (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      state.localInstImg = ev.target.result;
+      document.getElementById('localInstImg').src = ev.target.result;
+      document.getElementById('localInstPreview').style.display = '';
+      atualizarPreview();
+    };
+    reader.readAsDataURL(f);
+    e.target.value = '';
+  });
+
+  // Vídeo
+  document.getElementById('videoInput').addEventListener('change', (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    state.videoNome = f.name;
+    const url = URL.createObjectURL(f);
+    document.getElementById('videoEl').src = url;
+    document.getElementById('videoNome').textContent = f.name;
+    document.getElementById('videoPreview').style.display = '';
+    atualizarPreview();
+    e.target.value = '';
+  });
+
+  // Status toggles
+  document.querySelectorAll('.st-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const val = btn.dataset.val;
+      // Toggle: se já ativo, desativa
+      state.checks[id] = (state.checks[id] === val) ? '' : val;
+      atualizarBotoesStatus();
+      atualizarPreview();
+    });
+  });
+
+  // Fotos
+  document.getElementById('fotoInput').addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(f => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        state.fotos.push({ dataUrl: ev.target.result, label: f.name.replace(/\.[^.]+$/, '') });
+        renderFotosEditor();
+        atualizarPreview();
+      };
+      reader.readAsDataURL(f);
+    });
+    e.target.value = '';
+  });
+
+  // Assinatura
+  initCanvas();
+
+  // Carregar rascunho
+  carregarRascunho();
+
+  // Preview inicial
+  atualizarPreview();
+});
+
+// ══════════════════════════════════════════════════
+// STATUS BUTTONS
+// ══════════════════════════════════════════════════
+
+function atualizarBotoesStatus() {
+  document.querySelectorAll('.st-btn').forEach(btn => {
+    const id = btn.dataset.id;
+    const val = btn.dataset.val;
+    const current = state.checks[id] || '';
+    btn.className = 'st-btn';
+    if (current === val) {
+      btn.classList.add(val === 'OK' ? 'ok' : 'nok');
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════
+// FOTOS — EDITOR
+// ══════════════════════════════════════════════════
+
+function renderFotosEditor() {
+  const grid = document.getElementById('fotosGrid');
+  grid.innerHTML = '';
+  state.fotos.forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'foto-mini';
+    div.innerHTML = `
+      <img src="${f.dataUrl}" alt="">
+      <div class="foto-mini-label">
+        <input type="text" value="${f.label}" placeholder="Descrição..." onchange="state.fotos[${i}].label=this.value;atualizarPreview()">
+      </div>
+      <button class="btn-rem-foto" onclick="removerFoto(${i})">×</button>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function removerFoto(i) {
+  state.fotos.splice(i, 1);
+  renderFotosEditor();
+  atualizarPreview();
+}
+
+// ══════════════════════════════════════════════════
+// TERMOS
+// ══════════════════════════════════════════════════
+
+function atualizarTermos() {
+  const checked = document.getElementById('termoCheck').checked;
+  document.getElementById('btnPDF').classList.toggle('btn-bloqueado', !checked);
+  document.getElementById('btnEnviar').classList.toggle('btn-bloqueado', !checked);
+  document.getElementById('termoAviso').classList.toggle('show', false);
+}
+
+function checarTermos() {
+  const checked = document.getElementById('termoCheck').checked;
+  if (!checked) {
+    document.getElementById('termoAviso').classList.add('show');
+    document.getElementById('termoCheck').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+  return true;
+}
+
+// ══════════════════════════════════════════════════
+// CARGAS (HÍBRIDO)
+// ══════════════════════════════════════════════════
+
+function addCarga() {
+  state.cargas.push({ nome: '', circuito: 'Backup', potencia: '' });
+  renderCargas();
+}
+
+function renderCargas() {
+  const lista = document.getElementById('cargasLista');
+  lista.innerHTML = '';
+  state.cargas.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'carga-item';
+
+    const inpNome = document.createElement('input');
+    inpNome.className = 'carga-nome';
+    inpNome.type = 'text';
+    inpNome.placeholder = 'Nome da carga (ex: Geladeira)';
+    inpNome.value = c.nome;
+    inpNome.addEventListener('input', () => { state.cargas[i].nome = inpNome.value; atualizarPreview(); });
+
+    const selCirc = document.createElement('select');
+    selCirc.className = 'carga-circ';
+    ['Backup', 'Rede'].forEach(op => {
+      const opt = document.createElement('option');
+      opt.value = op; opt.textContent = op;
+      if (op === c.circuito) opt.selected = true;
+      selCirc.appendChild(opt);
+    });
+    selCirc.addEventListener('change', () => { state.cargas[i].circuito = selCirc.value; atualizarPreview(); });
+
+    const inpPot = document.createElement('input');
+    inpPot.className = 'carga-pot';
+    inpPot.type = 'text';
+    inpPot.placeholder = 'ex: 150W';
+    inpPot.value = c.potencia;
+    inpPot.addEventListener('input', () => { state.cargas[i].potencia = inpPot.value; atualizarPreview(); });
+
+    const btnRem = document.createElement('button');
+    btnRem.className = 'btn-rem-carga';
+    btnRem.textContent = '×';
+    btnRem.onclick = () => { state.cargas.splice(i, 1); renderCargas(); atualizarPreview(); };
+
+    div.appendChild(inpNome);
+    div.appendChild(selCirc);
+    div.appendChild(inpPot);
+    div.appendChild(btnRem);
+    lista.appendChild(div);
+  });
+}
+
+function removerLocalInst() {
+  state.localInstImg = null;
+  document.getElementById('localInstPreview').style.display = 'none';
+  document.getElementById('localInstImg').src = '';
+  atualizarPreview();
+}
+
+function removerVideo() {
+  state.videoNome = null;
+  document.getElementById('videoEl').src = '';
+  document.getElementById('videoPreview').style.display = 'none';
+  atualizarPreview();
+}
+
+// ══════════════════════════════════════════════════
+// ADEQUAÇÕES
+// ══════════════════════════════════════════════════
+
+function addAdeq() {
+  state.adeqs.push({ desc: ADEQS_PADRAO[0], val: '' });
+  renderAdeqs();
+}
+
+function renderAdeqs() {
+  const lista = document.getElementById('adeqLista');
+  lista.innerHTML = '';
+  state.adeqs.forEach((a, i) => {
+    const div = document.createElement('div');
+    div.className = 'adeq-item';
+
+    // Select de sugestões
+    const sel = document.createElement('select');
+    ADEQS_PADRAO.forEach(label => {
+      const opt = document.createElement('option');
+      opt.value = label;
+      opt.textContent = label;
+      if (label === a.desc) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    // Opção personalizada se não na lista
+    if (!ADEQS_PADRAO.includes(a.desc)) {
+      const customOpt = document.createElement('option');
+      customOpt.value = a.desc;
+      customOpt.textContent = a.desc;
+      customOpt.selected = true;
+      sel.appendChild(customOpt);
+    }
+    sel.addEventListener('change', () => {
+      state.adeqs[i].desc = sel.value;
+      renderAdeqs();
+      atualizarPreview();
+    });
+
+    const valInput = document.createElement('input');
+    valInput.type = 'number';
+    valInput.className = 'val-input';
+    valInput.min = '0';
+    valInput.value = a.val !== '' ? a.val : '';
+    valInput.placeholder = 'R$';
+    valInput.addEventListener('input', () => {
+      state.adeqs[i].val = parseFloat(valInput.value) || 0;
+      atualizarTotalAdeq();
+      atualizarPreview();
+    });
+
+    const btnRem = document.createElement('button');
+    btnRem.className = 'btn-rem-adeq';
+    btnRem.textContent = '×';
+    btnRem.onclick = () => { state.adeqs.splice(i, 1); renderAdeqs(); atualizarPreview(); };
+
+    div.appendChild(sel);
+    div.appendChild(valInput);
+    div.appendChild(btnRem);
+    lista.appendChild(div);
+  });
+  atualizarTotalAdeq();
+}
+
+function atualizarTotalAdeq() {
+  const total = state.adeqs.reduce((s, a) => s + (parseFloat(a.val) || 0), 0);
+  document.getElementById('adeqTotal').textContent = formatBRL(total);
+}
+
+// ══════════════════════════════════════════════════
+// ASSINATURA DIGITAL (CANVAS)
+// ══════════════════════════════════════════════════
+
+function initCanvas() {
+  const canvas = document.getElementById('sigCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  let drawing = false, lx = 0, ly = 0;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if (e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  }
+
+  function startDraw(e) {
+    e.preventDefault();
+    drawing = true;
+    const p = getPos(e);
+    lx = p.x; ly = p.y;
+    ctx.beginPath();
+    ctx.moveTo(lx, ly);
+  }
+
+  function draw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const p = getPos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lx = p.x; ly = p.y;
+  }
+
+  function stopDraw(e) {
+    if (!drawing) return;
+    drawing = false;
+    state.sigImg = canvas.toDataURL('image/png');
+    atualizarPreview();
+  }
+
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDraw);
+  canvas.addEventListener('mouseleave', stopDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove', draw, { passive: false });
+  canvas.addEventListener('touchend', stopDraw);
+}
+
+function clearSig() {
+  const canvas = document.getElementById('sigCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  state.sigImg = null;
+  atualizarPreview();
+}
+
+// ══════════════════════════════════════════════════
+// PREVIEW
+// ══════════════════════════════════════════════════
+
+function v(id) { return (document.getElementById(id) || {}).value || ''; }
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val || '—';
+}
+
+function formatBRL(n) {
+  return 'R$ ' + Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function badgeClass(val) {
+  if (val === 'OK' || val === 'SIM') return 'badge-ok';
+  if (val === 'NÃO OK' || val === 'NÃO') return 'badge-nok';
+  return 'badge-nd';
+}
+function badgeText(val) {
+  if (val === 'OK') return 'OK';
+  if (val === 'NÃO OK') return 'NÃO';
+  if (val === 'SIM') return 'SIM';
+  if (val === 'NÃO') return 'NÃO';
+  return 'N/A';
+}
+
+function atualizarPreview() {
+  // Header data
+  const dataV = v('dataVisita');
+  const dataFmt = dataV ? new Date(dataV + 'T12:00:00').toLocaleDateString('pt-BR') : '—';
+  document.getElementById('pdf-data-header').textContent =
+    'Gerado em ' + new Date().toLocaleDateString('pt-BR') + ' | Visita: ' + dataFmt;
+
+  // Dados
+  set('pdf-instalador', v('instalador'));
+  set('pdf-dataVisita', dataFmt);
+  set('pdf-cliente', v('cliente'));
+  set('pdf-tipoProjeto', v('tipoProjeto'));
+  set('pdf-endereco', [v('endereco'), v('cidadeUF')].filter(Boolean).join(' — ') || null);
+
+  // Telhado
+  set('pdf-tipoTelhado', v('tipoTelhado'));
+  set('pdf-orientacao', v('orientacao'));
+  set('pdf-inclinacao', v('inclinacao'));
+  set('pdf-sombreamento', v('sombreamento'));
+  set('pdf-area', v('areaDisponivel') ? v('areaDisponivel') + ' m²' : null);
+  set('pdf-acesso', v('acessoTelhado'));
+
+  // Estrutura para compra + obs
+  set('pdf-estruturaCompra', v('estruturaCompra'));
+  document.getElementById('pdf-obsEstrutura').textContent = v('obsEstrutura') || '';
+
+  // Telhado apto
+  const aptoVal = state.checks['telhadoApto'] || '';
+  const aptoBadge = document.getElementById('pdf-telhado-apto-badge');
+  aptoBadge.className = 'pdf-check-badge ' + badgeClass(aptoVal);
+  aptoBadge.textContent = badgeText(aptoVal);
+  // Mostrar/ocultar campo de ajuste no editor
+  const ajusteWrap = document.getElementById('ajusteTelhadoWrap');
+  if (ajusteWrap) ajusteWrap.style.display = aptoVal === 'NÃO' ? '' : 'none';
+  // No PDF
+  const ajustePdfWrap = document.getElementById('pdf-ajusteTelhado-wrap');
+  ajustePdfWrap.style.display = aptoVal === 'NÃO' ? '' : 'none';
+  document.getElementById('pdf-ajusteTelhado').textContent = v('ajusteTelhado') || '';
+
+  // Padrão de entrada
+  set('pdf-tipoLigacao', v('tipoLigacao'));
+  const amp = v('disjuntorAmperagem');
+  set('pdf-disjuntor', amp ? amp + ' A' : null);
+
+  // Inversor e sistema
+  set('pdf-localInversor', v('localInversor'));
+  const obsLoc = v('obsLocalInversor');
+  const obsLocWrap = document.getElementById('pdf-obsLocalInversor-wrap');
+  obsLocWrap.style.display = obsLoc ? '' : 'none';
+  document.getElementById('pdf-obsLocalInversor').textContent = obsLoc;
+
+  // Híbrido — separação de cargas
+  const isHibrido = v('tipoProjeto') === 'Híbrido';
+  const temSep = state.checks['temSeparacaoCargas'] || '';
+  const cargasWrap = document.getElementById('cargasListaWrap');
+  if (cargasWrap) cargasWrap.style.display = temSep === 'SIM' ? '' : 'none';
+  document.getElementById('pdf-hibrido-secao').style.display = (isHibrido && temSep === 'SIM' && state.cargas.length > 0) ? '' : 'none';
+  const cargasBody = document.getElementById('pdf-cargas-body');
+  cargasBody.innerHTML = '';
+  state.cargas.forEach(c => {
+    const tr = document.createElement('tr');
+    const circColor = c.circuito === 'Backup' ? '#16a34a' : '#2563eb';
+    tr.innerHTML = `<td>${c.nome || '—'}</td><td style="color:${circColor};font-weight:600">${c.circuito}</td><td style="text-align:right">${c.potencia || '—'}</td>`;
+    cargasBody.appendChild(tr);
+  });
+
+  // Checks padrão
+  const checksDiv = document.getElementById('pdf-checks-padrao');
+  checksDiv.innerHTML = '';
+  CHECKS_PADRAO.forEach(c => {
+    const val = state.checks[c.id] || '';
+    const d = document.createElement('div');
+    d.className = 'pdf-check-item';
+    d.innerHTML = `<span class="pdf-check-badge ${badgeClass(val)}">${badgeText(val)}</span>${c.label}`;
+    checksDiv.appendChild(d);
+  });
+
+  // Fotos
+  const temFotos = state.fotos.length > 0 || state.localInstImg || state.videoNome;
+  const fotoSecao = document.getElementById('pdf-fotos-secao');
+  fotoSecao.style.display = temFotos ? '' : 'none';
+
+  // Local de instalação no PDF
+  const localWrap = document.getElementById('pdf-local-inst-wrap');
+  if (state.localInstImg) {
+    localWrap.style.display = '';
+    document.getElementById('pdf-local-inst-img').src = state.localInstImg;
+  } else {
+    localWrap.style.display = 'none';
+  }
+
+  // Outras fotos
+  const fotosGrid = document.getElementById('pdf-fotos-grid');
+  fotosGrid.innerHTML = '';
+  state.fotos.forEach(f => {
+    const d = document.createElement('div');
+    d.className = 'pdf-foto-item';
+    d.innerHTML = `<img src="${f.dataUrl}" alt="${f.label}"><div class="pdf-foto-leg">${f.label}</div>`;
+    fotosGrid.appendChild(d);
+  });
+
+  // Vídeo — mostra nota no PDF (não embute vídeo)
+  const videoInfoEl = document.getElementById('pdf-video-info');
+  videoInfoEl.style.display = state.videoNome ? '' : 'none';
+  if (state.videoNome) document.getElementById('pdf-video-nome-val').textContent = state.videoNome;
+
+  // Adequações
+  const adeqSecao = document.getElementById('pdf-adeq-secao');
+  adeqSecao.style.display = state.adeqs.length > 0 ? '' : 'none';
+  const tbody = document.getElementById('pdf-adeq-body');
+  tbody.innerHTML = '';
+  let totalAdeq = 0;
+  state.adeqs.forEach(a => {
+    const tr = document.createElement('tr');
+    const vl = parseFloat(a.val) || 0;
+    totalAdeq += vl;
+    tr.innerHTML = `<td>${a.desc}</td><td style="text-align:right">${formatBRL(vl)}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('pdf-adeq-total-val').textContent = formatBRL(totalAdeq);
+
+  // Custos
+  const ci = v('custoInstalacao');
+  const ch = v('custoHomologacao');
+  set('pdf-custoInstalacao', ci ? formatBRL(parseFloat(ci)) : null);
+  set('pdf-custoHomologacao', ch ? formatBRL(parseFloat(ch)) : null);
+  set('pdf-obsCustos', v('obsCustos'));
+
+  // Parecer
+  const parecer = v('parecerGeral');
+  const parecerBox = document.getElementById('pdf-parecer-box');
+  parecerBox.className = 'pdf-parecer-box';
+  if (parecer.includes('sem ressalvas')) parecerBox.classList.add('parecer-aprovado');
+  else if (parecer.includes('com adequações')) parecerBox.classList.add('parecer-aprovado-ressalvas');
+  else if (parecer.includes('obra civil')) parecerBox.classList.add('parecer-reprovado-obra');
+  else if (parecer.includes('inviável')) parecerBox.classList.add('parecer-reprovado');
+  set('pdf-parecer', parecer);
+  set('pdf-obsFinais', v('obsFinais'));
+
+  // Nome assinatura
+  const nome = v('nomeAssinatura');
+  document.getElementById('pdf-nome-assinatura').textContent = nome || '_________________________';
+
+  // Assinatura digital
+  const sigImg = document.getElementById('pdf-sig-img');
+  if (state.sigImg) {
+    sigImg.innerHTML = `<img src="${state.sigImg}" alt="Assinatura">`;
+  } else {
+    sigImg.innerHTML = '';
+  }
+}
+
+// ══════════════════════════════════════════════════
+// PDF
+// ══════════════════════════════════════════════════
+
+function gerarPDF() {
+  if (!checarTermos()) return;
+  atualizarPreview();
+  setTimeout(() => window.print(), 150);
+}
+
+// ══════════════════════════════════════════════════
+// ENVIO PARA PLANILHA
+// ══════════════════════════════════════════════════
+
+function coletarDados(incluirFotos) {
+  const dados = {
+    instalador:         v('instalador'),
+    dataVisita:         v('dataVisita'),
+    cliente:            v('cliente'),
+    endereco:           v('endereco'),
+    cidadeUF:           v('cidadeUF'),
+    tipoProjeto:        v('tipoProjeto'),
+    tipoTelhado:        v('tipoTelhado'),
+    estruturaCompra:    v('estruturaCompra'),
+    obsEstrutura:       v('obsEstrutura'),
+    telhadoApto:        state.checks['telhadoApto'] || '',
+    ajusteTelhado:      v('ajusteTelhado'),
+    orientacao:         v('orientacao'),
+    inclinacao:         v('inclinacao'),
+    sombreamento:       v('sombreamento'),
+    areaDisponivel:     v('areaDisponivel'),
+    acessoTelhado:      v('acessoTelhado'),
+    tipoLigacao:        v('tipoLigacao'),
+    disjuntorAmperagem: v('disjuntorAmperagem'),
+    disjuntorBomEstado: state.checks['disjuntorBomEstado'] || '',
+    disjuntorCompativel:state.checks['disjuntorCompativel'] || '',
+    aterramento:        state.checks['aterramento'] || '',
+    hasteAterramento:   state.checks['hasteAterramento'] || '',
+    dpsInstalado:       state.checks['dpsInstalado'] || '',
+    dpsClasseI:         state.checks['dpsClasseI'] || '',
+    quadroBomEstado:    state.checks['quadroBomEstado'] || '',
+    espacoQuadro:       state.checks['espacoQuadro'] || '',
+    fiacaoBomEstado:    state.checks['fiacaoBomEstado'] || '',
+    medidorBidirecional:state.checks['medidorBidirecional'] || '',
+    espacoStringBox:    state.checks['espacoStringBox'] || '',
+    dentroDasNormas:    state.checks['dentroDasNormas'] || '',
+    localInversor:      v('localInversor'),
+    obsLocalInversor:   v('obsLocalInversor'),
+    cargas:             state.cargas,
+    temVideoAnexado:    !!state.videoNome,
+    nomeVideo:          state.videoNome || '',
+    qtdFotos:           state.fotos.length + (state.localInstImg ? 1 : 0),
+    adequacoes:         state.adeqs.map(a => ({ desc: a.desc, valor: a.val })),
+    custoInstalacao:    v('custoInstalacao'),
+    custoHomologacao:   v('custoHomologacao'),
+    obsCustos:          v('obsCustos'),
+    parecerGeral:       v('parecerGeral'),
+    obsFinais:          v('obsFinais'),
+    nomeAssinatura:     v('nomeAssinatura'),
+    temAssinatura:      !!state.sigImg,
+  };
+  if (incluirFotos) {
+    // Fotos em base64 para salvar no Drive
+    const fotosArr = state.fotos.map(f => ({ dataUrl: f.dataUrl, label: f.label }));
+    if (state.localInstImg) fotosArr.unshift({ dataUrl: state.localInstImg, label: 'local-instalacao' });
+    dados.fotosBase64 = fotosArr;
+    dados.assinaturaBase64 = state.sigImg || null;
+  }
+  return dados;
+}
+
+async function enviarChecklist() {
+  if (!checarTermos()) return;
+  if (!v('cliente')) { showToast('Preencha o nome do cliente antes de enviar.', 'err'); return; }
+  if (!v('instalador')) { showToast('Informe o nome do instalador antes de enviar.', 'err'); return; }
+  if (ENDPOINT.includes('COLE_A_URL')) {
+    showToast('Configure o endpoint do Apps Script no código.', 'err'); return;
+  }
+
+  showToast('Enviando checklist e fotos...', '');
+  try {
+    const resp = await fetch(ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'save_checklist', data: coletarDados(true) })
+    });
+    const json = await resp.json();
+    if (json.status === 'ok') {
+      showToast('Enviado! ID: ' + json.id + (json.pastaLink ? ' — Fotos salvas no Drive' : ''), 'ok');
+    } else {
+      showToast('Erro: ' + (json.message || 'falha no servidor'), 'err');
+    }
+  } catch (err) {
+    showToast('Falha na conexão: ' + err.message, 'err');
+  }
+}
+
+// ══════════════════════════════════════════════════
+// LOCAL STORAGE
+// ══════════════════════════════════════════════════
+
+function salvarRascunho() {
+  const dados = coletarDados(false);
+  // Não salvar fotos em base64 (pode ser muito pesado)
+  dados._checks = { ...state.checks };
+  dados._adeqs = [...state.adeqs];
+  localStorage.setItem('lumengrid_checklist_draft', JSON.stringify(dados));
+  showToast('Rascunho salvo localmente.', 'ok');
+}
+
+function carregarRascunho() {
+  const raw = localStorage.getItem('lumengrid_checklist_draft');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    setVal('instalador', d.instalador);
+    setVal('dataVisita', d.dataVisita);
+    setVal('cliente', d.cliente);
+    setVal('endereco', d.endereco);
+    setVal('cidadeUF', d.cidadeUF);
+    setVal('tipoProjeto', d.tipoProjeto);
+    setVal('tipoTelhado', d.tipoTelhado);
+    setVal('estruturaCompra', d.estruturaCompra);
+    setVal('obsEstrutura', d.obsEstrutura);
+    setVal('ajusteTelhado', d.ajusteTelhado);
+    setVal('orientacao', d.orientacao);
+    setVal('inclinacao', d.inclinacao);
+    setVal('sombreamento', d.sombreamento);
+    setVal('areaDisponivel', d.areaDisponivel);
+    setVal('acessoTelhado', d.acessoTelhado);
+    setVal('tipoLigacao', d.tipoLigacao);
+    setVal('disjuntorAmperagem', d.disjuntorAmperagem);
+    setVal('localInversor', d.localInversor);
+    setVal('obsLocalInversor', d.obsLocalInversor);
+    setVal('custoInstalacao', d.custoInstalacao);
+    setVal('custoHomologacao', d.custoHomologacao);
+    setVal('obsCustos', d.obsCustos);
+    setVal('parecerGeral', d.parecerGeral);
+    setVal('obsFinais', d.obsFinais);
+    setVal('nomeAssinatura', d.nomeAssinatura);
+
+    if (d._checks) { Object.assign(state.checks, d._checks); atualizarBotoesStatus(); }
+    if (d._adeqs) { state.adeqs = d._adeqs; renderAdeqs(); }
+    if (d.cargas) { state.cargas = d.cargas; renderCargas(); }
+    // Restaurar visibilidade do híbrido
+    if (d.tipoProjeto === 'Híbrido') document.getElementById('secaoHibrido').classList.add('ativa');
+
+    showToast('Rascunho carregado.', 'ok');
+  } catch (e) { /* ignora */ }
+}
+
+function limparFormulario() {
+  if (!confirm('Limpar todos os dados do formulário?')) return;
+  document.querySelectorAll('.editor input, .editor select, .editor textarea').forEach(el => {
+    if (el.type !== 'file') el.value = '';
+  });
+  state.checks = {};
+  state.fotos = [];
+  state.adeqs = [];
+  state.cargas = [];
+  state.sigImg = null;
+  state.localInstImg = null;
+  state.videoNome = null;
+  state.videoBlob = null;
+  document.getElementById('secaoHibrido').classList.remove('ativa');
+  document.getElementById('termoCheck').checked = false;
+  atualizarTermos();
+  document.getElementById('localInstPreview').style.display = 'none';
+  document.getElementById('videoPreview').style.display = 'none';
+  atualizarBotoesStatus();
+  renderFotosEditor();
+  renderAdeqs();
+  clearSig();
+  localStorage.removeItem('lumengrid_checklist_draft');
+  // Resetar data
+  document.getElementById('dataVisita').value = new Date().toISOString().split('T')[0];
+  atualizarPreview();
+  showToast('Formulário limpo.', 'ok');
+}
+
+// ══════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════
+
+let toastTimer;
+function showToast(msg, tipo) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (tipo || '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+</script>
+</body>
+</html>

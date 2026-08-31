@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vídeos de Homologação — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --or: #F26522; --or-dim: rgba(242,101,34,.15); --or-border: rgba(242,101,34,.28);
+  --bg: #0a0a0a; --panel: #0f0f0f; --card: #1a1a1a; --card2: #141414;
+  --border: rgba(255,255,255,.08);
+  --t1: #FAFAFA; --t2: rgba(250,250,250,.62); --t3: rgba(250,250,250,.35); --t4: rgba(250,250,250,.18);
+  --ok: #22c55e; --nok: #ef4444; --warn: #f59e0b;
+}
+html, body { min-height: 100%; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t1); display: flex; flex-direction: column; }
+
+/* ─── HEADER ─── */
+.hdr {
+  position: sticky; top: 0; z-index: 30;
+  background: var(--panel); border-bottom: 2px solid var(--or);
+  padding: 13px 20px; display: flex; align-items: center; gap: 10px;
+}
+.brand-row { display: flex; align-items: center; gap: 9px; }
+.brand-row img { height: 26px; filter: drop-shadow(0 0 8px rgba(242,101,34,.75)); }
+.brand-wm { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; }
+.brand-wm .l { color: var(--or); } .brand-wm .g { color: var(--t1); }
+.brand-sub { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(242,101,34,.52); }
+.tool-name {
+  margin-left: auto; font-family: 'Space Grotesk', sans-serif; font-size: 10px;
+  font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--t3);
+}
+
+/* ─── LAYOUT ─── */
+.conteudo { flex: 1; max-width: 680px; width: 100%; margin: 0 auto; padding: 24px 20px 80px; display: flex; flex-direction: column; gap: 24px; }
+
+/* ─── GRUPOS ─── */
+.grupo { display: flex; flex-direction: column; gap: 10px; }
+.grupo-titulo {
+  font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--or);
+  padding-bottom: 7px; border-bottom: 1px solid rgba(242,101,34,.16);
+  display: flex; align-items: center; gap: 7px;
+}
+.grupo-titulo svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ─── CAMPOS ─── */
+.campo { display: flex; flex-direction: column; gap: 4px; }
+.campo label { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--t3); }
+.campo input, .campo select, .campo textarea {
+  background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+  padding: 9px 11px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--t1);
+  outline: none; width: 100%; transition: border-color .18s; -webkit-appearance: none;
+}
+.campo select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer;
+}
+.campo select option { background: #1a1a1a; }
+.campo input:focus, .campo select:focus, .campo textarea:focus { border-color: rgba(242,101,34,.5); }
+.campo textarea { min-height: 60px; resize: vertical; }
+.campo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+
+/* ─── CONCESSIONÁRIA ─── */
+.conc-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+@media (max-width: 500px) { .conc-grid { grid-template-columns: 1fr 1fr; } }
+.conc-btn {
+  background: var(--card2); border: 1.5px solid var(--border); border-radius: 9px;
+  padding: 12px 8px; cursor: pointer; text-align: center; transition: all .18s;
+  display: flex; flex-direction: column; gap: 3px; align-items: center;
+}
+.conc-btn:hover { border-color: rgba(242,101,34,.35); }
+.conc-btn.ativo { border-color: var(--or); background: var(--or-dim); }
+.conc-btn .conc-nome { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--t1); }
+.conc-btn .conc-regioes { font-size: 9px; color: var(--t3); line-height: 1.4; }
+.conc-btn.ativo .conc-nome { color: var(--or); }
+
+/* ─── VÍDEOS LISTA ─── */
+.video-item {
+  background: var(--card2); border: 1px solid var(--border); border-radius: 9px;
+  overflow: hidden; transition: border-color .18s;
+}
+.video-item.ok { border-color: rgba(34,197,94,.35); }
+.video-item.pendente { border-color: var(--border); }
+.video-item-header {
+  padding: 11px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;
+}
+.video-badge {
+  width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  background: var(--card); border: 1px solid var(--border);
+}
+.video-item.ok .video-badge { background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.3); }
+.video-info { flex: 1; min-width: 0; }
+.video-nome { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 600; color: var(--t1); }
+.video-desc { font-size: 10px; color: var(--t3); margin-top: 1px; line-height: 1.4; }
+.video-status {
+  font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  padding: 3px 8px; border-radius: 4px; flex-shrink: 0;
+}
+.status-ok { background: rgba(34,197,94,.12); color: var(--ok); }
+.status-pend { background: var(--card); color: var(--t3); }
+.status-opc { background: rgba(242,101,34,.1); color: rgba(242,101,34,.6); }
+.video-item-body { padding: 0 14px 12px; display: none; }
+.video-item.aberto .video-item-body { display: block; }
+.video-drop {
+  border: 2px dashed var(--or-border); border-radius: 7px; padding: 14px;
+  text-align: center; cursor: pointer; transition: all .18s; margin-bottom: 8px;
+}
+.video-drop:hover { border-color: var(--or); background: var(--or-dim); }
+.video-drop input { display: none; }
+.video-drop-text { font-size: 12px; color: var(--t3); line-height: 1.6; }
+.video-preview { margin-top: 4px; }
+.video-preview video {
+  width: 100%; border-radius: 6px; max-height: 180px; background: #000; display: block;
+}
+.video-file-info {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 6px;
+}
+.video-file-name { font-size: 10px; color: var(--t2); }
+.video-file-size { font-size: 9px; color: var(--t3); }
+.video-obs { margin-top: 8px; }
+.video-obs input {
+  width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 5px;
+  padding: 6px 10px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--t1);
+  outline: none; transition: border-color .15s;
+}
+.video-obs input:focus { border-color: rgba(242,101,34,.4); }
+.video-obs label { font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--t3); display: block; margin-bottom: 3px; }
+.btn-rem-video { background: none; border: none; cursor: pointer; color: rgba(239,68,68,.5); font-size: 12px; transition: color .15s; padding: 2px 6px; }
+.btn-rem-video:hover { color: var(--nok); }
+.aviso-tamanho {
+  font-size: 10px; color: var(--warn); background: rgba(245,158,11,.08);
+  border: 1px solid rgba(245,158,11,.25); border-radius: 5px; padding: 6px 9px;
+  margin-top: 6px; display: none;
+}
+.aviso-tamanho.show { display: block; }
+
+/* ─── PROGRESSO ─── */
+.progresso-wrap {
+  background: var(--card2); border: 1px solid var(--border); border-radius: 9px; padding: 14px;
+}
+.progresso-label {
+  font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--t3); margin-bottom: 8px;
+  display: flex; justify-content: space-between;
+}
+.progresso-bar { height: 6px; background: var(--card); border-radius: 3px; overflow: hidden; }
+.progresso-fill { height: 100%; background: var(--or); border-radius: 3px; transition: width .3s; }
+.progresso-itens { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.prog-item {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.5px;
+  padding: 3px 7px; border-radius: 4px;
+}
+.prog-ok { background: rgba(34,197,94,.12); color: var(--ok); }
+.prog-pend { background: var(--card); color: var(--t3); }
+
+/* ─── TERMOS ─── */
+.termos-wrap {
+  background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 14px;
+  display: flex; flex-direction: column; gap: 11px;
+}
+.termos-texto { font-size: 11px; color: var(--t2); line-height: 1.7; font-style: italic; }
+.termos-check-row { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.termos-check-row input[type=checkbox] { width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--or); margin-top: 1px; cursor: pointer; }
+.termos-check-label { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 600; color: var(--t1); line-height: 1.5; cursor: pointer; }
+.termos-aviso { font-size: 10px; color: rgba(239,68,68,.7); padding: 4px 8px; border-radius: 5px; background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); display: none; }
+.termos-aviso.show { display: block; }
+
+/* ─── BOTÕES ─── */
+.btn {
+  font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; border: none; border-radius: 6px;
+  padding: 11px 16px; cursor: pointer; transition: all .18s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn svg { width: 14px; height: 14px; }
+.btn-primary { background: var(--or); color: #fff; }
+.btn-primary:hover { background: #d9561a; }
+.btn-ghost { background: transparent; border: 1px solid var(--or-border); color: rgba(242,101,34,.75); }
+.btn-ghost:hover { background: var(--or-dim); border-color: var(--or); color: var(--or); }
+.btn-dark { background: var(--card); border: 1px solid var(--border); color: var(--t2); }
+.btn-dark:hover { background: var(--card2); color: var(--t1); }
+.btn-mini { padding: 6px 10px; font-size: 9px; }
+.btn-bloqueado { opacity: .35; pointer-events: none; }
+.acoes { display: flex; flex-direction: column; gap: 8px; }
+.acoes-row { display: flex; gap: 8px; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; bottom: 24px; right: 20px; background: #1a1a1a;
+  border: 1px solid var(--border); border-radius: 9px; padding: 12px 18px;
+  font-size: 13px; color: var(--t1); z-index: 9999; display: none; gap: 8px;
+  align-items: center; max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+.toast.show { display: flex; }
+.toast.ok { border-color: rgba(34,197,94,.35); }
+.toast.err { border-color: rgba(239,68,68,.35); }
+
+/* ─── FOOTER ─── */
+.footer { text-align: center; font-size: 10px; color: var(--t4); padding: 16px; border-top: 1px solid var(--border); margin-top: auto; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="brand-row">
+    <img src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div>
+      <div class="brand-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+      <div class="brand-sub">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="tool-name">Vídeos de Homologação</div>
+</div>
+
+<div class="conteudo">
+
+  <!-- ─── 1. DADOS ─── -->
+  <div class="grupo">
+    <div class="grupo-titulo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      1. Dados da Instalação
+    </div>
+    <div class="campo-row">
+      <div class="campo">
+        <label>Instalador</label>
+        <input type="text" id="instalador" placeholder="Seu nome">
+      </div>
+      <div class="campo">
+        <label>Data da Instalação</label>
+        <input type="date" id="dataInstalacao">
+      </div>
+    </div>
+    <div class="campo">
+      <label>Cliente</label>
+      <input type="text" id="cliente" placeholder="Nome do cliente">
+    </div>
+    <div class="campo">
+      <label>Endereço / Cidade</label>
+      <input type="text" id="endereco" placeholder="Rua, número — Cidade/UF">
+    </div>
+    <div class="campo-row">
+      <div class="campo">
+        <label>Número do Protocolo / OS</label>
+        <input type="text" id="protocolo" placeholder="Opcional">
+      </div>
+      <div class="campo">
+        <label>Tipo de Ligação</label>
+        <select id="tipoLigacao">
+          <option value="">Selecione</option>
+          <option>Monofásico</option>
+          <option>Bifásico</option>
+          <option>Trifásico</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 2. CONCESSIONÁRIA ─── -->
+  <div class="grupo">
+    <div class="grupo-titulo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      2. Concessionária
+    </div>
+    <div class="conc-grid" id="concGrid"></div>
+    <div class="campo" id="outraConcWrap" style="display:none">
+      <label>Nome da Concessionária</label>
+      <input type="text" id="outraConc" placeholder="Ex: Energisa, Elektro, Coelba...">
+    </div>
+    <div style="font-size:11px;color:var(--t3);margin-top:-4px" id="concDica"></div>
+  </div>
+
+  <!-- ─── 3. VÍDEOS ─── -->
+  <div class="grupo" id="videosGrupo" style="display:none">
+    <div class="grupo-titulo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      3. Vídeos Obrigatórios
+    </div>
+    <div class="progresso-wrap">
+      <div class="progresso-label">
+        <span>Progresso de upload</span>
+        <span id="progTexto">0 / 0</span>
+      </div>
+      <div class="progresso-bar"><div class="progresso-fill" id="progFill" style="width:0%"></div></div>
+      <div class="progresso-itens" id="progItens"></div>
+    </div>
+    <div id="videosLista"></div>
+  </div>
+
+  <!-- ─── 4. OBSERVAÇÕES ─── -->
+  <div class="grupo">
+    <div class="grupo-titulo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      4. Observações Gerais
+    </div>
+    <div class="campo">
+      <label>Observações para a homologação</label>
+      <textarea id="obsGerais" placeholder="Pendências, informações adicionais para o processo de homologação..."></textarea>
+    </div>
+  </div>
+
+  <!-- ─── TERMOS ─── -->
+  <div class="termos-wrap">
+    <div class="termos-texto">
+      Declaro que os vídeos enviados representam fielmente o estado da instalação no momento da gravação e atendem aos requisitos da concessionária selecionada.
+    </div>
+    <label class="termos-check-row">
+      <input type="checkbox" id="termoCheck" onchange="atualizarTermos()">
+      <span class="termos-check-label">Confirmo que todos os vídeos obrigatórios foram gravados e conferidos antes do envio.</span>
+    </label>
+    <div class="termos-aviso" id="termoAviso">Confirme os termos para enviar.</div>
+  </div>
+
+  <!-- ─── AÇÕES ─── -->
+  <div class="acoes">
+    <button class="btn btn-primary btn-bloqueado" id="btnEnviar" onclick="enviarHomologacao()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Enviar Vídeos para Drive / Planilha
+    </button>
+    <div class="acoes-row">
+      <button class="btn btn-ghost" style="flex:1" onclick="salvarRascunho()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Salvar Rascunho
+      </button>
+      <button class="btn btn-dark btn-mini" onclick="limparTudo()">Limpar</button>
+    </div>
+  </div>
+
+</div><!-- /conteudo -->
+
+<div class="footer">Feito por Domani Consultoria</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────────
+// CONFIGURAÇÃO
+// ──────────────────────────────────────────────
+
+const ENDPOINT_HOMOLAG = 'COLE_A_URL_DO_APPS_SCRIPT_AQUI';
+
+// ──────────────────────────────────────────────
+// CONCESSIONÁRIAS — vídeos exigidos
+// ──────────────────────────────────────────────
+
+const CONCESSIONARIAS = {
+  Enel: {
+    regioes: 'SP · RJ · CE · GO',
+    dica: 'A Enel exige vídeo do relé de proteção (anti-ilhamento) e placa do inversor. Arquivos: MP4, máx. 100MB por vídeo.',
+    videos: [
+      { id: 'medidor',    nome: 'Medidor Bidirecional',            obrigatorio: true,  desc: 'Mostrar número serial do medidor, que é bidirecional e está corretamente instalado.' },
+      { id: 'disjuntor',  nome: 'Disjuntor Geral',                 obrigatorio: true,  desc: 'Mostrar amperagem e estado do disjuntor geral do padrão de entrada.' },
+      { id: 'rele',       nome: 'Relé de Proteção (anti-ilhamento)',obrigatorio: true,  desc: 'Mostrar o relé instalado, identificação do modelo e funcionamento.' },
+      { id: 'inversor',   nome: 'Inversor em Operação',             obrigatorio: true,  desc: 'Display do inversor com potência gerada, tensão e frequência da rede visíveis.' },
+      { id: 'placa_inv',  nome: 'Placa de Identificação do Inversor',obrigatorio: true, desc: 'Número de série e modelo do inversor legíveis.' },
+      { id: 'string_box', nome: 'String Box / DPS CC',              obrigatorio: true,  desc: 'Mostrar a string box com fusíveis/DPS de corrente contínua instalados.' },
+      { id: 'dps_ac',     nome: 'DPS AC',                           obrigatorio: true,  desc: 'Dispositivo de proteção contra surtos na saída AC do inversor.' },
+      { id: 'aterramento',nome: 'Aterramento',                      obrigatorio: true,  desc: 'Haste de aterramento, barra de aterramento e interligação com o neutro.' },
+      { id: 'padrao',     nome: 'Padrão de Entrada (vista geral)',   obrigatorio: true,  desc: 'Vista completa do padrão aberto, mostrando toda a fiação e componentes.' },
+      { id: 'telhado',    nome: 'Painéis no Telhado',               obrigatorio: false, desc: 'Panorama dos painéis instalados no telhado (opcional, mas recomendado).' },
+    ]
+  },
+  CPFL: {
+    regioes: 'SP interior · RS · MG',
+    dica: 'A CPFL pode exigir chave seccionadora e, para cargas maiores, medidor com TC. Vídeos em MP4/MOV.',
+    videos: [
+      { id: 'medidor',    nome: 'Medidor Bidirecional',             obrigatorio: true,  desc: 'Número do medidor, tipo bidirecional e conexões visíveis.' },
+      { id: 'disjuntor',  nome: 'Disjuntor Geral',                  obrigatorio: true,  desc: 'Amperagem, estado e conexões do disjuntor geral.' },
+      { id: 'inversor',   nome: 'Inversor em Operação',              obrigatorio: true,  desc: 'Display mostrando potência, tensão de rede e frequência.' },
+      { id: 'placa_inv',  nome: 'Placa de Identificação do Inversor',obrigatorio: true,  desc: 'Número de série e modelo do inversor.' },
+      { id: 'string_box', nome: 'String Box / Caixa CC',             obrigatorio: true,  desc: 'Caixa de proteção CC com fusíveis e DPS.' },
+      { id: 'dps_ac',     nome: 'DPS AC',                            obrigatorio: true,  desc: 'Proteção contra surtos AC.' },
+      { id: 'aterramento',nome: 'Aterramento',                       obrigatorio: true,  desc: 'Sistema de aterramento completo.' },
+      { id: 'chave_sec',  nome: 'Chave Seccionadora AC',             obrigatorio: true,  desc: 'Chave seccionadora instalada e identificada.' },
+      { id: 'padrao',     nome: 'Padrão de Entrada',                 obrigatorio: true,  desc: 'Vista geral do padrão com todos os componentes.' },
+      { id: 'medidor_tc', nome: 'Medidor com TC (se aplicável)',     obrigatorio: false, desc: 'Obrigatório para instalações acima de 75kW.' },
+    ]
+  },
+  Light: {
+    regioes: 'RJ · interior RJ',
+    dica: 'A Light exige vídeos em boa iluminação e qualidade mínima 720p. Envio pelo portal da Light após aprovação.',
+    videos: [
+      { id: 'medidor',    nome: 'Medidor',                          obrigatorio: true,  desc: 'Medidor instalado com número visível e conexões.' },
+      { id: 'disjuntor',  nome: 'Disjuntor Geral',                  obrigatorio: true,  desc: 'Disjuntor do ramal de entrada.' },
+      { id: 'inversor',   nome: 'Inversor Funcionando',              obrigatorio: true,  desc: 'Inversor em operação com display e geração visível.' },
+      { id: 'protecao_ac',nome: 'Proteção AC',                      obrigatorio: true,  desc: 'Dispositivos de proteção na saída AC.' },
+      { id: 'aterramento',nome: 'Aterramento',                      obrigatorio: true,  desc: 'Sistema de aterramento com haste e barra.' },
+      { id: 'quadro',     nome: 'Quadro de Distribuição',           obrigatorio: true,  desc: 'Quadro com o disjuntor do sistema solar identificado.' },
+      { id: 'padrao',     nome: 'Padrão de Entrada',                obrigatorio: true,  desc: 'Vista completa do padrão de entrada.' },
+      { id: 'placa_inv',  nome: 'Placa do Inversor',                obrigatorio: false, desc: 'Número de série do inversor (recomendado).' },
+    ]
+  },
+  Neoenergia: {
+    regioes: 'BA · PE · RN · DF · MT',
+    dica: 'Neoenergia / Coelba / Elektro. Vídeos enviados pelo portal da distribuidora regional.',
+    videos: [
+      { id: 'medidor',    nome: 'Medidor Bidirecional',             obrigatorio: true,  desc: 'Número serial, tipo e instalação do medidor.' },
+      { id: 'disjuntor',  nome: 'Disjuntor Geral',                  obrigatorio: true,  desc: 'Disjuntor do ramal com amperagem.' },
+      { id: 'inversor',   nome: 'Inversor em Operação',              obrigatorio: true,  desc: 'Display com dados de geração.' },
+      { id: 'placa_inv',  nome: 'Placa do Inversor',                obrigatorio: true,  desc: 'Número de série e modelo.' },
+      { id: 'string_box', nome: 'String Box',                       obrigatorio: true,  desc: 'Caixa de proteção CC.' },
+      { id: 'aterramento',nome: 'Aterramento',                      obrigatorio: true,  desc: 'Haste e conexões de aterramento.' },
+      { id: 'padrao',     nome: 'Padrão de Entrada',                obrigatorio: true,  desc: 'Vista geral do padrão.' },
+    ]
+  },
+  Cemig: {
+    regioes: 'MG',
+    dica: 'CEMIG exige vídeo do disjuntor de proteção bidirecional e aterramento. Envio pelo SolicitaWeb.',
+    videos: [
+      { id: 'medidor',    nome: 'Medidor Bidirecional',             obrigatorio: true,  desc: 'Medidor instalado com número e tipo visíveis.' },
+      { id: 'disjuntor',  nome: 'Disjuntor de Proteção',            obrigatorio: true,  desc: 'Disjuntor bidirecional do sistema solar.' },
+      { id: 'inversor',   nome: 'Inversor em Operação',              obrigatorio: true,  desc: 'Tela do inversor com geração ativa.' },
+      { id: 'placa_inv',  nome: 'Placa do Inversor',                obrigatorio: true,  desc: 'Número de série e modelo.' },
+      { id: 'aterramento',nome: 'Aterramento',                      obrigatorio: true,  desc: 'Sistema de aterramento.' },
+      { id: 'padrao',     nome: 'Padrão de Entrada',                obrigatorio: true,  desc: 'Vista completa do padrão.' },
+      { id: 'dps_ac',     nome: 'DPS AC',                           obrigatorio: false, desc: 'Proteção contra surtos (recomendado).' },
+    ]
+  },
+  Outra: {
+    regioes: 'Outra / digitar',
+    dica: '',
+    videos: [
+      { id: 'medidor',    nome: 'Medidor',                          obrigatorio: true,  desc: 'Medidor instalado.' },
+      { id: 'disjuntor',  nome: 'Disjuntor Geral',                  obrigatorio: true,  desc: 'Disjuntor do padrão.' },
+      { id: 'inversor',   nome: 'Inversor em Operação',              obrigatorio: true,  desc: 'Inversor funcionando.' },
+      { id: 'placa_inv',  nome: 'Placa do Inversor',                obrigatorio: false, desc: 'Identificação do equipamento.' },
+      { id: 'aterramento',nome: 'Aterramento',                      obrigatorio: false, desc: 'Sistema de aterramento.' },
+      { id: 'padrao',     nome: 'Padrão de Entrada',                obrigatorio: true,  desc: 'Vista geral do padrão.' },
+    ]
+  }
+};
+
+// ──────────────────────────────────────────────
+// ESTADO
+// ──────────────────────────────────────────────
+
+const state = {
+  concSelecionada: null,
+  videos: {}  // id -> { file, blob, nome, tamanho, obs }
+};
+
+// ──────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dataInstalacao').value = new Date().toISOString().split('T')[0];
+  renderConcessionarias();
+  carregarRascunho();
+});
+
+// ──────────────────────────────────────────────
+// CONCESSIONÁRIAS
+// ──────────────────────────────────────────────
+
+function renderConcessionarias() {
+  const grid = document.getElementById('concGrid');
+  grid.innerHTML = '';
+  Object.entries(CONCESSIONARIAS).forEach(([key, c]) => {
+    const btn = document.createElement('div');
+    btn.className = 'conc-btn' + (state.concSelecionada === key ? ' ativo' : '');
+    btn.innerHTML = `<div class="conc-nome">${key}</div><div class="conc-regioes">${c.regioes}</div>`;
+    btn.onclick = () => selecionarConc(key);
+    grid.appendChild(btn);
+  });
+}
+
+function selecionarConc(key) {
+  state.concSelecionada = key;
+  state.videos = {};
+  renderConcessionarias();
+
+  const outraWrap = document.getElementById('outraConcWrap');
+  outraWrap.style.display = key === 'Outra' ? '' : 'none';
+
+  const dica = document.getElementById('concDica');
+  dica.textContent = CONCESSIONARIAS[key].dica || '';
+
+  document.getElementById('videosGrupo').style.display = '';
+  renderVideos();
+  atualizarProgresso();
+}
+
+// ──────────────────────────────────────────────
+// VÍDEOS
+// ──────────────────────────────────────────────
+
+function renderVideos() {
+  if (!state.concSelecionada) return;
+  const lista = document.getElementById('videosLista');
+  lista.innerHTML = '';
+  const vids = CONCESSIONARIAS[state.concSelecionada].videos;
+
+  vids.forEach(v => {
+    const item = document.createElement('div');
+    const uploaded = state.videos[v.id] && state.videos[v.id].blob;
+    item.className = 'video-item ' + (uploaded ? 'ok' : 'pendente');
+    item.id = 'vi-' + v.id;
+
+    const statusTxt = uploaded ? 'ENVIADO' : (v.obrigatorio ? 'PENDENTE' : 'OPCIONAL');
+    const statusClass = uploaded ? 'status-ok' : (v.obrigatorio ? 'status-pend' : 'status-opc');
+    const emoji = uploaded ? '✅' : (v.obrigatorio ? '🎥' : '📎');
+
+    item.innerHTML = `
+      <div class="video-item-header" onclick="toggleItem('${v.id}')">
+        <div class="video-badge">${emoji}</div>
+        <div class="video-info">
+          <div class="video-nome">${v.nome}${!v.obrigatorio ? ' <span style="font-size:9px;color:var(--t3)">(opcional)</span>' : ''}</div>
+          <div class="video-desc">${v.desc}</div>
+        </div>
+        <div class="video-status ${statusClass}">${statusTxt}</div>
+      </div>
+      <div class="video-item-body">
+        ${uploaded ? renderVideoPreview(v.id) : renderVideoDrop(v.id)}
+        <div class="video-obs">
+          <label>Observação</label>
+          <input type="text" placeholder="Ex: video gravado às 14h, medidor número 123456..."
+            value="${(state.videos[v.id] && state.videos[v.id].obs) || ''}"
+            onchange="setObs('${v.id}', this.value)">
+        </div>
+        <div class="aviso-tamanho" id="aviso-${v.id}">
+          ⚠️ Arquivo grande (>50MB). Salve localmente e faça upload manual na pasta do Drive.
+        </div>
+      </div>
+    `;
+    lista.appendChild(item);
+  });
+}
+
+function renderVideoDrop(id) {
+  return `
+    <div class="video-drop" onclick="document.getElementById('vinput-${id}').click()">
+      <input type="file" id="vinput-${id}" accept="video/*" onchange="carregarVideo('${id}', this)">
+      <div class="video-drop-text">Toque para selecionar o vídeo<br><small style="color:var(--t4)">MP4, MOV, AVI — qualquer formato</small></div>
+    </div>`;
+}
+
+function renderVideoPreview(id) {
+  const info = state.videos[id];
+  return `
+    <div class="video-preview">
+      <video src="${URL.createObjectURL(info.blob)}" controls></video>
+      <div class="video-file-info">
+        <span class="video-file-name">📹 ${info.nome}</span>
+        <span class="video-file-size">${formatBytes(info.tamanho)}</span>
+        <button class="btn-rem-video" onclick="removerVideo('${id}')">× Remover</button>
+      </div>
+    </div>`;
+}
+
+function toggleItem(id) {
+  const el = document.getElementById('vi-' + id);
+  el.classList.toggle('aberto');
+}
+
+function carregarVideo(id, input) {
+  const f = input.files[0];
+  if (!f) return;
+  state.videos[id] = { blob: f, nome: f.name, tamanho: f.size, obs: (state.videos[id] && state.videos[id].obs) || '' };
+  // Aviso de tamanho
+  const aviso = document.getElementById('aviso-' + id);
+  if (aviso) aviso.classList.toggle('show', f.size > 50 * 1024 * 1024);
+  renderVideos();
+  atualizarProgresso();
+}
+
+function removerVideo(id) {
+  if (state.videos[id]) { state.videos[id].blob = null; state.videos[id].nome = ''; state.videos[id].tamanho = 0; }
+  renderVideos();
+  atualizarProgresso();
+}
+
+function setObs(id, val) {
+  if (!state.videos[id]) state.videos[id] = {};
+  state.videos[id].obs = val;
+}
+
+// ──────────────────────────────────────────────
+// PROGRESSO
+// ──────────────────────────────────────────────
+
+function atualizarProgresso() {
+  if (!state.concSelecionada) return;
+  const vids = CONCESSIONARIAS[state.concSelecionada].videos;
+  const obrigatorios = vids.filter(v => v.obrigatorio);
+  const enviados = obrigatorios.filter(v => state.videos[v.id] && state.videos[v.id].blob);
+  const pct = obrigatorios.length ? Math.round(enviados.length / obrigatorios.length * 100) : 0;
+
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progTexto').textContent = enviados.length + ' / ' + obrigatorios.length + ' obrigatórios';
+
+  const itens = document.getElementById('progItens');
+  itens.innerHTML = '';
+  vids.forEach(v => {
+    const ok = state.videos[v.id] && state.videos[v.id].blob;
+    const span = document.createElement('span');
+    span.className = 'prog-item ' + (ok ? 'prog-ok' : 'prog-pend');
+    span.textContent = (ok ? '✓ ' : '○ ') + v.nome;
+    itens.appendChild(span);
+  });
+}
+
+// ──────────────────────────────────────────────
+// TERMOS
+// ──────────────────────────────────────────────
+
+function atualizarTermos() {
+  const ok = document.getElementById('termoCheck').checked;
+  document.getElementById('btnEnviar').classList.toggle('btn-bloqueado', !ok);
+  document.getElementById('termoAviso').classList.toggle('show', false);
+}
+
+function checarTermos() {
+  if (!document.getElementById('termoCheck').checked) {
+    document.getElementById('termoAviso').classList.add('show');
+    document.getElementById('termoCheck').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+  return true;
+}
+
+// ──────────────────────────────────────────────
+// ENVIO
+// ──────────────────────────────────────────────
+
+async function enviarHomologacao() {
+  if (!checarTermos()) return;
+  if (!state.concSelecionada) { showToast('Selecione a concessionária antes de enviar.', 'err'); return; }
+  if (!document.getElementById('cliente').value) { showToast('Preencha o nome do cliente.', 'err'); return; }
+  if (ENDPOINT_HOMOLAG.includes('COLE_A_URL')) { showToast('Configure o endpoint do Apps Script no código.', 'err'); return; }
+
+  showToast('Convertendo e enviando vídeos...', '');
+
+  try {
+    const videosPayload = [];
+    const vids = CONCESSIONARIAS[state.concSelecionada].videos;
+    for (const v of vids) {
+      const info = state.videos[v.id];
+      if (!info || !info.blob) continue;
+      if (info.tamanho > 50 * 1024 * 1024) {
+        // Pula arquivos muito grandes, só registra o nome
+        videosPayload.push({ id: v.id, nome: v.nome, nomeArquivo: info.nome, tamanho: info.tamanho, obs: info.obs || '', base64: null, grande: true });
+        continue;
+      }
+      const b64 = await fileToBase64(info.blob);
+      videosPayload.push({ id: v.id, nome: v.nome, nomeArquivo: info.nome, tamanho: info.tamanho, obs: info.obs || '', base64: b64, grande: false });
+    }
+
+    const dados = {
+      instalador:     document.getElementById('instalador').value,
+      dataInstalacao: document.getElementById('dataInstalacao').value,
+      cliente:        document.getElementById('cliente').value,
+      endereco:       document.getElementById('endereco').value,
+      protocolo:      document.getElementById('protocolo').value,
+      tipoLigacao:    document.getElementById('tipoLigacao').value,
+      concessionaria: state.concSelecionada === 'Outra' ? (document.getElementById('outraConc').value || 'Outra') : state.concSelecionada,
+      obsGerais:      document.getElementById('obsGerais').value,
+      videos:         videosPayload
+    };
+
+    const resp = await fetch(ENDPOINT_HOMOLAG, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'save_homologacao', data: dados })
+    });
+    const json = await resp.json();
+    if (json.status === 'ok') {
+      showToast('Enviado! ID: ' + json.id + ' — Pasta criada no Drive.', 'ok');
+    } else {
+      showToast('Erro: ' + (json.message || 'falha'), 'err');
+    }
+  } catch (err) {
+    showToast('Falha na conexão: ' + err.message, 'err');
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ──────────────────────────────────────────────
+// LOCAL STORAGE
+// ──────────────────────────────────────────────
+
+function salvarRascunho() {
+  const dados = {
+    instalador:     document.getElementById('instalador').value,
+    dataInstalacao: document.getElementById('dataInstalacao').value,
+    cliente:        document.getElementById('cliente').value,
+    endereco:       document.getElementById('endereco').value,
+    protocolo:      document.getElementById('protocolo').value,
+    tipoLigacao:    document.getElementById('tipoLigacao').value,
+    concSelecionada:state.concSelecionada,
+    outraConc:      document.getElementById('outraConc').value,
+    obsGerais:      document.getElementById('obsGerais').value,
+    videoObs: Object.fromEntries(Object.entries(state.videos).map(([k, v]) => [k, { obs: v.obs || '' }]))
+  };
+  localStorage.setItem('lumengrid_homolog_draft', JSON.stringify(dados));
+  showToast('Rascunho salvo.', 'ok');
+}
+
+function carregarRascunho() {
+  const raw = localStorage.getItem('lumengrid_homolog_draft');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    const sv = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    sv('instalador', d.instalador);
+    sv('dataInstalacao', d.dataInstalacao);
+    sv('cliente', d.cliente);
+    sv('endereco', d.endereco);
+    sv('protocolo', d.protocolo);
+    sv('tipoLigacao', d.tipoLigacao);
+    sv('outraConc', d.outraConc);
+    sv('obsGerais', d.obsGerais);
+    if (d.concSelecionada) {
+      state.concSelecionada = d.concSelecionada;
+      renderConcessionarias();
+      document.getElementById('videosGrupo').style.display = '';
+      document.getElementById('outraConcWrap').style.display = d.concSelecionada === 'Outra' ? '' : 'none';
+      // Restaurar obs dos vídeos
+      if (d.videoObs) {
+        Object.entries(d.videoObs).forEach(([k, v]) => {
+          if (!state.videos[k]) state.videos[k] = {};
+          state.videos[k].obs = v.obs;
+        });
+      }
+      renderVideos();
+      atualizarProgresso();
+    }
+    showToast('Rascunho carregado.', 'ok');
+  } catch (e) { /* ignora */ }
+}
+
+function limparTudo() {
+  if (!confirm('Limpar todos os dados?')) return;
+  state.concSelecionada = null;
+  state.videos = {};
+  document.querySelectorAll('input:not([type=checkbox]):not([type=file]), textarea').forEach(el => el.value = '');
+  document.getElementById('termoCheck').checked = false;
+  atualizarTermos();
+  renderConcessionarias();
+  document.getElementById('videosGrupo').style.display = 'none';
+  document.getElementById('outraConcWrap').style.display = 'none';
+  document.getElementById('concDica').textContent = '';
+  localStorage.removeItem('lumengrid_homolog_draft');
+  document.getElementById('dataInstalacao').value = new Date().toISOString().split('T')[0];
+  showToast('Formulário limpo.', 'ok');
+}
+
+// ──────────────────────────────────────────────
+// HELPERS
+// ──────────────────────────────────────────────
+
+function formatBytes(b) {
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1024 / 1024).toFixed(1) + ' MB';
+}
+
+let toastTimer;
+function showToast(msg, tipo) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (tipo || '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 4000);
+}
+</script>
+</body>
+</html>
