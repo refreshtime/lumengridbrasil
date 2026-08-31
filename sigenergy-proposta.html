@@ -303,7 +303,8 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);-webkit-backdr
 .btn-wpp{background:#25D366;color:#fff;padding:16px 34px;border-radius:10px;font-size:14px;font-weight:700;letter-spacing:.4px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all .25s;min-height:44px}
 .btn-wpp:hover{background:#1ebe5a;transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,211,102,.32)}
 .cta-consultor{margin-top:40px;display:flex;align-items:center;justify-content:center;gap:16px;padding:18px 28px;background:var(--card);border:1px solid var(--border);border-radius:14px;max-width:420px;margin-left:auto;margin-right:auto}
-.cc-avatar{width:46px;height:46px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0}
+.cc-avatar{width:52px;height:52px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;overflow:hidden}
+.cc-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .cc-role{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--or);text-transform:uppercase;margin-bottom:3px}
 .cc-name{font-size:15px;font-weight:800;color:var(--text)}
 .cc-spec{font-size:10px;color:var(--muted)}
@@ -1152,18 +1153,18 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
     <div class="eye">Próximo Passo</div>
     <h2 class="cta-h2" id="cta-h2">Pronto para ter<br><span class="grad-or">energia inteligente?</span></h2>
     <p class="cta-sub" id="cta-sub">Entre em contato com a equipe LumenGrid e solicite uma proposta personalizada para o seu projeto.</p>
-    <div class="cta-btns">
-      <a class="btn-wpp" href="https://lumengridbrasil.com.br" target="_blank" rel="noopener" style="background:var(--or);">
+    <div class="cta-btns" id="cta-btns">
+      <a class="btn-wpp" id="cta-btn-principal" href="https://lumengridbrasil.com.br" target="_blank" rel="noopener" style="background:var(--or);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         Solicitar Orçamento
       </a>
     </div>
-    <div class="cta-consultor">
-      <div class="cc-avatar">L</div>
+    <div class="cta-consultor" id="cta-consultor">
+      <div class="cc-avatar" id="cc-avatar">L</div>
       <div>
-        <div class="cc-role">Especialista em Energia Renovável</div>
-        <div class="cc-name">LumenGrid</div>
-        <div class="cc-spec">Parceiro Oficial Sigenergy · lumengridbrasil.com.br</div>
+        <div class="cc-role" id="cc-role">Especialista em Energia Renovável</div>
+        <div class="cc-name" id="cc-name">LumenGrid</div>
+        <div class="cc-spec" id="cc-spec">Parceiro Oficial Sigenergy · lumengridbrasil.com.br</div>
       </div>
     </div>
   </div>
@@ -1185,21 +1186,55 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
 // ══════════════════════════════════════════════════════════════════
 // CONFIG — PERSONALIZAR PROPOSTA
 // ══════════════════════════════════════════════════════════════════
-const WPP_NUMBER = '5500000000000'; // ← número WhatsApp da LumenGrid (com DDI, sem +)
-
 // Opção A — edite diretamente aqui:
 const CFG_CLIENTE  = '';   // ex: 'João Silva'
 const CFG_VALIDADE = '';   // ex: '30/09/2026'  (formato DD/MM/AAAA)
 
 // Opção B — use parâmetros na URL ao enviar ao cliente:
-//   sigenergy-proposta.html?cliente=João Silva&validade=30/09/2026
+//   sigenergy-proposta.html?consultor=hingrid&cliente=João Silva&validade=30/09/2026
 // URL tem prioridade sobre os valores acima.
+
+// ── CONSULTORES — edite WhatsApp e nome aqui ──
+const CONSULTORES = {
+  hingrid: {
+    nome:  'Hingrid Kelly',
+    cargo: 'Consultora de Energia Renovável',
+    wpp:   '5511900000001', // ← substitua pelo número real (DDI+DDD+número, sem +)
+    foto:  'Foto Kelly.png'
+  },
+  lucas: {
+    nome:  'Lucas',
+    cargo: 'Consultor de Energia Renovável',
+    wpp:   '5511900000002', // ← substitua pelo número real (DDI+DDD+número, sem +)
+    foto:  'Foto Lucas.png'
+  }
+};
 // ══════════════════════════════════════════════════════════════════
 
 // ── URL PARAMS ──
 const P = new URLSearchParams(location.search);
-const CLIENTE  = P.get('cliente')  || CFG_CLIENTE;
-const VALIDADE = P.get('validade') || CFG_VALIDADE;
+const CLIENTE    = P.get('cliente')    || CFG_CLIENTE;
+const VALIDADE   = P.get('validade')   || CFG_VALIDADE;
+const CONSULTOR  = (P.get('consultor') || '').toLowerCase();
+const C          = CONSULTORES[CONSULTOR] || null;
+
+// ── CONSULTOR: personalizar CTA ──
+if (C) {
+  // Botão WhatsApp com número do consultor
+  var msgWpp = encodeURIComponent(
+    'Olá' + (CLIENTE ? ', ' + CLIENTE : '') + '! Tenho interesse no sistema Sigenergy. Pode me ajudar?'
+  );
+  var btnPrincipal = document.getElementById('cta-btn-principal');
+  btnPrincipal.href = 'https://wa.me/' + C.wpp + '?text=' + msgWpp;
+  btnPrincipal.style.background = '#25D366';
+  btnPrincipal.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Falar com ' + C.nome.split(' ')[0];
+
+  // Card do consultor
+  document.getElementById('cc-avatar').innerHTML = '<img src="' + C.foto + '" alt="' + C.nome + '" onerror="this.parentNode.textContent=\'' + C.nome[0] + '\'">';
+  document.getElementById('cc-role').textContent = C.cargo;
+  document.getElementById('cc-name').textContent = C.nome;
+  document.getElementById('cc-spec').textContent = 'Parceiro Oficial Sigenergy · LumenGrid';
+}
 
 // Validade: parse e verificar expiração
 var validadeExpirada = false;
