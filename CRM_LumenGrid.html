@@ -625,6 +625,20 @@ tbody tr td:first-child{font-weight:700}
 .of-badge.hot  {background:#FFEDD5;color:#C2410C}
 .of-badge.old  {background:#FEE2E2;color:#B91C1C}
 @keyframes retorno-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{opacity:.7;box-shadow:0 0 0 5px rgba(220,38,38,0)}}
+/* ── BANNER RETORNO MÊS ── */
+.retorno-banner{
+  display:none;width:100%;background:linear-gradient(90deg,#4338CA,#6366F1);
+  border-bottom:2px solid #818CF8;padding:9px 20px;
+  cursor:pointer;transition:background .2s;
+}
+.retorno-banner:hover{background:linear-gradient(90deg,#3730A3,#4F46E5)}
+.retorno-banner-inner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1400px;margin:0 auto}
+.retorno-banner-icon{font-size:16px;animation:rb-pulse 2s ease-in-out infinite;flex-shrink:0}
+@keyframes rb-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.retorno-banner-title{font-size:11px;font-weight:900;color:#fff;letter-spacing:.5px;white-space:nowrap}
+.retorno-banner-count{font-size:10px;font-weight:700;background:rgba(255,255,255,.2);color:#fff;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.retorno-banner-leads{font-size:10px;color:rgba(255,255,255,.8);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.retorno-banner-arrow{font-size:11px;color:rgba(255,255,255,.6);flex-shrink:0;margin-left:auto}
 /* Kanban col oportunidade futura */
 .kb-col-of{border-top:3px solid #6366F1}
 .col-hd.of{color:#4338CA}
@@ -660,6 +674,19 @@ tbody tr td:first-child{font-weight:700}
   .hdr-search{display:none}
   .info-grid,.add-form{grid-template-columns:1fr}
 }
+/* ━━━ SYNC OVERLAY ━━━ */
+#syncOverlay{
+  position:fixed;inset:0;z-index:8000;
+  background:var(--dark);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+}
+#syncOverlay .so-logo{display:flex;align-items:baseline;gap:0;font-size:22px;font-weight:900;letter-spacing:-0.5px}
+#syncOverlay .so-logo span:first-child{color:#F26522}
+#syncOverlay .so-logo span:last-child{color:#FAFAFA}
+#syncOverlay .so-msg{color:#94A3B8;font-size:13px;font-weight:500}
+#syncOverlay .so-spinner{width:28px;height:28px;border:3px solid #1E293B;border-top-color:#F26522;border-radius:50%;animation:spin .7s linear infinite}
+#syncOverlay .so-retry{color:#EF4444;font-size:12px;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -708,6 +735,14 @@ tbody tr td:first-child{font-weight:700}
 <!-- APP -->
 <div id="app">
 
+  <!-- SYNC OVERLAY (PC novo / localStorage vazio) -->
+  <div id="syncOverlay" style="display:none">
+    <div class="so-logo"><span>LUMEN</span><span>GRID</span></div>
+    <div class="so-spinner"></div>
+    <div class="so-msg" id="syncOverlayMsg">Sincronizando dados...</div>
+    <div class="so-retry" id="syncOverlayRetry">Falha na conexão. Tentando novamente...</div>
+  </div>
+
   <!-- HEADER -->
   <header class="hdr">
     <div class="hdr-logo">
@@ -741,6 +776,17 @@ tbody tr td:first-child{font-weight:700}
       </div>
     </div>
   </header>
+
+  <!-- BANNER RETORNO MÊS -->
+  <div class="retorno-banner" id="retornoBanner" onclick="showView('leads',document.querySelectorAll('.hn')[2]);renderLeadsList('retorno-mes')">
+    <div class="retorno-banner-inner">
+      <span class="retorno-banner-icon">📅</span>
+      <span class="retorno-banner-title">LEADS PARA RETORNAR ESTE MÊS</span>
+      <span class="retorno-banner-count" id="retornoBannerCount"></span>
+      <span class="retorno-banner-leads" id="retornoBannerLeads"></span>
+      <span class="retorno-banner-arrow">Ver todos →</span>
+    </div>
+  </div>
 
   <!-- DASHBOARD -->
   <div id="v-dash" class="view active">
@@ -908,6 +954,7 @@ tbody tr td:first-child{font-weight:700}
       <div class="add-form">
         <div class="fg"><div class="fg-lbl">Nome *</div><input class="fg-inp" id="af-nome" placeholder="Nome completo"></div>
         <div class="fg"><div class="fg-lbl">Telefone *</div><input class="fg-inp" id="af-tel" placeholder="(XX) 9XXXX-XXXX"></div>
+        <div class="fg"><div class="fg-lbl">CPF</div><input class="fg-inp" id="af-cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)"></div>
         <div class="fg"><div class="fg-lbl">E-mail</div><input class="fg-inp" id="af-email" placeholder="email@exemplo.com"></div>
         <div class="fg"><div class="fg-lbl">Cidade</div><input class="fg-inp" id="af-cidade" placeholder="São Paulo / SP"></div>
         <div class="fg"><div class="fg-lbl">Consumo kWh/mês</div><input class="fg-inp" id="af-kwh" type="number" placeholder="450"></div>
@@ -1264,7 +1311,17 @@ function getLeads() {
     // Kelly vê só os próprios + Visita Comercial de todos
     return all.filter(l => l.resp === 'Kelly' || l.stage === 16);
   }
-  // Lucas e Hingrid: próprios + leads da Kelly + pós-venda de todos + Visita Comercial de todos
+  // Lucas: próprios + pós-venda de todos + Visita Comercial de todos (sem pre-venda da Kelly)
+  // IDs reais de pós-venda: 7–13. Não usar STAGES[l.stage].phase (array desalinhado por id:16 na posição 6)
+  if (currentUser === 'Lucas') {
+    const posVendaIds = new Set([7,8,9,10,11,12,13]);
+    return all.filter(l =>
+      l.resp === 'Lucas' ||
+      posVendaIds.has(l.stage) ||
+      l.stage === 16
+    );
+  }
+  // Hingrid: próprios + leads da Kelly + pós-venda de todos + Visita Comercial de todos
   return all.filter(l =>
     l.resp === currentUser ||
     l.resp === 'Kelly' ||
@@ -1272,6 +1329,69 @@ function getLeads() {
     l.stage === 16
   );
 }
+/* ━━━ CPF FINANCIAMENTO ━━━ */
+function maskCPF(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length > 11) v = v.slice(0,11);
+  v = v.replace(/(\d{3})(\d)/,'$1.$2')
+       .replace(/(\d{3}\.\d{3})(\d)/,'$1.$2')
+       .replace(/(\d{3}\.\d{3}\.\d{3})(\d{1,2})/,'$1-$2');
+  el.value = v;
+}
+function getCpfStatus(lead) {
+  const consultas = lead.cpfConsultas || [];
+  if (!consultas.length) return { status:'none', label:'Sem consulta', color:'#9CA3AF' };
+  const last = consultas[consultas.length - 1];
+  if (last.status === 'Aprovado') return { status:'approved', label:'CPF Aprovado', color:'#22C55E' };
+  if (last.status === 'Em Análise') return { status:'pending', label:'Em Análise', color:'#F59E0B' };
+  // Negado
+  const dias = Math.floor((Date.now() - last.data) / 86400000);
+  const restantes = 30 - dias;
+  if (restantes > 0) {
+    const recData = new Date(last.data + 30*86400000).toLocaleDateString('pt-BR');
+    return { status:'denied_wait', label:`CPF NEGADO — Reconsultar em ${recData}`, color:'#EF4444', diasRestantes: restantes };
+  }
+  return { status:'denied_ready', label:'CPF NEGADO — Pronto p/ reconsulta', color:'#F59E0B', diasRestantes: 0 };
+}
+function renderCpfBadge(lead) {
+  const s = getCpfStatus(lead);
+  if (s.status === 'none') return '';
+  const icon = s.status === 'denied_wait' ? '⏳' : s.status === 'denied_ready' ? '⚠' : s.status === 'approved' ? '✓' : '⏳';
+  const bg = s.color + '22';
+  const border = s.color + '55';
+  const texto = s.status === 'denied_wait'
+    ? `CPF NEGADO ${s.diasRestantes}d`
+    : s.status === 'denied_ready'
+    ? 'RECONSULTAR'
+    : s.status === 'approved'
+    ? 'CPF OK'
+    : 'ANÁLISE';
+  return `<div class="inactive-badge" style="background:${bg};color:${s.color};border-color:${border};margin-top:4px">${icon} ${texto}</div>`;
+}
+function addCpfConsulta(leadId) {
+  const status = document.getElementById('cpf-cons-status').value;
+  const obs = document.getElementById('cpf-cons-obs').value.trim();
+  const leads = getLeads();
+  const lead = leads.find(l => l.id === leadId);
+  if (!lead) return;
+  if (!lead.cpfConsultas) lead.cpfConsultas = [];
+  lead.cpfConsultas.push({ data: Date.now(), status, obs });
+  lead.history = lead.history || [];
+  lead.history.push({ text: `Consulta de financiamento registrada: ${status}${obs?' — '+obs:''}`, user: currentUser, ts: Date.now() });
+  // Se negado, sugerir mover para Oportunidade Futura
+  if (status === 'Negado' && lead.stage !== 14) {
+    if (confirm('CPF negado. Mover lead para Oportunidade Futura (aguardar 30 dias)?')) {
+      lead.stage = 14;
+      lead.oportunidadeDate = lead.oportunidadeDate || Date.now();
+      lead.history.push({ text: 'Movido para Oportunidade Futura por CPF negado.', user: currentUser, ts: Date.now() });
+    }
+  }
+  lead.updatedAt = Date.now();
+  saveLeads(leads, lead);
+  toast('Consulta registrada!', 'ok');
+  openDetail(leadId);
+}
+
 function saveLeads(leads, changedLead) {
   if (ADMINS.includes(currentUser)) {
     localStorage.setItem('lg_leads', JSON.stringify(leads));
@@ -1338,40 +1458,50 @@ function jsonpFetch(url) {
 }
 
 // Carrega leads do Sheets e faz merge inteligente com localStorage
-async function loadFromSheets(silent = false) {
+// retries: número de tentativas em caso de falha (JSONP timeout / erro de rede)
+async function loadFromSheets(silent = false, retries = 3) {
   const cfg = getConfig();
-  if (!cfg.gsUrl) return;
-  try {
-    const data = await jsonpFetch(cfg.gsUrl + '?action=leads_crm');
-    if (!Array.isArray(data)) return;
-    const local = getAllLeadsRaw();
-    // Merge por ID: leads do servidor têm prioridade (versão mais recente vinda do GAS)
-    // Leads locais que não existem no servidor são preservados
-    const serverById = {};
-    data.forEach(l => { if (l.id) serverById[l.id] = l; });
-    // Deduplica dados do servidor por ID (evita duplicatas vindas do Sheets)
-    const seenIds = new Set();
-    const merged = [];
-    data.forEach(l => {
-      if (!l.id) { merged.push(l); return; }
-      if (!seenIds.has(l.id)) { seenIds.add(l.id); merged.push(l); }
-    });
-    local.forEach(l => { if (l.id && !serverById[l.id]) merged.push(l); });
-    merged.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-    localStorage.setItem('lg_leads_backup', localStorage.getItem('lg_leads') || '[]');
-    localStorage.setItem('lg_leads', JSON.stringify(merged));
-    if (!silent) return;
-    // Re-renderiza a view ativa após sync automático
-    const activeView = document.querySelector('.view.active');
-    if (activeView) {
-      const id = activeView.id;
-      if (id === 'v-kanban') renderKanban();
-      else if (id === 'v-leads') renderLeadsList();
-      else if (id === 'v-dash') renderDashboard();
-      else if (id === 'v-docs') renderDocsView();
-    }
-    setSyncStatus('ok');
-  } catch(_) {}
+  if (!cfg.gsUrl) return false;
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      if (attempt > 0) {
+        const retryEl = document.getElementById('syncOverlayRetry');
+        if (retryEl) retryEl.style.display = 'block';
+        await new Promise(r => setTimeout(r, 3000));
+      }
+      const data = await jsonpFetch(cfg.gsUrl + '?action=leads_crm');
+      if (!Array.isArray(data)) continue;
+      const local = getAllLeadsRaw();
+      // Merge por ID: leads do servidor têm prioridade (versão mais recente vinda do GAS)
+      // Leads locais que não existem no servidor são preservados
+      const serverById = {};
+      data.forEach(l => { if (l.id) serverById[l.id] = l; });
+      // Deduplica dados do servidor por ID (evita duplicatas vindas do Sheets)
+      const seenIds = new Set();
+      const merged = [];
+      data.forEach(l => {
+        if (!l.id) { merged.push(l); return; }
+        if (!seenIds.has(l.id)) { seenIds.add(l.id); merged.push(l); }
+      });
+      local.forEach(l => { if (l.id && !serverById[l.id]) merged.push(l); });
+      merged.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      localStorage.setItem('lg_leads_backup', localStorage.getItem('lg_leads') || '[]');
+      localStorage.setItem('lg_leads', JSON.stringify(merged));
+      if (!silent) return true;
+      // Re-renderiza a view ativa após sync automático
+      const activeView = document.querySelector('.view.active');
+      if (activeView) {
+        const id = activeView.id;
+        if (id === 'v-kanban') renderKanban();
+        else if (id === 'v-leads') renderLeadsList();
+        else if (id === 'v-dash') renderDashboard();
+        else if (id === 'v-docs') renderDocsView();
+      }
+      setSyncStatus('ok');
+      return true;
+    } catch(_) {}
+  }
+  return false; // todas as tentativas falharam
 }
 
 let _syncInterval = null;
@@ -1484,12 +1614,25 @@ function initApp() {
   if (cfg.parceirosUrl) document.getElementById('parceirosUrl').value = cfg.parceirosUrl;
   const now = new Date();
   document.getElementById('dashDate').textContent = now.toLocaleDateString('pt-BR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  // Carrega leads do Sheets e re-renderiza
-  loadFromSheets().then(() => { renderDashboard(); renderKanban(); renderLeadsList(); });
-  renderDashboard();
-  renderKanban();
-  renderLeadsList();
-  // Auto-sync a cada 30 segundos para manter todos os usuários atualizados
+  // Se localStorage está vazio (PC novo), bloqueia a tela até sincronizar
+  const isEmpty = getAllLeadsRaw().length === 0;
+  if (isEmpty) {
+    const overlay = document.getElementById('syncOverlay');
+    if (overlay) overlay.style.display = 'flex';
+    loadFromSheets(false, 5).then(ok => {
+      if (overlay) overlay.style.display = 'none';
+      renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner();
+      if (!ok) toast('Não foi possível sincronizar com o servidor. Verifique a conexão e recarregue.', 'err');
+    });
+  } else {
+    // Tem dados locais — renderiza já e sincroniza em segundo plano
+    renderDashboard();
+    renderKanban();
+    renderLeadsList();
+    updateRetornoBanner();
+    loadFromSheets().then(() => { renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner(); });
+  }
+  // Auto-sync a cada 10 segundos para manter todos os usuários atualizados
   startAutoSync();
 }
 
@@ -1520,6 +1663,7 @@ function renderDashboard() {
     alert.style.display = 'flex';
     document.getElementById('newLeadCount').textContent = `${newL.length} lead${newL.length>1?'s novos':' novo'} aguardando!`;
   } else alert.style.display = 'none';
+  updateRetornoBanner();
 
   document.getElementById('kpiGrid').innerHTML = `
     <div class="kpi"><div class="kpi-lbl">Meus Leads</div><div class="kpi-val def">${mine.length}</div><div class="kpi-note">total na carteira</div></div>
@@ -1746,7 +1890,8 @@ function renderCard(l) {
       ${l.kwh?`<div class="lc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>${l.kwh} kWh/mês</div>`:''}
     </div>
     ${inactiveBadge}
-    <div class="lc-bot" style="margin-top:${inactiveBadge?'6':'0'}px">
+    ${(()=>{const cb=renderCpfBadge(l);return cb?cb:'';})()}
+    <div class="lc-bot" style="margin-top:${(inactiveBadge||getCpfStatus(l).status!=='none')?'6':'0'}px">
       <div class="lc-resp" style="color:${USER_COLORS[l.resp]||'#666'}">${l.resp||'—'}</div>
       ${l.valor?`<div class="lc-val">R$ ${parseFloat(l.valor).toLocaleString('pt-BR')}</div>`:`<div class="lc-date">${fmtDate(l.createdAt)}</div>`}
     </div>
@@ -2067,6 +2212,7 @@ function openDetail(id) {
     <div class="info-grid">
       <div class="if"><div class="if-lbl">Nome</div><input class="if-inp" id="d-nome" value="${esc(lead.nome)}"></div>
       <div class="if"><div class="if-lbl">Telefone</div><input class="if-inp" id="d-tel" value="${esc(lead.telefone||'')}"></div>
+      <div class="if"><div class="if-lbl">CPF</div><input class="if-inp" id="d-cpf" value="${esc(lead.cpf||'')}" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)"></div>
       <div class="if"><div class="if-lbl">E-mail</div><input class="if-inp" id="d-email" value="${esc(lead.email||'')}"></div>
       <div class="if"><div class="if-lbl">Cidade</div><input class="if-inp" id="d-cidade" value="${esc(lead.cidade||'')}"></div>
       <div class="if"><div class="if-lbl">kWh/mês</div><input class="if-inp" id="d-kwh" type="number" value="${lead.kwh||''}"></div>
@@ -2089,6 +2235,52 @@ function openDetail(id) {
       <div class="if"><div class="if-lbl">Criado em</div><input class="if-inp" value="${fmtDate(lead.createdAt)}" disabled style="color:var(--text3)"></div>
     </div>
   </div>
+
+  ${(()=>{
+    const consultas = lead.cpfConsultas || [];
+    const cpfSt = getCpfStatus(lead);
+    const badgeStyle = {
+      none: 'background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB',
+      approved: 'background:#DCFCE7;color:#15803D;border:1px solid #BBF7D0',
+      pending: 'background:#FEF9C3;color:#A16207;border:1px solid #FDE047',
+      denied_wait: 'background:#FEE2E2;color:#991B1B;border:1px solid #FECACA',
+      denied_ready: 'background:#FEF3C7;color:#92400E;border:1px solid #FDE68A',
+    }[cpfSt.status];
+    const histHtml = consultas.length ? consultas.slice().reverse().map(c=>{
+      const dt = new Date(c.data).toLocaleDateString('pt-BR');
+      const clr = c.status==='Aprovado'?'#15803D':c.status==='Negado'?'#991B1B':'#A16207';
+      return `<div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid #F3F4F6;font-size:10px">
+        <span style="font-weight:700;color:${clr};white-space:nowrap">${dt} — ${c.status}</span>
+        ${c.obs?`<span style="color:#6B7280">${esc(c.obs)}</span>`:''}
+      </div>`;
+    }).join('') : `<div style="font-size:10px;color:#9CA3AF;padding:6px 0">Nenhuma consulta registrada.</div>`;
+    return `
+  <div class="ms">
+    <div class="ms-title${posCls}">Financiamento / CPF</div>
+    <div style="margin-bottom:10px">
+      <span style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;${badgeStyle}">${cpfSt.label}</span>
+    </div>
+    ${histHtml}
+    <div style="margin-top:10px;padding:10px;background:#F9FAFB;border-radius:8px;border:1px solid #E5E7EB" id="cpf-form-${lead.id}">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Registrar Consulta</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:9px;color:#9CA3AF">Status</div>
+          <select id="cpf-cons-status" class="if-sel" style="font-size:10px;padding:4px 8px">
+            <option>Aprovado</option>
+            <option selected>Negado</option>
+            <option>Em Análise</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:140px;display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:9px;color:#9CA3AF">Observação (opcional)</div>
+          <input id="cpf-cons-obs" class="if-inp" style="font-size:10px" placeholder="ex: score baixo, dívida ativa...">
+        </div>
+        <button onclick="addCpfConsulta('${lead.id}')" class="btn btn-g btn-sm" style="font-size:10px;padding:5px 12px">+ Registrar</button>
+      </div>
+    </div>
+  </div>`;
+  })()}
 
   <div class="ms">
     <div class="ms-title${posCls}">Mover para Etapa</div>
@@ -2365,6 +2557,7 @@ function saveLeadDetail() {
   if (!lead) return;
   lead.nome = document.getElementById('d-nome').value.trim() || lead.nome;
   lead.telefone = document.getElementById('d-tel').value.trim();
+  lead.cpf = document.getElementById('d-cpf')?.value.trim() || lead.cpf || '';
   lead.email = document.getElementById('d-email').value.trim();
   lead.cidade = document.getElementById('d-cidade').value.trim();
   lead.kwh = document.getElementById('d-kwh').value;
@@ -2411,6 +2604,8 @@ function saveLead() {
     origem:  document.getElementById('af-origem').value,
     resp:    document.getElementById('af-resp').value,
     valor:   document.getElementById('af-valor').value,
+    cpf:     document.getElementById('af-cpf').value.trim(),
+    cpfConsultas: [],
     stage:0, subtasks:{},
     history:[{text:`Lead criado por ${currentUser}`,user:currentUser,ts:Date.now()}],
     notes: document.getElementById('af-obs').value.trim()
@@ -2421,7 +2616,7 @@ function saveLead() {
   const leads = getLeads();
   leads.unshift(lead);
   saveLeads(leads, lead);
-  ['af-nome','af-tel','af-email','af-cidade','af-kwh','af-valor','af-obs'].forEach(id=>document.getElementById(id).value='');
+  ['af-nome','af-tel','af-cpf','af-email','af-cidade','af-kwh','af-valor','af-obs'].forEach(id=>document.getElementById(id).value='');
   closeModal('ov-add');
   toast(`Lead "${nome}" criado!`,'ok');
   renderDashboard(); renderKanban(); renderLeadsList();
@@ -3015,6 +3210,19 @@ const fmtDateTime = ts => ts ? new Date(ts).toLocaleString('pt-BR',{day:'2-digit
 function currentMonthStr() {
   const n = new Date();
   return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0');
+}
+
+function updateRetornoBanner() {
+  const banner = document.getElementById('retornoBanner');
+  if (!banner) return;
+  const leads = getLeads();
+  const cur = currentMonthStr();
+  const retorno = leads.filter(l => l.stage === 14 && l.retornoMonth === cur);
+  if (retorno.length === 0) { banner.style.display = 'none'; return; }
+  banner.style.display = 'block';
+  document.getElementById('retornoBannerCount').textContent = retorno.length + (retorno.length === 1 ? ' lead' : ' leads');
+  const nomes = retorno.map(l => esc(l.nome)).join(' · ');
+  document.getElementById('retornoBannerLeads').textContent = nomes;
 }
 function retornoMonthOptions(selected) {
   const now = new Date();
