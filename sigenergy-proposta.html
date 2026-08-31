@@ -37,7 +37,7 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);-webkit-backdr
 /* ── HERO ── */
 .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:100px 56px 72px}
 .hero-bg{position:absolute;inset:0;z-index:0}
-.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:right 30%;opacity:.4}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 40%;opacity:.65}
 .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(7,11,20,1) 42%,rgba(7,11,20,.72) 68%,rgba(7,11,20,.25) 100%)}
 .hero-bg::before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(7,11,20,.9) 0%,transparent 40%);z-index:1}
 .hero-content{position:relative;z-index:2;max-width:620px}
@@ -417,8 +417,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <span class="hero-pill-dot"></span>
       <span>Parceiro Oficial Sigenergy · LumenGrid</span>
     </div>
-    <div id="hero-name"></div>
-    <h1 class="hero-h1">
+    <h1 class="hero-h1" id="hero-h1">
       Energia inteligente<br>
       <span class="grad-or">para sua casa.</span>
     </h1>
@@ -1151,7 +1150,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
   <div class="cta-glow"></div>
   <div style="position:relative;z-index:1" class="rv">
     <div class="eye">Próximo Passo</div>
-    <h2 class="cta-h2">Pronto para ter<br><span class="grad-or">energia inteligente?</span></h2>
+    <h2 class="cta-h2" id="cta-h2">Pronto para ter<br><span class="grad-or">energia inteligente?</span></h2>
     <p class="cta-sub" id="cta-sub">Entre em contato com a equipe LumenGrid e solicite uma proposta personalizada para o seu projeto.</p>
     <div class="cta-btns">
       <a class="btn-wpp" href="https://lumengridbrasil.com.br" target="_blank" rel="noopener" style="background:var(--or);">
@@ -1230,9 +1229,13 @@ if (CLIENTE || VALIDADE) {
 }
 
 if (CLIENTE) {
-  var heroName = document.getElementById('hero-name');
-  heroName.textContent = 'Proposta exclusiva para ' + CLIENTE;
-  heroName.style.display = 'block';
+  // Hero H1: personalizado com nome
+  var heroH1 = document.getElementById('hero-h1');
+  heroH1.innerHTML = 'Vamos garantir sua<br>autonomia energética,<br><span class="grad-or">' + CLIENTE + '?</span>';
+
+  // CTA final: personalizado com nome
+  var ctaH2 = document.getElementById('cta-h2');
+  ctaH2.innerHTML = 'Pronto para começar,<br><span class="grad-or">' + CLIENTE + '?</span>';
 }
 
 // Hero pill: mostrar validade
