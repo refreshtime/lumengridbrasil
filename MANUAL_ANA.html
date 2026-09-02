@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Manual da Ana — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#F8F9FB;color:#1E293B;-webkit-font-smoothing:antialiased;padding:40px 20px 80px}
+.wrap{max-width:700px;margin:0 auto}
+
+.logo{display:flex;align-items:baseline;margin-bottom:4px}
+.logo span:first-child{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:26px;color:#F26522;letter-spacing:-1px}
+.logo span:last-child{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:26px;color:#0b0b12;letter-spacing:-1px}
+.tag{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#94A3B8;margin-bottom:36px}
+
+h2{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:800;color:#0b0b12;margin:40px 0 14px;padding-bottom:8px;border-bottom:2px solid #F26522}
+p,li{font-size:13px;color:#475569;line-height:1.75}
+ul{padding-left:18px;display:flex;flex-direction:column;gap:6px}
+
+/* Link pill */
+.link-pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;padding:12px 16px;margin:10px 0;text-decoration:none;width:100%;transition:border-color .15s}
+.link-pill:hover{border-color:#F26522}
+.link-pill-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.link-pill-body{flex:1;min-width:0}
+.link-pill-title{font-size:13px;font-weight:700;color:#1E293B;margin-bottom:2px}
+.link-pill-url{font-size:11px;color:#94A3B8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.link-pill-arrow{font-size:16px;color:#CBD5E1;flex-shrink:0}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:12px;margin:14px 0}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;background:#F26522;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-title{font-size:13px;font-weight:700;color:#1E293B;margin-bottom:3px}
+.step-desc{font-size:12px;color:#64748B;line-height:1.65}
+
+/* Alert */
+.alert{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:12px;line-height:1.75}
+.alert-orange{background:#FFF7ED;border:1.5px solid rgba(242,101,34,.3);color:#92400E}
+.alert-orange strong{color:#C94E0F}
+.alert-blue{background:#EFF6FF;border:1.5px solid #BFDBFE;color:#1E40AF}
+.alert-blue strong{color:#1D4ED8}
+.alert-green{background:#F0FDF4;border:1.5px solid #BBF7D0;color:#14532D}
+.alert-green strong{color:#15803D}
+
+/* Flow */
+.flow{display:flex;align-items:center;gap:0;margin:16px 0;flex-wrap:wrap;gap:6px}
+.flow-box{background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;color:#1E293B;text-align:center;min-width:120px}
+.flow-box.orange{background:#FFF7ED;border-color:rgba(242,101,34,.4);color:#C94E0F}
+.flow-box.green{background:#F0FDF4;border-color:#BBF7D0;color:#15803D}
+.flow-arrow{font-size:18px;color:#CBD5E1;flex-shrink:0}
+
+/* Credencial */
+.cred-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.cred{background:#fff;border:1.5px solid #E2E8F0;border-radius:10px;padding:14px 16px}
+.cred-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#94A3B8;margin-bottom:5px}
+.cred-val{font-size:14px;font-weight:700;color:#1E293B}
+.cred-val.orange{color:#F26522}
+
+/* Planilha card */
+.sheet-card{background:#fff;border:1.5px solid #E2E8F0;border-radius:12px;padding:16px 20px;margin:10px 0}
+.sheet-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sheet-icon{width:36px;height:36px;border-radius:8px;background:#1A6B3A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
+.sheet-title{font-size:14px;font-weight:700;color:#1E293B}
+.sheet-sub{font-size:11px;color:#94A3B8;margin-top:1px}
+.sheet-url{font-size:11px;color:#2563EB;word-break:break-all;margin-top:8px;padding-top:8px;border-top:1px solid #F1F5F9}
+
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid #E2E8F0;font-size:11px;color:#94A3B8;text-align:center}
+
+code{background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;padding:2px 7px;font-size:11px;color:#C94E0F;font-family:monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="logo"><span>LUMEN</span><span>GRID</span></div>
+  <div class="tag">Manual da Ana — Fluxo Comercial & Sistemas</div>
+
+  <!-- 1. ACESSO AO CRM -->
+  <h2>1. Acessar o CRM</h2>
+  <p>O CRM é onde você gerencia todos os seus leads. Acesse pelo link abaixo e faça login com seu usuário.</p>
+
+  <a class="link-pill" href="https://lumengridbrasil.com.br/CRM_LumenGrid.html" target="_blank">
+    <div class="link-pill-icon" style="background:#FFF7ED">📋</div>
+    <div class="link-pill-body">
+      <div class="link-pill-title">CRM LumenGrid</div>
+      <div class="link-pill-url">lumengridbrasil.com.br/CRM_LumenGrid.html</div>
+    </div>
+    <div class="link-pill-arrow">→</div>
+  </a>
+
+  <div class="cred-row">
+    <div class="cred">
+      <div class="cred-label">Usuário</div>
+      <div class="cred-val">Ana</div>
+    </div>
+    <div class="cred">
+      <div class="cred-label">Senha</div>
+      <div class="cred-val orange">Ana@2026</div>
+    </div>
+  </div>
+
+  <div class="alert alert-blue">
+    <strong>Você só enxerga os seus leads.</strong> Leads atribuídos a outros vendedores não aparecem na sua tela.
+  </div>
+
+  <!-- 2. PIPELINE — ETAPAS DO LEAD -->
+  <h2>2. Pipeline de vendas</h2>
+  <p>Cada lead passa por etapas no Kanban. Arraste o card para a coluna correspondente conforme o avanço do atendimento.</p>
+
+  <div class="flow">
+    <div class="flow-box orange">Lead Novo</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Contato<br>Realizado</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Enviar<br>Orçamento</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Negociação</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">Venda<br>Fechada</div>
+  </div>
+
+  <div class="alert alert-orange">
+    <strong>Mantenha sempre atualizado.</strong> O status do lead no CRM é o que a equipe usa para acompanhar o resultado.
+  </div>
+
+  <!-- 3. COMO TRABALHAR UM LEAD -->
+  <h2>3. Como trabalhar um lead</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Clique no card do lead para abrir o detalhe</div>
+        <div class="step-desc">Você verá nome, telefone, cidade, histórico e todas as informações do cliente.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Registre cada interação no histórico</div>
+        <div class="step-desc">Use o campo de anotações para registrar ligações, mensagens, objeções e próximos passos.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Mova o lead para a próxima etapa</div>
+        <div class="step-desc">Arraste o card no Kanban ou altere o status dentro do detalhe do lead.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Calcule a proposta quando necessário</div>
+        <div class="step-desc">No detalhe do lead, role até "Calcular Proposta / Comissão", preencha os dados e clique em Salvar.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. CALCULAR PROPOSTA -->
+  <h2>4. Calcular proposta e comissão</h2>
+  <p>A seção <strong>"Calcular Proposta / Comissão"</strong> aparece no detalhe de qualquer lead. Use para calcular margem, comissão e lucro da empresa.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Abra o lead e role até "Calcular Proposta / Comissão"</div>
+        <div class="step-desc">Preencha: Valor Projeto, kWp, Custo Equipamentos e % Comissão do parceiro (se houver).</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Veja os resultados calculados automaticamente</div>
+        <div class="step-desc">O sistema mostra: <strong>Margem</strong>, <strong>Comissão do Parceiro</strong> e <strong>Lucro da Empresa</strong> (em verde).</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Clique em "Salvar / Enviar ao Parceiro"</div>
+        <div class="step-desc">Se não houver parceiro, selecione "Sem parceiro" — o cálculo fica salvo no histórico para controle interno.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. CONTATO E DÚVIDAS -->
+  <h2>5. Contato e suporte</h2>
+  <p>Em caso de dúvidas sobre o sistema, fale com a Hingrid.</p>
+
+  <div class="cred-row">
+    <div class="cred">
+      <div class="cred-label">Seu telefone cadastrado</div>
+      <div class="cred-val" style="font-size:13px">16 99723-6668</div>
+    </div>
+    <div class="cred">
+      <div class="cred-label">Suporte técnico</div>
+      <div class="cred-val" style="font-size:13px;font-weight:500">Falar com Hingrid</div>
+    </div>
+  </div>
+
+  <!-- 6. PLANILHAS -->
+  <h2>6. Planilha de dados</h2>
+  <p>Os dados do CRM ficam salvos no Google Sheets. Para acessar, entre pelo Google Workspace da LumenGrid (conta <code>@lumengridbrasil.com.br</code>).</p>
+
+  <div class="sheet-card">
+    <div class="sheet-card-header">
+      <div class="sheet-icon">S</div>
+      <div>
+        <div class="sheet-title">Planilha do CRM</div>
+        <div class="sheet-sub">Todos os leads — backup automático a cada alteração</div>
+      </div>
+    </div>
+    <ul>
+      <li>Aba <code>Leads</code> — leads vindos do Meta/Facebook</li>
+      <li>Aba <code>CRM_Dados</code> — dados completos do CRM (JSON + tabela legível)</li>
+    </ul>
+    <div class="sheet-url">
+      docs.google.com/spreadsheets/d/1LTv6dFRT56533gfPc5elNfxiddsUzgYyLbCLsNykyRQ/edit
+    </div>
+  </div>
+
+  <div class="alert alert-blue">
+    Peça o e-mail e a senha da sua conta <strong>@lumengridbrasil.com.br</strong> para a Hingrid antes de acessar.
+  </div>
+
+  <!-- RESUMO RÁPIDO -->
+  <h2>Resumo rápido</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Lead chegou para você?</div>
+        <div class="step-desc">Já está no seu CRM. Entre, abra o card e inicie o contato.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Fez contato? Registre no histórico.</div>
+        <div class="step-desc">Anotações no CRM garantem que nada se perde, mesmo se você tirar folga.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Lead avançou? Mova no Kanban.</div>
+        <div class="step-desc">Mantenha sempre o status correto para facilitar o acompanhamento da equipe.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Quer calcular proposta?</div>
+        <div class="step-desc">Use "Calcular Proposta / Comissão" dentro do detalhe do lead.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#0b0b12">→</div>
+      <div>
+        <div class="step-title">Dúvida no sistema?</div>
+        <div class="step-desc">Fale com a Hingrid.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    LumenGrid · Manual da Ana · Setembro 2026<br>
+    Dúvidas? Fale com a Hingrid.<br><br>
+    Feito por Domani Consultoria
+  </div>
+
+</div>
+</body>
+</html>
