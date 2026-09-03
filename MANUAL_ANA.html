@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manual da Ana — LumenGrid</title>
+<title>Guia Comercial — LumenGrid</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -455,14 +455,13 @@
     </div>
   </div>
   <div class="title-block">
-    <h1>Manual da Ana</h1>
-    <p>Guia Completo — CRM, Propostas e Treinamento Comercial</p>
+    <h1>Guia Comercial</h1>
+    <p>Guia do Vendedor — Solar, Híbrido, Propostas e Equipamentos</p>
   </div>
 </header>
 
 <!-- ÍNDICE -->
 <div class="index-bar">
-  <a href="#acesso">Acesso</a>
   <a href="#crm">CRM</a>
   <a href="#proposta-solar">Proposta Solar</a>
   <a href="#proposta-hibrido">Proposta Híbrido</a>
@@ -473,6 +472,7 @@
   <a href="#comparativo">Solar vs Híbrido</a>
   <a href="#documentos">Documentos</a>
   <a href="#equipamentos">Equipamentos</a>
+  <a href="#kits-precos">Kits e Preços</a>
   <a href="#venda-digital">Venda Digital</a>
   <a href="#script">Script</a>
   <a href="#faq">FAQ do Cliente</a>
@@ -481,41 +481,7 @@
 
 <main>
 
-  <!-- ── 1. ACESSO ── -->
-  <section id="acesso">
-    <div class="section-tag">Primeiro passo</div>
-    <h2>Suas credenciais de acesso</h2>
-
-    <div class="cred-box">
-      <div class="cred-item">
-        <div class="cred-label">Usuário CRM</div>
-        <div class="cred-val">Ana</div>
-      </div>
-      <div class="cred-item">
-        <div class="cred-label">Senha CRM</div>
-        <div class="cred-val orange">Ana@2026</div>
-      </div>
-      <div class="cred-item">
-        <div class="cred-label">Seu WhatsApp</div>
-        <div class="cred-val">16 99723-6668</div>
-      </div>
-    </div>
-
-    <a class="link-pill" href="https://lumengridbrasil.com.br/CRM_LumenGrid.html" target="_blank">
-      <div class="link-pill-icon">📋</div>
-      <div>
-        <div class="link-pill-title">CRM LumenGrid</div>
-        <div class="link-pill-url">lumengridbrasil.com.br/CRM_LumenGrid.html</div>
-      </div>
-      <div class="link-pill-arrow">→</div>
-    </a>
-
-    <div class="tip">
-      <strong>Importante:</strong> Você só enxerga os seus leads no CRM. Os leads de outros vendedores não aparecem na sua tela.
-    </div>
-  </section>
-
-  <!-- ── 2. CRM ── -->
+  <!-- ── 1. CRM ── -->
   <section id="crm">
     <div class="section-tag">Ferramenta principal</div>
     <h2>Como usar o CRM</h2>
@@ -724,11 +690,11 @@
 
     <p>A proposta Sigenergy é uma landing page premium para o sistema híbrido inteligente com IA. Você personaliza com seu nome e o nome do cliente direto pela URL — sem precisar editar nenhum arquivo.</p>
 
-    <a class="link-pill" href="https://lumengridbrasil.com.br/sigenergy-proposta.html?consultor=ana&cliente=Nome%20do%20Cliente" target="_blank">
+    <a class="link-pill" href="https://lumengridbrasil.com.br/sigenergy-proposta.html?consultor=seunome&cliente=Nome%20do%20Cliente" target="_blank">
       <div class="link-pill-icon">🌐</div>
       <div>
         <div class="link-pill-title">Proposta Sigenergy — Exemplo</div>
-        <div class="link-pill-url">lumengridbrasil.com.br/sigenergy-proposta.html?consultor=ana&cliente=...</div>
+        <div class="link-pill-url">lumengridbrasil.com.br/sigenergy-proposta.html?consultor=[seu-nome]&cliente=...</div>
       </div>
       <div class="link-pill-arrow">→</div>
     </a>
@@ -740,7 +706,7 @@
       <span class="comment">// URL base:</span><br>
       https://lumengridbrasil.com.br/sigenergy-proposta.html<br><br>
       <span class="comment">// Parâmetros disponíveis (adicione com ? e & entre eles):</span><br>
-      ?consultor=<strong>ana</strong>          <span class="comment">← sempre use "ana" (minúsculo)</span><br>
+      ?consultor=<strong>[seu-nome]</strong>      <span class="comment">← seu nome em minúsculo, sem espaços</span><br>
       &amp;cliente=<strong>João Silva</strong>      <span class="comment">← nome do cliente (substitua espaço por %20)</span><br>
       &amp;validade=<strong>30/09/2026</strong>   <span class="comment">← data de validade (opcional)</span>
     </div>
@@ -749,7 +715,7 @@
     <p>Para enviar para a cliente Maria Souza com validade até 30 de setembro:</p>
 
     <div class="url-box">
-      https://lumengridbrasil.com.br/sigenergy-proposta.html?consultor=ana&amp;cliente=Maria%20Souza&amp;validade=30/09/2026
+      https://lumengridbrasil.com.br/sigenergy-proposta.html?consultor=<strong>[seu-nome]</strong>&amp;cliente=Maria%20Souza&amp;validade=30/09/2026
     </div>
 
     <div class="steps">
@@ -757,7 +723,7 @@
         <div class="step-num">1</div>
         <div class="step-body">
           <strong>Monte a URL trocando o nome do cliente</strong>
-          <span>Copie o modelo acima e troque "Maria%20Souza" pelo nome do cliente — substitua espaços por %20.</span>
+          <span>Copie o modelo acima e troque "Maria%20Souza" pelo nome do cliente — substitua espaços por %20. No campo <em>consultor</em>, use seu nome em minúsculo.</span>
         </div>
       </div>
       <div class="step">
@@ -771,13 +737,13 @@
         <div class="step-num">3</div>
         <div class="step-body">
           <strong>Envie o link ao cliente pelo WhatsApp</strong>
-          <span>O cliente abre no celular e vê uma proposta premium personalizada com seu nome. O botão "Falar com a Ana" já abre o WhatsApp direto para você.</span>
+          <span>O cliente abre no celular e vê uma proposta premium personalizada com o nome dele. O botão de contato já abre o WhatsApp direto para você.</span>
         </div>
       </div>
     </div>
 
     <div class="tip">
-      <strong>Nomes com espaço:</strong> substitua cada espaço por <strong>%20</strong> na URL. Exemplo: "Ana Paula" → "Ana%20Paula". Caracteres especiais (ç, ã, é) funcionam normalmente na maioria dos celulares — se tiver problema, use a versão sem acento.
+      <strong>Nomes com espaço:</strong> substitua cada espaço por <strong>%20</strong> na URL. Exemplo: "João Silva" → "João%20Silva". Caracteres especiais (ç, ã, é) funcionam normalmente na maioria dos celulares — se tiver problema, use a versão sem acento.
     </div>
   </section>
 
@@ -1052,7 +1018,230 @@
     </div>
   </section>
 
-  <!-- ── 12. VENDA DIGITAL ── -->
+  <!-- ── 12. KITS E PREÇOS ── -->
+  <section id="kits-precos">
+    <div class="section-tag">Tabela de Preços</div>
+    <h2>Kits e Equipamentos — Tabela de Preços</h2>
+
+    <p>Use estes valores como referência na negociação. <strong>Preço Cheio</strong> é o valor apresentado ao cliente. <strong>Preço Mínimo</strong> é o piso — não vender abaixo disso.</p>
+
+    <div class="tip">
+      <strong>Nota:</strong> Preço Cheio = valor para negociação · Preço Mínimo = piso (não vender abaixo). Módulo padrão: Jinko 620W.
+    </div>
+
+    <h3>Solar On-Grid</h3>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Placas</th>
+            <th>kWp</th>
+            <th>Inversor</th>
+            <th>Módulo</th>
+            <th>Preço Cheio</th>
+            <th>Preço Mínimo</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-og"></tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:40px">Híbrido (com bateria)</h3>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Placas</th>
+            <th>kWp</th>
+            <th>Inversor</th>
+            <th>Módulo</th>
+            <th>Baterias</th>
+            <th>Modelo Bateria</th>
+            <th>Preço Cheio</th>
+            <th>Preço Mínimo</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-hi"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+  (function() {
+    // ── Constantes On-Grid ────────────────────────────────────────
+    const WP = 620;
+    const FAIXAS = [
+      { min:0,  max:3,  rwp:0.84, homo:500  },
+      { min:3,  max:6,  rwp:0.60, homo:500  },
+      { min:6,  max:9,  rwp:0.50, homo:800  },
+      { min:9,  max:12, rwp:0.44, homo:950  },
+      { min:12, max:20, rwp:0.42, homo:1050 },
+      { min:20, max:45, rwp:0.38, homo:1450 },
+    ];
+    const MARGEM = {
+      4:0.24, 5:0.24, 6:0.24, 7:0.24,
+      8:0.24, 9:0.25, 10:0.26, 11:0.27, 12:0.28,
+      13:0.285, 14:0.29, 15:0.295, 16:0.30,
+      17:0.30, 18:0.30, 19:0.30, 20:0.30,
+      21:0.305, 22:0.31, 23:0.31, 24:0.31,
+      25:0.31, 26:0.31, 27:0.31,
+      28:0.32, 29:0.32, 30:0.32, 31:0.32, 32:0.32, 33:0.32,
+      34:0.33, 35:0.33, 36:0.33, 37:0.33, 38:0.33, 39:0.33, 40:0.33
+    };
+    const NEG = {
+      4:0.08, 5:0.08, 6:0.08, 7:0.08,
+      8:0.05, 9:0.05, 10:0.05, 11:0.05, 12:0.05,
+      13:0.05, 14:0.05, 15:0.05, 16:0.05,
+      17:0.05, 18:0.05, 19:0.06, 20:0.06,
+      21:0.06, 22:0.06, 23:0.06, 24:0.06,
+      25:0.06, 26:0.06, 27:0.06, 28:0.06,
+      29:0.06, 30:0.06, 31:0.06, 32:0.06,
+      33:0.06, 34:0.06, 35:0.06, 36:0.06,
+      37:0.06, 38:0.06, 39:0.06, 40:0.06
+    };
+
+    const KITS_OG = [
+      { placas:4,  inv:'GoodWe 3kW',   equip:4800,  promo:null  },
+      { placas:5,  inv:'GoodWe 3kW',   equip:5300,  promo:null  },
+      { placas:6,  inv:'GoodWe 3kW',   equip:5800,  promo:null  },
+      { placas:7,  inv:'GoodWe 5kW',   equip:6900,  promo:null  },
+      { placas:8,  inv:'FoxESS Micro', equip:7832,  promo:14880 },
+      { placas:8,  inv:'GoodWe 5kW',   equip:7400,  promo:14380 },
+      { placas:9,  inv:'GoodWe 5kW',   equip:7900,  promo:null  },
+      { placas:10, inv:'GoodWe 5kW',   equip:8400,  promo:null  },
+      { placas:11, inv:'GoodWe 7.5kW', equip:12525, promo:null  },
+      { placas:12, inv:'FoxESS Micro', equip:11800, promo:null  },
+      { placas:12, inv:'GoodWe 6kW',   equip:12121, promo:21755 },
+      { placas:13, inv:'GoodWe 7.5kW', equip:13525, promo:null  },
+      { placas:14, inv:'GoodWe 7.5kW', equip:14025, promo:null  },
+      { placas:15, inv:'GoodWe 10kW',  equip:15400, promo:null  },
+      { placas:16, inv:'GoodWe 7.5kW', equip:15025, promo:28990 },
+      { placas:16, inv:'FoxESS Micro', equip:16000, promo:30119 },
+      { placas:17, inv:'GoodWe 10kW',  equip:16400, promo:null  },
+      { placas:18, inv:'GoodWe 10kW',  equip:16900, promo:null  },
+      { placas:19, inv:'GoodWe 10kW',  equip:17400, promo:null  },
+      { placas:20, inv:'GoodWe 10kW',  equip:17900, promo:34490 },
+      { placas:20, inv:'FoxESS Micro', equip:19500, promo:36290 },
+      { placas:21, inv:'GoodWe 10kW',  equip:18700, promo:null  },
+      { placas:22, inv:'GoodWe 12kW',  equip:19500, promo:null  },
+      { placas:23, inv:'GoodWe 12kW',  equip:20250, promo:null  },
+      { placas:24, inv:'FoxESS Micro', equip:23000, promo:null  },
+      { placas:24, inv:'GoodWe 12kW',  equip:21000, promo:null  },
+      { placas:25, inv:'GoodWe 12kW',  equip:21500, promo:null  },
+      { placas:26, inv:'GoodWe 12kW',  equip:22000, promo:null  },
+      { placas:27, inv:'GoodWe 12kW',  equip:22500, promo:null  },
+      { placas:28, inv:'GoodWe 15kW',  equip:25750, promo:null  },
+      { placas:28, inv:'FoxESS Micro', equip:27300, promo:null  },
+      { placas:29, inv:'GoodWe 15kW',  equip:26250, promo:null  },
+      { placas:30, inv:'GoodWe 15kW',  equip:26750, promo:null  },
+      { placas:31, inv:'GoodWe 15kW',  equip:27250, promo:null  },
+      { placas:32, inv:'GoodWe 15kW',  equip:27750, promo:null  },
+      { placas:32, inv:'FoxESS Micro', equip:31200, promo:null  },
+      { placas:33, inv:'GoodWe 15kW',  equip:28250, promo:null  },
+      { placas:34, inv:'GoodWe 20kW',  equip:33300, promo:null  },
+      { placas:35, inv:'GoodWe 20kW',  equip:33800, promo:null  },
+      { placas:36, inv:'GoodWe 20kW',  equip:34300, promo:null  },
+      { placas:36, inv:'FoxESS Micro', equip:35100, promo:null  },
+      { placas:37, inv:'GoodWe 20kW',  equip:34800, promo:null  },
+      { placas:38, inv:'GoodWe 20kW',  equip:35300, promo:null  },
+      { placas:39, inv:'GoodWe 20kW',  equip:35800, promo:null  },
+      { placas:40, inv:'GoodWe 20kW',  equip:36300, promo:null  },
+      { placas:40, inv:'FoxESS Micro', equip:39000, promo:null  },
+    ];
+
+    function calcOG(k) {
+      const kwp = k.placas * WP / 1000;
+      const faixa = FAIXAS.find(f => kwp > f.min && kwp <= f.max) || FAIXAS[FAIXAS.length - 1];
+      const instal = faixa.rwp * k.placas * WP + faixa.homo;
+      const direto = k.equip + instal;
+      const margem = MARGEM[k.placas];
+      const neg = NEG[k.placas];
+      const formulaMin = direto / (1 - margem);
+      const minimo = k.promo !== null ? k.promo : Math.round(formulaMin / 10) * 10;
+      const cheio = Math.round(minimo / (1 - neg) / 10) * 10;
+      return { kwp, minimo, cheio };
+    }
+
+    const R = v => 'R$ ' + v.toLocaleString('pt-BR');
+    const tbOG = document.getElementById('tbody-og');
+    KITS_OG.forEach(k => {
+      const c = calcOG(k);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${k.placas}</td>
+        <td>${c.kwp.toFixed(2)}</td>
+        <td>${k.inv}</td>
+        <td>Jinko 620W</td>
+        <td style="color:#F26522;font-weight:700">${R(c.cheio)}</td>
+        <td>${R(c.minimo)}</td>
+      `;
+      tbOG.appendChild(tr);
+    });
+
+    // ── Constantes Híbrido ───────────────────────────────────────
+    const KITS_HI = [
+      { placas:6,  inv:'GoodWe 3.5kW Híbrido', bats:1, batMod:'Lynx A (GoodWe)', equip:13873 },
+      { placas:7,  inv:'GoodWe 3.5kW Híbrido', bats:1, batMod:'Lynx A (GoodWe)', equip:14533 },
+      { placas:8,  inv:'GoodWe 3.5kW Híbrido', bats:1, batMod:'Lynx A (GoodWe)', equip:15193 },
+      { placas:7,  inv:'GoodWe 5kW Híbrido',   bats:1, batMod:'Lynx A (GoodWe)', equip:17252 },
+      { placas:8,  inv:'GoodWe 5kW Híbrido',   bats:1, batMod:'Lynx A (GoodWe)', equip:17912 },
+      { placas:9,  inv:'GoodWe 5kW Híbrido',   bats:1, batMod:'Lynx A (GoodWe)', equip:18572 },
+      { placas:10, inv:'GoodWe 5kW Híbrido',   bats:1, batMod:'Lynx A (GoodWe)', equip:19232 },
+      { placas:11, inv:'GoodWe 5kW Híbrido',   bats:1, batMod:'Lynx A (GoodWe)', equip:19892 },
+      { placas:9,  inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Lynx A (GoodWe)', equip:20353 },
+      { placas:9,  inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Unipower',        equip:19049 },
+      { placas:10, inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Unipower',        equip:19709 },
+      { placas:11, inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Unipower',        equip:20369 },
+      { placas:12, inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Unipower',        equip:21029 },
+      { placas:13, inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Unipower',        equip:21689 },
+      { placas:14, inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Unipower',        equip:22349 },
+      { placas:15, inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Unipower',        equip:23009 },
+      { placas:16, inv:'GoodWe 7.5kW Híbrido', bats:1, batMod:'Unipower',        equip:23669 },
+      { placas:9,  inv:'GoodWe 7.5kW Híbrido', bats:2, batMod:'Unipower',        equip:23357 },
+      { placas:16, inv:'GoodWe 7.5kW Híbrido', bats:2, batMod:'Unipower',        equip:27977 },
+      { placas:9,  inv:'GoodWe 7.5kW Híbrido', bats:3, batMod:'Unipower',        equip:27665 },
+      { placas:9,  inv:'Sofar 7.5kW Híbrido',  bats:1, batMod:'Unipower',        equip:18479 },
+      { placas:10, inv:'Sofar 7.5kW Híbrido',  bats:1, batMod:'Unipower',        equip:19139 },
+      { placas:11, inv:'Sofar 7.5kW Híbrido',  bats:1, batMod:'Unipower',        equip:19799 },
+      { placas:12, inv:'Sofar 7.5kW Híbrido',  bats:1, batMod:'Unipower',        equip:20459 },
+      { placas:13, inv:'Sofar 7.5kW Híbrido',  bats:1, batMod:'Unipower',        equip:21119 },
+      { placas:14, inv:'Sofar 7.5kW Híbrido',  bats:1, batMod:'Unipower',        equip:21779 },
+      { placas:15, inv:'Sofar 7.5kW Híbrido',  bats:1, batMod:'Unipower',        equip:22439 },
+      { placas:16, inv:'Sofar 7.5kW Híbrido',  bats:1, batMod:'Unipower',        equip:23099 },
+      { placas:9,  inv:'Sofar 7.5kW Híbrido',  bats:2, batMod:'Unipower',        equip:22774 },
+      { placas:16, inv:'Sofar 7.5kW Híbrido',  bats:2, batMod:'Unipower',        equip:27394 },
+    ];
+
+    function calcHI(k) {
+      const kwp = k.placas * 620 / 1000;
+      const instalDEG = 4000 + k.placas * 350 + k.bats * 1200 + 400;
+      const custoDireto = k.equip + instalDEG + 500;
+      const margem = k.bats <= 2 ? 0.31 : k.bats <= 4 ? 0.32 : 0.33;
+      const minimo = Math.max(28000, Math.round(custoDireto / (1 - margem) / 10) * 10);
+      const cheio = Math.round(minimo / (1 - 0.06) / 10) * 10;
+      return { kwp, minimo, cheio };
+    }
+
+    const tbHI = document.getElementById('tbody-hi');
+    KITS_HI.forEach(k => {
+      const c = calcHI(k);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${k.placas}</td>
+        <td>${c.kwp.toFixed(2)}</td>
+        <td>${k.inv}</td>
+        <td>Jinko 620W</td>
+        <td style="text-align:center">${k.bats}</td>
+        <td>${k.batMod}</td>
+        <td style="color:#F26522;font-weight:700">${R(c.cheio)}</td>
+        <td>${R(c.minimo)}</td>
+      `;
+      tbHI.appendChild(tr);
+    });
+  })();
+  </script>
+
+  <!-- ── 13. VENDA DIGITAL ── -->
   <section id="venda-digital">
     <div class="section-tag">Método</div>
     <h2>Pilares da venda digital</h2>
@@ -1126,7 +1315,7 @@
 
     <div class="script-box">
       <div class="who vendedor">Você</div>
-      <p>Olá, [nome]! Tudo bem? Aqui é Ana, da LumenGrid. Vi seu interesse em energia solar — posso te ajudar a entender como funciona e quanto você economizaria com o seu perfil de consumo. Tem 2 minutinhos?</p>
+      <p>Olá, [nome]! Tudo bem? Aqui é [seu nome], da LumenGrid. Vi seu interesse em energia solar — posso te ajudar a entender como funciona e quanto você economizaria com o seu perfil de consumo. Tem 2 minutinhos?</p>
     </div>
 
     <h3>Qualificação — puxando a fatura</h3>
@@ -1275,7 +1464,7 @@
 </main>
 
 <footer>
-  LumenGrid · Manual da Ana · Setembro 2026 · Dúvidas? Fale com a Hingrid.<br><br>
+  LumenGrid · Guia Comercial · Setembro 2026 · Dúvidas? Fale com a Hingrid.<br><br>
   Feito por Domani Consultoria
 </footer>
 
