@@ -1310,7 +1310,13 @@ let dragSrcId = null;
 function getServicos() { try { return JSON.parse(localStorage.getItem('lg_servicos')||'[]'); } catch { return []; } }
 function saveServicos(srvs) { localStorage.setItem('lg_servicos', JSON.stringify(srvs)); }
 
-function getAllLeadsRaw() { try { return JSON.parse(localStorage.getItem('lg_leads')||'[]'); } catch { return []; } }
+function getAllLeadsRaw() {
+  try {
+    const all = JSON.parse(localStorage.getItem('lg_leads')||'[]');
+    const seen = new Set();
+    return all.filter(l => { if (!l.id || seen.has(l.id)) return false; seen.add(l.id); return true; });
+  } catch { return []; }
+}
 function getLeads() {
   const all = getAllLeadsRaw();
   if (ADMINS.includes(currentUser)) return all;
@@ -2584,7 +2590,7 @@ function saveLeadDetail() {
 
 function deleteLead() {
   if (!confirm('Excluir este lead permanentemente?')) return;
-  saveLeads(getLeads().filter(l=>l.id!==editingId));
+  saveLeads(getAllLeadsRaw().filter(l=>l.id!==editingId));
   closeModal('ov-detail');
   toast('Lead excluído.','');
   renderDashboard(); renderKanban(); renderLeadsList();
