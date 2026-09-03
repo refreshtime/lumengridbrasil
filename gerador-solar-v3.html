@@ -265,7 +265,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Nome do Cliente / Empresa *</label>
     <input class="fi" id="clientName" placeholder="Ex: João Silva / Empresa XYZ">
     <label class="fl">Telefone / WhatsApp</label>
-    <input class="fi" id="clientPhone" placeholder="(11) 9 0000-0000" type="tel">
+    <input class="fi" id="clientPhone" placeholder="(11) 9 0000-0000" type="tel" oninput="checkPhoneCRM()">
+    <div id="crmLeadAlert" style="display:none;background:#7f1d1d;border:2px solid #ef4444;border-radius:6px;padding:12px 16px;margin-top:8px;margin-bottom:4px;">
+      <span style="font-size:13px;font-weight:800;letter-spacing:1px;color:#fca5a5;text-transform:uppercase;" id="crmLeadAlertText"></span>
+    </div>
     <label class="fl">Endereço / Cidade</label>
     <input class="fi" id="clientAddr" placeholder="São Paulo, SP">
     <label class="fl">Mensagem personalizada (opcional)</label>
@@ -474,6 +477,32 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 </div><!-- app-body -->
 
 <script>
+// ── CONFIG GOOGLE SHEETS ──
+const SHEET_ID_OG = 'SEU_SHEET_ID_AQUI'; // mesmo ID da planilha em precificacao_kits.html
+const SHEET_URL_OG_SOLAR = `https://docs.google.com/spreadsheets/d/${SHEET_ID_OG}/gviz/tq?tqx=out:csv&sheet=OnGrid`;
+
+async function parseCSVSolar(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const csv = await res.text();
+  const rows = csv.trim().split('\n');
+  const headers = rows[0].match(/(".*?"|[^,]*)/g).map(h => h.replace(/^"|"$/g, '').trim()).filter(Boolean);
+  return rows.slice(1).map(line => {
+    const vals = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i <= line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { vals.push(cur); cur = ''; }
+      else if (i === line.length) { vals.push(cur); }
+      else { cur += ch; }
+    }
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (vals[i] || '').trim(); });
+    return obj;
+  });
+}
+
 // ── CONSTANTS ──
 const PARC_RATES=[
   {n:1,ac:0.0287},{n:2,ac:0.0450},{n:3,ac:0.0520},{n:4,ac:0.0620},
@@ -520,7 +549,7 @@ const KIT_NEG={
   33:0.06,34:0.06,35:0.06,36:0.06,
   37:0.06,38:0.06,39:0.06,40:0.06
 };
-const KITS_OG=[
+const KITS_OG_FALLBACK=[
   {placas:4, inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:4800,  promo:null},
   {placas:4, inv:'GoodWe 3kW',  mod:'Leapton 620W', equip:4520,  promo:null},
   {placas:5, inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:5300,  promo:null},
@@ -612,6 +641,7 @@ const KITS_OG=[
   {placas:40,inv:'FoxESS Micro',mod:'Jinko 620W',   equip:39000, promo:null},
   {placas:40,inv:'FoxESS Micro',mod:'Leapton 620W', equip:36200, promo:null},
 ];
+let KITS_OG = KITS_OG_FALLBACK;
 function getKitPrecos(placas,isJinko,isMicro){
   const modKey=isJinko?'Jinko':'Leapton';
   const invKey=isMicro?'FoxESS':'GoodWe';
@@ -872,7 +902,37 @@ function buildGenChart(genKwh){
 }
 
 // ── MAIN GENERATE ──
+function checkPhoneCRM(){
+  const raw=(document.getElementById('clientPhone')||{}).value||'';
+  const digits=raw.replace(/\D/g,'');
+  const alert=document.getElementById('crmLeadAlert');
+  const alertText=document.getElementById('crmLeadAlertText');
+  if(!alert||!alertText)return null;
+  if(digits.length<8){alert.style.display='none';return null;}
+  const leads=JSON.parse(localStorage.getItem('lg_leads')||'[]');
+  const match=leads.find(l=>(l.telefone||'').replace(/\D/g,'')===digits);
+  if(match){
+    alertText.textContent='⚠ LEAD NO CRM DE '+(match.resp||'outro vendedor').toUpperCase()+' — '+match.nome.toUpperCase()+' — FALE COM ELE ANTES DE GERAR PROPOSTA';
+    alert.style.display='block';
+    return match;
+  }
+  alert.style.display='none';
+  return null;
+}
+
 function generateProposal(criarCard=true){
+  // ── VALIDAÇÃO CRM: telefone já cadastrado ──
+  const leadExistente=checkPhoneCRM();
+  if(leadExistente){
+    const confirmar=window.confirm(
+      '⚠ LEAD JÁ EXISTE NO CRM\n\n'+
+      'Este telefone está cadastrado como lead de '+leadExistente.nome+', sob responsabilidade de '+(leadExistente.resp||'outro vendedor')+'.\n\n'+
+      'Fale com ele antes de gerar a proposta.\n\n'+
+      'Deseja gerar mesmo assim?'
+    );
+    if(!confirmar)return;
+  }
+
   // ── VALIDAÇÃO OBRIGATÓRIA ──
   const erros=[];
   if(!getN('modQty'))erros.push('Quantidade de módulos (placas)');
@@ -1458,6 +1518,26 @@ function printPDF(){
   document.title='Proposta Solar LumenGrid - '+cliente;
   setTimeout(()=>{window.print();setTimeout(()=>{document.title=orig;},1500);},120);
 }
+
+// ── INIT — CARREGA KITS DO SHEETS (ou usa fallback) ──
+(async function initKitsOG() {
+  if (SHEET_ID_OG !== 'SEU_SHEET_ID_AQUI') {
+    try {
+      const rows = await parseCSVSolar(SHEET_URL_OG_SOLAR);
+      if (rows.length > 0) {
+        KITS_OG = rows.map(r => ({
+          placas: parseInt(r.placas),
+          inv:    r.inv,
+          mod:    r.mod,
+          equip:  parseFloat(r.equip),
+          promo:  (r.promo === '' || r.promo === 'null') ? null : parseFloat(r.promo)
+        }));
+      }
+    } catch (e) {
+      console.warn('[Sheets] OnGrid offline — usando dados locais:', e);
+    }
+  }
+})();
 </script>
 </body>
 </html>
