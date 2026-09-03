@@ -634,11 +634,38 @@ function getInversorAC(inv, placas) {
   return typeof v === 'function' ? v(placas) : (v || 0);
 }
 
+// ── CONFIG GOOGLE SHEETS ───────────────────────────────────────────────────
+const SHEET_ID = 'SEU_SHEET_ID_AQUI'; // Substitua pelo ID da planilha publicada
+const SHEET_URL_OG = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=OnGrid`;
+const SHEET_URL_HI = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Hibrido`;
+
+async function parseCSV(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const csv = await res.text();
+  const rows = csv.trim().split('\n');
+  const headers = rows[0].match(/(".*?"|[^,]*)/g).map(h => h.replace(/^"|"$/g, '').trim()).filter(Boolean);
+  return rows.slice(1).map(line => {
+    const vals = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i <= line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { vals.push(cur); cur = ''; }
+      else if (i === line.length) { vals.push(cur); }
+      else { cur += ch; }
+    }
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (vals[i] || '').trim(); });
+    return obj;
+  });
+}
+
 // Kits — dados reais (REAL) e estimados (ESTIMADO)
 // Custo equip estimado: Jinko ~R$500/placa, Leapton ~R$430/placa + inversor
 // Delta Jinko→Leapton: R$70/placa (kits 4–40pl)
 // GW3kW ~R$2.800 | GW5kW ~R$3.400 | GW7.5kW ~R$7.025 | GW10kW ~R$7.900 | GW12kW ~R$9.000 | GW15kW ~R$11.750 | GW20kW ~R$16.300
-const KITS = [
+const KITS_FALLBACK = [
   // ── 4 PLACAS ── ESTIMADO (2,48 kWp · GW3kW · faixa 0-3)
   { placas:4,  inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:4800,  promo:null, src:'ESTIMADO' },
   { placas:4,  inv:'GoodWe 3kW',  mod:'Leapton 620W', equip:4520,  promo:null, src:'ESTIMADO' },
@@ -771,6 +798,7 @@ const KITS = [
   { placas:40, inv:'GoodWe 20kW',  mod:'Hanersun 610W', equip:32016, promo:null, src:'REAL_COTAÇÃO' },
   { placas:40, inv:'FoxESS Micro', mod:'Hanersun 610W', equip:34697, promo:null, src:'REAL_COTAÇÃO' },
 ];
+let KITS = KITS_FALLBACK;
 
 // ══════════════════════════════════════════════════════════════
 //  FUNÇÕES DE CÁLCULO
@@ -813,7 +841,7 @@ function calcKit(k) {
   return { wp, kwp, faixa, instal, direto, margem, neg, formulaMin, minimo, cheio, imp, gestao, cash, mrealPct, rwkwp, acW, overload, overOk, foxOk, isFox, delta, status };
 }
 
-const CALC = KITS.map(k => ({ ...k, ...calcKit(k) }));
+let CALC;
 
 // ══════════════════════════════════════════════════════════════
 //  FORMATAÇÃO
@@ -860,7 +888,7 @@ document.getElementById('param-cards').innerHTML = `
 //  RENDER — KITS
 // ══════════════════════════════════════════════════════════════
 
-(function renderKits() {
+function renderKits() {
   const tb = document.getElementById('kits-table');
   let lastPlacas = null;
   CALC.forEach(c => {
@@ -891,7 +919,7 @@ document.getElementById('param-cards').innerHTML = `
       <td>${badge(c.src)}</td>
     </tr>`;
   });
-})();
+}
 
 // ══════════════════════════════════════════════════════════════
 //  RENDER — INVERSORES (FoxESS por kit)
@@ -955,7 +983,7 @@ document.getElementById('param-cards').innerHTML = `
 //  RENDER — COMISSÕES
 // ══════════════════════════════════════════════════════════════
 
-(function populateCommSelect() {
+function populateCommSelect() {
   const sel = document.getElementById('comm-kit');
   CALC.forEach((c, i) => {
     const opt = document.createElement('option');
@@ -964,7 +992,7 @@ document.getElementById('param-cards').innerHTML = `
     sel.appendChild(opt);
   });
   calcComm();
-})();
+}
 
 function calcComm() {
   const idx  = parseInt(document.getElementById('comm-kit').value);
@@ -1000,7 +1028,7 @@ function calcComm() {
 //  RENDER — RESUMO
 // ══════════════════════════════════════════════════════════════
 
-(function renderResumo() {
+function renderResumo() {
   const tb = document.getElementById('resumo-table');
   let lastP = null;
   CALC.forEach(c => {
@@ -1020,13 +1048,13 @@ function calcComm() {
       <td>${badge(c.src)}</td>
     </tr>`;
   });
-})();
+}
 
 // ══════════════════════════════════════════════════════════════
 //  RENDER — BACKEND
 // ══════════════════════════════════════════════════════════════
 
-(function renderBackend() {
+function renderBackend() {
   const tb = document.getElementById('backend-table');
   CALC.forEach(c => {
     tb.innerHTML += `<tr>
@@ -1057,13 +1085,13 @@ function calcComm() {
   }));
   document.getElementById('js-export').textContent =
     'const KITS_PRECOS = ' + JSON.stringify(obj, null, 2) + ';';
-})();
+}
 
 // ══════════════════════════════════════════════════════════════
 //  RENDER — VALIDAÇÃO
 // ══════════════════════════════════════════════════════════════
 
-(function renderValidacao() {
+function renderValidacao() {
   const tb = document.getElementById('validacao-table');
   CALC.forEach(c => {
     const overStr = c.acW > 0
@@ -1094,7 +1122,7 @@ function calcComm() {
       <td class="center">${badge(c.status)}</td>
     </tr>`;
   });
-})();
+}
 
 // ══════════════════════════════════════════════════════════════
 //  COTAÇÕES — Linha nova
@@ -1120,7 +1148,7 @@ function addCotacaoRow() {
 
 // Deltas derivados de dados reais Solfácil:
 //   Leapton 590W: R$560/pl · Jinko 620W: R$660/pl · Unipower bat: R$4.308/bat
-const KITS_HIBRIDOS = [
+const KITS_HIBRIDOS_FALLBACK = [
   // ── GoodWe 3.5kW Híbrido — Lynx A (GoodWe) — máx 8pl ───────────────────
   { id:'GW35-6J',    placas:6,  inv:'GoodWe 3.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:13873, status:'ESTIMADO'    },
   { id:'GW35-7J',    placas:7,  inv:'GoodWe 3.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Lynx A (GoodWe)', equip:14533, status:'ESTIMADO'    },
@@ -1183,6 +1211,7 @@ const KITS_HIBRIDOS = [
   { id:'SF75-16L-2', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:25794, status:'REAL_COTAÇÃO' },
   { id:'SF75-16J-2', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:27394, status:'ESTIMADO'    },
 ];
+let KITS_HIBRIDOS = KITS_HIBRIDOS_FALLBACK;
 
 // S+ tabela fixa — instalação do sistema de armazenamento (sem painéis)
 const SPLUS_HI = [
@@ -1236,9 +1265,9 @@ function calcHibrido(k, cenario) {
   const custoTotal = custoDireto + icms;
   const margem = margemHi(k.bats);
   const minimo = Math.round(custoTotal / (1 - margem) / 10) * 10;
-  const bomba      = Math.round(custoTotal / (1 - 0.24) / 10) * 10; // margem mínima de referência — o mais baixo possível
+  const bomba      = Math.round(custoTotal / (1 - 0.24) / 10) * 10 + 1000; // margem mínima de referência — o mais baixo possível
   const cashBomba  = Math.round((bomba - custoTotal - bomba * 0.10) * 0.80);
-  const cheio = minimo / (1 - 0.06);
+  const cheio = minimo / (1 - 0.06) + 1000;
   const imp = Math.round(minimo * 0.10);
   const liquido = minimo - custoDireto - icms - imp;
   const gestao = Math.round(liquido * 0.20);
@@ -1253,14 +1282,14 @@ function calcHibrido(k, cenario) {
 //  HÍBRIDOS — RENDER
 // ══════════════════════════════════════════════════════════════
 
-(function initHibridosFilters() {
+function initHibridosFilters() {
   const sel = document.getElementById('hi-filter-inv');
   [...new Set(KITS_HIBRIDOS.map(k => k.inv))].forEach(inv => {
     const opt = document.createElement('option');
     opt.value = inv; opt.textContent = inv;
     sel.appendChild(opt);
   });
-})();
+}
 
 function renderHibridos() {
   const cenario  = parseInt(document.getElementById('hi-cenario').value);
@@ -1334,7 +1363,7 @@ function renderHibridos() {
   });
 }
 
-(function renderSplusHiTableBody() {
+function renderSplusHiTableBody() {
   const tb = document.getElementById('splus-hi-table-body');
   SPLUS_HI.forEach((row, i) => {
     tb.innerHTML += `<tr>
@@ -1344,7 +1373,7 @@ function renderHibridos() {
     </tr>`;
   });
   renderHibridos();
-})();
+}
 
 // ══════════════════════════════════════════════════════════════
 //  TAB NAVIGATION
@@ -1356,6 +1385,57 @@ function showTab(name) {
   document.getElementById('tab-' + name).classList.add('active');
   event.target.classList.add('active');
 }
+
+// ══════════════════════════════════════════════════════════════
+//  INIT — CARREGA DADOS DO GOOGLE SHEETS (ou usa fallback local)
+// ══════════════════════════════════════════════════════════════
+
+async function initPage() {
+  if (SHEET_ID !== 'SEU_SHEET_ID_AQUI') {
+    try {
+      const [ogRows, hiRows] = await Promise.all([
+        parseCSV(SHEET_URL_OG),
+        parseCSV(SHEET_URL_HI)
+      ]);
+      if (ogRows.length > 0) {
+        KITS = ogRows.map(r => ({
+          placas: parseInt(r.placas),
+          inv:    r.inv,
+          mod:    r.mod,
+          equip:  parseFloat(r.equip),
+          promo:  (r.promo === '' || r.promo === 'null') ? null : parseFloat(r.promo),
+          src:    r.src
+        }));
+      }
+      if (hiRows.length > 0) {
+        KITS_HIBRIDOS = hiRows.map(r => ({
+          id:     r.id,
+          placas: parseInt(r.placas),
+          inv:    r.inv,
+          mod:    r.mod,
+          bats:   parseInt(r.bats),
+          batMod: r.batMod,
+          equip:  parseFloat(r.equip),
+          status: r.status
+        }));
+      }
+    } catch (e) {
+      console.warn('[Sheets] Falha ao carregar — usando dados locais:', e);
+    }
+  }
+
+  CALC = KITS.map(k => ({ ...k, ...calcKit(k) }));
+
+  renderKits();
+  populateCommSelect();
+  renderResumo();
+  renderBackend();
+  renderValidacao();
+  initHibridosFilters();
+  renderSplusHiTableBody(); // já chama renderHibridos() internamente
+}
+
+initPage();
 </script>
 </body>
 </html>

@@ -507,6 +507,32 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 </div><!-- /app-body -->
 
 <script>
+// ── CONFIG GOOGLE SHEETS ──
+const SHEET_ID_HI = 'SEU_SHEET_ID_AQUI'; // mesmo ID da planilha em precificacao_kits.html
+const SHEET_URL_HI_HIBRIDO = `https://docs.google.com/spreadsheets/d/${SHEET_ID_HI}/gviz/tq?tqx=out:csv&sheet=Hibrido`;
+
+async function parseCSVHibrido(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const csv = await res.text();
+  const rows = csv.trim().split('\n');
+  const headers = rows[0].match(/(".*?"|[^,]*)/g).map(h => h.replace(/^"|"$/g, '').trim()).filter(Boolean);
+  return rows.slice(1).map(line => {
+    const vals = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i <= line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { vals.push(cur); cur = ''; }
+      else if (i === line.length) { vals.push(cur); }
+      else { cur += ch; }
+    }
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (vals[i] || '').trim(); });
+    return obj;
+  });
+}
+
 const IMG_BASE='https://lumengridbrasil.com.br/imagens/';
 const PRECO_KVP_MIN=5000;
 
@@ -690,14 +716,36 @@ function onKitInvChange(){
     o.textContent=b.label;
     batSel.appendChild(o);
   });
+  // Atualiza imediatamente os campos de inversor no formulário abaixo
+  const kit=KITS_DATA[ki];
+  if(kit){
+    const invSel=$('invModelSel');
+    let f=false;
+    for(let i=0;i<invSel.options.length;i++){
+      if(invSel.options[i].value===kit.invVal){invSel.selectedIndex=i;f=true;break;}
+    }
+    if(!f){invSel.value='custom';}
+    $('invModel').value=kit.invVal;
+    $('invModel').style.display='none';
+    $('invPower').value=kit.invPwr;
+    calcOverload();
+  }
 }
 
 function onKitBatChange(){
   const v=$('kitBatSel').value;
   if(!v){$('kitPreviewCard').style.display='none';return;}
   const{ki,ci}=JSON.parse(v);
-  const conf=KITS_DATA[ki].configs[ci];
-  const pl=conf.qty||KITS_DATA[ki].baseQty||9;
+  const kit=KITS_DATA[ki];const conf=kit.configs[ci];
+  const pl=conf.qty||kit.baseQty||9;
+  // Preenche campos de bateria automaticamente
+  const batSel=$('batModelSel');
+  let f=false;for(let i=0;i<batSel.options.length;i++){if(batSel.options[i].value===kit.batVal){batSel.selectedIndex=i;f=true;break;}}
+  if(!f)batSel.value='custom';
+  $('batModel').value=kit.batVal;$('batModel').style.display='none';
+  $('batQty').value=conf.nbat;
+  $('batteryKwh').value=(kit.batKwh*conf.nbat).toFixed(1);
+  recalcAutonomy();
   renderKitPreview(ki,ci,pl);
 }
 
@@ -717,7 +765,7 @@ function renderKitPreview(ki,ci,pl){
 }
 
 // ── KITS HÍBRIDOS — dados e fórmulas (sincronizado com precificacao_kits.html) ──
-const KITS_HIBRIDOS=[
+const KITS_HIBRIDOS_FALLBACK=[
   {id:'GW35-6J', placas:6, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:13873},
   {id:'GW35-7J', placas:7, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:14533},
   {id:'GW35-8J', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:15193},
@@ -772,6 +820,7 @@ const KITS_HIBRIDOS=[
   {id:'SF75-16L-2',placas:16,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:2,batMod:'Unipower',equip:25794},
   {id:'SF75-16J-2',placas:16,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:2,batMod:'Unipower',equip:27394},
 ];
+let KITS_HIBRIDOS = KITS_HIBRIDOS_FALLBACK;
 function getModWpHi(mod){if(mod.includes('590'))return 590;if(mod.includes('575'))return 575;if(mod.includes('610'))return 610;return 620;}
 function margemHi(bats){if(bats<=2)return 0.31;if(bats<=4)return 0.32;return 0.33;}
 function degInstalHi(placas,bats){return 4000+placas*350+bats*1200+400;}
@@ -782,9 +831,9 @@ function calcHibridoKit(k){
   const custoDireto=k.equip+instalDEG+homo;
   const margem=margemHi(k.bats);
   const minimo=Math.round(custoDireto/(1-margem)/10)*10;
-  const bomba=Math.round(custoDireto/0.76/10)*10;
+  const bomba=Math.round(custoDireto/0.76/10)*10+1000;
   const cheio=minimo/(1-0.06);
-  return{minimo,bomba,cheio:Math.round(cheio)};
+  return{minimo,bomba,cheio:Math.round(cheio)+1000};
 }
 
 // precoMin = preço mínimo (31% margem s/ NEG)
@@ -795,32 +844,32 @@ const KITS_DATA=[
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
    batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
    configs:[
-     {nbat:1,preco:41446,precoMin:37336,precoBomba:33900},
-     {nbat:2,preco:48446,precoMin:44336,precoBomba:40250},
+     {nbat:1,preco:42446,precoMin:37336,precoBomba:34900},
+     {nbat:2,preco:49446,precoMin:44336,precoBomba:41250},
    ]},
   // 1: GoodWe GW7.5K
   {invVal:'GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
    batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
    configs:[
-     {nbat:1,preco:47000,precoMin:43500,precoBomba:39490},
-     {nbat:2,preco:54270,precoMin:52000,precoBomba:47210},
-     {nbat:3,preco:61000,precoMin:58700,precoBomba:52520},
+     {nbat:1,preco:48000,precoMin:43500,precoBomba:40490},
+     {nbat:2,preco:55270,precoMin:52000,precoBomba:48210},
+     {nbat:3,preco:62000,precoMin:58700,precoBomba:53520},
    ]},
   // 2: Sofar HYD-7.5K
   {invVal:'Sofar HYD-7.5K-LSP1 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
    modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
    batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
    configs:[
-     {nbat:1,qty:9, preco:43700,precoMin:41080,precoBomba:37300},
-     {nbat:2,qty:16,preco:59740,precoMin:56160,precoBomba:50990},
+     {nbat:1,qty:9, preco:44700,precoMin:41080,precoBomba:38300},
+     {nbat:2,qty:16,preco:60740,precoMin:56160,precoBomba:51990},
    ]},
   // 3: GoodWe GW12K Trifásico
   {invVal:'GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW',invPwr:12,
    modVal:'Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)',modPwr:600,
    batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:11,extras:850,
    configs:[
-     {nbat:1,qty:11,preco:50140,precoMin:47130,precoBomba:42790},
+     {nbat:1,qty:11,preco:51140,precoMin:47130,precoBomba:43790},
    ]},
 ];
 
@@ -833,12 +882,13 @@ function applyKit(ki,ci,nivel){
   }
   kitAtivo=true;kitAtual={kit,conf,nivel,ki,ci};
   // Inversor
-  const invSel=document.querySelector('select[onchange="onInvModelChange(this)"]');
+  const invSel=$('invModelSel');
   let f=false;for(let i=0;i<invSel.options.length;i++){if(invSel.options[i].value===kit.invVal){invSel.selectedIndex=i;f=true;break;}}
   if(!f)invSel.value='custom';
   $('invModel').value=kit.invVal;$('invModel').style.display='none';$('invPower').value=kit.invPwr;
+  calcOverload();
   // Módulo
-  const modSel=document.querySelector('select[onchange="onModModelChange(this)"]');
+  const modSel=$('modModelSel');
   f=false;for(let i=0;i<modSel.options.length;i++){if(modSel.options[i].value===kit.modVal){modSel.selectedIndex=i;f=true;break;}}
   if(!f)modSel.value='custom';
   $('modModel').value=kit.modVal;$('modModel').style.display='none';$('modPower').value=kit.modPwr;
@@ -1162,7 +1212,7 @@ function generateProposal(criarCard){
   const waUrl=waFoneDigits?'https://wa.me/55'+waFoneDigits+'?text='+waMsg:'';
 
   const showGenPage=$('showGenPage')&&$('showGenPage').checked;
-  const tot=showGenPage?7:6;
+  const tot=showGenPage?8:7;
   let pg=1;
 
   // ── PAGE 1: CAPA ──
@@ -1296,38 +1346,6 @@ function generateProposal(criarCard){
     {n:'Assist\u00eancia T\u00e9cnica',v:warAss},
   ];
 
-  // Autonomy section
-  const aut=getAutonomyData();
-  const autHtml=aut&&aut.hAll?`
-  <div style="margin-top:10px">
-    <div class="stitle" style="margin-bottom:8px">Autonomia da Bateria &mdash; ${batKwh} kWh</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <div style="padding:12px;background:rgba(232,100,26,.1);border:2px solid rgba(232,100,26,.3);border-radius:10px;text-align:center">
-        <div style="font-size:8px;font-weight:800;color:rgba(232,100,26,.85);margin-bottom:3px;letter-spacing:.8px;text-transform:uppercase">Todos os equipamentos ligados</div>
-        <div style="font-size:30px;font-weight:900;color:var(--or);line-height:1">${aut.hAll}h</div>
-        <div style="font-size:9px;color:var(--lmuted);margin-top:2px">${aut.totKw.toFixed(2)} kW consumo total</div>
-      </div>
-      <div style="padding:12px;background:rgba(232,100,26,.05);border:1.5px solid rgba(232,100,26,.2);border-radius:10px;text-align:center">
-        <div style="font-size:8px;font-weight:800;color:rgba(232,100,26,.65);margin-bottom:3px;letter-spacing:.8px;text-transform:uppercase">Uso alternado (50% da carga)</div>
-        <div style="font-size:30px;font-weight:900;color:var(--or);line-height:1">${aut.hAlt}h</div>
-        <div style="font-size:9px;color:var(--lmuted);margin-top:2px">equipamentos em uso intercalado</div>
-      </div>
-    </div>
-    <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--lborder);border-radius:8px;overflow:hidden;margin-bottom:7px">
-      <thead><tr style="background:rgba(232,100,26,.07)">
-        <th style="padding:6px 10px;text-align:left;font-size:9px;font-weight:800;color:var(--or);letter-spacing:.5px">EQUIPAMENTO PROTEGIDO</th>
-        <th style="padding:6px 10px;text-align:center;font-size:9px;font-weight:800;color:var(--or);width:10%">QTD</th>
-        <th style="padding:6px 10px;text-align:right;font-size:9px;font-weight:800;color:var(--or);width:22%">CONSUMO</th>
-      </tr></thead>
-      <tbody>${aut.items.map((e,i)=>`<tr style="${i<aut.items.length-1?'border-bottom:1px solid #f0f0f0':''}">
-        <td style="padding:5px 10px;font-size:11px;font-weight:700;color:var(--ltext)">${e.name}</td>
-        <td style="padding:5px 10px;text-align:center;font-size:11px;color:var(--lmuted)">&times;${e.qty}</td>
-        <td style="padding:5px 10px;text-align:right;font-size:11px;font-weight:800;color:var(--or)">${Math.round(e.totalW)} W</td>
-      </tr>`).join('')}</tbody>
-    </table>
-    <div style="font-size:8.5px;color:var(--lmuted);font-style:italic;padding-left:2px">* Autonomia ampliada se conectado ao sistema de energia solar.</div>
-  </div>`:'';
-
   const ecoTimelineHtml=ecoAnual?`
   <div style="background:linear-gradient(135deg,rgba(232,100,26,.07),rgba(232,100,26,.03));border:1px solid rgba(232,100,26,.2);border-radius:10px;padding:12px 16px;margin-top:12px">
     <div style="font-size:9px;font-weight:800;color:var(--or);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Economia Estimada</div>
@@ -1379,7 +1397,6 @@ function generateProposal(criarCard){
           </div>
         </div>
       </div>
-      ${autHtml}
       <div>
         <div class="stitle" style="margin-bottom:6px">Responsabilidades</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -1594,7 +1611,69 @@ function generateProposal(criarCard){
     ${footer(today)}
   </div>`;
 
-  const html=p1+p2+p3+(showGenPage?p3b:'')+p4+p5+p6;
+  // ── PAGE 3C: EQUIPAMENTOS PROTEGIDOS & BATERIAS ──
+  const aut=getAutonomyData();
+  const autTableRows=aut?aut.items.map((e,i)=>`<tr style="${i<aut.items.length-1?'border-bottom:1px solid #f0f0f0':''}">
+    <td style="padding:6px 12px;font-size:11px;font-weight:700;color:var(--ltext)">${e.name}</td>
+    <td style="padding:6px 12px;text-align:center;font-size:11px;color:var(--lmuted)">&times;${e.qty}</td>
+    <td style="padding:6px 12px;text-align:right;font-size:11px;font-weight:800;color:var(--or)">${Math.round(e.totalW)} W</td>
+  </tr>`).join(''):'';
+  const autCards=aut&&aut.hAll?`
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    <div style="padding:12px;background:rgba(232,100,26,.1);border:2px solid rgba(232,100,26,.3);border-radius:10px;text-align:center">
+      <div style="font-size:8px;font-weight:800;color:rgba(232,100,26,.85);margin-bottom:3px;letter-spacing:.8px;text-transform:uppercase">Todos os equipamentos ligados</div>
+      <div style="font-size:30px;font-weight:900;color:var(--or);line-height:1">${aut.hAll}h</div>
+      <div style="font-size:9px;color:var(--lmuted);margin-top:2px">${aut.totKw.toFixed(2)} kW consumo total</div>
+    </div>
+    <div style="padding:12px;background:rgba(232,100,26,.05);border:1.5px solid rgba(232,100,26,.2);border-radius:10px;text-align:center">
+      <div style="font-size:8px;font-weight:800;color:rgba(232,100,26,.65);margin-bottom:3px;letter-spacing:.8px;text-transform:uppercase">Uso alternado (50% da carga)</div>
+      <div style="font-size:30px;font-weight:900;color:var(--or);line-height:1">${aut.hAlt}h</div>
+      <div style="font-size:9px;color:var(--lmuted);margin-top:2px">equipamentos em uso intercalado</div>
+    </div>
+  </div>`:'';
+
+  const pEquip=`<div class="page p-light">
+    ${corners()}
+    ${topbar(pg++,tot)}
+    <div class="p-body" style="justify-content:flex-start;gap:16px">
+      <div>
+        <div class="sec-eye">Proteção em Falta de Energia</div>
+        <div class="sec-h2">Equipamentos Protegidos <span style="color:var(--or)">&amp; Baterias</span></div>
+        <div class="sec-rule" style="margin-bottom:0"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+        <div>
+          <div class="stitle" style="margin-bottom:8px">Cargas Protegidas — ${batKwh} kWh</div>
+          ${autCards}
+          <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--lborder);border-radius:8px;overflow:hidden;margin-bottom:6px">
+            <thead><tr style="background:rgba(232,100,26,.07)">
+              <th style="padding:6px 12px;text-align:left;font-size:9px;font-weight:800;color:var(--or);letter-spacing:.5px">EQUIPAMENTO PROTEGIDO</th>
+              <th style="padding:6px 12px;text-align:center;font-size:9px;font-weight:800;color:var(--or);width:10%">QTD</th>
+              <th style="padding:6px 12px;text-align:right;font-size:9px;font-weight:800;color:var(--or);width:22%">CONSUMO</th>
+            </tr></thead>
+            <tbody>${autTableRows||'<tr><td colspan="3" style="padding:10px;text-align:center;font-size:11px;color:var(--lmuted)">Nenhum equipamento selecionado</td></tr>'}</tbody>
+          </table>
+          <div style="font-size:8px;color:var(--lmuted);font-style:italic;padding-left:2px">* Autonomia ampliada quando o sistema solar está gerando.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:#fff;border:1px solid var(--lborder);border-radius:10px;padding:14px">
+            <div style="font-size:11px;font-weight:800;color:var(--or);letter-spacing:.5px;margin-bottom:2px">GoodWe</div>
+            <div style="font-size:8.5px;color:var(--lmuted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Inversores &amp; Baterias</div>
+            <div style="font-size:10px;color:var(--ltext);line-height:1.6;margin-bottom:10px">Fabricante global com mais de 2 milhões de unidades instaladas em 100+ países. Linha Lynx de baterias LFP com alta durabilidade e integração nativa com o inversor híbrido.</div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              ${[['Tecnologia','LFP (LiFePO₄)'],['Ciclos de vida','&gt; 6.000 ciclos (80% DoD)'],['Profundidade de descarga','90% DoD'],['Garantia bateria','10 anos'],['Garantia inversor','5–10 anos']].map(([k,v])=>`
+              <div style="display:flex;justify-content:space-between;font-size:9.5px;padding-bottom:4px;border-bottom:1px solid #f0f0f0">
+                <span style="color:var(--lmuted)">${k}</span><span style="font-weight:700;color:var(--ltext)">${v}</span>
+              </div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    ${footer(today)}
+  </div>`;
+
+  const html=p1+p2+p3+pEquip+(showGenPage?p3b:'')+p4+p5+p6;
   $('preview').innerHTML=html;
   $('preview').style.display='block';
   $('prevEmpty').style.display='none';
@@ -1711,7 +1790,7 @@ $('modQty').addEventListener('input',onModQtyChange);
 $('modQty').addEventListener('change',onModQtyChange);
 $('modPower').addEventListener('input',function(){kitAtivo=false;autoCalcHibrido();});
 $('invPower').addEventListener('input',calcOverload);
-$('precoKvp').addEventListener('input',function(){kitAtivo=false;autoCalcHibrido();});
+$('precoKvp').addEventListener('input',function(){if(!kitAtivo)autoCalcHibrido();});
 $('monthlyGen').addEventListener('input',function(){this.dataset.manual='1';});
 $('hasWallbox').addEventListener('change',function(){$('wallboxField').style.display=this.checked?'':'none';});
 $('batQty').addEventListener('change',function(){if($('isencaoICMS').checked)onIsencaoICMS();onBatQtyChange();});
@@ -1724,6 +1803,29 @@ renderEquipmentTable();
 (function(){
   const ms=$('modModelSel');if(ms)onModModelChange(ms);
   const is=$('invModelSel');if(is)onInvModelChange(is);
+})();
+
+// ── INIT — CARREGA KITS HÍBRIDOS DO SHEETS (ou usa fallback) ──
+(async function initKitsHibrido() {
+  if (SHEET_ID_HI !== 'SEU_SHEET_ID_AQUI') {
+    try {
+      const rows = await parseCSVHibrido(SHEET_URL_HI_HIBRIDO);
+      if (rows.length > 0) {
+        KITS_HIBRIDOS = rows.map(r => ({
+          id:     r.id,
+          placas: parseInt(r.placas),
+          inv:    r.inv,
+          mod:    r.mod,
+          bats:   parseInt(r.bats),
+          batMod: r.batMod,
+          equip:  parseFloat(r.equip),
+          status: r.status || 'ESTIMADO'
+        }));
+      }
+    } catch (e) {
+      console.warn('[Sheets] Híbrido offline — usando dados locais:', e);
+    }
+  }
 })();
 </script>
 </body>
