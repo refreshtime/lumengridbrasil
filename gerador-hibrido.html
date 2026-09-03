@@ -286,7 +286,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Nome do Cliente / Empresa <span class="req-star">*</span></label>
     <input class="fi" id="clientName" placeholder="Ex: João Silva / Empresa XYZ">
     <label class="fl">Telefone / WhatsApp <span style="color:var(--or)">*</span></label>
-    <input class="fi" id="clientPhone" placeholder="11 95668-4205" oninput="maskPhone(this)" maxlength="13">
+    <input class="fi" id="clientPhone" placeholder="11 95668-4205" oninput="maskPhone(this);checkPhoneCRM()" maxlength="13">
+    <div id="crmLeadAlert" style="display:none;background:#7f1d1d;border:2px solid #ef4444;border-radius:6px;padding:12px 16px;margin-top:8px;margin-bottom:4px;">
+      <span style="font-size:13px;font-weight:800;letter-spacing:1px;color:#fca5a5;text-transform:uppercase;" id="crmLeadAlertText"></span>
+    </div>
     <label class="fl">Endereço / Cidade</label>
     <input class="fi" id="clientAddr" placeholder="São Paulo, SP">
     <label class="fl">Mensagem personalizada (opcional)</label>
@@ -1128,8 +1131,39 @@ function buildGenChart(genKwh){
 }
 
 // ── GENERATE PROPOSAL ──
+function checkPhoneCRM(){
+  const raw=(document.getElementById('clientPhone')||{}).value||'';
+  const digits=raw.replace(/\D/g,'');
+  const alert=document.getElementById('crmLeadAlert');
+  const alertText=document.getElementById('crmLeadAlertText');
+  if(!alert||!alertText)return null;
+  if(digits.length<8){alert.style.display='none';return null;}
+  const leads=JSON.parse(localStorage.getItem('lg_leads')||'[]');
+  const match=leads.find(l=>(l.telefone||'').replace(/\D/g,'')===digits);
+  if(match){
+    alertText.textContent='⚠ LEAD NO CRM DE '+(match.resp||'outro vendedor').toUpperCase()+' — '+match.nome.toUpperCase()+' — FALE COM ELE ANTES DE GERAR PROPOSTA';
+    alert.style.display='block';
+    return match;
+  }
+  alert.style.display='none';
+  return null;
+}
+
 function generateProposal(criarCard){
   if(criarCard===undefined)criarCard=true;
+
+  // ── VALIDAÇÃO CRM: telefone já cadastrado ──
+  const leadExistente=checkPhoneCRM();
+  if(leadExistente){
+    const confirmar=window.confirm(
+      '⚠ LEAD JÁ EXISTE NO CRM\n\n'+
+      'Este telefone está cadastrado como lead de '+leadExistente.nome+', sob responsabilidade de '+(leadExistente.resp||'outro vendedor')+'.\n\n'+
+      'Fale com ele antes de gerar a proposta.\n\n'+
+      'Deseja gerar mesmo assim?'
+    );
+    if(!confirmar)return;
+  }
+
   // Validação: alerta se nível bomba
   if(kitAtual&&kitAtual.nivel==='bomba'){
     alert('⚠ ATENÇÃO: PREÇO BOMBA SOMENTE DEPOIS DE VISITA TÉCNICA E VALIDAÇÃO\n\nEssa proposta está sendo gerada com o Preço Bomba. Certifique-se de que a visita técnica foi realizada e a gestão autorizou este preço antes de enviar ao cliente.');
