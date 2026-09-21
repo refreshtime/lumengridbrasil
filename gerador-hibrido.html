@@ -1340,7 +1340,7 @@ function generateProposal(criarCard){
     kVp?{label:'Sistema Fotovoltaico',qty:'—',spec:kVp.toFixed(2)+' kWp',hero:true}:null,
     batKwh?{label:'Armazenamento',qty:'—',spec:batKwh+' kWh',hero2:true}:null,
     modQty&&modModel?{label:'M\u00f3dulos Fotovoltaicos',qty:modQty+' un.',spec:modModel+(modPower?' \u00b7 '+modPower+' W':'')}:null,
-    invQty?{label:'Inversor H\u00edbrido',qty:invQty+' un.',spec:(invModel||'Inversor H\u00edbrido')+(invPower?' \u00b7 '+invPower+' kW':''),goodwe:invModel&&invModel.toLowerCase().includes('goodwe')}:null,
+    invQty?{label:'Inversor H\u00edbrido',qty:invQty+' un.',spec:(invModel||'Inversor H\u00edbrido')+(invPower?' \u00b7 '+invPower+' kW':'')}:null,
     batKwh&&batModel?{label:'Bateria',qty:batQty+' un.',spec:batModel}:null,
     {label:'Estrutura de Fixa\u00e7\u00e3o',qty:'\u2713',spec:'Alum\u00ednio anodizado \u2014 conforme projeto'},
     {label:'Cabeamento CC / CA',qty:'\u2713',spec:'Fio solar 6mm\u00b2 certificado ABNT'},
@@ -1349,6 +1349,7 @@ function generateProposal(criarCard){
     {label:'ART / RRT',qty:'\u2713',spec:'Engenheiro respons\u00e1vel CREA'},
     {label:'Homologa\u00e7\u00e3o',qty:'\u2713',spec:'Processo completo junto \u00e0 concession\u00e1ria'},
     hasWallbox?{label:'Carregador Veicular (Wallbox)',qty:'1 un.',spec:(wallboxModel?wallboxModel+' \u2014 ':'')+wallboxPower}:null,
+    (kVp||invPower)?{label:'POT\u00caNCIA TOTAL DO SISTEMA',qty:'—',spec:[kVp?kVp.toFixed(2)+' kWp Solar':null,invQty&&invPower?(invQty*invPower)+' kW Inversor':null,batKwh?batKwh+' kWh Armazenado':null].filter(Boolean).join(' \u00b7 '),heroTotal:true}:null,
   ].filter(Boolean);
   const specRows=specItems.map((it,i)=>{
     const last=i===specItems.length-1;
@@ -1364,11 +1365,15 @@ function generateProposal(criarCard){
       <td style="${border}padding:8px 12px;font-size:11px;color:var(--lmuted);text-align:center">—</td>
       <td style="${border}padding:8px 12px;font-size:14px;font-weight:900;color:var(--or)">${it.spec}</td>
     </tr>`;
-    const gwBadge=it.goodwe?` <span style="background:#1a6fa8;color:#fff;font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;vertical-align:middle;letter-spacing:.5px">★ RECOMENDADO</span>`:'';
-    return`<tr${it.goodwe?' style="background:rgba(26,111,168,.05)"':''}>
+    if(it.heroTotal)return`<tr style="background:rgba(232,100,26,.10)">
+      <td style="border-top:2px solid rgba(232,100,26,.25);padding:9px 12px;font-size:9px;font-weight:900;color:var(--or);letter-spacing:.8px;text-transform:uppercase">${it.label}</td>
+      <td style="border-top:2px solid rgba(232,100,26,.25);padding:9px 12px;font-size:11px;color:var(--lmuted);text-align:center">—</td>
+      <td style="border-top:2px solid rgba(232,100,26,.25);padding:9px 12px;font-size:11px;font-weight:900;color:var(--or)">${it.spec}</td>
+    </tr>`;
+    return`<tr>
       <td style="${border}padding:7px 12px;font-size:11px;color:var(--lmuted)">${it.label}</td>
       <td style="${border}padding:7px 12px;font-size:${isCheck?'13px':'11px'};font-weight:${isCheck?'900':'700'};color:${isCheck?'#27ae60':'var(--ltext)'};text-align:center">${it.qty}</td>
-      <td style="${border}padding:7px 12px;font-size:11px;font-weight:700;color:var(--ltext)">${it.spec}${gwBadge}</td>
+      <td style="${border}padding:7px 12px;font-size:11px;font-weight:700;color:var(--ltext)">${it.spec}</td>
     </tr>`;
   }).join('');
 
@@ -1399,7 +1404,7 @@ function generateProposal(criarCard){
   const p3=`<div class="page p-light">
     ${corners()}
     ${topbar(pg++,tot)}
-    <div class="p-body" style="justify-content:space-between">
+    <div class="p-body" style="justify-content:flex-start;gap:14px">
       <div>
         <div class="sec-eye">Sua Solu\u00e7\u00e3o em Energia</div>
         <div class="sec-h2">A solu\u00e7\u00e3o desenvolvida para o <span style="color:var(--or)">seu projeto</span></div>
@@ -1650,7 +1655,7 @@ function generateProposal(criarCard){
   const autTableRows=aut?aut.items.map((e,i)=>`<tr style="${i<aut.items.length-1?'border-bottom:1px solid #f0f0f0':''}">
     <td style="padding:6px 12px;font-size:11px;font-weight:700;color:var(--ltext)">${e.name}</td>
     <td style="padding:6px 12px;text-align:center;font-size:11px;color:var(--lmuted)">&times;${e.qty}</td>
-    <td style="padding:6px 12px;text-align:right;font-size:11px;font-weight:800;color:var(--or)">${Math.round(e.totalW)} W</td>
+    <td style="padding:6px 12px;text-align:right;font-size:11px;font-weight:800;color:var(--or)">${Math.round(e.power*e.qty)} W</td>
   </tr>`).join(''):'';
   const autCards=aut&&aut.hAll?`
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
@@ -1669,13 +1674,13 @@ function generateProposal(criarCard){
   const pEquip=`<div class="page p-light">
     ${corners()}
     ${topbar(pg++,tot)}
-    <div class="p-body" style="justify-content:flex-start;gap:16px">
+    <div class="p-body" style="justify-content:flex-start;gap:12px">
       <div>
         <div class="sec-eye">Proteção em Falta de Energia</div>
         <div class="sec-h2">Equipamentos Protegidos <span style="color:var(--or)">&amp; Baterias</span></div>
         <div class="sec-rule" style="margin-bottom:0"></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
         <div>
           <div class="stitle" style="margin-bottom:8px">Cargas Protegidas — ${batKwh} kWh</div>
           ${autCards}
@@ -1685,22 +1690,42 @@ function generateProposal(criarCard){
               <th style="padding:6px 12px;text-align:center;font-size:9px;font-weight:800;color:var(--or);width:10%">QTD</th>
               <th style="padding:6px 12px;text-align:right;font-size:9px;font-weight:800;color:var(--or);width:22%">CONSUMO</th>
             </tr></thead>
-            <tbody>${autTableRows||'<tr><td colspan="3" style="padding:10px;text-align:center;font-size:11px;color:var(--lmuted)">Nenhum equipamento selecionado</td></tr>'}</tbody>
+            <tbody>${autTableRows||'<tr><td colspan="3" style="padding:10px;text-align:center;font-size:11px;color:var(--lmuted)">Nenhum equipamento selecionado</td></tr>'}${aut?`<tr style="background:rgba(232,100,26,.07);border-top:1.5px solid rgba(232,100,26,.3)"><td style="padding:6px 12px;font-size:10px;font-weight:800;color:var(--or)" colspan="2">TOTAL DE CARGA (BACKUP)</td><td style="padding:6px 12px;text-align:right;font-size:11px;font-weight:900;color:var(--or)">${Math.round(aut.totS)} W</td></tr>`:''}</tbody>
           </table>
           <div style="font-size:8px;color:var(--lmuted);font-style:italic;padding-left:2px">* Autonomia ampliada quando o sistema solar está gerando.</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:12px">
           <div style="background:#fff;border:1px solid var(--lborder);border-radius:10px;padding:14px">
-            <div style="font-size:11px;font-weight:800;color:var(--or);letter-spacing:.5px;margin-bottom:2px">GoodWe</div>
-            <div style="font-size:8.5px;color:var(--lmuted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Inversores &amp; Baterias</div>
-            <div style="font-size:10px;color:var(--ltext);line-height:1.6;margin-bottom:10px">Fabricante global com mais de 2 milhões de unidades instaladas em 100+ países. Linha Lynx de baterias LFP com alta durabilidade e integração nativa com o inversor híbrido.</div>
+            <div style="font-size:11px;font-weight:800;color:var(--or);letter-spacing:.5px;margin-bottom:2px">Tecnologia de Bateria</div>
+            <div style="font-size:8.5px;color:var(--lmuted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">LFP — Lítio Ferro Fosfato</div>
+            <div style="font-size:10px;color:var(--ltext);line-height:1.6;margin-bottom:10px">Química mais segura e duradoura do mercado. Alta tolerância a ciclos profundos com integração nativa ao inversor híbrido para gerenciamento inteligente de energia.</div>
             <div style="display:flex;flex-direction:column;gap:5px">
-              ${[['Tecnologia','LFP (LiFePO₄)'],['Ciclos de vida','&gt; 6.000 ciclos (80% DoD)'],['Profundidade de descarga','90% DoD'],['Garantia bateria','10 anos'],['Garantia inversor','5–10 anos']].map(([k,v])=>`
+              ${[['Tecnologia','LFP (LiFePO₄)'],['Garantia bateria','6.000 ciclos de vida útil'],['Garantia inversor','10 anos']].map(([k,v])=>`
               <div style="display:flex;justify-content:space-between;font-size:9.5px;padding-bottom:4px;border-bottom:1px solid #f0f0f0">
                 <span style="color:var(--lmuted)">${k}</span><span style="font-weight:700;color:var(--ltext)">${v}</span>
               </div>`).join('')}
             </div>
           </div>
+          <div style="background:linear-gradient(135deg,rgba(232,100,26,.06),rgba(232,100,26,.02));border:1px solid rgba(232,100,26,.2);border-radius:10px;padding:14px">
+            <div style="font-size:11px;font-weight:800;color:var(--or);letter-spacing:.5px;margin-bottom:2px">Por que Sistema Híbrido?</div>
+            <div style="font-size:8.5px;color:var(--lmuted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Vantagens do modelo</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              ${['Independência da rede em caso de falta de energia','Armazena o excedente solar para uso noturno','Integra-se ao sistema solar já existente e amplia a autonomia da carga','Monitoramento em tempo real via aplicativo','Redução máxima na conta de luz — mesmo à noite'].map(txt=>`
+              <div style="display:flex;align-items:flex-start;gap:9px;font-size:9.5px;padding:3px 0">
+                <span style="width:5px;height:5px;min-width:5px;border-radius:50%;background:var(--or);margin-top:5px;display:block"></span>
+                <span style="color:var(--ltext);line-height:1.55">${txt}</span>
+              </div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-height:0;border-radius:12px;overflow:hidden;position:relative">
+        <img src="imagens/PROJETOS/capa-proposta-hibrida.png" style="width:100%;height:100%;object-fit:cover;object-position:center 38%">
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,10,.15) 0%,rgba(10,10,10,.55) 50%,rgba(10,10,10,.75) 100%)"></div>
+        <div style="position:absolute;bottom:20px;left:24px">
+          <div style="color:rgba(232,100,26,1);font-size:8px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px">Instalação Real</div>
+          <div style="color:#fff;font-size:13px;font-weight:900;line-height:1.2;margin-bottom:3px">Inversor Híbrido + Bateria LFP</div>
+          <div style="color:rgba(255,255,255,.6);font-size:8.5px">Integração nativa — gerenciamento inteligente de energia</div>
         </div>
       </div>
     </div>
