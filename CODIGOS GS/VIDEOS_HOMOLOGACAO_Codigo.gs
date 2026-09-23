@@ -16,6 +16,9 @@ const DRIVE_PASTA_HOMOLAG = 'plan';
 // Subpasta dentro de "plan" para homologações
 const DRIVE_PASTA_HOMOLAG_SUB = 'homologacao';
 
+// Destinatário do e-mail automático ao receber homologação
+const EMAIL_DESTINO = 'COLE_O_EMAIL_AQUI';
+
 // ────────────────────────────────────────────────
 // CABEÇALHOS
 // ────────────────────────────────────────────────
@@ -23,8 +26,11 @@ const DRIVE_PASTA_HOMOLAG_SUB = 'homologacao';
 const HOMOLAG_HEADERS = [
   'ID', 'Data/Hora Envio', 'Instalador', 'Cliente', 'Endereço',
   'Concessionária', 'Concessionária Texto', 'Data Instalação',
-  'Número UC / Protocolo', 'Observações Gerais',
-  'Pasta Drive', 'Qtd Vídeos', 'Vídeos (JSON)', 'Termos Aceitos'
+  'Número UC / Protocolo', 'Tipo Ligação',
+  'E-mail Cliente', 'Telefone Cliente', 'Coordenadas', 'Disjuntor Padrão',
+  'Inversor (Marca/Modelo/Qtd)', 'Módulo (Marca/Modelo/Qtd)',
+  'Fatura (link Drive)', 'Documento Titular (link Drive)',
+  'Observações Gerais', 'Pasta Drive', 'Qtd Vídeos', 'Vídeos (JSON)', 'Termos Aceitos'
 ];
 
 // ────────────────────────────────────────────────
@@ -92,14 +98,18 @@ function saveHomologacao(data) {
   const id = 'HOM-' + String(sheet.getLastRow()).padStart(4, '0');
   const agora = new Date();
 
-  // Salvar vídeos no Drive
+  // Salvar arquivos no Drive (vídeos + documentos)
   let pastaLink = '';
+  let faturaLink = '';
+  let documentoLink = '';
   const videosInfo = data.videos || [];
+  const docsInfo = data.documentos || {};
+  let pasta = null;
   try {
-    if (videosInfo.length > 0) {
-      const pasta = salvarVideosNoDrive(data.cliente, data.dataInstalacao, id, videosInfo);
-      pastaLink = pasta ? pasta.getUrl() : '';
-    }
+    pasta = salvarArquivosNoDrive(data.cliente, data.dataInstalacao, id, videosInfo, docsInfo);
+    pastaLink = pasta ? pasta.getUrl() : '';
+    faturaLink = pasta ? obterLinkArquivoPasta(pasta, 'fatura') : '';
+    documentoLink = pasta ? obterLinkArquivoPasta(pasta, 'documento') : '';
   } catch (driveErr) {
     Logger.log('Drive error: ' + driveErr.message);
   }
@@ -114,6 +124,9 @@ function saveHomologacao(data) {
     muitoGrande: v.muitoGrande || false
   }));
 
+  const inv = data.inversor || {};
+  const mod = data.modulo || {};
+
   const row = [
     id, agora,
     data.instalador || '',
@@ -122,7 +135,16 @@ function saveHomologacao(data) {
     data.concessionaria || '',
     data.concessionariaTexto || '',
     data.dataInstalacao || '',
-    data.numeroUC || '',
+    data.protocolo || '',
+    data.tipoLigacao || '',
+    data.emailCliente || '',
+    data.telefoneCliente || '',
+    data.coordenadas || '',
+    data.disjuntorPadrao || '',
+    [inv.marca, inv.modelo, inv.qtd].filter(Boolean).join(' / '),
+    [mod.marca, mod.modelo, mod.qtd].filter(Boolean).join(' / '),
+    faturaLink,
+    documentoLink,
     data.obsGerais || '',
     pastaLink,
     String(videosInfo.length),
@@ -133,21 +155,24 @@ function saveHomologacao(data) {
   sheet.appendRow(row);
   sheet.getRange(sheet.getLastRow(), 1, 1, HOMOLAG_HEADERS.length).setVerticalAlignment('top');
 
+  // Enviar e-mail automático
+  try {
+    enviarEmailHomologacao(data, pastaLink, id);
+  } catch (mailErr) {
+    Logger.log('E-mail error: ' + mailErr.message);
+  }
+
   return { status: 'ok', id: id, row: sheet.getLastRow(), pastaLink: pastaLink };
 }
 
 // ────────────────────────────────────────────────
-// SALVAR VÍDEOS NO DRIVE
+// SALVAR ARQUIVOS NO DRIVE (vídeos + documentos)
 // ────────────────────────────────────────────────
 
-function salvarVideosNoDrive(cliente, dataInstalacao, id, videos) {
-  // Localiza ou cria pasta raiz "plan"
+function salvarArquivosNoDrive(cliente, dataInstalacao, id, videos, docs) {
   const raiz = obterOuCriarPastaHomolag(DRIVE_PASTA_HOMOLAG, DriveApp.getRootFolder());
-
-  // Subpasta "homologacao" dentro de "plan"
   const subHomolag = obterOuCriarPastaHomolag(DRIVE_PASTA_HOMOLAG_SUB, raiz);
 
-  // Pasta do envio: "HOM-0001 - Nome Cliente - 2025-01-15"
   const nomePasta = [
     id,
     (cliente || 'sem-nome').replace(/[\/\\:*?"<>|]/g, '_'),
@@ -158,13 +183,13 @@ function salvarVideosNoDrive(cliente, dataInstalacao, id, videos) {
 
   // Salva cada vídeo que tenha base64
   videos.forEach((v, i) => {
-    if (!v.base64 || v.muitoGrande) return; // pula arquivos grandes (apenas registrados por nome)
+    if (!v.base64 || v.muitoGrande) return;
     try {
       const partes = v.base64.split(',');
       const mime = partes[0].match(/:(.*?);/)[1];
       const ext = mime.split('/')[1] || 'mp4';
       const bytes = Utilities.base64Decode(partes[1]);
-      const nomeArquivo = (v.nomeArquivo || (v.nome || 'video-' + (i + 1)).replace(/\s+/g, '-')) + '.' + ext;
+      const nomeArquivo = (v.nomeArquivo || (v.nome || 'video-' + (i + 1)).replace(/\s+/g, '-'));
       const blob = Utilities.newBlob(bytes, mime, nomeArquivo);
       pasta.createFile(blob);
     } catch (e) {
@@ -172,24 +197,95 @@ function salvarVideosNoDrive(cliente, dataInstalacao, id, videos) {
     }
   });
 
-  // Cria arquivo de texto listando vídeos muito grandes (não carregados)
+  // Cria arquivo listando vídeos muito grandes
   const grandes = videos.filter(v => v.muitoGrande);
   if (grandes.length > 0) {
     const linhas = ['Vídeos não carregados (acima de 50 MB):', ''];
     grandes.forEach(v => {
-      linhas.push('- ' + (v.nome || v.id) + ': ' + (v.nomeArquivo || 'arquivo não identificado') + ' (' + (v.tamanhoMB || '?') + ' MB)');
+      linhas.push('- ' + (v.nome || v.id) + ': ' + (v.nomeArquivo || 'arquivo não identificado'));
     });
-    const blob = Utilities.newBlob(linhas.join('\n'), 'text/plain', 'VIDEOS_GRANDES.txt');
-    pasta.createFile(blob);
+    pasta.createFile(Utilities.newBlob(linhas.join('\n'), 'text/plain', 'VIDEOS_GRANDES.txt'));
   }
 
+  // Salva documentos (fatura / documento do titular)
+  const labelsDoc = { fatura: 'fatura_energia', documento: 'documento_titular' };
+  Object.entries(docs || {}).forEach(([tipo, info]) => {
+    if (!info || !info.base64 || info.grande) return;
+    try {
+      const partes = info.base64.split(',');
+      const mime = partes[0].match(/:(.*?);/)[1];
+      const bytes = Utilities.base64Decode(partes[1]);
+      const nomeArquivo = (labelsDoc[tipo] || tipo) + '_' + id + '_' + (info.nome || 'arquivo');
+      pasta.createFile(Utilities.newBlob(bytes, mime, nomeArquivo));
+    } catch (e) {
+      Logger.log('Erro ao salvar doc ' + tipo + ': ' + e.message);
+    }
+  });
+
   return pasta;
+}
+
+function obterLinkArquivoPasta(pasta, prefixo) {
+  try {
+    const it = pasta.getFiles();
+    while (it.hasNext()) {
+      const f = it.next();
+      if (f.getName().indexOf(prefixo) === 0) return f.getUrl();
+    }
+  } catch (e) { /* ignora */ }
+  return '';
 }
 
 function obterOuCriarPastaHomolag(nome, pai) {
   const it = pai.getFoldersByName(nome);
   if (it.hasNext()) return it.next();
   return pai.createFolder(nome);
+}
+
+// ────────────────────────────────────────────────
+// E-MAIL AUTOMÁTICO
+// ────────────────────────────────────────────────
+
+function enviarEmailHomologacao(data, pastaLink, id) {
+  if (!EMAIL_DESTINO || EMAIL_DESTINO.indexOf('COLE_') === 0) return;
+
+  const inv = data.inversor || {};
+  const mod = data.modulo || {};
+  const invTexto = [inv.marca, inv.modelo, inv.qtd ? inv.qtd + ' un.' : ''].filter(Boolean).join(' ');
+  const modTexto = [mod.marca, mod.modelo, mod.qtd ? mod.qtd + ' un.' : ''].filter(Boolean).join(' ');
+
+  const corpo = `
+<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#f9f9f9">
+  <div style="background:#F26522;color:#fff;padding:16px 20px;border-radius:8px 8px 0 0">
+    <strong style="font-size:18px">LumenGrid — Nova Homologação Recebida</strong>
+    <div style="font-size:12px;margin-top:4px;opacity:.85">ID: ${id}</div>
+  </div>
+  <div style="background:#fff;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee">
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <tr><td style="padding:6px 0;color:#555;width:180px">Instalador</td><td><strong>${data.instalador || '—'}</strong></td></tr>
+      <tr><td style="padding:6px 0;color:#555">Cliente</td><td><strong>${data.cliente || '—'}</strong></td></tr>
+      <tr><td style="padding:6px 0;color:#555">Endereço</td><td>${data.endereco || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">Concessionária</td><td>${data.concessionaria || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">Data Instalação</td><td>${data.dataInstalacao || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">E-mail Cliente</td><td>${data.emailCliente || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">Telefone Cliente</td><td>${data.telefoneCliente || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">Coordenadas</td><td>${data.coordenadas || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">Disjuntor Padrão</td><td>${data.disjuntorPadrao || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">Inversor</td><td>${invTexto || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">Módulo</td><td>${modTexto || '—'}</td></tr>
+      <tr><td style="padding:6px 0;color:#555">Vídeos enviados</td><td>${(data.videos || []).length} arquivo(s)</td></tr>
+      ${data.obsGerais ? '<tr><td style="padding:6px 0;color:#555">Observações</td><td>' + data.obsGerais + '</td></tr>' : ''}
+      ${pastaLink ? '<tr><td style="padding:6px 0;color:#555">Pasta Drive</td><td><a href="' + pastaLink + '" style="color:#F26522">Abrir pasta</a></td></tr>' : ''}
+    </table>
+  </div>
+  <div style="font-size:10px;color:#aaa;margin-top:12px;text-align:center">Feito por Domani Consultoria</div>
+</div>`;
+
+  MailApp.sendEmail({
+    to: EMAIL_DESTINO,
+    subject: 'LumenGrid — Homologação ' + id + ' — ' + (data.cliente || 'cliente'),
+    htmlBody: corpo
+  });
 }
 
 // ────────────────────────────────────────────────

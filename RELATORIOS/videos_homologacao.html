@@ -275,11 +275,108 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div style="font-size:11px;color:var(--t3);margin-top:-4px" id="concDica"></div>
   </div>
 
-  <!-- ─── 3. VÍDEOS ─── -->
+  <!-- ─── 3. DOCUMENTAÇÃO E DADOS TÉCNICOS ─── -->
+  <div class="grupo">
+    <div class="grupo-titulo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      3. Documentação e Dados Técnicos
+    </div>
+
+    <div class="campo-row">
+      <div class="campo">
+        <label>Fatura de Energia</label>
+        <div class="video-drop" onclick="document.getElementById('dinput-fatura').click()">
+          <input type="file" id="dinput-fatura" onchange="carregarDocumento('fatura', this)">
+          <div class="video-drop-text" id="ddrop-fatura-txt">Toque para selecionar<br><small style="color:var(--t4)">PDF, JPG, PNG...</small></div>
+        </div>
+      </div>
+      <div class="campo">
+        <label>Documento do Titular</label>
+        <div class="video-drop" onclick="document.getElementById('dinput-documento').click()">
+          <input type="file" id="dinput-documento" onchange="carregarDocumento('documento', this)">
+          <div class="video-drop-text" id="ddrop-documento-txt">Toque para selecionar<br><small style="color:var(--t4)">PDF, JPG, PNG...</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="campo-row">
+      <div class="campo">
+        <label>E-mail do Cliente</label>
+        <input type="email" id="emailCliente" placeholder="cliente@email.com">
+      </div>
+      <div class="campo">
+        <label>Telefone do Cliente</label>
+        <input type="tel" id="telefoneCliente" placeholder="(11) 99999-9999">
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Coordenadas GPS</label>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Latitude</label>
+          <input type="text" id="gpsLat" placeholder="-23.550520">
+        </div>
+        <div class="campo">
+          <label>Longitude</label>
+          <input type="text" id="gpsLng" placeholder="-46.633309">
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-mini" style="margin-top:6px" onclick="obterGPS()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        Obter GPS
+      </button>
+    </div>
+
+    <div class="campo">
+      <label>Disjuntor do Padrão</label>
+      <input type="text" id="disjuntorPadrao" placeholder="Ex: 63A Trifásico">
+    </div>
+
+    <div class="grupo-titulo" style="margin-top:4px;font-size:8px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      KIT — Inversores
+    </div>
+    <div class="campo-row">
+      <div class="campo">
+        <label>Marca do Inversor</label>
+        <input type="text" id="invMarca" placeholder="Ex: GoodWe">
+      </div>
+      <div class="campo">
+        <label>Modelo do Inversor</label>
+        <input type="text" id="invModelo" placeholder="Ex: GW5000-NS">
+      </div>
+    </div>
+    <div class="campo">
+      <label>Quantidade de Inversores</label>
+      <input type="number" id="invQtd" placeholder="1" min="1" style="max-width:160px">
+    </div>
+
+    <div class="grupo-titulo" style="margin-top:4px;font-size:8px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="2" y1="15" x2="22" y2="15"/><line x1="8" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="16" y2="21"/></svg>
+      KIT — Módulos
+    </div>
+    <div class="campo-row">
+      <div class="campo">
+        <label>Marca do Módulo</label>
+        <input type="text" id="modMarca" placeholder="Ex: Canadian Solar">
+      </div>
+      <div class="campo">
+        <label>Modelo do Módulo</label>
+        <input type="text" id="modModelo" placeholder="Ex: CS6R-410MS">
+      </div>
+    </div>
+    <div class="campo">
+      <label>Quantidade de Módulos</label>
+      <input type="number" id="modQtd" placeholder="10" min="1" style="max-width:160px">
+    </div>
+  </div>
+
+  <!-- ─── 4. VÍDEOS ─── -->
   <div class="grupo" id="videosGrupo" style="display:none">
     <div class="grupo-titulo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-      3. Vídeos Obrigatórios
+      4. Vídeos Obrigatórios
     </div>
     <div class="progresso-wrap">
       <div class="progresso-label">
@@ -292,11 +389,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div id="videosLista"></div>
   </div>
 
-  <!-- ─── 4. OBSERVAÇÕES ─── -->
+  <!-- ─── 5. OBSERVAÇÕES ─── -->
   <div class="grupo">
     <div class="grupo-titulo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      4. Observações Gerais
+      5. Observações Gerais
     </div>
     <div class="campo">
       <label>Observações para a homologação</label>
@@ -440,7 +537,8 @@ const CONCESSIONARIAS = {
 
 const state = {
   concSelecionada: null,
-  videos: {}  // id -> { file, blob, nome, tamanho, obs }
+  videos: {},  // id -> { blob, nome, tamanho, obs }
+  documentos: { fatura: null, documento: null }
 };
 
 // ──────────────────────────────────────────────
@@ -580,6 +678,35 @@ function setObs(id, val) {
 }
 
 // ──────────────────────────────────────────────
+// GPS
+// ──────────────────────────────────────────────
+
+function obterGPS() {
+  if (!navigator.geolocation) { showToast('Geolocalização não suportada neste navegador.', 'err'); return; }
+  showToast('Obtendo localização...', '');
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      document.getElementById('gpsLat').value = pos.coords.latitude.toFixed(6);
+      document.getElementById('gpsLng').value = pos.coords.longitude.toFixed(6);
+      showToast('GPS obtido com sucesso.', 'ok');
+    },
+    err => { showToast('Erro ao obter GPS: ' + err.message, 'err'); }
+  );
+}
+
+// ──────────────────────────────────────────────
+// DOCUMENTOS
+// ──────────────────────────────────────────────
+
+function carregarDocumento(tipo, input) {
+  const f = input.files[0];
+  if (!f) return;
+  state.documentos[tipo] = { blob: f, nome: f.name, tamanho: f.size };
+  const txt = document.getElementById('ddrop-' + tipo + '-txt');
+  if (txt) txt.innerHTML = '📎 ' + f.name + '<br><small style="color:var(--t4)">' + formatBytes(f.size) + '</small>';
+}
+
+// ──────────────────────────────────────────────
 // PROGRESSO
 // ──────────────────────────────────────────────
 
@@ -633,7 +760,7 @@ async function enviarHomologacao() {
   if (!document.getElementById('cliente').value) { showToast('Preencha o nome do cliente.', 'err'); return; }
   if (ENDPOINT_HOMOLAG.includes('COLE_A_URL')) { showToast('Configure o endpoint do Apps Script no código.', 'err'); return; }
 
-  showToast('Convertendo e enviando vídeos...', '');
+  showToast('Convertendo e enviando arquivos...', '');
 
   try {
     const videosPayload = [];
@@ -642,7 +769,6 @@ async function enviarHomologacao() {
       const info = state.videos[v.id];
       if (!info || !info.blob) continue;
       if (info.tamanho > 50 * 1024 * 1024) {
-        // Pula arquivos muito grandes, só registra o nome
         videosPayload.push({ id: v.id, nome: v.nome, nomeArquivo: info.nome, tamanho: info.tamanho, obs: info.obs || '', base64: null, grande: true });
         continue;
       }
@@ -650,16 +776,45 @@ async function enviarHomologacao() {
       videosPayload.push({ id: v.id, nome: v.nome, nomeArquivo: info.nome, tamanho: info.tamanho, obs: info.obs || '', base64: b64, grande: false });
     }
 
+    const docsPayload = {};
+    for (const [tipo, info] of Object.entries(state.documentos)) {
+      if (!info || !info.blob) { docsPayload[tipo] = null; continue; }
+      if (info.tamanho > 50 * 1024 * 1024) {
+        docsPayload[tipo] = { nome: info.nome, tamanho: info.tamanho, base64: null, grande: true };
+        continue;
+      }
+      const b64 = await fileToBase64(info.blob);
+      docsPayload[tipo] = { nome: info.nome, tamanho: info.tamanho, base64: b64, grande: false };
+    }
+
+    const lat = document.getElementById('gpsLat').value;
+    const lng = document.getElementById('gpsLng').value;
+
     const dados = {
-      instalador:     document.getElementById('instalador').value,
-      dataInstalacao: document.getElementById('dataInstalacao').value,
-      cliente:        document.getElementById('cliente').value,
-      endereco:       document.getElementById('endereco').value,
-      protocolo:      document.getElementById('protocolo').value,
-      tipoLigacao:    document.getElementById('tipoLigacao').value,
-      concessionaria: state.concSelecionada === 'Outra' ? (document.getElementById('outraConc').value || 'Outra') : state.concSelecionada,
-      obsGerais:      document.getElementById('obsGerais').value,
-      videos:         videosPayload
+      instalador:      document.getElementById('instalador').value,
+      dataInstalacao:  document.getElementById('dataInstalacao').value,
+      cliente:         document.getElementById('cliente').value,
+      endereco:        document.getElementById('endereco').value,
+      protocolo:       document.getElementById('protocolo').value,
+      tipoLigacao:     document.getElementById('tipoLigacao').value,
+      concessionaria:  state.concSelecionada === 'Outra' ? (document.getElementById('outraConc').value || 'Outra') : state.concSelecionada,
+      emailCliente:    document.getElementById('emailCliente').value,
+      telefoneCliente: document.getElementById('telefoneCliente').value,
+      coordenadas:     lat && lng ? lat + ', ' + lng : (lat || lng || ''),
+      disjuntorPadrao: document.getElementById('disjuntorPadrao').value,
+      inversor:        {
+        marca:  document.getElementById('invMarca').value,
+        modelo: document.getElementById('invModelo').value,
+        qtd:    document.getElementById('invQtd').value
+      },
+      modulo:          {
+        marca:  document.getElementById('modMarca').value,
+        modelo: document.getElementById('modModelo').value,
+        qtd:    document.getElementById('modQtd').value
+      },
+      obsGerais:       document.getElementById('obsGerais').value,
+      documentos:      docsPayload,
+      videos:          videosPayload
     };
 
     const resp = await fetch(ENDPOINT_HOMOLAG, {
@@ -692,16 +847,31 @@ function fileToBase64(file) {
 
 function salvarRascunho() {
   const dados = {
-    instalador:     document.getElementById('instalador').value,
-    dataInstalacao: document.getElementById('dataInstalacao').value,
-    cliente:        document.getElementById('cliente').value,
-    endereco:       document.getElementById('endereco').value,
-    protocolo:      document.getElementById('protocolo').value,
-    tipoLigacao:    document.getElementById('tipoLigacao').value,
-    concSelecionada:state.concSelecionada,
-    outraConc:      document.getElementById('outraConc').value,
-    obsGerais:      document.getElementById('obsGerais').value,
-    videoObs: Object.fromEntries(Object.entries(state.videos).map(([k, v]) => [k, { obs: v.obs || '' }]))
+    instalador:      document.getElementById('instalador').value,
+    dataInstalacao:  document.getElementById('dataInstalacao').value,
+    cliente:         document.getElementById('cliente').value,
+    endereco:        document.getElementById('endereco').value,
+    protocolo:       document.getElementById('protocolo').value,
+    tipoLigacao:     document.getElementById('tipoLigacao').value,
+    concSelecionada: state.concSelecionada,
+    outraConc:       document.getElementById('outraConc').value,
+    emailCliente:    document.getElementById('emailCliente').value,
+    telefoneCliente: document.getElementById('telefoneCliente').value,
+    gpsLat:          document.getElementById('gpsLat').value,
+    gpsLng:          document.getElementById('gpsLng').value,
+    disjuntorPadrao: document.getElementById('disjuntorPadrao').value,
+    invMarca:        document.getElementById('invMarca').value,
+    invModelo:       document.getElementById('invModelo').value,
+    invQtd:          document.getElementById('invQtd').value,
+    modMarca:        document.getElementById('modMarca').value,
+    modModelo:       document.getElementById('modModelo').value,
+    modQtd:          document.getElementById('modQtd').value,
+    obsGerais:       document.getElementById('obsGerais').value,
+    videoObs: Object.fromEntries(Object.entries(state.videos).map(([k, v]) => [k, { obs: v.obs || '' }])),
+    documentosNomes: {
+      fatura:    state.documentos.fatura   ? state.documentos.fatura.nome   : null,
+      documento: state.documentos.documento ? state.documentos.documento.nome : null
+    }
   };
   localStorage.setItem('lumengrid_homolog_draft', JSON.stringify(dados));
   showToast('Rascunho salvo.', 'ok');
@@ -720,7 +890,27 @@ function carregarRascunho() {
     sv('protocolo', d.protocolo);
     sv('tipoLigacao', d.tipoLigacao);
     sv('outraConc', d.outraConc);
+    sv('emailCliente', d.emailCliente);
+    sv('telefoneCliente', d.telefoneCliente);
+    sv('gpsLat', d.gpsLat);
+    sv('gpsLng', d.gpsLng);
+    sv('disjuntorPadrao', d.disjuntorPadrao);
+    sv('invMarca', d.invMarca);
+    sv('invModelo', d.invModelo);
+    sv('invQtd', d.invQtd);
+    sv('modMarca', d.modMarca);
+    sv('modModelo', d.modModelo);
+    sv('modQtd', d.modQtd);
     sv('obsGerais', d.obsGerais);
+    if (d.documentosNomes) {
+      ['fatura', 'documento'].forEach(tipo => {
+        const nome = d.documentosNomes[tipo];
+        if (nome) {
+          const txt = document.getElementById('ddrop-' + tipo + '-txt');
+          if (txt) txt.innerHTML = '📎 ' + nome + '<br><small style="color:var(--t4)">(arquivo não recarregado)</small>';
+        }
+      });
+    }
     if (d.concSelecionada) {
       state.concSelecionada = d.concSelecionada;
       renderConcessionarias();
@@ -744,6 +934,13 @@ function limparTudo() {
   if (!confirm('Limpar todos os dados?')) return;
   state.concSelecionada = null;
   state.videos = {};
+  state.documentos = { fatura: null, documento: null };
+  ['fatura', 'documento'].forEach(tipo => {
+    const txt = document.getElementById('ddrop-' + tipo + '-txt');
+    if (txt) txt.innerHTML = 'Toque para selecionar<br><small style="color:var(--t4)">PDF, JPG, PNG...</small>';
+    const inp = document.getElementById('dinput-' + tipo);
+    if (inp) inp.value = '';
+  });
   document.querySelectorAll('input:not([type=checkbox]):not([type=file]), textarea').forEach(el => el.value = '');
   document.getElementById('termoCheck').checked = false;
   atualizarTermos();
