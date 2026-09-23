@@ -46,11 +46,9 @@ function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
     const action = body.action || 'save_homologacao';
-    if (action === 'save_homologacao') {
-      result = saveHomologacao(body.data);
-    } else {
-      result = { status: 'error', message: 'Ação desconhecida.' };
-    }
+    if      (action === 'save_homologacao')       result = saveHomologacao(body.data);
+    else if (action === 'save_homologacao_dados') result = saveHomologacaoDados(body.data);
+    else result = { status: 'error', message: 'Ação desconhecida.' };
   } catch (err) {
     result = { status: 'error', message: err.message };
   }
@@ -63,8 +61,9 @@ function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || 'ping';
   let result;
   try {
-    if (action === 'ping') result = { status: 'ok', message: 'Homologação backend ativo.' };
-    else if (action === 'list') result = listHomologacoes();
+    if      (action === 'ping')       result = { status: 'ok', message: 'Homologação backend ativo.' };
+    else if (action === 'list')       result = listHomologacoes();
+    else if (action === 'get_index')  result = getHomologacoesIndex();
     else result = { status: 'error', message: 'Ação desconhecida.' };
   } catch (err) {
     result = { status: 'error', message: err.message };
@@ -240,6 +239,111 @@ function obterOuCriarPastaHomolag(nome, pai) {
   const it = pai.getFoldersByName(nome);
   if (it.hasNext()) return it.next();
   return pai.createFolder(nome);
+}
+
+// ────────────────────────────────────────────────
+// SALVAR DADOS DE HOMOLOGAÇÃO (Form 1 — Vendedor)
+// ────────────────────────────────────────────────
+
+const ABA_DADOS = 'Homologacoes_Dados';
+
+const DADOS_HEADERS = [
+  'ID', 'Data/Hora Envio', 'Vendedor', 'Cliente', 'Endereço',
+  'Concessionária', 'Data Instalação', 'Tipo Ligação',
+  'E-mail Cliente', 'Telefone Cliente', 'Coordenadas', 'Disjuntor Padrão',
+  'Inversor (Marca/Modelo/Qtd)', 'Módulo (Marca/Modelo/Qtd)',
+  'Fatura (link Drive)', 'Documento Titular (link Drive)',
+  'Protocolo/OS', 'Observações Gerais'
+];
+
+function saveHomologacaoDados(data) {
+  const ss = SpreadsheetApp.openById(HOMOLAG_SHEET_ID);
+  let sheet = ss.getSheetByName(ABA_DADOS);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(ABA_DADOS);
+    sheet.appendRow(DADOS_HEADERS);
+    sheet.setFrozenRows(1);
+    const hr = sheet.getRange(1, 1, 1, DADOS_HEADERS.length);
+    hr.setBackground('#0D9488');
+    hr.setFontColor('#ffffff');
+    hr.setFontWeight('bold');
+  }
+
+  const id = 'HD-' + String(sheet.getLastRow()).padStart(4, '0');
+  const agora = new Date();
+
+  // Salvar documentos no Drive
+  let faturaLink = '';
+  let documentoLink = '';
+  const docsInfo = data.documentos || {};
+  try {
+    const raiz = obterOuCriarPastaHomolag(DRIVE_PASTA_HOMOLAG, DriveApp.getRootFolder());
+    const subDados = obterOuCriarPastaHomolag('dados_homologacao', raiz);
+    const nomePasta = [id, (data.cliente || 'sem-nome').replace(/[\/\\:*?"<>|]/g, '_')].join(' - ');
+    const pasta = obterOuCriarPastaHomolag(nomePasta, subDados);
+
+    const labelsDoc = { fatura: 'fatura_energia', documento: 'documento_titular' };
+    Object.entries(docsInfo).forEach(([tipo, info]) => {
+      if (!info || !info.base64 || info.grande) return;
+      try {
+        const partes = info.base64.split(',');
+        const mime = partes[0].match(/:(.*?);/)[1];
+        const bytes = Utilities.base64Decode(partes[1]);
+        const nomeArq = (labelsDoc[tipo] || tipo) + '_' + id + '_' + (info.nome || 'arquivo');
+        const f = pasta.createFile(Utilities.newBlob(bytes, mime, nomeArq));
+        if (tipo === 'fatura')    faturaLink = f.getUrl();
+        if (tipo === 'documento') documentoLink = f.getUrl();
+      } catch (e) { Logger.log('Doc error ' + tipo + ': ' + e.message); }
+    });
+  } catch (driveErr) {
+    Logger.log('Drive error (dados): ' + driveErr.message);
+  }
+
+  const inv = data.inversor || {};
+  const mod = data.modulo || {};
+
+  const row = [
+    id, agora,
+    data.vendedor || '',
+    data.cliente || '',
+    data.endereco || '',
+    data.concessionaria || '',
+    data.dataInstalacao || '',
+    data.tipoLigacao || '',
+    data.emailCliente || '',
+    data.telefoneCliente || '',
+    data.coordenadas || '',
+    data.disjuntorPadrao || '',
+    [inv.marca, inv.modelo, inv.qtd].filter(Boolean).join(' / '),
+    [mod.marca, mod.modelo, mod.qtd].filter(Boolean).join(' / '),
+    faturaLink,
+    documentoLink,
+    data.protocolo || '',
+    data.obsGerais || ''
+  ];
+
+  sheet.appendRow(row);
+  sheet.getRange(sheet.getLastRow(), 1, 1, DADOS_HEADERS.length).setVerticalAlignment('top');
+
+  // E-mail automático
+  try { enviarEmailHomologacao(data, '', id); } catch(e) { Logger.log('Mail error: ' + e.message); }
+
+  return { status: 'ok', id: id };
+}
+
+// ────────────────────────────────────────────────
+// ÍNDICE DE HOMOLOGAÇÕES (consultado pelo CRM)
+// ────────────────────────────────────────────────
+
+function getHomologacoesIndex() {
+  const ss = SpreadsheetApp.openById(HOMOLAG_SHEET_ID);
+  const sheet = ss.getSheetByName(ABA_DADOS);
+  if (!sheet || sheet.getLastRow() < 2) return { status: 'ok', clientes: [] };
+  // Coluna 4 = Cliente (índice 3 em 0-based, coluna D)
+  const rows = sheet.getRange(2, 4, sheet.getLastRow() - 1, 1).getValues();
+  const clientes = rows.map(r => (r[0] || '').toString().trim().toLowerCase()).filter(Boolean);
+  return { status: 'ok', clientes: clientes };
 }
 
 // ────────────────────────────────────────────────

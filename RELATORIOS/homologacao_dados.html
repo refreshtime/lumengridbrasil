@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dados de Homologação — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --or: #F26522; --or-dim: rgba(242,101,34,.15); --or-border: rgba(242,101,34,.28);
+  --bg: #0a0a0a; --panel: #0f0f0f; --card: #1a1a1a; --card2: #141414;
+  --border: rgba(255,255,255,.08);
+  --t1: #FAFAFA; --t2: rgba(250,250,250,.62); --t3: rgba(250,250,250,.35); --t4: rgba(250,250,250,.18);
+  --ok: #22c55e; --nok: #ef4444; --warn: #f59e0b;
+}
+html, body { min-height: 100%; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t1); display: flex; flex-direction: column; }
+
+/* ─── HEADER ─── */
+.hdr {
+  position: sticky; top: 0; z-index: 30;
+  background: var(--panel); border-bottom: 2px solid var(--or);
+  padding: 13px 20px; display: flex; align-items: center; gap: 10px;
+}
+.brand-row { display: flex; align-items: center; gap: 9px; }
+.brand-row img { height: 26px; filter: drop-shadow(0 0 8px rgba(242,101,34,.75)); }
+.brand-wm { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; }
+.brand-wm .l { color: var(--or); } .brand-wm .g { color: var(--t1); }
+.brand-sub { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(242,101,34,.52); }
+.tool-name {
+  margin-left: auto; font-family: 'Space Grotesk', sans-serif; font-size: 10px;
+  font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--t3);
+}
+
+/* ─── LAYOUT ─── */
+.conteudo { flex: 1; max-width: 680px; width: 100%; margin: 0 auto; padding: 24px 20px 80px; display: flex; flex-direction: column; gap: 24px; }
+
+/* ─── GRUPOS ─── */
+.grupo { display: flex; flex-direction: column; gap: 10px; }
+.grupo-titulo {
+  font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--or);
+  padding-bottom: 7px; border-bottom: 1px solid rgba(242,101,34,.16);
+  display: flex; align-items: center; gap: 7px;
+}
+.grupo-titulo svg { width: 14px; height: 14px; flex-shrink: 0; }
+.subtitulo {
+  font-family: 'Space Grotesk', sans-serif; font-size: 8px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--t3);
+  padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center; gap: 6px; margin-top: 4px;
+}
+.subtitulo svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ─── CAMPOS ─── */
+.campo { display: flex; flex-direction: column; gap: 4px; }
+.campo label { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--t3); }
+.campo input, .campo select, .campo textarea {
+  background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+  padding: 9px 11px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--t1);
+  outline: none; width: 100%; transition: border-color .18s; -webkit-appearance: none;
+}
+.campo select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer;
+}
+.campo select option { background: #1a1a1a; }
+.campo input:focus, .campo select:focus, .campo textarea:focus { border-color: rgba(242,101,34,.5); }
+.campo textarea { min-height: 60px; resize: vertical; }
+.campo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+
+/* ─── CONCESSIONÁRIA ─── */
+.conc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+@media (max-width: 500px) { .conc-grid { grid-template-columns: 1fr 1fr; } }
+.conc-btn {
+  background: var(--card2); border: 1.5px solid var(--border); border-radius: 9px;
+  padding: 12px 8px; cursor: pointer; text-align: center; transition: all .18s;
+  display: flex; flex-direction: column; gap: 3px; align-items: center;
+}
+.conc-btn:hover { border-color: rgba(242,101,34,.35); }
+.conc-btn.ativo { border-color: var(--or); background: var(--or-dim); }
+.conc-btn .conc-nome { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--t1); }
+.conc-btn .conc-regioes { font-size: 9px; color: var(--t3); line-height: 1.4; }
+.conc-btn.ativo .conc-nome { color: var(--or); }
+
+/* ─── DOC DROP ─── */
+.doc-drop {
+  border: 2px dashed var(--or-border); border-radius: 7px; padding: 14px;
+  text-align: center; cursor: pointer; transition: all .18s;
+}
+.doc-drop:hover { border-color: var(--or); background: var(--or-dim); }
+.doc-drop input { display: none; }
+.doc-drop-text { font-size: 12px; color: var(--t3); line-height: 1.6; }
+
+/* ─── BOTÕES ─── */
+.btn {
+  font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; border: none; border-radius: 6px;
+  padding: 11px 16px; cursor: pointer; transition: all .18s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn svg { width: 14px; height: 14px; }
+.btn-primary { background: var(--or); color: #fff; }
+.btn-primary:hover { background: #d9561a; }
+.btn-ghost { background: transparent; border: 1px solid var(--or-border); color: rgba(242,101,34,.75); }
+.btn-ghost:hover { background: var(--or-dim); border-color: var(--or); color: var(--or); }
+.btn-dark { background: var(--card); border: 1px solid var(--border); color: var(--t2); }
+.btn-dark:hover { background: var(--card2); color: var(--t1); }
+.btn-mini { padding: 6px 10px; font-size: 9px; }
+.acoes { display: flex; flex-direction: column; gap: 8px; }
+.acoes-row { display: flex; gap: 8px; }
+
+/* ─── SUCESSO ─── */
+.sucesso-wrap {
+  background: rgba(34,197,94,.08); border: 1px solid rgba(34,197,94,.25);
+  border-radius: 12px; padding: 28px 20px; text-align: center;
+  display: none; flex-direction: column; align-items: center; gap: 12px;
+}
+.sucesso-wrap.show { display: flex; }
+.sucesso-icone { font-size: 40px; }
+.sucesso-titulo { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--ok); }
+.sucesso-id { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--t3); }
+.sucesso-msg { font-size: 12px; color: var(--t2); line-height: 1.6; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; bottom: 24px; right: 20px; background: #1a1a1a;
+  border: 1px solid var(--border); border-radius: 9px; padding: 12px 18px;
+  font-size: 13px; color: var(--t1); z-index: 9999; display: none; gap: 8px;
+  align-items: center; max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+.toast.show { display: flex; }
+.toast.ok { border-color: rgba(34,197,94,.35); }
+.toast.err { border-color: rgba(239,68,68,.35); }
+
+/* ─── FOOTER ─── */
+.footer { text-align: center; font-size: 10px; color: var(--t4); padding: 16px; border-top: 1px solid var(--border); margin-top: auto; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="brand-row">
+    <img src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div>
+      <div class="brand-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+      <div class="brand-sub">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="tool-name">Dados de Homologação</div>
+</div>
+
+<div class="conteudo">
+
+  <!-- ─── SUCESSO ─── -->
+  <div class="sucesso-wrap" id="sucessoWrap">
+    <div class="sucesso-icone">✅</div>
+    <div class="sucesso-titulo">Dados enviados com sucesso!</div>
+    <div class="sucesso-id" id="sucessoId"></div>
+    <div class="sucesso-msg">Os dados foram salvos na planilha e a equipe técnica foi notificada.<br>Agora o instalador pode enviar os vídeos de homologação.</div>
+    <button class="btn btn-ghost btn-mini" onclick="novoEnvio()">Novo envio</button>
+  </div>
+
+  <!-- ─── FORMULÁRIO ─── -->
+  <div id="formWrap">
+
+    <!-- ─── 1. DADOS ─── -->
+    <div class="grupo">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        1. Dados da Instalação
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Vendedor Responsável</label>
+          <input type="text" id="vendedor" placeholder="Seu nome">
+        </div>
+        <div class="campo">
+          <label>Data da Instalação</label>
+          <input type="date" id="dataInstalacao">
+        </div>
+      </div>
+      <div class="campo">
+        <label>Nome do Cliente</label>
+        <input type="text" id="cliente" placeholder="Nome completo do cliente">
+      </div>
+      <div class="campo">
+        <label>Endereço / Cidade</label>
+        <input type="text" id="endereco" placeholder="Rua, número — Cidade/UF">
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Número do Protocolo / OS</label>
+          <input type="text" id="protocolo" placeholder="Opcional">
+        </div>
+        <div class="campo">
+          <label>Tipo de Ligação</label>
+          <select id="tipoLigacao">
+            <option value="">Selecione</option>
+            <option>Monofásico</option>
+            <option>Bifásico</option>
+            <option>Trifásico</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 2. CONCESSIONÁRIA ─── -->
+    <div class="grupo" style="margin-top:16px">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        2. Concessionária
+      </div>
+      <div class="conc-grid" id="concGrid"></div>
+      <div class="campo" id="outraConcWrap" style="display:none">
+        <label>Nome da Concessionária</label>
+        <input type="text" id="outraConc" placeholder="Ex: Energisa, Elektro, Coelba...">
+      </div>
+      <div style="font-size:11px;color:var(--t3);margin-top:-4px" id="concDica"></div>
+    </div>
+
+    <!-- ─── 3. DOCUMENTAÇÃO E DADOS TÉCNICOS ─── -->
+    <div class="grupo" style="margin-top:16px">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        3. Documentação e Dados Técnicos
+      </div>
+
+      <div class="campo-row">
+        <div class="campo">
+          <label>Fatura de Energia</label>
+          <div class="doc-drop" onclick="document.getElementById('dinput-fatura').click()">
+            <input type="file" id="dinput-fatura" onchange="carregarDocumento('fatura', this)">
+            <div class="doc-drop-text" id="ddrop-fatura-txt">Toque para selecionar<br><small style="color:var(--t4)">PDF, JPG, PNG...</small></div>
+          </div>
+        </div>
+        <div class="campo">
+          <label>Documento do Titular</label>
+          <div class="doc-drop" onclick="document.getElementById('dinput-documento').click()">
+            <input type="file" id="dinput-documento" onchange="carregarDocumento('documento', this)">
+            <div class="doc-drop-text" id="ddrop-documento-txt">Toque para selecionar<br><small style="color:var(--t4)">PDF, JPG, PNG...</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="campo-row">
+        <div class="campo">
+          <label>E-mail do Cliente</label>
+          <input type="email" id="emailCliente" placeholder="cliente@email.com">
+        </div>
+        <div class="campo">
+          <label>Telefone do Cliente</label>
+          <input type="tel" id="telefoneCliente" placeholder="(11) 99999-9999">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Coordenadas GPS</label>
+        <div class="campo-row">
+          <div class="campo">
+            <label>Latitude</label>
+            <input type="text" id="gpsLat" placeholder="-23.550520">
+          </div>
+          <div class="campo">
+            <label>Longitude</label>
+            <input type="text" id="gpsLng" placeholder="-46.633309">
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-mini" style="margin-top:6px" onclick="obterGPS()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+          Obter GPS
+        </button>
+      </div>
+
+      <div class="campo">
+        <label>Disjuntor do Padrão</label>
+        <input type="text" id="disjuntorPadrao" placeholder="Ex: 63A Trifásico">
+      </div>
+
+      <div class="subtitulo" style="margin-top:6px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        KIT — Inversores
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Marca do Inversor</label>
+          <input type="text" id="invMarca" placeholder="Ex: GoodWe">
+        </div>
+        <div class="campo">
+          <label>Modelo do Inversor</label>
+          <input type="text" id="invModelo" placeholder="Ex: GW5000-NS">
+        </div>
+      </div>
+      <div class="campo">
+        <label>Quantidade de Inversores</label>
+        <input type="number" id="invQtd" placeholder="1" min="1" style="max-width:160px">
+      </div>
+
+      <div class="subtitulo" style="margin-top:6px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="2" y1="15" x2="22" y2="15"/><line x1="8" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="16" y2="21"/></svg>
+        KIT — Módulos
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Marca do Módulo</label>
+          <input type="text" id="modMarca" placeholder="Ex: Canadian Solar">
+        </div>
+        <div class="campo">
+          <label>Modelo do Módulo</label>
+          <input type="text" id="modModelo" placeholder="Ex: CS6R-410MS">
+        </div>
+      </div>
+      <div class="campo">
+        <label>Quantidade de Módulos</label>
+        <input type="number" id="modQtd" placeholder="10" min="1" style="max-width:160px">
+      </div>
+    </div>
+
+    <!-- ─── 4. OBSERVAÇÕES ─── -->
+    <div class="grupo" style="margin-top:16px">
+      <div class="grupo-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        4. Observações Gerais
+      </div>
+      <div class="campo">
+        <label>Observações para a homologação</label>
+        <textarea id="obsGerais" placeholder="Informações adicionais, pendências, particularidades do cliente..."></textarea>
+      </div>
+    </div>
+
+    <!-- ─── AÇÕES ─── -->
+    <div class="acoes" style="margin-top:8px">
+      <button class="btn btn-primary" id="btnEnviar" onclick="enviarDados()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Enviar Dados para Homologação
+      </button>
+      <div class="acoes-row">
+        <button class="btn btn-ghost" style="flex:1" onclick="salvarRascunho()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Salvar Rascunho
+        </button>
+        <button class="btn btn-dark btn-mini" onclick="limparTudo()">Limpar</button>
+      </div>
+    </div>
+
+  </div><!-- /formWrap -->
+
+</div><!-- /conteudo -->
+
+<div class="footer">Feito por Domani Consultoria</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────────
+// CONFIGURAÇÃO
+// ──────────────────────────────────────────────
+
+const ENDPOINT_HOMOLAG_DADOS = 'COLE_A_URL_DO_APPS_SCRIPT_AQUI';
+
+// ──────────────────────────────────────────────
+// CONCESSIONÁRIAS
+// ──────────────────────────────────────────────
+
+const CONCESSIONARIAS = {
+  Enel:      { regioes: 'SP · RJ · CE · GO',        dica: 'Enel exige relé de proteção (anti-ilhamento) e placa do inversor.' },
+  CPFL:      { regioes: 'SP interior · RS · MG',    dica: 'CPFL pode exigir chave seccionadora e medidor com TC para cargas maiores.' },
+  Light:     { regioes: 'RJ · interior RJ',          dica: 'Light exige vídeos em boa iluminação e qualidade mínima 720p.' },
+  Neoenergia:{ regioes: 'BA · PE · RN · DF · MT',   dica: 'Neoenergia / Coelba / Elektro. Envio pelo portal da distribuidora.' },
+  Cemig:     { regioes: 'MG',                        dica: 'CEMIG exige disjuntor de proteção bidirecional e aterramento.' },
+  Outra:     { regioes: 'Outra / digitar',            dica: '' }
+};
+
+// ──────────────────────────────────────────────
+// ESTADO
+// ──────────────────────────────────────────────
+
+const state = {
+  concSelecionada: null,
+  documentos: { fatura: null, documento: null }
+};
+
+// ──────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dataInstalacao').value = new Date().toISOString().split('T')[0];
+  renderConcessionarias();
+  carregarRascunho();
+});
+
+// ──────────────────────────────────────────────
+// CONCESSIONÁRIAS
+// ──────────────────────────────────────────────
+
+function renderConcessionarias() {
+  const grid = document.getElementById('concGrid');
+  grid.innerHTML = '';
+  Object.entries(CONCESSIONARIAS).forEach(([key, c]) => {
+    const btn = document.createElement('div');
+    btn.className = 'conc-btn' + (state.concSelecionada === key ? ' ativo' : '');
+    btn.innerHTML = `<div class="conc-nome">${key}</div><div class="conc-regioes">${c.regioes}</div>`;
+    btn.onclick = () => selecionarConc(key);
+    grid.appendChild(btn);
+  });
+}
+
+function selecionarConc(key) {
+  state.concSelecionada = key;
+  renderConcessionarias();
+  document.getElementById('outraConcWrap').style.display = key === 'Outra' ? '' : 'none';
+  document.getElementById('concDica').textContent = CONCESSIONARIAS[key].dica || '';
+}
+
+// ──────────────────────────────────────────────
+// GPS
+// ──────────────────────────────────────────────
+
+function obterGPS() {
+  if (!navigator.geolocation) { showToast('Geolocalização não suportada neste navegador.', 'err'); return; }
+  showToast('Obtendo localização...', '');
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      document.getElementById('gpsLat').value = pos.coords.latitude.toFixed(6);
+      document.getElementById('gpsLng').value = pos.coords.longitude.toFixed(6);
+      showToast('GPS obtido com sucesso.', 'ok');
+    },
+    err => { showToast('Erro ao obter GPS: ' + err.message, 'err'); }
+  );
+}
+
+// ──────────────────────────────────────────────
+// DOCUMENTOS
+// ──────────────────────────────────────────────
+
+function carregarDocumento(tipo, input) {
+  const f = input.files[0];
+  if (!f) return;
+  state.documentos[tipo] = { blob: f, nome: f.name, tamanho: f.size };
+  const txt = document.getElementById('ddrop-' + tipo + '-txt');
+  if (txt) txt.innerHTML = '📎 ' + f.name + '<br><small style="color:var(--t4)">' + formatBytes(f.size) + '</small>';
+}
+
+// ──────────────────────────────────────────────
+// ENVIO
+// ──────────────────────────────────────────────
+
+async function enviarDados() {
+  const cliente = document.getElementById('cliente').value.trim();
+  if (!cliente) { showToast('Preencha o nome do cliente.', 'err'); return; }
+  if (!state.concSelecionada) { showToast('Selecione a concessionária.', 'err'); return; }
+  if (ENDPOINT_HOMOLAG_DADOS.includes('COLE_A_URL')) { showToast('Configure o endpoint do Apps Script.', 'err'); return; }
+
+  document.getElementById('btnEnviar').disabled = true;
+  showToast('Enviando dados...', '');
+
+  try {
+    const docsPayload = {};
+    for (const [tipo, info] of Object.entries(state.documentos)) {
+      if (!info || !info.blob) { docsPayload[tipo] = null; continue; }
+      if (info.tamanho > 10 * 1024 * 1024) {
+        docsPayload[tipo] = { nome: info.nome, tamanho: info.tamanho, base64: null, grande: true };
+        continue;
+      }
+      docsPayload[tipo] = { nome: info.nome, tamanho: info.tamanho, base64: await fileToBase64(info.blob), grande: false };
+    }
+
+    const lat = document.getElementById('gpsLat').value;
+    const lng = document.getElementById('gpsLng').value;
+
+    const dados = {
+      vendedor:        document.getElementById('vendedor').value,
+      dataInstalacao:  document.getElementById('dataInstalacao').value,
+      cliente:         cliente,
+      endereco:        document.getElementById('endereco').value,
+      protocolo:       document.getElementById('protocolo').value,
+      tipoLigacao:     document.getElementById('tipoLigacao').value,
+      concessionaria:  state.concSelecionada === 'Outra' ? (document.getElementById('outraConc').value || 'Outra') : state.concSelecionada,
+      emailCliente:    document.getElementById('emailCliente').value,
+      telefoneCliente: document.getElementById('telefoneCliente').value,
+      coordenadas:     lat && lng ? lat + ', ' + lng : (lat || lng || ''),
+      disjuntorPadrao: document.getElementById('disjuntorPadrao').value,
+      inversor: {
+        marca:  document.getElementById('invMarca').value,
+        modelo: document.getElementById('invModelo').value,
+        qtd:    document.getElementById('invQtd').value
+      },
+      modulo: {
+        marca:  document.getElementById('modMarca').value,
+        modelo: document.getElementById('modModelo').value,
+        qtd:    document.getElementById('modQtd').value
+      },
+      obsGerais:  document.getElementById('obsGerais').value,
+      documentos: docsPayload
+    };
+
+    const resp = await fetch(ENDPOINT_HOMOLAG_DADOS, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'save_homologacao_dados', data: dados })
+    });
+    const json = await resp.json();
+    if (json.status === 'ok') {
+      localStorage.removeItem('lumengrid_homolog_dados_draft');
+      document.getElementById('formWrap').style.display = 'none';
+      document.getElementById('sucessoId').textContent = 'ID: ' + json.id;
+      document.getElementById('sucessoWrap').classList.add('show');
+    } else {
+      showToast('Erro: ' + (json.message || 'falha no servidor'), 'err');
+      document.getElementById('btnEnviar').disabled = false;
+    }
+  } catch (err) {
+    showToast('Falha na conexão: ' + err.message, 'err');
+    document.getElementById('btnEnviar').disabled = false;
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function novoEnvio() {
+  document.getElementById('sucessoWrap').classList.remove('show');
+  document.getElementById('formWrap').style.display = '';
+  document.getElementById('btnEnviar').disabled = false;
+  limparTudo(true);
+}
+
+// ──────────────────────────────────────────────
+// LOCAL STORAGE
+// ──────────────────────────────────────────────
+
+function salvarRascunho() {
+  const dados = {
+    vendedor:        document.getElementById('vendedor').value,
+    dataInstalacao:  document.getElementById('dataInstalacao').value,
+    cliente:         document.getElementById('cliente').value,
+    endereco:        document.getElementById('endereco').value,
+    protocolo:       document.getElementById('protocolo').value,
+    tipoLigacao:     document.getElementById('tipoLigacao').value,
+    concSelecionada: state.concSelecionada,
+    outraConc:       document.getElementById('outraConc').value,
+    emailCliente:    document.getElementById('emailCliente').value,
+    telefoneCliente: document.getElementById('telefoneCliente').value,
+    gpsLat:          document.getElementById('gpsLat').value,
+    gpsLng:          document.getElementById('gpsLng').value,
+    disjuntorPadrao: document.getElementById('disjuntorPadrao').value,
+    invMarca:        document.getElementById('invMarca').value,
+    invModelo:       document.getElementById('invModelo').value,
+    invQtd:          document.getElementById('invQtd').value,
+    modMarca:        document.getElementById('modMarca').value,
+    modModelo:       document.getElementById('modModelo').value,
+    modQtd:          document.getElementById('modQtd').value,
+    obsGerais:       document.getElementById('obsGerais').value,
+    documentosNomes: {
+      fatura:    state.documentos.fatura    ? state.documentos.fatura.nome    : null,
+      documento: state.documentos.documento ? state.documentos.documento.nome : null
+    }
+  };
+  localStorage.setItem('lumengrid_homolog_dados_draft', JSON.stringify(dados));
+  showToast('Rascunho salvo.', 'ok');
+}
+
+function carregarRascunho() {
+  const raw = localStorage.getItem('lumengrid_homolog_dados_draft');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    const sv = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
+    sv('vendedor', d.vendedor);
+    sv('dataInstalacao', d.dataInstalacao);
+    sv('cliente', d.cliente);
+    sv('endereco', d.endereco);
+    sv('protocolo', d.protocolo);
+    sv('tipoLigacao', d.tipoLigacao);
+    sv('outraConc', d.outraConc);
+    sv('emailCliente', d.emailCliente);
+    sv('telefoneCliente', d.telefoneCliente);
+    sv('gpsLat', d.gpsLat);
+    sv('gpsLng', d.gpsLng);
+    sv('disjuntorPadrao', d.disjuntorPadrao);
+    sv('invMarca', d.invMarca);
+    sv('invModelo', d.invModelo);
+    sv('invQtd', d.invQtd);
+    sv('modMarca', d.modMarca);
+    sv('modModelo', d.modModelo);
+    sv('modQtd', d.modQtd);
+    sv('obsGerais', d.obsGerais);
+    if (d.concSelecionada) {
+      state.concSelecionada = d.concSelecionada;
+      renderConcessionarias();
+      document.getElementById('outraConcWrap').style.display = d.concSelecionada === 'Outra' ? '' : 'none';
+      document.getElementById('concDica').textContent = CONCESSIONARIAS[d.concSelecionada]?.dica || '';
+    }
+    if (d.documentosNomes) {
+      ['fatura', 'documento'].forEach(tipo => {
+        const nome = d.documentosNomes[tipo];
+        if (nome) {
+          const txt = document.getElementById('ddrop-' + tipo + '-txt');
+          if (txt) txt.innerHTML = '📎 ' + nome + '<br><small style="color:var(--t4)">(não recarregado)</small>';
+        }
+      });
+    }
+    showToast('Rascunho carregado.', 'ok');
+  } catch (e) { /* ignora */ }
+}
+
+function limparTudo(silencioso) {
+  if (!silencioso && !confirm('Limpar todos os dados?')) return;
+  state.concSelecionada = null;
+  state.documentos = { fatura: null, documento: null };
+  ['fatura', 'documento'].forEach(tipo => {
+    const txt = document.getElementById('ddrop-' + tipo + '-txt');
+    if (txt) txt.innerHTML = 'Toque para selecionar<br><small style="color:var(--t4)">PDF, JPG, PNG...</small>';
+    const inp = document.getElementById('dinput-' + tipo);
+    if (inp) inp.value = '';
+  });
+  document.querySelectorAll('input:not([type=file]), textarea, select').forEach(el => el.value = '');
+  renderConcessionarias();
+  document.getElementById('outraConcWrap').style.display = 'none';
+  document.getElementById('concDica').textContent = '';
+  document.getElementById('dataInstalacao').value = new Date().toISOString().split('T')[0];
+  localStorage.removeItem('lumengrid_homolog_dados_draft');
+  if (!silencioso) showToast('Formulário limpo.', 'ok');
+}
+
+// ──────────────────────────────────────────────
+// HELPERS
+// ──────────────────────────────────────────────
+
+function formatBytes(b) {
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1024 / 1024).toFixed(1) + ' MB';
+}
+
+let toastTimer;
+function showToast(msg, tipo) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (tipo || '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 4000);
+}
+</script>
+</body>
+</html>

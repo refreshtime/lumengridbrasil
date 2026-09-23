@@ -238,6 +238,10 @@ a{text-decoration:none;color:inherit}
 }
 .col-body.drag-over{background:rgba(242,101,34,.07);outline:2px dashed var(--gold-border);outline-offset:-2px;border-radius:8px}
 .col-body.drag-over-pos{background:var(--teal-pale);outline:2px dashed var(--teal-border);outline-offset:-2px;border-radius:8px}
+.homolog-pendente{border-left:3px solid var(--red)!important;border-color:rgba(239,68,68,.35)!important}
+.homolog-banner{font-size:10px;background:rgba(242,101,34,.1);border:1px solid rgba(242,101,34,.25);border-radius:5px;padding:5px 8px;margin-bottom:6px;color:rgba(242,101,34,.9)}
+.homolog-banner a,.homolog-alerta a{color:inherit;text-decoration:underline;font-weight:600}
+.homolog-alerta{font-size:10px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;padding:5px 8px;margin-bottom:6px;color:rgba(239,68,68,.9)}
 
 /* ━━━ LEAD CARD ━━━ */
 .lc{
@@ -596,6 +600,8 @@ tbody tr td:first-child{font-weight:700}
 .toast.ok::before{background:var(--green)}
 .toast.err{border-color:#FECACA;color:var(--red)}
 .toast.err::before{background:var(--red)}
+.toast.warn{border-color:#FDE68A;color:#D97706}
+.toast.warn::before{background:#F59E0B}
 @keyframes tIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes tOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(110%)}}
 
@@ -1305,6 +1311,7 @@ let leadsFilter = 'all';
 let editingId = null;
 let editingSrvId = null;
 let dragSrcId = null;
+let homologacoesIndex = new Set(); // nomes de clientes (lowercase) com dados preenchidos
 
 /* ━━━ STORAGE ━━━ */
 function getServicos() { try { return JSON.parse(localStorage.getItem('lg_servicos')||'[]'); } catch { return []; } }
@@ -1524,6 +1531,8 @@ function startAutoSync() {
 }
 const PARCEIROS_URL = 'https://script.google.com/macros/s/AKfycby8FMy4HPUiRCjGjWjyMEdZE7DGFzwNzmACBlI2RxdrC9PlbgyO_Kdh1PuQoQIKHTr-Lg/exec';
 const CRM_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
+// URL do backend de homologação (mesmo do VIDEOS_HOMOLOGACAO_Codigo.gs)
+const HOMOLAG_URL = 'COLE_A_URL_DO_HOMOLAG_AQUI';
 const getConfig = () => { try { return { parceirosUrl: PARCEIROS_URL, gsUrl: CRM_SHEETS_URL, ...JSON.parse(localStorage.getItem('lg_config')||'{}') }; } catch { return { parceirosUrl: PARCEIROS_URL, gsUrl: CRM_SHEETS_URL }; } };
 const saveConfig = c => localStorage.setItem('lg_config', JSON.stringify(c));
 const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2,6);
@@ -1614,6 +1623,21 @@ function renderServicoCard(srv) {
 }
 
 /* ━━━ INIT ━━━ */
+async function fetchHomologacoesIndex() {
+  if (!HOMOLAG_URL || HOMOLAG_URL.includes('COLE_')) return;
+  try {
+    const resp = await fetch(HOMOLAG_URL + '?action=get_index');
+    const json = await resp.json();
+    if (json.status === 'ok' && Array.isArray(json.clientes)) {
+      homologacoesIndex = new Set(json.clientes);
+    }
+  } catch (e) { /* silencioso — não bloqueia o CRM */ }
+}
+
+function temHomologacao(lead) {
+  return homologacoesIndex.has((lead.nome || '').trim().toLowerCase());
+}
+
 function initApp() {
   const u = currentUser;
   document.getElementById('greetName').textContent = u;
@@ -1647,6 +1671,8 @@ function initApp() {
   }
   // Auto-sync a cada 10 segundos para manter todos os usuários atualizados
   startAutoSync();
+  // Carregar índice de homologações em segundo plano
+  fetchHomologacoesIndex().then(() => { renderKanban(); });
 }
 
 /* ━━━ VIEWS ━━━ */
@@ -1881,17 +1907,26 @@ function renderCard(l) {
     ? `<div class="inactive-badge warn">⚠ ${Math.floor(daysSince)}d em negociação</div>`
     : '';
 
+  // Homologação
+  const semHomolog = l.stage >= 10 && !temHomologacao(l);
+  const homologBanner = l.stage === 9
+    ? `<div class="homolog-banner" onclick="event.stopPropagation()">📋 <a href="../RELATORIOS/homologacao_dados.html" target="_blank">Preencher dados de homologação</a></div>`
+    : semHomolog
+    ? `<div class="homolog-alerta" onclick="event.stopPropagation()">⚠ Dados de homologação pendentes — <a href="../RELATORIOS/homologacao_dados.html" target="_blank">preencher</a></div>`
+    : '';
+
   const propTag = l.proposta
     ? `<span class="prop-badge ${l.proposta.tipo==='Híbrido'?'hibr':'solar'}" style="margin-top:3px">${l.proposta.tipo==='Híbrido'?'⚡ Híbrido':'☀️ Solar'}</span>`
     : '';
   const lkTag = l.lookalike ? `<span class="lk-card-badge">◉ Lookalike</span>` : '';
 
-  return `<div class="lc${isPos?' pos':''}${isNew?' is-new':''}${isInactive?' inactive':''}${isWarn?' inactive-warn':''}"
+  return `<div class="lc${isPos?' pos':''}${isNew?' is-new':''}${isInactive?' inactive':''}${isWarn?' inactive-warn':''}${semHomolog?' homolog-pendente':''}"
     draggable="true"
     ondragstart="cardDragStart(event,'${l.id}')"
     ondragend="cardDragEnd(event)"
     onclick="openDetail('${l.id}')">
     ${isNew?'<div class="lc-new-badge">NOVO</div>':''}
+    ${homologBanner}
     <div class="lc-top">
       <div class="lc-name">${esc(l.nome)}</div>
       <div class="lc-orig ${origClass}">${l.origem||'Manual'}</div>
@@ -1980,6 +2015,15 @@ function colDrop(e, stageId) {
   const leads = getLeads();
   const lead = leads.find(l => l.id === id);
   if (!lead || lead.stage === stageId) return;
+  // Bloquear avanço para "Agendar Instalação" (11) sem homologação preenchida
+  if (stageId === 11 && !temHomologacao(lead)) {
+    toast(`Preencha os dados de homologação de ${lead.nome} antes de agendar a instalação.`, 'err');
+    return;
+  }
+  // Avisar (mas permitir) ao mover para "Compra Realizada" (10) sem homologação
+  if (stageId === 10 && !temHomologacao(lead)) {
+    toast(`Atenção: dados de homologação de ${lead.nome} ainda não foram preenchidos.`, 'warn');
+  }
   const oldName = STAGES[lead.stage].name;
   lead.stage = stageId;
   if (stageId === 14) lead.oportunidadeDate = lead.oportunidadeDate || Date.now();
@@ -2434,11 +2478,20 @@ function toggleLookalike() {
 }
 
 function changeStage(id, btn) {
-  document.querySelectorAll('.ss-btn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
   const leads = getLeads();
   const lead = leads.find(l => l.id === editingId);
   if (!lead) return;
+  // Bloquear avanço para "Agendar Instalação" (11) sem homologação preenchida
+  if (id === 11 && !temHomologacao(lead)) {
+    toast(`Preencha os dados de homologação de ${lead.nome} antes de agendar a instalação.`, 'err');
+    return;
+  }
+  // Avisar (mas permitir) ao mover para "Compra Realizada" (10) sem homologação
+  if (id === 10 && !temHomologacao(lead)) {
+    toast(`Atenção: dados de homologação de ${lead.nome} ainda não foram preenchidos.`, 'warn');
+  }
+  document.querySelectorAll('.ss-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
   lead.history = lead.history || [];
   lead.history.push({ text:`Etapa → "${STAGES[id].name}"`, user:currentUser, ts:Date.now() });
   lead.stage = id;
