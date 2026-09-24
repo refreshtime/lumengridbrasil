@@ -17,7 +17,7 @@ const DRIVE_PASTA_HOMOLAG = 'plan';
 const DRIVE_PASTA_HOMOLAG_SUB = 'homologacao';
 
 // Destinatário do e-mail automático ao receber homologação
-const EMAIL_DESTINO = 'COLE_O_EMAIL_AQUI';
+const EMAIL_DESTINO = 'comercial@lumengridbrasil.com.br';
 
 // ────────────────────────────────────────────────
 // CABEÇALHOS
