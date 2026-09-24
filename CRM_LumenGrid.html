@@ -1908,7 +1908,8 @@ function renderCard(l) {
     : '';
 
   // Homologação
-  const semHomolog = l.stage >= 10 && !temHomologacao(l);
+  // IDs 10,11,12,13 = Compra Realizada, Agendar Instalação, Homologação, Projeto Concluído
+  const semHomolog = [10, 11, 12, 13].includes(l.stage) && !temHomologacao(l);
   const homologBanner = l.stage === 9
     ? `<div class="homolog-banner" onclick="event.stopPropagation()">📋 <a href="../RELATORIOS/homologacao_dados.html" target="_blank">Preencher dados de homologação</a></div>`
     : semHomolog
