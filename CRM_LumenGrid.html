@@ -1532,7 +1532,7 @@ function startAutoSync() {
 const PARCEIROS_URL = 'https://script.google.com/macros/s/AKfycby8FMy4HPUiRCjGjWjyMEdZE7DGFzwNzmACBlI2RxdrC9PlbgyO_Kdh1PuQoQIKHTr-Lg/exec';
 const CRM_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
 // URL do backend de homologação (mesmo do VIDEOS_HOMOLOGACAO_Codigo.gs)
-const HOMOLAG_URL = 'COLE_A_URL_DO_HOMOLAG_AQUI';
+const HOMOLAG_URL = 'https://script.google.com/macros/s/AKfycbx9g9pBVHctzQwR37V18GK9VdiWfEz-WlZzcwdWzBKnings58uMU1UpZoyqUJF4MTcb/exec';
 const getConfig = () => { try { return { parceirosUrl: PARCEIROS_URL, gsUrl: CRM_SHEETS_URL, ...JSON.parse(localStorage.getItem('lg_config')||'{}') }; } catch { return { parceirosUrl: PARCEIROS_URL, gsUrl: CRM_SHEETS_URL }; } };
 const saveConfig = c => localStorage.setItem('lg_config', JSON.stringify(c));
 const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2,6);
