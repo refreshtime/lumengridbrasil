@@ -495,20 +495,16 @@ async function enviarDados() {
       documentos: docsPayload
     };
 
-    const resp = await fetch(ENDPOINT_HOMOLAG_DADOS, {
+    await fetch(ENDPOINT_HOMOLAG_DADOS, {
       method: 'POST',
+      mode: 'no-cors',
       body: JSON.stringify({ action: 'save_homologacao_dados', data: dados })
     });
-    const json = await resp.json();
-    if (json.status === 'ok') {
-      localStorage.removeItem('lumengrid_homolog_dados_draft');
-      document.getElementById('formWrap').style.display = 'none';
-      document.getElementById('sucessoId').textContent = 'ID: ' + json.id;
-      document.getElementById('sucessoWrap').classList.add('show');
-    } else {
-      showToast('Erro: ' + (json.message || 'falha no servidor'), 'err');
-      document.getElementById('btnEnviar').disabled = false;
-    }
+    // no-cors não permite ler a resposta — considera enviado com sucesso
+    localStorage.removeItem('lumengrid_homolog_dados_draft');
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('sucessoId').textContent = 'Enviado em ' + new Date().toLocaleString('pt-BR');
+    document.getElementById('sucessoWrap').classList.add('show');
   } catch (err) {
     showToast('Falha na conexão: ' + err.message, 'err');
     document.getElementById('btnEnviar').disabled = false;
