@@ -16,6 +16,9 @@ const DRIVE_PASTA_HOMOLAG = 'plan';
 // Subpasta dentro de "plan" para homologações
 const DRIVE_PASTA_HOMOLAG_SUB = 'homologacao';
 
+// Pasta dedicada de homologação (Form 1 — documentos do cliente)
+const DRIVE_PASTA_HOMOLAG_DADOS_ID = '1n3kABE2H3i_1GvQwNVz_IrDR6nU14I8h';
+
 // Destinatário do e-mail automático ao receber homologação
 const EMAIL_DESTINO = 'comercial@lumengridbrasil.com.br';
 
@@ -278,10 +281,11 @@ function saveHomologacaoDados(data) {
   let documentoLink = '';
   const docsInfo = data.documentos || {};
   try {
-    const raiz = obterOuCriarPastaHomolag(DRIVE_PASTA_HOMOLAG, DriveApp.getRootFolder());
-    const subDados = obterOuCriarPastaHomolag('dados_homologacao', raiz);
-    const nomePasta = [id, (data.cliente || 'sem-nome').replace(/[\/\\:*?"<>|]/g, '_')].join(' - ');
-    const pasta = obterOuCriarPastaHomolag(nomePasta, subDados);
+    const pastaRaiz = DriveApp.getFolderById(DRIVE_PASTA_HOMOLAG_DADOS_ID);
+    const nomeCliente = (data.cliente || 'sem-nome').replace(/[\/\\:*?"<>|]/g, '_');
+    const codContrato = (data.protocolo || '').replace(/[\/\\:*?"<>|]/g, '_');
+    const nomePasta = codContrato ? nomeCliente + ' - ' + codContrato : nomeCliente;
+    const pasta = obterOuCriarPastaHomolag(nomePasta, pastaRaiz);
 
     const labelsDoc = { fatura: 'fatura_energia', documento: 'documento_titular' };
     Object.entries(docsInfo).forEach(([tipo, info]) => {
