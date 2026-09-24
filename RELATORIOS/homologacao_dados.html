@@ -351,6 +351,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <div class="footer">Feito por Domani Consultoria</div>
 <div class="toast" id="toast"></div>
 
+<!-- Envio CORS-free via iframe oculto -->
+<form id="_gasForm" method="POST" target="_gasFrame" style="display:none">
+  <input type="hidden" id="_gasPayload" name="payload">
+</form>
+<iframe id="_gasFrame" name="_gasFrame" style="display:none"></iframe>
+
 <script>
 // ──────────────────────────────────────────────
 // CONFIGURAÇÃO
@@ -495,18 +501,22 @@ async function enviarDados() {
       documentos: docsPayload
     };
 
-    await fetch(ENDPOINT_HOMOLAG_DADOS, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify({ action: 'save_homologacao_dados', data: dados })
-    });
-    // no-cors não permite ler a resposta — considera enviado com sucesso
-    localStorage.removeItem('lumengrid_homolog_dados_draft');
-    document.getElementById('formWrap').style.display = 'none';
-    document.getElementById('sucessoId').textContent = 'Enviado em ' + new Date().toLocaleString('pt-BR');
-    document.getElementById('sucessoWrap').classList.add('show');
+    // Envio via iframe oculto — sem CORS
+    const iframe = document.getElementById('_gasFrame');
+    const form   = document.getElementById('_gasForm');
+    document.getElementById('_gasPayload').value = JSON.stringify({ action: 'save_homologacao_dados', data: dados });
+    form.action = ENDPOINT_HOMOLAG_DADOS;
+
+    iframe.onload = function() {
+      localStorage.removeItem('lumengrid_homolog_dados_draft');
+      document.getElementById('formWrap').style.display = 'none';
+      document.getElementById('sucessoId').textContent = 'Enviado em ' + new Date().toLocaleString('pt-BR');
+      document.getElementById('sucessoWrap').classList.add('show');
+    };
+
+    form.submit();
   } catch (err) {
-    showToast('Falha na conexão: ' + err.message, 'err');
+    showToast('Erro ao preparar envio: ' + err.message, 'err');
     document.getElementById('btnEnviar').disabled = false;
   }
 }
