@@ -89,12 +89,18 @@ function salvarContrato(p) {
   if (!p || !p.pdf) throw new Error('PDF não recebido. Chaves recebidas: ' + Object.keys(p || {}).join(','));
   if (!p.cnh) throw new Error('CNH não recebida.');
 
-  // 1. Pasta raiz (pasta fixa no Drive) → subpasta do cliente
+  // 1. Pasta raiz → mes → subpasta do cliente
+  const MESES = ['Janeiro','Fevereiro','Marco','Abril','Maio','Junho',
+                 'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const now = new Date();
+  const mesAno = MESES[now.getMonth()] + ' ' + now.getFullYear();
+
   const FOLDER_ID = '1DtFDC4jH_a1updhKrx-ns9qfLGnCyA9i';
   const root = DriveApp.getFolderById(FOLDER_ID);
   const num     = p.num     || '---';
   const cliNome = p.cliNome || 'Cliente';
-  const sub = getOrCreateFolder(root, cliNome + ' - ' + num);
+  const mesPasta = getOrCreateFolder(root, mesAno);
+  const sub = getOrCreateFolder(mesPasta, cliNome + ' - ' + num);
   sub.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   const folderUrl = sub.getUrl();
   const id = Utilities.getUuid();
@@ -109,13 +115,24 @@ function salvarContrato(p) {
   saveOrReplaceFile(sub, 'CNH_' + cliNome + '.' + cnhExt, cnhBytes, p.cnh.type);
 
   // 4. Fatura (opcional)
+  var fatBytes, fatExt;
   if (p.fatura) {
-    const fatBytes = Utilities.base64Decode(p.fatura.data);
-    const fatExt   = _extFromMime(p.fatura.type) || _extFromName(p.fatura.name) || 'pdf';
+    fatBytes = Utilities.base64Decode(p.fatura.data);
+    fatExt   = _extFromMime(p.fatura.type) || _extFromName(p.fatura.name) || 'pdf';
     saveOrReplaceFile(sub, 'Fatura_' + cliNome + '.' + fatExt, fatBytes, p.fatura.type);
   }
 
-  // 5. Registro na planilha
+  // 5. Homologacao: raiz homo → mes → cliente (copia CNH + Fatura)
+  const HOMO_ID = '1JPyXaUyZHR2hprOh5WZ_uWAJNri_Zrdg';
+  const homoRoot = DriveApp.getFolderById(HOMO_ID);
+  const homoMes  = getOrCreateFolder(homoRoot, mesAno);
+  const homoCli  = getOrCreateFolder(homoMes, cliNome);
+  saveOrReplaceFile(homoCli, 'CNH_' + cliNome + '.' + cnhExt, cnhBytes, p.cnh.type);
+  if (p.fatura) {
+    saveOrReplaceFile(homoCli, 'Fatura_' + cliNome + '.' + fatExt, fatBytes, p.fatura.type);
+  }
+
+  // 6. Registro na planilha
   try {
     const ss = SpreadsheetApp.openById('145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o');
     let gerado = ss.getSheetByName('Gerado');
