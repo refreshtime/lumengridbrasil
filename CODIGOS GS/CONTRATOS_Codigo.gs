@@ -3,7 +3,11 @@
 // Planilha: LumenGrid Contratos
 // https://docs.google.com/spreadsheets/d/145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o
 // Abas: Gerado | Assinado
+// Escopos necessários: Drive (leitura/escrita) + Spreadsheets
 // ═══════════════════════════════════════════════════════════
+
+// Força reconhecimento do escopo Drive pelo Apps Script
+function _authDrive() { DriveApp.getRootFolder(); }
 
 const COLS = [
   'ID', 'Nº Contrato', 'Data Emissão', 'Cliente', 'CPF/CNPJ',
@@ -20,6 +24,12 @@ function doGet(e) {
     let result;
     if (action === 'get_contratos') {
       result = getContratos();
+    } else if (action === 'salvarContrato') {
+      // POST foi redirecionado para GET pelo GAS (bug de CORS/redirect).
+      // Os arquivos (PDF, CNH) foram perdidos no redirect.
+      // Solução: no Google Apps Script, clique em Implantar > Gerenciar implantações >
+      // edite a implantação ativa e mude "Quem tem acesso" para "Qualquer pessoa".
+      result = { success: false, error: 'Redirect: POST convertido em GET. Reimplante o Web App com acesso "Qualquer pessoa (anonimo)".' };
     } else {
       result = { success: false, error: 'Acao desconhecida' };
     }
@@ -41,10 +51,10 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    // action vem pela URL (?action=salvarContrato) — sobrevive ao redirect do GAS
-    const action = e.parameter.action;
+    const body = JSON.parse(e.postData.contents);
+    // action vem pela URL (?action=salvarContrato) OU pelo body JSON como fallback
+    const action = (e.parameter && e.parameter.action) || body.action;
     if (action === 'salvarContrato') {
-      const body = JSON.parse(e.postData.contents);
       return ContentService
         .createTextOutput(JSON.stringify(salvarContrato(body)))
         .setMimeType(ContentService.MimeType.JSON);
