@@ -16,6 +16,17 @@ const COLS = [
 ];
 const COL_STATUS = 13;
 
+const COLS_VENDAS = [
+  'Data', 'Nº Contrato', 'Cliente', 'Telefone', 'kVp', 'Tipo Sistema',
+  'Módulo', 'Qtd Módulos', 'Inversor', 'Qtd Inversores', 'Bateria',
+  'Valor (R$)', 'Forma Pagamento', 'Consultor'
+];
+
+const COLS_COMPRAS = [
+  'Data', 'Nº Contrato', 'Cliente', 'kVp', 'Custo Kit (R$)',
+  'Fornecedor', 'Observações'
+];
+
 // ── ENDPOINTS ────────────────────────────────────────────────
 function doGet(e) {
   try {
@@ -135,6 +146,8 @@ function salvarContrato(p) {
   // 6. Registro na planilha
   try {
     const ss = SpreadsheetApp.openById('145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o');
+
+    // — Aba Gerado —
     let gerado = ss.getSheetByName('Gerado');
     if (!gerado) {
       gerado = ss.insertSheet('Gerado');
@@ -154,6 +167,46 @@ function salvarContrato(p) {
     gerado.getRange(newRow, 10).setNumberFormat('R$ #,##0.00');
     gerado.getRange(newRow, COL_STATUS).setFontColor('#E8641A').setFontWeight('bold');
     gerado.getRange(newRow, 14).setFontColor('#1a73e8');
+
+    // — Aba Vendas —
+    let vendas = ss.getSheetByName('Vendas');
+    if (!vendas) {
+      vendas = ss.insertSheet('Vendas');
+      vendas.getRange(1, 1, 1, COLS_VENDAS.length).setValues([COLS_VENDAS])
+        .setFontWeight('bold').setBackground('#1a7340').setFontColor('#ffffff');
+      vendas.setFrozenRows(1);
+      vendas.setColumnWidth(3, 200);
+    }
+    vendas.appendRow([
+      new Date().toLocaleString('pt-BR'), num, cliNome, p.cliFone || '',
+      p.eqKvp || '', tipoLabel,
+      p.eqModModel || '', p.eqModQty || '',
+      p.eqInvModel || '', p.eqInvQty || '',
+      p.eqBatModel || '',
+      parseFloat(p.payTotal) || 0, _pagLabel(p.payModo), p.vendNome || ''
+    ]);
+    const vRow = vendas.getLastRow();
+    vendas.getRange(vRow, 12).setNumberFormat('R$ #,##0.00');
+
+    // — Aba Compras (somente se custo informado) —
+    if (p.custoKit) {
+      let compras = ss.getSheetByName('Compras');
+      if (!compras) {
+        compras = ss.insertSheet('Compras');
+        compras.getRange(1, 1, 1, COLS_COMPRAS.length).setValues([COLS_COMPRAS])
+          .setFontWeight('bold').setBackground('#1a3a73').setFontColor('#ffffff');
+        compras.setFrozenRows(1);
+        compras.setColumnWidth(3, 200);
+      }
+      compras.appendRow([
+        new Date().toLocaleString('pt-BR'), num, cliNome,
+        p.eqKvp || '', parseFloat(p.custoKit),
+        p.fornecedor || '', p.obsCompra || ''
+      ]);
+      const cRow = compras.getLastRow();
+      compras.getRange(cRow, 5).setNumberFormat('R$ #,##0.00');
+    }
+
   } catch(sheetErr) {
     return { success: true, folderUrl: folderUrl, id: id, warning: sheetErr.message };
   }
@@ -188,15 +241,21 @@ function getContratos() {
 function initSheets() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   if (!ss) return;
-  ['Gerado', 'Assinado'].forEach(function(nome) {
-    let sh = ss.getSheetByName(nome);
+  [
+    { nome: 'Gerado',   cols: COLS,         bg: '#E8641A', w14: true },
+    { nome: 'Assinado', cols: COLS,         bg: '#1a7340', w14: true },
+    { nome: 'Vendas',   cols: COLS_VENDAS,  bg: '#1a7340', w14: false },
+    { nome: 'Compras',  cols: COLS_COMPRAS, bg: '#1a3a73', w14: false }
+  ].forEach(function(def) {
+    let sh = ss.getSheetByName(def.nome);
     if (!sh) {
-      sh = ss.insertSheet(nome);
-      sh.appendRow(COLS);
-      sh.getRange(1, 1, 1, COLS.length).setFontWeight('bold')
-        .setBackground(nome === 'Gerado' ? '#E8641A' : '#1a7340').setFontColor('#ffffff');
+      sh = ss.insertSheet(def.nome);
+      sh.appendRow(def.cols);
+      sh.getRange(1, 1, 1, def.cols.length).setFontWeight('bold')
+        .setBackground(def.bg).setFontColor('#ffffff');
       sh.setFrozenRows(1);
-      sh.setColumnWidth(14, 320);
+      if (def.w14) sh.setColumnWidth(14, 320);
+      sh.setColumnWidth(3, 200);
     }
   });
   try { SpreadsheetApp.getUi().alert('Planilha de Contratos configurada!'); } catch(_) {}

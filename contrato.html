@@ -203,7 +203,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
     </div>
     <label class="fl">E-mail</label>
     <input class="fi" id="cliEmail" placeholder="email@exemplo.com" type="email">
-    <label class="fl">Telefone / WhatsApp</label>
+    <label class="fl">Telefone / WhatsApp <span style="color:#E8641A;font-weight:900">*</span></label>
     <input class="fi" id="cliFone" placeholder="(11) 9 0000-0000">
   </div>
 
@@ -382,6 +382,22 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
     </label>
   </div>
 
+  <div class="fs">
+    <div class="fs-toggle fs-title" onclick="toggleSection(this)">
+      Custo / Compra <span style="font-size:9px;font-weight:400;color:rgba(255,255,255,.35)">(interno — não aparece no contrato)</span>
+      <span class="fs-arrow">▼</span>
+    </div>
+    <div class="fs-body collapsed">
+      <div class="frow" style="margin-top:12px">
+        <div><label class="fl">Custo do Kit (R$)</label><input class="fi" type="number" id="custoKit" placeholder="0.00" step="0.01"></div>
+        <div><label class="fl">Fornecedor</label><input class="fi" id="fornecedor" placeholder="Ex: Aldo Solar, GreenWatt..."></div>
+      </div>
+      <label class="fl">Observações de Compra</label>
+      <textarea class="fta" id="obsCompra" placeholder="Prazo de entrega, condições especiais, descontos negociados..."></textarea>
+      <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px;line-height:1.5">Registrado na aba <strong style="color:rgba(255,255,255,.45)">Compras</strong> da planilha ao salvar no Drive.</div>
+    </div>
+  </div>
+
   <div class="btn-bar">
     <button class="bp btn" onclick="generateContract()">📄 Gerar Contrato</button>
     <button class="bpdf btn" onclick="downloadPDF()">🖨 Imprimir / PDF</button>
@@ -462,7 +478,9 @@ function generateContract(){
   const _cliNomeRaw=document.getElementById('cliNome').value.trim();
   const _payTotalRaw=parseFloat(document.getElementById('payTotal').value)||0;
   const erros=[];
+  const _cliFoneRaw=document.getElementById('cliFone').value.trim();
   if(!_cliNomeRaw)erros.push('• Nome do Cliente');
+  if(!_cliFoneRaw)erros.push('• Telefone / WhatsApp');
   if(!_payTotalRaw)erros.push('• Valor Total do Contrato');
   if(erros.length){
     document.getElementById('prevPanel').innerHTML='<div style="color:#E8641A;font-family:Montserrat,sans-serif;font-size:13px;padding:40px;text-align:center"><div style="font-size:32px;margin-bottom:16px">⚠️</div><strong>Preencha os campos obrigatórios:</strong><br><br>'+erros.join('<br>')+'</div>';
@@ -707,6 +725,40 @@ function generateContract(){
 
     document.getElementById('prevPanel').innerHTML=pg1+pg2+pg3+pg4+pg5+pg6+pg7+pgAnexos;
   document.title = cliNome + ' - ' + num + ' - LUMENGRID';
+  sincronizarComCRM(cliNome, cliFone, modModel, invModel, batModel, kvp, payTotal, payModo);
+}
+
+function sincronizarComCRM(cliNome, cliFone, modModel, invModel, batModel, kvp, payTotal, payModo) {
+  if (!cliFone) return;
+  try {
+    var leads = JSON.parse(localStorage.getItem('lg_leads') || '[]');
+    var norm = function(p) { return String(p||'').replace(/\D/g,''); };
+    var tel = norm(cliFone);
+    if (!tel) return;
+    var lead = null;
+    for (var i=0; i<leads.length; i++) {
+      if (norm(leads[i].telefone) === tel) { lead = leads[i]; break; }
+    }
+    if (!lead) return;
+    lead.contrato = {
+      modModel: modModel||'', invModel: invModel||'', batModel: batModel||'',
+      kvp: kvp||'', valorVendido: payTotal, metodoPagamento: payModo
+    };
+    lead.valorProjeto = payTotal;
+    if ((lead.stage||0) < 6) lead.stage = 6;
+    lead.history = lead.history || [];
+    var modoLabel = {'cartao':'Cartão de Crédito','parcelado':'Parcelado','personalizado':'Personalizado'}[payModo] || payModo;
+    var kvpLabel = kvp ? ' — ' + kvp : '';
+    var kitDesc = [modModel, invModel, batModel].filter(Boolean).join(', ');
+    lead.history.push({
+      ts: Date.now(),
+      txt: 'Contrato gerado' + kvpLabel + (kitDesc ? ' — ' + kitDesc : '') +
+           ' — R$ ' + parseFloat(payTotal).toLocaleString('pt-BR',{minimumFractionDigits:2}) +
+           ' (' + modoLabel + ')'
+    });
+    lead.updatedAt = new Date().toISOString();
+    localStorage.setItem('lg_leads', JSON.stringify(leads));
+  } catch(e) { /* silencioso */ }
 }
 
 function addAnexo(){
@@ -868,9 +920,10 @@ async function salvarNoDrive() {
     return;
   }
   const cliNome = document.getElementById('cliNome').value.trim();
+  const cliFoneDrive = document.getElementById('cliFone').value.trim();
   const payTotal = parseFloat(document.getElementById('payTotal').value) || 0;
-  if (!cliNome || !payTotal) {
-    _driveToast('erro', 'Preencha o Nome do Cliente e o Valor Total antes de salvar.', null);
+  if (!cliNome || !cliFoneDrive || !payTotal) {
+    _driveToast('erro', 'Preencha o Nome do Cliente, Telefone e o Valor Total antes de salvar.', null);
     return;
   }
 
@@ -933,9 +986,17 @@ async function salvarNoDrive() {
       cliFone: document.getElementById('cliFone').value.trim(),
       cliEmail: document.getElementById('cliEmail').value.trim(),
       eqKvp: document.getElementById('eqKvp').value.trim(),
+      eqModModel: document.getElementById('eqModModel').value.trim(),
+      eqModQty: parseInt(document.getElementById('eqModQty').value)||0,
+      eqInvModel: document.getElementById('eqInvModel').value.trim(),
+      eqInvQty: parseInt(document.getElementById('eqInvQty').value)||0,
+      eqBatModel: document.getElementById('eqBatModel').value.trim(),
       payTotal: payTotal,
       payModo: document.getElementById('payModo').value,
       vendNome: document.getElementById('vendNome').value.trim(),
+      custoKit: parseFloat(document.getElementById('custoKit').value)||null,
+      fornecedor: document.getElementById('fornecedor').value.trim()||null,
+      obsCompra: document.getElementById('obsCompra').value.trim()||null,
       pdf: pdfBase64,
       cnh: { data: cnhBase64, type: cnhFile.type, name: cnhFile.name },
       fatura: faturaBase64 ? { data: faturaBase64, type: faturaFile.type, name: faturaFile.name } : null

@@ -495,6 +495,59 @@ a{text-decoration:none;color:inherit}
 }
 .msg-copy-btn:hover{color:var(--gold-d);border-color:var(--gold-border)}
 
+/* ━━━ MODAL TABS (Detail) ━━━ */
+.modal-sticky-top{position:sticky;top:0;z-index:2;background:var(--surface)}
+.modal-sticky-top .mhd{position:relative;border-bottom:none}
+#detailModal .mbody{padding:0}
+.d-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 16px;background:var(--surface);gap:0}
+.d-tab{
+  padding:10px 14px;background:none;border:none;border-bottom:2px solid transparent;
+  cursor:pointer;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);transition:all .18s;margin-bottom:-1px;
+}
+.d-tab:hover{color:var(--text2)}
+.d-tab.active{color:var(--gold-d);border-bottom-color:var(--gold)}
+.d-tab-panel{display:none;padding:18px 20px}
+.d-tab-panel.active{display:block}
+/* Scripts */
+.script-card{padding:12px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;margin-bottom:8px;position:relative}
+.script-label{font-size:8px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.script-text{font-size:12.5px;color:var(--text);line-height:1.65;font-weight:400;padding-right:64px;white-space:pre-wrap}
+.script-copy{
+  position:absolute;top:10px;right:10px;
+  font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--text3);background:var(--bg);border:1px solid var(--border);
+  border-radius:5px;padding:3px 8px;cursor:pointer;transition:all .18s;
+}
+.script-copy:hover{color:var(--gold-d);border-color:var(--gold-border)}
+/* FAQ objeções */
+.faq-block{padding:10px 12px;background:#F8F9FB;border:1px solid var(--border);border-radius:7px;margin-bottom:6px}
+.faq-q{font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px}
+.faq-a{font-size:11px;color:var(--text2);line-height:1.6}
+.faq-script{font-size:11px;color:var(--gold-d);font-style:italic;margin-top:6px;padding-top:6px;border-top:1px solid var(--gold-border)}
+/* Timeline unificada */
+.tl-note .h-dot{background:var(--gold)}
+.tl-note .h-meta{color:#B45309}
+.tl-sys .h-dot{background:var(--border2)}
+.tl-sys .h-meta{color:var(--text3)}
+/* Oportunidade Futura card */
+.of-card{border:1.5px solid #C7D2FE;border-radius:8px;padding:14px;margin-bottom:18px;background:#EEF2FF}
+.of-card-title{font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#4338CA;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.of-card-title::after{content:'';flex:1;height:1px;background:#C7D2FE}
+/* Details colapsável */
+.ms-details{margin-top:14px}
+.ms-details > summary{
+  font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);cursor:pointer;padding:9px 12px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:7px;
+  list-style:none;display:flex;align-items:center;justify-content:space-between;transition:all .18s;
+}
+.ms-details > summary:hover{color:var(--gold-d);border-color:var(--gold-border)}
+.ms-details > summary::after{content:'▸';font-size:10px}
+.ms-details[open] > summary::after{content:'▾'}
+.ms-details[open] > summary{border-radius:7px 7px 0 0;border-bottom:none}
+.ms-details-body{padding:14px;background:var(--surface2);border:1px solid var(--border);border-top:none;border-radius:0 0 7px 7px}
+
 /* ━━━ FUP RÁPIDO NO HEADER DO MODAL ━━━ */
 .btn-fup{
   display:flex;align-items:center;gap:6px;padding:7px 14px;
@@ -927,9 +980,14 @@ tbody tr td:first-child{font-weight:700}
         <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
           <button class="btn btn-s" onclick="exportJSON()">Exportar Backup</button>
           <button class="btn btn-s" onclick="exportCSV()">Exportar CSV</button>
-          <button class="btn btn-s" onclick="document.getElementById('importJSON').click()">Restaurar Backup</button>
+          <button class="btn btn-s" onclick="document.getElementById('importJSON').click()">Restaurar Backup Local</button>
           <input type="file" id="importJSON" accept=".json" style="display:none" onchange="importBackup(event)">
           <button class="btn btn-s" style="background:#EF4444;color:#fff;border-color:#EF4444" onclick="if(!ADMINS.includes(currentUser)){toast('Apenas o admin pode limpar duplicatas.','err');return;}if(confirm('Remover todos os cards duplicados do localStorage e sincronizar com o servidor?'))limparDuplicatas()">🧹 Limpar Duplicatas</button>
+        </div>
+        <div id="bloco-backup-servidor" style="margin-top:14px;display:none">
+          <div class="imp-opt-sub" style="margin-bottom:8px">Backups automáticos no servidor (Google Sheets) — criados a cada salvamento:</div>
+          <button class="btn btn-s" style="background:#6366F1;color:#fff;border-color:#6366F1" onclick="abrirPainelBackupServidor()">Ver Backups do Servidor</button>
+          <div id="backups-servidor-lista" style="margin-top:10px;display:none"></div>
         </div>
       </div>
     </div>
@@ -1019,20 +1077,26 @@ tbody tr td:first-child{font-weight:700}
 <!-- LEAD DETAIL MODAL -->
 <div class="ov" id="ov-detail">
   <div class="modal" id="detailModal">
-    <div class="mhd">
-      <div class="mhd-left">
-        <div class="mhd-name" id="d-name"></div>
-        <div class="mhd-tags">
-          <span class="stage-tag" id="d-stage-tag"></span>
-          <span class="stage-tag" id="d-resp-tag"></span>
-          <button class="lk-btn" id="d-lk-btn" onclick="toggleLookalike()" style="display:none">◎ Lookalike</button>
+    <div class="modal-sticky-top">
+      <div class="mhd">
+        <div class="mhd-left">
+          <div class="mhd-name" id="d-name"></div>
+          <div class="mhd-tags">
+            <span class="stage-tag" id="d-stage-tag"></span>
+            <span class="stage-tag" id="d-resp-tag"></span>
+          </div>
         </div>
+        <button class="btn-fup" onclick="quickFup()" title="Registrar Follow-up">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .94h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          Reg. FUP
+        </button>
+        <button class="mhd-close" onclick="closeModal('ov-detail')">✕</button>
       </div>
-      <button class="btn-fup" onclick="quickFup()" title="Registrar Follow-up">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .94h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-        Reg. FUP
-      </button>
-      <button class="mhd-close" onclick="closeModal('ov-detail')">✕</button>
+      <div class="d-tabs">
+        <button class="d-tab active" data-tab="resumo" onclick="switchTab('resumo')">Resumo</button>
+        <button class="d-tab" data-tab="comercial" onclick="switchTab('comercial')">Comercial</button>
+        <button class="d-tab" data-tab="historico" onclick="switchTab('historico')">Histórico</button>
+      </div>
     </div>
     <div class="mbody" id="d-body"></div>
     <div class="mft">
@@ -1245,41 +1309,51 @@ const SUBTASKS = {
   ],
 };
 
-const MESSAGES = {
-  0: [
-    'Olá, [Nome]! Recebemos sua solicitação de orçamento e serei responsável pelo seu atendimento daqui pra frente. Você prefere falar por aqui ou podemos entrar em ligação?',
-    'Oi, [Nome]! Tudo bem? Vi que você demonstrou interesse em energia solar. Posso te ajudar com algumas informações rápidas? 😊',
-    'Olá! Aqui é [Seu Nome] da LumenGrid. Vi seu interesse em energia solar e adoraria te mostrar como você pode economizar na conta de luz. Tem um minutinho?',
-  ],
-  1: [
-    'Oi [Nome], tudo bem? Passando para saber se conseguiu dar uma olhada na nossa mensagem anterior. Posso te ligar agora?',
-    'Olá! Tentei entrar em contato antes. Quando seria um bom momento para conversarmos sobre a economia que você pode ter com energia solar?',
-    '[Nome], a LumenGrid tem uma proposta especial rodando essa semana. Posso te apresentar em 5 minutinhos?',
-  ],
-  2: [
-    'Olá [Nome]! Para montar o orçamento ideal para você, preciso de uma informação: qual é a média de consumo da sua conta de luz por mês (em kWh ou R$)?',
-    'Oi! Para calcular exatamente quanto você vai economizar, me diz: sua instalação é residencial ou comercial? E qual tipo de telhado você tem?',
-    'Perfeito! Já tenho os dados. Vou dimensionar o sistema ideal para o seu perfil de consumo e te mando a proposta ainda hoje!',
-  ],
-  3: [
-    'Olá [Nome]! Acabei de enviar sua proposta personalizada. Tive o cuidado de calcular exatamente quanto você vai economizar. Chegou tudo bem?',
-    'Aqui está sua proposta, [Nome]! Calculei um payback de aproximadamente X anos, com economia estimada de R$ X por mês. Ficou com alguma dúvida?',
-    'Oi [Nome]! Sua proposta já foi para o seu WhatsApp/e-mail. Se quiser, posso te explicar os detalhes em uma chamada rápida!',
-  ],
-  4: [
-    '[Nome], não perca a chance de discutir o projeto. Guardando a sua percepção do orçamento sem compartilhar, você pode estar perdendo de fazer um bom negócio e entender um pouco mais sobre as possibilidades no projeto.',
-    'Percebi que não tive retorno após o envio do orçamento e queria entender se houve algum ponto que não atendeu às suas expectativas?',
-    'Oi [Nome], tudo bem? Além da proposta que te enviei, temos opção de financiamento em até 60x. Isso tornaria o investimento mais acessível para você?',
-  ],
-  5: [
-    'Entendo, [Nome]! Posso verificar uma condição especial para você. Me diz: qual seria o valor que caberia no seu orçamento agora?',
-    'Olá! Além da proposta padrão, temos uma linha de financiamento pelo banco X com parcelas a partir de R$ X. Isso facilitaria a decisão?',
-    '[Nome], posso garantir que depois que o sistema estiver instalado, a economia na sua conta começa no primeiro mês. Quer que eu mostre a simulação mês a mês?',
-  ],
-  6: [
-    'Parabéns pela decisão, [Nome]! Seja bem-vindo(a) à família LumenGrid! Vou encaminhar o contrato e os próximos passos agora mesmo.',
-    'Que ótima notícia! Já estou preparando tudo para a sua instalação. Em breve nossa equipe técnica vai entrar em contato para agendar a visita.',
-  ],
+const SCRIPTS = {
+  stages: {
+    0: [
+      { label: 'Abertura — WhatsApp', text: 'Olá, [Nome]! Tudo bem? Aqui é [Seu Nome], da LumenGrid. Vi seu interesse em energia solar — posso te ajudar a entender como funciona e quanto você economizaria com o seu perfil de consumo. Tem 2 minutinhos?' },
+    ],
+    1: [
+      { label: 'FUP — Agendar chamada', text: 'Oi [Nome], tudo bem? Passando para saber se conseguiu dar uma olhada na nossa mensagem anterior. Posso te ligar agora?' },
+      { label: 'FUP — Puxar visita', text: 'Olá! Tentei entrar em contato antes. Quando seria um bom momento para conversarmos sobre a economia que você pode ter com energia solar?' },
+    ],
+    2: [
+      { label: 'Pedir fatura', text: 'Para eu te montar uma proposta real, preciso de uma informação: você consegue me mandar a sua fatura de energia mais recente? Para que eu faça um orçamento mais assertivo.' },
+      { label: 'Sem fatura — alternativa', text: 'Sem problema! Me passa então: quanto você paga de luz por mês, em média? E o endereço completo com CEP. Já consigo dar uma olhada no telhado pelo satélite e te passar uma estimativa bem próxima do real.' },
+    ],
+    3: [
+      { label: 'Solar — 1. Texto + PDF', text: 'Oi, bom dia! Tudo bem?\n\nEstou te enviando o projeto completo.\n\nO projeto conta com o sistema de energia solar que vai te trazer economia de pelo menos 85% na fatura.\n\nO PDF está logo acima. Lá nas páginas 3 e 4 coloquei o valor do investimento e os equipamentos. Quanto às formas de pagamento, temos opções bem legais de parcelamento, incluindo cartão de crédito com taxas muito baixas. No parcelamento consigo que você inicie os pagamentos somente daqui 3 meses e já comece a economizar.\n\nA proposta está considerando o melhor equipamento do mercado. Se você ainda quiser reduzir valores podemos conversar sobre outros equipamentos.\n\nOlha com calma, mas é muito interessante conversarmos sobre o projeto — existem particularidades que fazem diferença na avaliação. Você teria um momento para conversarmos?' },
+      { label: 'Solar — 2. Áudio logo depois', text: 'Grave um áudio curto (30–60 segundos) explicando: quanto o cliente vai economizar por mês, como o sistema funciona no dia a dia e por que vale a pena conversar. Voz gera conexão — o áudio humaniza a proposta e aumenta muito a chance de resposta.' },
+      { label: 'Solar — 3. Convite para chamada', text: 'Finaliza o áudio puxando pra uma chamada: "O ideal é agendarmos uma conversa — qual sua disponibilidade para agendarmos?"' },
+      { label: 'Híbrido — 1. Texto + PDF', text: 'Estou te enviando o projeto completo.\n\nO projeto conta com o sistema híbrido (Inversor GoodWe + Bateria de 5kWh + isenção de ICMS nas placas), pensado para te dar autonomia nas quedas de luz — sem aquele barulho chato de gerador e sem manutenção.\n\nO PDF está logo acima. Lá nas páginas 5 e 6 coloquei o valor do investimento e as formas de pagamento (temos opções bem legais de parcelamento, incluindo cartão de crédito com taxas muito baixas).\n\nA proposta está considerando o melhor equipamento híbrido do mercado, da marca GoodWe. Se você ainda quiser reduzir valores podemos conversar sobre outros equipamentos.' },
+      { label: 'Híbrido — 2. Áudio', text: 'Grave um áudio curto explicando os diferenciais do híbrido: autonomia no apagão, sem barulho, sem manutenção, economia na conta. Voz humaniza — mande antes de esperar resposta.' },
+      { label: 'Híbrido — 3. Convite para chamada', text: '"Fique à vontade para olhar com calma. Que horas seria melhor para conversarmos sobre o projeto?"' },
+    ],
+    4: [
+      { label: '1º FUP — Agendar chamada', text: 'Olá, [Nome]! Podemos agendar uma chamada para falar sobre o projeto?' },
+      { label: '2º FUP — Puxar visita', text: 'Podemos agendar uma visita para avaliarmos o local? Assim consigo te passar uma proposta ainda mais precisa.' },
+      { label: 'Cliente pediu desconto', text: 'Para ajustar os valores de maneira prudente, o ideal é fazermos uma visita primeiro. Qual seria sua disponibilidade para agendarmos e verificarmos melhor a sua residência?' },
+      { label: 'Cliente sumiu', text: 'Não costumo não receber retorno depois do envio do orçamento. Existe alguma questão que eu possa ajustar pra você?' },
+    ],
+    5: [
+      { label: 'Comparativo Solar vs Híbrido', text: 'O sistema On-Grid é o mais popular: reduz ~85% da conta e tem payback de 4–6 anos. O Híbrido vai além: além de economizar, garante energia mesmo em apagão — funciona com as baterias quando a rede cai. A diferença de investimento é compensada pela tranquilidade e pelo uso noturno da energia gerada.' },
+      { label: 'Defesa dos equipamentos', text: 'A proposta considera os melhores equipamentos do mercado — com garantia extendida e suporte especializado. Se quiser reduzir valores, posso te mostrar outras configurações, mas vale entender o que cada uma entrega. O mais barato nem sempre é o melhor negócio a longo prazo.' },
+    ],
+    6: [
+      { label: 'Boas-vindas à família', text: 'Parabéns pela decisão, [Nome]! Seja bem-vindo(a) à família LumenGrid! Vou encaminhar o contrato e os próximos passos agora mesmo.' },
+    ],
+  },
+  global: {
+    objecoes: [
+      { q: 'Os créditos que sobram, para onde vão?', a: 'Ficam registrados junto à distribuidora. Toda vez que o sistema gera mais do que o cliente consome, o excedente vira crédito, válido por até 60 meses. Usados à noite, em dias nublados ou em qualquer mês de menor geração.', script: '"Tudo que você gerar e não usar fica guardado como crédito na distribuidora — como um banco de energia. Você usa quando quiser, em até 5 anos."' },
+      { q: 'Se a geração não for suficiente, fico sem energia?', a: 'Não. O sistema On-Grid está sempre conectado à rede. Se faltar geração, o cliente simplesmente consome da rede normalmente, usando créditos acumulados ou pagando a diferença.', script: '"Não existe risco de ficar sem energia. Se faltar geração, a distribuidora complementa automaticamente. Você não percebe diferença nenhuma."' },
+      { q: 'Quanto tempo leva para instalar?', a: 'Instalamos em até 20 dias úteis após aprovação da proposta e pedido dos equipamentos.', script: '"Nosso prazo é de até 20 dias úteis após a aprovação — é um dos mais rápidos do mercado."' },
+      { q: 'Quanto vou economizar? A conta vai a zero?', a: 'A média é 85% de redução. A conta nunca chega a zero porque a distribuidora cobra uma taxa mínima (Custo de Disponibilidade) — geralmente entre R$ 30 e R$ 80.', script: '"Se você paga R$ 800 hoje, sua conta vai pra algo em torno de R$ 50–120. Com o híbrido, você chega muito perto de zero."' },
+      { q: 'Funciona em apartamento?', a: 'Sim. Duas opções: Sistema Híbrido (instalado dentro do apartamento, sem telhado) ou Geração Distribuída (créditos de uma usina remota, regulamentado pela ANEEL).', script: '"Apartamento não é impedimento. Temos o híbrido que instala dentro do apê, e a geração distribuída onde você recebe créditos sem instalar nada. Me manda sua fatura que eu te passo as opções."' },
+      { q: 'O sistema híbrido funciona em apagão?', a: 'Sim — o híbrido detecta a queda da rede e comuta automaticamente para modo off-grid pelas baterias. O On-Grid convencional desliga por segurança quando a rede cai.', script: '"Com o híbrido, quando cair a energia do bairro, a sua casa continua ligada. Geladeira, luz, internet — tudo funcionando. O sistema troca automaticamente para as baterias."' },
+    ],
+  },
 };
 
 const SERVICE_TYPES = ['Lavagem de Placas','Manutenção Preventiva','Reparo / Corretiva','Troca de Inversor','Expansão do Sistema','Outro'];
@@ -1569,6 +1643,7 @@ function login(user) {
   document.getElementById('login').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('kb-filters-admin').style.display = ADMINS.includes(user) ? 'flex' : 'none';
+  document.getElementById('bloco-backup-servidor').style.display = ADMINS.includes(user) ? 'block' : 'none';
   initApp();
 }
 function logout() {
@@ -2053,12 +2128,11 @@ function quickFup() {
   lead.updatedAt = Date.now();
   saveLeads(leads, lead);
   toast(`FUP registrado — ${lead.nome}`, 'ok');
-  // Atualizar histórico no modal sem fechar
-  const hist = document.getElementById('d-hist');
-  const isPos = lead.stage >= 7;
-  if (hist) {
-    hist.insertAdjacentHTML('afterbegin', `<div class="h-row">
-      <div class="h-lwrap"><div class="h-dot${isPos?' t':''}"></div></div>
+  // Atualizar timeline no modal sem fechar
+  const timeline = document.getElementById('d-timeline');
+  if (timeline) {
+    timeline.insertAdjacentHTML('afterbegin', `<div class="h-row tl-sys">
+      <div class="h-lwrap"><div class="h-dot"></div></div>
       <div class="h-content">
         <div class="h-txt">Contato registrado (FUP) por ${currentUser}</div>
         <div class="h-meta">${currentUser} · Agora</div>
@@ -2093,47 +2167,49 @@ function addNote() {
   const lead = leads.find(l => l.id === editingId);
   if (!lead) return;
   lead.notes = lead.notes || [];
-  const note = { text, user: currentUser, ts: Date.now() };
-  lead.notes.push(note);
+  lead.notes.push({ text, user: currentUser, ts: Date.now() });
   lead.updatedAt = Date.now();
   saveLeads(leads, lead);
   inp.value = '';
-  // Inserir na lista de notas sem fechar modal
-  const notesList = document.querySelector('.notes-panel');
-  if (notesList) {
-    const emptyMsg = notesList.querySelector('div[style]');
-    if (emptyMsg && emptyMsg.textContent.includes('Nenhuma')) emptyMsg.remove();
-    const addRow = notesList.querySelector('.note-add-row');
-    const newNote = document.createElement('div');
-    newNote.className = 'note-item';
-    newNote.innerHTML = `<div class="note-text">${esc(text)}</div>
-      <div class="note-meta">
-        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        ${currentUser} · Agora
-      </div>`;
-    notesList.insertBefore(newNote, addRow);
+  const timeline = document.getElementById('d-timeline');
+  if (timeline) {
+    timeline.insertAdjacentHTML('afterbegin', `<div class="h-row tl-note">
+      <div class="h-lwrap"><div class="h-dot"></div></div>
+      <div class="h-content">
+        <div class="h-txt">${esc(text)}</div>
+        <div class="h-meta">${currentUser} · Agora</div>
+      </div>
+    </div>`);
   }
   toast('Anotação salva!', 'ok');
 }
 
-/* ━━━ COPIAR MENSAGEM SUGERIDA ━━━ */
-function copyMsg(idx, leadId) {
+/* ━━━ TABS ━━━ */
+function switchTab(tab) {
+  document.querySelectorAll('#detailModal .d-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('#d-body .d-tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tab));
+}
+
+/* ━━━ COPIAR SCRIPT ━━━ */
+function copyScript(type, idx, leadId) {
   const leads = getLeads();
   const lead = leads.find(l => l.id === leadId);
   if (!lead) return;
-  const msgs = MESSAGES[lead.stage] || [];
-  if (!msgs[idx]) return;
-  const txt = msgs[idx]
-    .replace('[Nome]', lead.nome.split(' ')[0])
-    .replace('[Seu Nome]', currentUser);
+  let raw = '';
+  if (type === 'stage') {
+    raw = (SCRIPTS.stages[lead.stage] || [])[idx]?.text || '';
+  } else if (type === 'objecao') {
+    raw = SCRIPTS.global.objecoes[idx]?.script || '';
+  }
+  if (!raw) return;
+  const txt = raw.replace(/\[Nome\]/g, lead.nome.split(' ')[0]).replace(/\[Seu Nome\]/g, currentUser);
   navigator.clipboard.writeText(txt).then(() => {
-    toast('Mensagem copiada!', 'ok');
+    toast('Script copiado!', 'ok');
   }).catch(() => {
-    // fallback
     const ta = document.createElement('textarea');
     ta.value = txt; document.body.appendChild(ta);
     ta.select(); document.execCommand('copy');
-    ta.remove(); toast('Mensagem copiada!', 'ok');
+    ta.remove(); toast('Script copiado!', 'ok');
   });
 }
 
@@ -2155,94 +2231,29 @@ function openDetail(id) {
   const rTag = document.getElementById('d-resp-tag');
   rTag.textContent = lead.resp;
   rTag.style.cssText = `background:${USER_COLORS[lead.resp]||'#666'}22;color:${USER_COLORS[lead.resp]||'#666'};border:1px solid ${USER_COLORS[lead.resp]||'#666'}44`;
-  const lkBtn = document.getElementById('d-lk-btn');
-  lkBtn.style.display = 'inline-block';
-  lkBtn.textContent = lead.lookalike ? '◉ Lookalike ✓' : '◎ Lookalike';
-  lkBtn.className = 'lk-btn' + (lead.lookalike ? ' active' : '');
+
+  // Reset tabs to Resumo
+  document.querySelectorAll('#detailModal .d-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'resumo'));
 
   const tasks = SUBTASKS[lead.stage] || [];
   const doneTasks = (lead.subtasks&&lead.subtasks[lead.stage]) || {};
   const doneCount = Object.values(doneTasks).filter(Boolean).length;
   const posCls = isPos ? ' t' : '';
-  const nCls = ' n';
 
-  // Notas com data (mais recentes primeiro)
-  const notes = lead.notes || [];
-  const notesHtml = `
-  <div class="notes-panel">
-    <div class="notes-panel-title">Anotações</div>
-    ${notes.length === 0
-      ? '<div style="font-size:10px;color:#B45309;opacity:.6">Nenhuma anotação ainda.</div>'
-      : notes.slice().reverse().map(n => `
-        <div class="note-item">
-          <div class="note-text">${esc(n.text)}</div>
-          <div class="note-meta">
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            ${n.user} · ${fmtDateTime(n.ts)}
-          </div>
-        </div>`).join('')}
-    <div class="note-add-row">
-      <input class="note-inp" id="note-inp" placeholder="Nova anotação..." onkeydown="if(event.key==='Enter')addNote()">
-      <button class="btn btn-s btn-sm" onclick="addNote()">+ Anotação</button>
-    </div>
-  </div>`;
-
-  // Painel de documentos
-  const DOC_ICONS = {'RG/CNH':'🪪','Fatura de Energia':'⚡','Contrato':'📄','Outro':'📎'};
-  const docs = lead.docs || [];
-  const docsHtml = `
-  <div class="docs-panel">
-    <div class="docs-panel-title">Documentos do Cliente</div>
-    ${docs.length === 0
-      ? '<div style="font-size:11px;color:#166534;opacity:.7;margin-bottom:10px">Nenhum documento enviado ainda.</div>'
-      : docs.map(d => `
-        <div class="doc-item">
-          <div class="doc-icon">${DOC_ICONS[d.tipo]||'📎'}</div>
-          <div class="doc-info">
-            <div class="doc-tipo">${d.tipo}</div>
-            <div class="doc-nome">${esc(d.nome||'Documento')}</div>
-            <div class="doc-meta">${d.user||'Sistema'} · ${fmtDateTime(d.ts)}</div>
-          </div>
-          <a class="btn btn-g btn-sm" href="${d.link}" target="_blank" style="text-decoration:none;font-size:10px;padding:7px 14px;flex-shrink:0">📂 Abrir</a>
-        </div>`).join('')}
-    <div class="doc-uploads">
-      <label class="doc-upload-btn">🪪 RG / CNH<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('RG/CNH','${id}',this)"></label>
-      <label class="doc-upload-btn">⚡ Fatura de Energia<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('Fatura de Energia','${id}',this)"></label>
-      <label class="doc-upload-btn">📄 Contrato<input type="file" style="display:none" accept="image/*,.pdf,.doc,.docx" onchange="uploadDoc('Contrato','${id}',this)"></label>
-      <label class="doc-upload-btn">📎 Outro<input type="file" style="display:none" onchange="uploadDoc('Outro','${id}',this)"></label>
-    </div>
-  </div>`;
-
-  // Mensagens sugeridas para o estágio atual
-  const msgs = MESSAGES[lead.stage] || [];
-  const msgsHtml = msgs.length > 0 ? `
-  <div class="ms">
-    <div class="ms-title${posCls}">Mensagens Sugeridas — ${STAGES[lead.stage].name}</div>
-    <div class="msg-list">
-      ${msgs.map((m,i) => {
-        const txt = m.replace('[Nome]', lead.nome.split(' ')[0]).replace('[Seu Nome]', currentUser);
-        return `<div class="msg-item">
-          <div class="msg-text">${esc(txt)}</div>
-          <button class="msg-copy-btn" onclick="event.stopPropagation();copyMsg(${i},'${lead.id}')">Copiar</button>
-        </div>`;
-      }).join('')}
-    </div>
-  </div>` : '';
-
+  // ── PARCEIRO ──
   const _parc    = (lead.origem||'').startsWith('Parceiro — ') ? lead.origem.replace('Parceiro — ','') : (lead.parceiro||'');
   const _parcSel = ['Michael','Jessica','Orlando'].includes(_parc) ? _parc : (_parc ? 'outro' : '');
 
-  // Seção da proposta (se existir)
+  // ── PROPOSTA ──
   const propostaHtml = lead.proposta ? (() => {
     const p = lead.proposta;
     const isSolar = p.tipo !== 'Híbrido';
-    const badgeCls = isSolar ? 'solar' : 'hibr';
     const fmtBRL = v => v ? 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—';
     const fmtN = v => v ? Number(v).toLocaleString('pt-BR') : '—';
-    return `<div class="ms" style="border-left:3px solid #EC4899;background:linear-gradient(135deg,#FDF2F8,#fff)">
+    return `<div class="ms" style="border-left:3px solid #EC4899;background:linear-gradient(135deg,#FDF2F8,#fff);padding:14px;border-radius:8px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
         <div class="ms-title${posCls}" style="margin-bottom:0;color:#9D174D">Proposta Gerada</div>
-        <span class="prop-badge ${badgeCls}" style="font-size:8px">${isSolar?'☀️ Solar':'⚡ Híbrido'}</span>
+        <span class="prop-badge ${isSolar?'solar':'hibr'}" style="font-size:8px">${isSolar?'☀️ Solar':'⚡ Híbrido'}</span>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px">
         ${p.kWp?`<div><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9D174D;margin-bottom:2px">Potência</div><div style="font-size:13px;font-weight:800;color:#1a1a2e">${Number(p.kWp).toFixed(2)} kWp</div></div>`:''}
@@ -2264,113 +2275,129 @@ function openDetail(id) {
     </div>`;
   })() : '';
 
-  document.getElementById('d-body').innerHTML = propostaHtml + notesHtml + docsHtml + msgsHtml + `
-  <div class="ms">
-    <div class="ms-title${posCls}">Informações</div>
-    <div class="info-grid">
-      <div class="if"><div class="if-lbl">Nome</div><input class="if-inp" id="d-nome" value="${esc(lead.nome)}"></div>
-      <div class="if"><div class="if-lbl">Telefone</div><input class="if-inp" id="d-tel" value="${esc(lead.telefone||'')}"></div>
-      <div class="if"><div class="if-lbl">CPF</div><input class="if-inp" id="d-cpf" value="${esc(lead.cpf||'')}" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)"></div>
-      <div class="if"><div class="if-lbl">E-mail</div><input class="if-inp" id="d-email" value="${esc(lead.email||'')}"></div>
-      <div class="if"><div class="if-lbl">Cidade</div><input class="if-inp" id="d-cidade" value="${esc(lead.cidade||'')}"></div>
-      <div class="if"><div class="if-lbl">kWh/mês</div><input class="if-inp" id="d-kwh" type="number" value="${lead.kwh||''}"></div>
-      <div class="if"><div class="if-lbl">Tipo de Imóvel</div>
-        <select class="if-sel" id="d-tipo">${['','Residencial','Comercial','Rural','Industrial','Condomínio'].map(o=>`<option${lead.tipo===o?' selected':''}>${o||'Selecione'}</option>`).join('')}</select>
-      </div>
-      <div class="if"><div class="if-lbl">Telhado</div>
-        <select class="if-sel" id="d-telhado">${['','Cerâmico','Fibrocimento','Metálico','Laje','Outro'].map(o=>`<option${lead.telhado===o?' selected':''}>${o||'Selecione'}</option>`).join('')}</select>
-      </div>
-      <div class="if"><div class="if-lbl">Sistema</div>
-        <select class="if-sel" id="d-sistema">${['','String','Microinversor','Híbrido','Off-Grid'].map(o=>`<option${lead.sistema===o?' selected':''}>${o||'Selecione'}</option>`).join('')}</select>
-      </div>
-      <div class="if"><div class="if-lbl">Origem</div>
-        <select class="if-sel" id="d-origem">${['Meta','Indicação','WhatsApp','Site','Manual'].map(o=>`<option${lead.origem===o?' selected':''}>${o}</option>`).join('')}</select>
-      </div>
-      <div class="if"><div class="if-lbl">Responsável</div>
-        <select class="if-sel" id="d-resp">${USERS.map(u=>`<option${lead.resp===u?' selected':''}>${u}</option>`).join('')}</select>
-      </div>
-      <div class="if"><div class="if-lbl">Valor (R$)</div><input class="if-inp" id="d-valor" type="number" value="${lead.valor||''}"></div>
-      <div class="if"><div class="if-lbl">Criado em</div><input class="if-inp" value="${fmtDate(lead.createdAt)}" disabled style="color:var(--text3)"></div>
-    </div>
-  </div>
-
-  ${(()=>{
-    const consultas = lead.cpfConsultas || [];
-    const cpfSt = getCpfStatus(lead);
-    const badgeStyle = {
-      none: 'background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB',
-      approved: 'background:#DCFCE7;color:#15803D;border:1px solid #BBF7D0',
-      pending: 'background:#FEF9C3;color:#A16207;border:1px solid #FDE047',
-      denied_wait: 'background:#FEE2E2;color:#991B1B;border:1px solid #FECACA',
-      denied_ready: 'background:#FEF3C7;color:#92400E;border:1px solid #FDE68A',
-    }[cpfSt.status];
-    const histHtml = consultas.length ? consultas.slice().reverse().map(c=>{
-      const dt = new Date(c.data).toLocaleDateString('pt-BR');
-      const clr = c.status==='Aprovado'?'#15803D':c.status==='Negado'?'#991B1B':'#A16207';
-      return `<div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid #F3F4F6;font-size:10px">
-        <span style="font-weight:700;color:${clr};white-space:nowrap">${dt} — ${c.status}</span>
-        ${c.obs?`<span style="color:#6B7280">${esc(c.obs)}</span>`:''}
-      </div>`;
-    }).join('') : `<div style="font-size:10px;color:#9CA3AF;padding:6px 0">Nenhuma consulta registrada.</div>`;
-    return `
+  // ── FINANCIAMENTO / CPF ──
+  const consultas = lead.cpfConsultas || [];
+  const cpfSt = getCpfStatus(lead);
+  const cpfBadgeStyle = {
+    none: 'background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB',
+    approved: 'background:#DCFCE7;color:#15803D;border:1px solid #BBF7D0',
+    pending: 'background:#FEF9C3;color:#A16207;border:1px solid #FDE047',
+    denied_wait: 'background:#FEE2E2;color:#991B1B;border:1px solid #FECACA',
+    denied_ready: 'background:#FEF3C7;color:#92400E;border:1px solid #FDE68A',
+  }[cpfSt.status];
+  const cpfHistHtml = consultas.length
+    ? consultas.slice().reverse().map(c => {
+        const dt = new Date(c.data).toLocaleDateString('pt-BR');
+        const clr = c.status==='Aprovado'?'#15803D':c.status==='Negado'?'#991B1B':'#A16207';
+        return `<div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid #F3F4F6;font-size:10px">
+          <span style="font-weight:700;color:${clr};white-space:nowrap">${dt} — ${c.status}</span>
+          ${c.obs?`<span style="color:#6B7280">${esc(c.obs)}</span>`:''}
+        </div>`;
+      }).join('')
+    : `<div style="font-size:10px;color:#9CA3AF;padding:6px 0">Nenhuma consulta registrada.</div>`;
+  const cpfHtml = `
   <div class="ms">
     <div class="ms-title${posCls}">Financiamento / CPF</div>
-    <div style="margin-bottom:10px">
-      <span style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;${badgeStyle}">${cpfSt.label}</span>
-    </div>
-    ${histHtml}
-    <div style="margin-top:10px;padding:10px;background:#F9FAFB;border-radius:8px;border:1px solid #E5E7EB" id="cpf-form-${lead.id}">
+    <div style="margin-bottom:10px"><span style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;${cpfBadgeStyle}">${cpfSt.label}</span></div>
+    ${cpfHistHtml}
+    <div style="margin-top:10px;padding:10px;background:#F9FAFB;border-radius:8px;border:1px solid #E5E7EB">
       <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Registrar Consulta</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
         <div style="display:flex;flex-direction:column;gap:3px">
           <div style="font-size:9px;color:#9CA3AF">Status</div>
           <select id="cpf-cons-status" class="if-sel" style="font-size:10px;padding:4px 8px">
-            <option>Aprovado</option>
-            <option selected>Negado</option>
-            <option>Em Análise</option>
+            <option>Aprovado</option><option selected>Negado</option><option>Em Análise</option>
           </select>
         </div>
         <div style="flex:1;min-width:140px;display:flex;flex-direction:column;gap:3px">
           <div style="font-size:9px;color:#9CA3AF">Observação (opcional)</div>
           <input id="cpf-cons-obs" class="if-inp" style="font-size:10px" placeholder="ex: score baixo, dívida ativa...">
         </div>
-        <button onclick="addCpfConsulta('${lead.id}')" class="btn btn-g btn-sm" style="font-size:10px;padding:5px 12px">+ Registrar</button>
+        <button onclick="addCpfConsulta('${id}')" class="btn btn-g btn-sm" style="font-size:10px;padding:5px 12px">+ Registrar</button>
       </div>
     </div>
   </div>`;
-  })()}
 
-  <div class="ms">
-    <div class="ms-title${posCls}">Mover para Etapa</div>
-    <div style="margin-bottom:8px;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Pré-Venda</div>
-    <div class="stage-sel" style="margin-bottom:10px">
-      ${STAGES.filter(s=>s.phase==='pre').map(s=>`<button class="ss-btn${lead.stage===s.id?' on':''}" onclick="changeStage(${s.id},this)">${s.name}</button>`).join('')}
-    </div>
-    <div style="margin-bottom:8px;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Pós-Venda</div>
-    <div class="stage-sel">
-      ${STAGES.filter(s=>s.phase==='pos').map(s=>`<button class="ss-btn pos${lead.stage===s.id?' on':''}" onclick="changeStage(${s.id},this)">${s.name}</button>`).join('')}
-    </div>
-    <div style="margin-top:10px;padding-top:10px;border-top:1px dashed #C7D2FE">
-      <div style="margin-bottom:6px;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6366F1">Oportunidade Futura</div>
-      <div class="stage-sel">
-        <button class="ss-btn${lead.stage===14?' on':''}" style="border-color:#C7D2FE;color:#4338CA${lead.stage===14?';background:#EEF2FF':''}" onclick="changeStage(14,this)">⏳ Oportunidade Futura</button>
-      </div>
-      ${lead.oportunidadeDate?`<div style="font-size:9px;color:var(--text3);margin-top:5px">Registrado em: <strong>${fmtDate(lead.oportunidadeDate)}</strong>${(()=>{const ag=ofAging(lead);return ag?` — <span class="of-badge ${ag.cls}">${ag.label}</span>`:''})()}</div>`:''}
-      ${lead.stage===14?`<div style="margin-top:8px;display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+  // ── OPORTUNIDADE FUTURA CARD (só quando stage===14) ──
+  const ofCardHtml = lead.stage === 14 ? (() => {
+    const ag = ofAging(lead);
+    return `<div class="of-card">
+      <div class="of-card-title">⏳ Oportunidade Futura${ag?` <span class="of-badge ${ag.cls}">${ag.label}</span>`:''}</div>
+      ${lead.oportunidadeDate?`<div style="font-size:10px;color:#4338CA;margin-bottom:10px">Registrado em: <strong>${fmtDate(lead.oportunidadeDate)}</strong></div>`:''}
+      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
         <span style="font-size:9px;font-weight:700;color:#4338CA;letter-spacing:.5px">Mês de retorno:</span>
         <select id="d-retorno" class="if-inp" style="font-size:10px;padding:3px 7px;border-color:#C7D2FE;color:#1e1b4b;cursor:pointer;min-width:155px" onchange="saveRetornoMonth(this.value)">
           ${retornoMonthOptions(lead.retornoMonth||'')}
         </select>
         ${lead.retornoMonth?`<button onclick="saveRetornoMonth('')" style="font-size:9px;padding:2px 8px;background:#FEE2E2;color:#991B1B;border:1px solid #FECACA;border-radius:5px;cursor:pointer">✕ Limpar</button>`:''}
-      </div>`:''}
-    </div>
-  </div>
+      </div>
+    </div>`;
+  })() : '';
 
-  ${tasks.length>0?`
+  // ── CALCULAR PROPOSTA (colapsado) ──
+  const calcHtml = `
+  <details class="ms-details">
+    <summary>Calcular Proposta / Comissão</summary>
+    <div class="ms-details-body">
+      <div class="info-grid" style="margin-bottom:10px">
+        <div class="if"><div class="if-lbl">Valor Projeto (R$)</div><input class="if-inp" id="pp-proj" type="number" placeholder="45000" value="${lead.valorProjeto||''}" oninput="calcPP()"></div>
+        <div class="if"><div class="if-lbl">Potência (kWp)</div><input class="if-inp" id="pp-kwp" type="number" step="0.1" placeholder="5.5" value="${lead.kwp||''}" oninput="calcPPInst()"></div>
+        <div class="if"><div class="if-lbl">Custo Equipamentos (R$)</div><input class="if-inp" id="pp-equip" type="number" placeholder="22000" value="${lead.custoEquipamento||''}" oninput="calcPP()"></div>
+        <div class="if"><div class="if-lbl">Custo Instalação (R$)</div><input class="if-inp" id="pp-inst" type="number" placeholder="auto p/ kWp" value="${lead.custoInstalacao||''}" oninput="calcPP()"></div>
+        <div class="if"><div class="if-lbl">Impostos 10% (auto)</div><input class="if-inp" id="pp-imp" disabled style="color:var(--text3)"></div>
+        <div class="if"><div class="if-lbl">% Comissão Parceiro</div><input class="if-inp" id="pp-pct" type="number" step="0.1" value="${lead.pctComissao||15}" oninput="calcPP()"></div>
+      </div>
+      <div class="pp-calc">
+        <div class="pp-calc-item"><div class="pp-calc-lbl">Margem Bruta</div><div class="pp-calc-val" id="pp-mgm">—</div></div>
+        <div class="pp-calc-item"><div class="pp-calc-lbl" style="color:#F59E0B">Pós-Venda 20%</div><div class="pp-calc-val" style="color:#F59E0B" id="pp-posv">—</div></div>
+        <div class="pp-calc-item"><div class="pp-calc-lbl">Comissão Parceiro</div><div class="pp-calc-val" style="color:var(--gold-d)" id="pp-com">—</div></div>
+        <div class="pp-calc-item"><div class="pp-calc-lbl" style="color:#22C55E">Lucro Empresa</div><div class="pp-calc-val" style="color:#22C55E" id="pp-lucro">—</div></div>
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:5px">Parceiro (opcional)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <select id="pp-parceiro-sel" onchange="onParcSelect()" class="if-inp" style="cursor:pointer">
+              <option value="" ${_parcSel===''?'selected':''}>Sem parceiro</option>
+              <option value="Michael" ${_parcSel==='Michael'?'selected':''}>Michael</option>
+              <option value="Jessica" ${_parcSel==='Jessica'?'selected':''}>Jessica</option>
+              <option value="Orlando" ${_parcSel==='Orlando'?'selected':''}>Orlando</option>
+              <option value="outro" ${_parcSel==='outro'?'selected':''}>Outro (digitar)</option>
+            </select>
+            <input id="pp-parceiro-outro" class="if-inp" placeholder="Nome do parceiro" style="margin-top:6px;display:${_parcSel==='outro'?'block':'none'}" value="${_parcSel==='outro'?_parc:''}">
+          </div>
+          <div><button class="btn btn-g" style="width:100%" onclick="lancarPP('${id}')">→ Salvar / Enviar ao Parceiro</button></div>
+        </div>
+      </div>
+    </div>
+  </details>`;
+
+  // ── MOVER ETAPA ──
+  const etapaHtml = `
+  <div class="ms">
+    <div class="ms-title n">Mover para Etapa</div>
+    <div style="margin-bottom:8px;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Pré-Venda</div>
+    <div class="stage-sel" style="margin-bottom:10px">
+      ${STAGES.filter(s=>s.phase==='pre').map(s=>`<button class="ss-btn${lead.stage===s.id?' on':''}" onclick="changeStage(${s.id},this)">${s.name}</button>`).join('')}
+    </div>
+    <div style="margin-bottom:8px;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Pós-Venda</div>
+    <div class="stage-sel" style="margin-bottom:10px">
+      ${STAGES.filter(s=>s.phase==='pos').map(s=>`<button class="ss-btn pos${lead.stage===s.id?' on':''}" onclick="changeStage(${s.id},this)">${s.name}</button>`).join('')}
+    </div>
+    <div style="padding-top:10px;border-top:1px dashed #C7D2FE">
+      <div style="margin-bottom:6px;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6366F1">Oportunidade Futura</div>
+      <div class="stage-sel">
+        <button class="ss-btn${lead.stage===14?' on':''}" style="border-color:#C7D2FE;color:#4338CA${lead.stage===14?';background:#EEF2FF':''}" onclick="changeStage(14,this)">⏳ Oportunidade Futura</button>
+      </div>
+    </div>
+  </div>`;
+
+  // ── CHECKLIST ──
+  const checklistHtml = tasks.length > 0 ? `
   <div class="ms">
     <div class="ms-title${posCls}">Checklist — ${STAGES[lead.stage].name} (${doneCount}/${tasks.length})</div>
     <div class="ck-list">
-      ${tasks.map((t,i)=>{
+      ${tasks.map((t,i) => {
         const chk = doneTasks[i]===true;
         return `<div class="ck-item${isPos?' pos-item':''}" onclick="toggleTask(${i})">
           <div class="ck-box${chk?' on':''}${isPos?' t':''}" id="ckb-${i}">
@@ -2380,45 +2407,94 @@ function openDetail(id) {
         </div>`;
       }).join('')}
     </div>
-  </div>`:''}
+  </div>` : '';
 
-  <div class="pp-card">
-    <div class="pp-title">Calcular Proposta / Comissão</div>
-    <div class="info-grid">
-      <div class="if"><div class="if-lbl">Valor Projeto (R$)</div><input class="if-inp" id="pp-proj" type="number" placeholder="45000" value="${lead.valorProjeto||''}" oninput="calcPP()"></div>
-      <div class="if"><div class="if-lbl">Potência (kWp)</div><input class="if-inp" id="pp-kwp" type="number" step="0.1" placeholder="5.5" value="${lead.kwp||''}" oninput="calcPPInst()"></div>
-      <div class="if"><div class="if-lbl">Custo Equipamentos (R$)</div><input class="if-inp" id="pp-equip" type="number" placeholder="22000" value="${lead.custoEquipamento||''}" oninput="calcPP()"></div>
-      <div class="if"><div class="if-lbl">Custo Instalação (R$)</div><input class="if-inp" id="pp-inst" type="number" placeholder="auto p/ kWp" value="${lead.custoInstalacao||''}" oninput="calcPP()"></div>
-      <div class="if"><div class="if-lbl">Impostos 10% (auto)</div><input class="if-inp" id="pp-imp" disabled style="color:var(--text3)"></div>
-      <div class="if"><div class="if-lbl">% Comissão Parceiro</div><input class="if-inp" id="pp-pct" type="number" step="0.1" value="${lead.pctComissao||15}" oninput="calcPP()"></div>
-    </div>
-    <div class="pp-calc">
-      <div class="pp-calc-item"><div class="pp-calc-lbl">Margem Bruta</div><div class="pp-calc-val" id="pp-mgm">—</div></div>
-      <div class="pp-calc-item"><div class="pp-calc-lbl" style="color:#F59E0B">Pós-Venda 20%</div><div class="pp-calc-val" style="color:#F59E0B" id="pp-posv">—</div></div>
-      <div class="pp-calc-item"><div class="pp-calc-lbl">Comissão Parceiro</div><div class="pp-calc-val" style="color:var(--gold-d)" id="pp-com">—</div></div>
-      <div class="pp-calc-item"><div class="pp-calc-lbl" style="color:#22C55E">Lucro Empresa</div><div class="pp-calc-val" style="color:#22C55E" id="pp-lucro">—</div></div>
-    </div>
-    <div style="margin-top:10px">
-      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:5px">Parceiro (opcional)</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div>
-          <select id="pp-parceiro-sel" onchange="onParcSelect()" class="if-inp" style="cursor:pointer">
-            <option value="" ${_parcSel===''?'selected':''}>Sem parceiro</option>
-            <option value="Michael" ${_parcSel==='Michael'?'selected':''}>Michael</option>
-            <option value="Jessica" ${_parcSel==='Jessica'?'selected':''}>Jessica</option>
-            <option value="Orlando" ${_parcSel==='Orlando'?'selected':''}>Orlando</option>
-            <option value="outro" ${_parcSel==='outro'?'selected':''}>Outro (digitar)</option>
-          </select>
-          <input id="pp-parceiro-outro" class="if-inp" placeholder="Nome do parceiro" style="margin-top:6px;display:${_parcSel==='outro'?'block':'none'}" value="${_parcSel==='outro'?_parc:''}">
-        </div>
-        <div style="display:flex;flex-direction:column;justify-content:flex-start;gap:6px">
-          <button class="btn btn-g" style="width:100%;margin-top:0" onclick="lancarPP('${id}')">→ Salvar / Enviar ao Parceiro</button>
-        </div>
+  // ── SCRIPTS ──
+  const stageScripts = SCRIPTS.stages[lead.stage] || [];
+  const scriptsHtml = `
+  <div class="ms">
+    <div class="ms-title n">Scripts — ${esc(STAGES[lead.stage].name)}</div>
+    ${stageScripts.length > 0
+      ? stageScripts.map((s, i) => `<div class="script-card">
+          <div class="script-label">${esc(s.label)}</div>
+          <div class="script-text">${esc(s.text)}</div>
+          <button class="script-copy" onclick="copyScript('stage',${i},'${id}')">Copiar</button>
+        </div>`).join('')
+      : '<div style="font-size:11px;color:var(--text3);padding:6px 0">Nenhum script específico para esta etapa.</div>'}
+    <details class="ms-details">
+      <summary>Objeções Frequentes</summary>
+      <div class="ms-details-body">
+        ${SCRIPTS.global.objecoes.map((o, i) => `<div class="faq-block">
+          <div class="faq-q">${esc(o.q)}</div>
+          <div class="faq-a">${esc(o.a)}</div>
+          <div class="faq-script">${esc(o.script)} <button class="script-copy" style="position:static;margin-left:8px" onclick="copyScript('objecao',${i},'${id}')">Copiar</button></div>
+        </div>`).join('')}
       </div>
-    </div>
-  </div>
+    </details>
+    <details class="ms-details">
+      <summary>Comparativo Solar vs Híbrido</summary>
+      <div class="ms-details-body" style="font-size:12px;color:var(--text2);line-height:1.7">
+        <p><strong style="color:var(--gold-d)">On-Grid (Solar)</strong><br>Conectado à rede. Reduz ~85% da conta. Payback de 4–6 anos. Sistema mais simples e acessível. Não funciona em apagão.</p>
+        <p style="margin-top:10px"><strong style="color:#4338CA">Híbrido (GoodWe + Bateria)</strong><br>Gera, armazena e usa energia das baterias à noite ou em apagão. Autonomia total. Economia ainda maior. Investimento maior — compensado pela segurança e uso noturno da energia gerada.</p>
+      </div>
+    </details>
+  </div>`;
 
-  ${lead.stage >= 13 ? (() => {
+  // ── DOCUMENTOS ──
+  const DOC_ICONS = {'RG/CNH':'🪪','Fatura de Energia':'⚡','Contrato':'📄','Outro':'📎'};
+  const docs = lead.docs || [];
+  const docsHtml = `
+  <div class="docs-panel">
+    <div class="docs-panel-title">Documentos do Cliente</div>
+    ${docs.length === 0
+      ? '<div style="font-size:11px;color:#166534;opacity:.7;margin-bottom:10px">Nenhum documento enviado ainda.</div>'
+      : docs.map(d => `<div class="doc-item">
+          <div class="doc-icon">${DOC_ICONS[d.tipo]||'📎'}</div>
+          <div class="doc-info">
+            <div class="doc-tipo">${d.tipo}</div>
+            <div class="doc-nome">${esc(d.nome||'Documento')}</div>
+            <div class="doc-meta">${d.user||'Sistema'} · ${fmtDateTime(d.ts)}</div>
+          </div>
+          <a class="btn btn-g btn-sm" href="${d.link}" target="_blank" style="text-decoration:none;font-size:10px;padding:7px 14px;flex-shrink:0">📂 Abrir</a>
+        </div>`).join('')}
+    <div class="doc-uploads">
+      <label class="doc-upload-btn">🪪 RG / CNH<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('RG/CNH','${id}',this)"></label>
+      <label class="doc-upload-btn">⚡ Fatura de Energia<input type="file" style="display:none" accept="image/*,.pdf" onchange="uploadDoc('Fatura de Energia','${id}',this)"></label>
+      <label class="doc-upload-btn">📄 Contrato<input type="file" style="display:none" accept="image/*,.pdf,.doc,.docx" onchange="uploadDoc('Contrato','${id}',this)"></label>
+      <label class="doc-upload-btn">📎 Outro<input type="file" style="display:none" onchange="uploadDoc('Outro','${id}',this)"></label>
+    </div>
+  </div>`;
+
+  // ── TIMELINE UNIFICADA ──
+  const allEvents = [
+    ...(lead.notes||[]).map(n => ({...n, type:'note'})),
+    ...(lead.history||[]).map(h => ({...h, type:'sys'}))
+  ].sort((a, b) => b.ts - a.ts);
+  const timelineHtml = `
+  <div class="ms">
+    <div class="ms-title n">Histórico</div>
+    <div class="hist" id="d-timeline">
+      ${allEvents.length === 0
+        ? '<div style="font-size:11px;color:var(--text3);padding:8px 0">Nenhuma atividade registrada.</div>'
+        : allEvents.map((e, i, arr) => `<div class="h-row tl-${e.type}">
+            <div class="h-lwrap">
+              <div class="h-dot"></div>
+              ${i < arr.length-1 ? '<div class="h-vl"></div>' : ''}
+            </div>
+            <div class="h-content">
+              <div class="h-txt">${esc(e.text)}</div>
+              <div class="h-meta">${e.user||'Sistema'} · ${fmtDateTime(e.ts)}</div>
+            </div>
+          </div>`).join('')}
+    </div>
+    <div class="hist-inp-row">
+      <input class="hist-inp" id="note-inp" placeholder="Adicionar anotação..." onkeydown="if(event.key==='Enter')addNote()">
+      <button class="btn btn-s btn-sm" onclick="addNote()">+ Nota</button>
+    </div>
+  </div>`;
+
+  // ── SERVIÇOS ──
+  const servicosHtml = lead.stage >= 13 ? (() => {
     const srvs = getServicos().filter(sv => sv.leadId === lead.id);
     return `<div class="ms">
       <div class="ms-title t">Serviços deste Cliente</div>
@@ -2434,31 +2510,58 @@ function openDetail(id) {
           </div>`).join('')}
       <button class="btn btn-t btn-sm" style="margin-top:8px" onclick="closeModal('ov-detail');openAddServico('${id}')">+ Novo Serviço</button>
     </div>`;
-  })() : ''}
+  })() : '';
 
-  <div class="ms">
-    <div class="ms-title n">Histórico</div>
-    <div class="hist" id="d-hist">
-      ${(lead.history||[]).slice().reverse().map((h,i,a)=>`
-        <div class="h-row">
-          <div class="h-lwrap">
-            <div class="h-dot${isPos?' t':''}"></div>
-            ${i<a.length-1?'<div class="h-vl"></div>':''}
+  // ── MONTAR 3 PAINÉIS ──
+  document.getElementById('d-body').innerHTML = `
+    <div class="d-tab-panel active" data-panel="resumo">
+      ${propostaHtml}
+      <div class="ms">
+        <div class="ms-title${posCls}">Informações</div>
+        <div class="info-grid">
+          <div class="if"><div class="if-lbl">Nome</div><input class="if-inp" id="d-nome" value="${esc(lead.nome)}"></div>
+          <div class="if"><div class="if-lbl">Telefone</div><input class="if-inp" id="d-tel" value="${esc(lead.telefone||'')}"></div>
+          <div class="if"><div class="if-lbl">CPF</div><input class="if-inp" id="d-cpf" value="${esc(lead.cpf||'')}" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)"></div>
+          <div class="if"><div class="if-lbl">E-mail</div><input class="if-inp" id="d-email" value="${esc(lead.email||'')}"></div>
+          <div class="if"><div class="if-lbl">Cidade</div><input class="if-inp" id="d-cidade" value="${esc(lead.cidade||'')}"></div>
+          <div class="if"><div class="if-lbl">kWh/mês</div><input class="if-inp" id="d-kwh" type="number" value="${lead.kwh||''}"></div>
+          <div class="if"><div class="if-lbl">Tipo de Imóvel</div>
+            <select class="if-sel" id="d-tipo">${['','Residencial','Comercial','Rural','Industrial','Condomínio'].map(o=>`<option${lead.tipo===o?' selected':''}>${o||'Selecione'}</option>`).join('')}</select>
           </div>
-          <div class="h-content">
-            <div class="h-txt">${esc(h.text)}</div>
-            <div class="h-meta">${h.user||'Sistema'} · ${fmtDateTime(h.ts)}</div>
+          <div class="if"><div class="if-lbl">Telhado</div>
+            <select class="if-sel" id="d-telhado">${['','Cerâmico','Fibrocimento','Metálico','Laje','Outro'].map(o=>`<option${lead.telhado===o?' selected':''}>${o||'Selecione'}</option>`).join('')}</select>
           </div>
-        </div>`).join('')}
+          <div class="if"><div class="if-lbl">Sistema</div>
+            <select class="if-sel" id="d-sistema">${['','String','Microinversor','Híbrido','Off-Grid'].map(o=>`<option${lead.sistema===o?' selected':''}>${o||'Selecione'}</option>`).join('')}</select>
+          </div>
+          <div class="if"><div class="if-lbl">Origem</div>
+            <select class="if-sel" id="d-origem">${['Meta','Indicação','WhatsApp','Site','Manual'].map(o=>`<option${lead.origem===o?' selected':''}>${o}</option>`).join('')}</select>
+          </div>
+          <div class="if"><div class="if-lbl">Responsável</div>
+            <select class="if-sel" id="d-resp">${USERS.map(u=>`<option${lead.resp===u?' selected':''}>${u}</option>`).join('')}</select>
+          </div>
+          <div class="if"><div class="if-lbl">Valor (R$)</div><input class="if-inp" id="d-valor" type="number" value="${lead.valor||''}"></div>
+          <div class="if"><div class="if-lbl">Criado em</div><input class="if-inp" value="${fmtDate(lead.createdAt)}" disabled style="color:var(--text3)"></div>
+        </div>
+      </div>
+      ${cpfHtml}
+      ${ofCardHtml}
+      ${calcHtml}
     </div>
-    <div class="hist-inp-row">
-      <input class="hist-inp" id="hist-new" placeholder="Adicionar anotação..." onkeydown="if(event.key==='Enter')addHistory()">
-      <button class="btn btn-s btn-sm" onclick="addHistory()">Registrar</button>
+
+    <div class="d-tab-panel" data-panel="comercial">
+      ${etapaHtml}
+      ${checklistHtml}
+      ${scriptsHtml}
     </div>
-  </div>
+
+    <div class="d-tab-panel" data-panel="historico">
+      ${docsHtml}
+      ${timelineHtml}
+      ${servicosHtml}
+    </div>
   `;
 
-  // Recalcula proposta com dados salvos do lead
   if (lead.valorProjeto) calcPP();
   openModal('ov-detail');
 }
@@ -2471,9 +2574,6 @@ function toggleLookalike() {
   lead.history = lead.history || [];
   lead.history.push({ text: lead.lookalike ? 'Marcado como Lookalike' : 'Removido de Lookalike', user: currentUser, ts: Date.now() });
   saveLeads(leads, lead);
-  const lkBtn = document.getElementById('d-lk-btn');
-  lkBtn.textContent = lead.lookalike ? '◉ Lookalike ✓' : '◎ Lookalike';
-  lkBtn.className = 'lk-btn' + (lead.lookalike ? ' active' : '');
   toast(lead.lookalike ? '◉ Cliente marcado como Lookalike' : 'Lookalike removido', 'ok');
   renderDashboard(); renderKanban(); renderLeadsList();
 }
@@ -2523,28 +2623,6 @@ function toggleTask(i) {
   if (txt) txt.className = `ck-text${chk?' done':''}`;
 }
 
-function addHistory() {
-  const inp = document.getElementById('hist-new');
-  const text = inp.value.trim();
-  if (!text) return;
-  const leads = getLeads();
-  const lead = leads.find(l => l.id === editingId);
-  if (!lead) return;
-  lead.history = lead.history || [];
-  lead.history.push({ text, user:currentUser, ts:Date.now() });
-  lead.updatedAt = Date.now();
-  saveLeads(leads, lead);
-  inp.value = '';
-  const hist = document.getElementById('d-hist');
-  const isPos = lead.stage >= 7;
-  hist.insertAdjacentHTML('afterbegin', `<div class="h-row">
-    <div class="h-lwrap"><div class="h-dot${isPos?' t':''}"></div></div>
-    <div class="h-content">
-      <div class="h-txt">${esc(text)}</div>
-      <div class="h-meta">${currentUser} · Agora</div>
-    </div>
-  </div>`);
-}
 
 function uploadDoc(tipo, leadId, input) {
   const file = input.files[0];
@@ -2900,6 +2978,48 @@ function limparDuplicatas() {
   renderDashboard(); renderKanban(); renderLeadsList();
   toast(`${removed} card(s) duplicado(s) removido(s)!`, 'ok');
 }
+
+// ── BACKUP NO SERVIDOR ──────────────────────────────────────────────
+async function abrirPainelBackupServidor() {
+  const lista = document.getElementById('backups-servidor-lista');
+  lista.style.display = 'block';
+  lista.innerHTML = '<span style="color:var(--text3);font-size:12px">Carregando backups...</span>';
+  const cfg = getConfig();
+  if (!cfg.gsUrl) { lista.innerHTML = '<span style="color:#EF4444">URL do servidor não configurada.</span>'; return; }
+  try {
+    const data = await jsonpFetch(cfg.gsUrl + '?action=list_backups');
+    if (!Array.isArray(data) || data.length === 0) {
+      lista.innerHTML = '<span style="color:var(--text3);font-size:12px">Nenhum backup encontrado. Os backups são criados automaticamente a cada salvamento.</span>';
+      return;
+    }
+    lista.innerHTML = data.map(b => `
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:12px;color:var(--text2);flex:1">${b.label} &nbsp;<span style="color:var(--text3)">(${b.count} leads)</span></span>
+        <button class="btn btn-s" style="font-size:11px;padding:3px 10px" onclick="restaurarBackupServidor('${b.aba}','${b.label}',${b.count})">Restaurar</button>
+      </div>`).join('');
+  } catch(e) {
+    lista.innerHTML = '<span style="color:#EF4444;font-size:12px">Falha ao carregar backups. Verifique a conexão.</span>';
+  }
+}
+async function restaurarBackupServidor(aba, label, count) {
+  if (!ADMINS.includes(currentUser)) { toast('Apenas o admin pode restaurar backups.', 'err'); return; }
+  if (!confirm(`Restaurar backup "${label}" com ${count} leads?\n\nO estado atual será salvo como backup antes da restauração.`)) return;
+  const cfg = getConfig();
+  toast('Restaurando backup...', '');
+  try {
+    const res = await jsonpFetch(cfg.gsUrl + '?action=restore_backup&aba=' + encodeURIComponent(aba));
+    if (res && res.ok) {
+      toast(`Backup restaurado! ${res.count} leads carregados.`, 'ok');
+      await loadFromSheets(false);
+      renderKanban(); renderLeadsList(); renderDashboard();
+    } else {
+      toast('Erro: ' + (res && res.error ? res.error : 'falha desconhecida'), 'err');
+    }
+  } catch(e) {
+    toast('Falha na comunicação com o servidor.', 'err');
+  }
+}
+// ────────────────────────────────────────────────────────────────────
 
 function exportJSON() {
   const d={leads:getLeads(),config:getConfig(),exportedAt:new Date().toISOString()};
