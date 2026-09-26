@@ -661,10 +661,9 @@ async function enviarHomologacao() {
       videos:         videosPayload
     };
 
-    const resp = await fetch(ENDPOINT_HOMOLAG, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'save_homologacao', data: dados })
-    });
+    const formData = new FormData();
+    formData.append('payload', JSON.stringify({ action: 'save_homologacao', data: dados }));
+    const resp = await fetch(ENDPOINT_HOMOLAG, { method: 'POST', body: formData });
     const json = await resp.json();
     if (json.status === 'ok') {
       showToast('Enviado! ID: ' + json.id + ' — Pasta criada no Drive.', 'ok');
