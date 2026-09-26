@@ -54,6 +54,7 @@ function doPost(e) {
     if      (action === 'save_homologacao')       result = saveHomologacao(body.data);
     else if (action === 'save_homologacao_dados') result = saveHomologacaoDados(body.data);
     else if (action === 'upload_video')           result = uploadVideoNaPasta(body.data);
+    else if (action === 'gerar_upload_urls')      result = gerarUploadUrls(body.data);
     else result = { status: 'error', message: 'Ação desconhecida.' };
   } catch (err) {
     result = { status: 'error', message: err.message };
@@ -239,6 +240,41 @@ function obterLinkArquivoPasta(pasta, prefixo) {
     }
   } catch (e) { /* ignora */ }
   return '';
+}
+
+// ────────────────────────────────────────────────
+// GERAR URLs DE UPLOAD DIRETO (browser → Drive)
+// ────────────────────────────────────────────────
+
+function gerarUploadUrls(data) {
+  if (!data.pastaId || !data.videos) return { status: 'error', message: 'Dados incompletos.' };
+  const token = ScriptApp.getOAuthToken();
+  const urls = [];
+  data.videos.forEach(v => {
+    try {
+      const mime = v.mimeType || 'video/mp4';
+      const metadata = JSON.stringify({ name: v.nomeArquivo || (v.id + '.mp4'), parents: [data.pastaId] });
+      const resp = UrlFetchApp.fetch(
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable',
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Upload-Content-Type': mime
+          },
+          payload: metadata,
+          muteHttpExceptions: true
+        }
+      );
+      const hdrs = resp.getHeaders();
+      const location = hdrs['Location'] || hdrs['location'];
+      urls.push({ id: v.id, uploadUrl: location || null });
+    } catch (e) {
+      urls.push({ id: v.id, uploadUrl: null, erro: e.message });
+    }
+  });
+  return { status: 'ok', urls: urls };
 }
 
 // ────────────────────────────────────────────────

@@ -686,14 +686,12 @@ async function enviarHomologacao() {
   if (ENDPOINT_HOMOLAG.includes('COLE_A_URL')) { showToast('Configure o endpoint do Apps Script no código.', 'err'); return; }
 
   const vids = CONCESSIONARIAS[state.concSelecionada].videos;
+  const videosComBlob = vids.filter(v => state.videos[v.id] && state.videos[v.id].blob);
 
-  // Lista de vídeos sem base64 (enviados individualmente depois)
-  const videosInfo = vids
-    .filter(v => state.videos[v.id] && state.videos[v.id].blob)
-    .map(v => {
-      const info = state.videos[v.id];
-      return { id: v.id, nome: v.nome, nomeArquivo: info.nome, tamanho: info.tamanho, obs: info.obs || '', grande: true };
-    });
+  const videosInfo = videosComBlob.map(v => {
+    const info = state.videos[v.id];
+    return { id: v.id, nome: v.nome, nomeArquivo: info.nome, mimeType: info.blob.type || 'video/mp4', tamanho: info.tamanho, obs: info.obs || '', grande: true };
+  });
 
   const dados = {
     instalador:     document.getElementById('instalador').value,
@@ -710,7 +708,7 @@ async function enviarHomologacao() {
   abrirOverlay();
   try {
     // ── Passo 1: cria registro e pasta no Drive ──
-    atualizarOverlay('Criando registro...', 0, 0, 0);
+    atualizarOverlay('Criando registro...', 0, videosComBlob.length, 0);
     const r1 = await fetch(ENDPOINT_HOMOLAG, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -721,29 +719,55 @@ async function enviarHomologacao() {
 
     const { id, pastaId } = j1;
 
-    // ── Passo 2: envia cada vídeo individualmente ──
-    const videosComBlob = vids.filter(v => state.videos[v.id] && state.videos[v.id].blob && state.videos[v.id].tamanho <= 50 * 1024 * 1024);
-    const total = videosComBlob.length;
-    let i = 0;
-    for (const v of videosComBlob) {
-      i++;
-      const info = state.videos[v.id];
-      atualizarOverlay(v.nome, i, total, Math.round((i - 1) / total * 100));
-      const b64 = await fileToBase64(info.blob);
-      try {
-        await fetch(ENDPOINT_HOMOLAG, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'upload_video', data: { id, pastaId, video: { id: v.id, nome: v.nome, nomeArquivo: info.nome, base64: b64, obs: info.obs || '' } } })
-        });
-      } catch (e) { /* continua mesmo com falha individual */ }
-      atualizarOverlay(v.nome, i, total, Math.round(i / total * 100));
+    if (videosComBlob.length > 0 && pastaId) {
+      // ── Passo 2: gera URLs de upload direto no Drive ──
+      atualizarOverlay('Preparando upload...', 0, videosComBlob.length, 5);
+      const r2 = await fetch(ENDPOINT_HOMOLAG, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'gerar_upload_urls', data: { id, pastaId, videos: videosInfo } })
+      });
+      const j2 = await r2.json();
+      if (j2.status !== 'ok') { fecharOverlayErro('Erro ao preparar upload: ' + (j2.message || 'falha')); return; }
+
+      // ── Passo 3: upload direto do browser para o Drive ──
+      const urlMap = {};
+      j2.urls.forEach(u => { if (u.uploadUrl) urlMap[u.id] = u.uploadUrl; });
+
+      const total = videosComBlob.length;
+      let idx = 0;
+      for (const v of videosComBlob) {
+        idx++;
+        const info = state.videos[v.id];
+        const uploadUrl = urlMap[v.id];
+        if (!uploadUrl) continue;
+        await uploadDireto(uploadUrl, info.blob, v.nome, idx, total);
+      }
     }
 
     concluirOverlay(id);
   } catch (err) {
     fecharOverlayErro('Falha na conexão: ' + err.message);
   }
+}
+
+function uploadDireto(uploadUrl, blob, nome, idx, total) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', uploadUrl);
+    xhr.setRequestHeader('Content-Type', blob.type || 'video/mp4');
+    xhr.upload.onprogress = e => {
+      if (!e.lengthComputable) return;
+      const videoPct = Math.round(e.loaded / e.total * 100);
+      const globalPct = Math.round(10 + ((idx - 1 + e.loaded / e.total) / total) * 88);
+      document.getElementById('overlayMsg').textContent = nome + ' — ' + videoPct + '%';
+      document.getElementById('overlayBar').style.width = globalPct + '%';
+      document.getElementById('overlayInfo').textContent = idx + ' / ' + total + ' vídeos';
+    };
+    xhr.onload = () => (xhr.status >= 200 && xhr.status < 300) ? resolve() : reject(new Error('HTTP ' + xhr.status));
+    xhr.onerror = () => reject(new Error('Falha no upload de ' + nome));
+    xhr.send(blob);
+  });
 }
 
 // ──────────────────────────────────────────────
