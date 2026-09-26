@@ -53,6 +53,7 @@ function doPost(e) {
     const action = body.action || 'save_homologacao';
     if      (action === 'save_homologacao')       result = saveHomologacao(body.data);
     else if (action === 'save_homologacao_dados') result = saveHomologacaoDados(body.data);
+    else if (action === 'upload_video')           result = uploadVideoNaPasta(body.data);
     else result = { status: 'error', message: 'Ação desconhecida.' };
   } catch (err) {
     result = { status: 'error', message: err.message };
@@ -166,7 +167,7 @@ function saveHomologacao(data) {
     Logger.log('E-mail error: ' + mailErr.message);
   }
 
-  return { status: 'ok', id: id, row: sheet.getLastRow(), pastaLink: pastaLink };
+  return { status: 'ok', id: id, row: sheet.getLastRow(), pastaLink: pastaLink, pastaId: pasta ? pasta.getId() : '' };
 }
 
 // ────────────────────────────────────────────────
@@ -238,6 +239,26 @@ function obterLinkArquivoPasta(pasta, prefixo) {
     }
   } catch (e) { /* ignora */ }
   return '';
+}
+
+// ────────────────────────────────────────────────
+// UPLOAD INDIVIDUAL DE VÍDEO NA PASTA JÁ CRIADA
+// ────────────────────────────────────────────────
+
+function uploadVideoNaPasta(data) {
+  if (!data.pastaId || !data.video || !data.video.base64) return { status: 'error', message: 'Dados incompletos.' };
+  try {
+    const pasta = DriveApp.getFolderById(data.pastaId);
+    const v = data.video;
+    const partes = v.base64.split(',');
+    const mime = partes[0].match(/:(.*?);/)[1];
+    const bytes = Utilities.base64Decode(partes[1]);
+    const nomeArquivo = v.nomeArquivo || (v.nome || v.id).replace(/\s+/g, '-');
+    pasta.createFile(Utilities.newBlob(bytes, mime, nomeArquivo));
+    return { status: 'ok' };
+  } catch (e) {
+    return { status: 'error', message: e.message };
+  }
 }
 
 function obterOuCriarPastaHomolag(nome, pai) {
