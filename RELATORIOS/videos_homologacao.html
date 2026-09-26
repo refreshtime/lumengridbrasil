@@ -203,6 +203,45 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 /* ─── FOOTER ─── */
 .footer { text-align: center; font-size: 10px; color: var(--t4); padding: 16px; border-top: 1px solid var(--border); margin-top: auto; }
+
+/* ─── OVERLAY DE ENVIO ─── */
+.upload-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: rgba(0,0,0,.88); backdrop-filter: blur(5px);
+  display: flex; align-items: center; justify-content: center;
+}
+.upload-overlay.hide { display: none; }
+.upload-modal {
+  background: #1a1a1a; border: 1.5px solid rgba(242,101,34,.4);
+  border-radius: 16px; padding: 32px 28px; max-width: 340px; width: 90%;
+  text-align: center; display: flex; flex-direction: column; gap: 16px;
+  box-shadow: 0 0 60px rgba(242,101,34,.15);
+}
+.upload-spinner {
+  width: 44px; height: 44px; border: 3px solid rgba(242,101,34,.2);
+  border-top-color: var(--or); border-radius: 50%;
+  margin: 0 auto; animation: spin .8s linear infinite;
+}
+.upload-spinner.done { border-color: rgba(34,197,94,.4); border-top-color: var(--ok); animation: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.upload-titulo { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--t1); }
+.upload-subtitulo { font-size: 12px; color: var(--t2); min-height: 18px; line-height: 1.5; }
+.upload-bar-wrap { height: 7px; background: var(--card); border-radius: 4px; overflow: hidden; }
+.upload-bar-fill { height: 100%; background: var(--or); border-radius: 4px; transition: width .4s ease; }
+.upload-info { font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--t3); letter-spacing: .5px; }
+.upload-aviso {
+  font-size: 10px; color: var(--warn);
+  background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.2);
+  border-radius: 6px; padding: 8px 10px; line-height: 1.5;
+}
+.upload-btn-fechar {
+  display: none; margin-top: 4px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  background: var(--or); color: #fff; border: none; border-radius: 6px;
+  padding: 10px 16px; cursor: pointer;
+}
+.upload-btn-fechar.show { display: block; }
 </style>
 </head>
 <body>
@@ -335,6 +374,19 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 <div class="footer">Feito por Domani Consultoria</div>
 <div class="toast" id="toast"></div>
+
+<!-- ─── OVERLAY DE ENVIO ─── -->
+<div class="upload-overlay hide" id="uploadOverlay">
+  <div class="upload-modal">
+    <div class="upload-spinner" id="overlaySpinner"></div>
+    <div class="upload-titulo" id="overlayTitulo">Enviando...</div>
+    <div class="upload-subtitulo" id="overlayMsg">Criando registro...</div>
+    <div class="upload-bar-wrap"><div class="upload-bar-fill" id="overlayBar" style="width:0%"></div></div>
+    <div class="upload-info" id="overlayInfo"></div>
+    <div class="upload-aviso">⚠️ Não feche esta tela.<br>Aguarde até o envio ser concluído.</div>
+    <button class="upload-btn-fechar" id="overlayFechar" onclick="fecharOverlay()">✓ Concluído — Fechar</button>
+  </div>
+</div>
 
 <script>
 // ──────────────────────────────────────────────
@@ -655,26 +707,28 @@ async function enviarHomologacao() {
     videos:         videosInfo
   };
 
+  abrirOverlay();
   try {
     // ── Passo 1: cria registro e pasta no Drive ──
-    showToast('Criando registro...', '');
+    atualizarOverlay('Criando registro...', 0, 0, 0);
     const r1 = await fetch(ENDPOINT_HOMOLAG, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action: 'save_homologacao', data: dados })
     });
     const j1 = await r1.json();
-    if (j1.status !== 'ok') { showToast('Erro: ' + (j1.message || 'falha'), 'err'); return; }
+    if (j1.status !== 'ok') { fecharOverlayErro('Erro: ' + (j1.message || 'falha')); return; }
 
     const { id, pastaId } = j1;
 
     // ── Passo 2: envia cada vídeo individualmente ──
     const videosComBlob = vids.filter(v => state.videos[v.id] && state.videos[v.id].blob && state.videos[v.id].tamanho <= 50 * 1024 * 1024);
+    const total = videosComBlob.length;
     let i = 0;
     for (const v of videosComBlob) {
       i++;
       const info = state.videos[v.id];
-      showToast('Enviando vídeo ' + i + '/' + videosComBlob.length + ': ' + v.nome + '...', '');
+      atualizarOverlay(v.nome, i, total, Math.round((i - 1) / total * 100));
       const b64 = await fileToBase64(info.blob);
       try {
         await fetch(ENDPOINT_HOMOLAG, {
@@ -683,12 +737,56 @@ async function enviarHomologacao() {
           body: JSON.stringify({ action: 'upload_video', data: { id, pastaId, video: { id: v.id, nome: v.nome, nomeArquivo: info.nome, base64: b64, obs: info.obs || '' } } })
         });
       } catch (e) { /* continua mesmo com falha individual */ }
+      atualizarOverlay(v.nome, i, total, Math.round(i / total * 100));
     }
 
-    showToast('Enviado! ID: ' + id + ' — Vídeos salvos no Drive.', 'ok');
+    concluirOverlay(id);
   } catch (err) {
-    showToast('Falha na conexão: ' + err.message, 'err');
+    fecharOverlayErro('Falha na conexão: ' + err.message);
   }
+}
+
+// ──────────────────────────────────────────────
+// OVERLAY DE ENVIO
+// ──────────────────────────────────────────────
+
+function abrirOverlay() {
+  document.getElementById('uploadOverlay').classList.remove('hide');
+  document.getElementById('overlaySpinner').classList.remove('done');
+  document.getElementById('overlayTitulo').textContent = 'Enviando...';
+  document.getElementById('overlayBar').style.width = '0%';
+  document.getElementById('overlayFechar').classList.remove('show');
+  window.addEventListener('beforeunload', _bloqFechamento);
+}
+
+function atualizarOverlay(nomeVideo, atual, total, pct) {
+  document.getElementById('overlayMsg').textContent = total > 0 ? 'Vídeo: ' + nomeVideo : 'Criando registro no sistema...';
+  document.getElementById('overlayBar').style.width = pct + '%';
+  document.getElementById('overlayInfo').textContent = total > 0 ? atual + ' / ' + total + ' vídeos' : '';
+}
+
+function concluirOverlay(id) {
+  document.getElementById('overlaySpinner').classList.add('done');
+  document.getElementById('overlayTitulo').textContent = '✓ Enviado!';
+  document.getElementById('overlayMsg').textContent = 'ID: ' + id + ' — Vídeos salvos no Drive.';
+  document.getElementById('overlayBar').style.width = '100%';
+  document.getElementById('overlayFechar').classList.add('show');
+  window.removeEventListener('beforeunload', _bloqFechamento);
+}
+
+function fecharOverlayErro(msg) {
+  document.getElementById('uploadOverlay').classList.add('hide');
+  window.removeEventListener('beforeunload', _bloqFechamento);
+  showToast(msg, 'err');
+}
+
+function fecharOverlay() {
+  document.getElementById('uploadOverlay').classList.add('hide');
+}
+
+function _bloqFechamento(e) {
+  e.preventDefault();
+  e.returnValue = '';
 }
 
 function fileToBase64(file) {
