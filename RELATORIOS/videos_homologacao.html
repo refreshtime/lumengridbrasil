@@ -728,12 +728,14 @@ async function enviarHomologacao() {
       document.getElementById('overlayMsg').textContent = v.nome + ' — convertendo...';
       document.getElementById('overlayInfo').textContent = idx + ' / ' + total + ' vídeos';
       document.getElementById('overlayBar').style.width = Math.round(10 + ((idx - 1) / total) * 88) + '%';
+      const ext = (info.nome && info.nome.includes('.')) ? info.nome.split('.').pop() : 'mp4';
+      const nomeArquivo = v.nome.replace(/[\/\\:*?"<>|]/g, '_') + '.' + ext;
       const b64 = await fileToBase64(info.blob);
       document.getElementById('overlayMsg').textContent = v.nome + ' — enviando...';
       await fetch(ENDPOINT_HOMOLAG, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'upload_video', data: { id, pastaId, video: { id: v.id, nome: v.nome, nomeArquivo: info.nome, base64: b64, obs: info.obs || '' } } })
+        body: JSON.stringify({ action: 'upload_video', data: { id, pastaId, video: { id: v.id, nome: v.nome, nomeArquivo, base64: b64, obs: info.obs || '' } } })
       });
       document.getElementById('overlayBar').style.width = Math.round(10 + (idx / total) * 88) + '%';
     }
