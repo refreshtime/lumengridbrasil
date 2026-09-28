@@ -534,6 +534,14 @@ a{text-decoration:none;color:inherit}
 .of-card{border:1.5px solid #C7D2FE;border-radius:8px;padding:14px;margin-bottom:18px;background:#EEF2FF}
 .of-card-title{font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#4338CA;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .of-card-title::after{content:'';flex:1;height:1px;background:#C7D2FE}
+/* Equipamentos & Compra card */
+.eq-card{border:1.5px solid var(--border);border-radius:8px;padding:14px;margin-bottom:18px;background:var(--surface2)}
+.eq-card-title{font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold-d);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.eq-card-title::after{content:'';flex:1;height:1px;background:var(--border)}
+/* Pedido de Compra card */
+.po-card{border:1.5px solid #BBF7D0;border-radius:8px;padding:14px;margin-bottom:18px;background:#F0FDF4}
+.po-card-title{font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#166534;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.po-card-title::after{content:'';flex:1;height:1px;background:#BBF7D0}
 /* Details colapsável */
 .ms-details{margin-top:14px}
 .ms-details > summary{
@@ -2334,6 +2342,60 @@ function openDetail(id) {
     </div>`;
   })() : '';
 
+  // ── EQUIPAMENTOS & COMPRA ──
+  const eqCardHtml = lead.contrato ? (() => {
+    const c = lead.contrato;
+    const fmtBRL = v => v ? 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—';
+    return `<div class="eq-card">
+      <div class="eq-card-title">Equipamentos &amp; Compra</div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+        ${c.modModel?`<div style="font-size:11px;color:var(--text)">📦 <strong>${c.modQty||''}x</strong> ${esc(c.modModel)}</div>`:''}
+        ${c.invModel?`<div style="font-size:11px;color:var(--text)">⚡ <strong>${c.invQty||'1'}x</strong> ${esc(c.invModel)}</div>`:''}
+        ${c.batModel?`<div style="font-size:11px;color:var(--text)">🔋 <strong>${c.batQty||'1'}x</strong> ${esc(c.batModel)}</div>`:''}
+        ${c.estrutura?`<div style="font-size:11px;color:var(--text)">🏗️ ${esc(c.estrutura)}</div>`:''}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;border-top:1px solid var(--border);padding-top:8px">
+        ${c.kvp?`<div><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)">kWp</div><div style="font-size:12px;font-weight:700;color:var(--text)">${esc(c.kvp)}</div></div>`:''}
+        ${c.valorVendido?`<div><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)">Valor Venda</div><div style="font-size:12px;font-weight:700;color:var(--text)">${fmtBRL(c.valorVendido)}</div></div>`:''}
+        ${c.custoKit?`<div><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)">Custo Kit</div><div style="font-size:12px;font-weight:700;color:var(--gold-d)">${fmtBRL(c.custoKit)}</div></div>`:''}
+        ${c.fornecedor?`<div><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)">Fornecedor</div><div style="font-size:12px;font-weight:700;color:var(--text)">${esc(c.fornecedor)}</div></div>`:''}
+        ${c.metodoPagamento?`<div style="grid-column:1/-1"><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)">Pagamento</div><div style="font-size:12px;font-weight:700;color:var(--text)">${esc(c.metodoPagamento)}</div></div>`:''}
+      </div>
+    </div>`;
+  })() : '';
+
+  // ── PEDIDO DE COMPRA (stage 9/10) ──
+  const poCardHtml = (lead.stage === 9 || lead.stage === 10) && lead.contrato ? (() => {
+    const c = lead.contrato;
+    const fmtBRL = v => v ? 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—';
+    return `<div class="po-card">
+      <div class="po-card-title">📋 Pedido de Compra</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="flex:1"><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#166534">Cliente</div><div style="font-size:12px;font-weight:700;color:#166534">${esc(lead.nome)}</div></div>
+        <div style="flex:1"><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#166534">Telefone</div><div style="font-size:12px;font-weight:700;color:#166534">${esc(lead.telefone||'—')}</div></div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11px">
+        <thead><tr style="background:#D1FAE5">
+          <th style="text-align:left;padding:4px 6px;color:#166534;font-size:8px;letter-spacing:1px;text-transform:uppercase">Item</th>
+          <th style="text-align:center;padding:4px 6px;color:#166534;font-size:8px;letter-spacing:1px;text-transform:uppercase">Qtd</th>
+          <th style="text-align:left;padding:4px 6px;color:#166534;font-size:8px;letter-spacing:1px;text-transform:uppercase">Modelo</th>
+        </tr></thead>
+        <tbody>
+          ${c.modModel?`<tr><td style="padding:4px 6px">Módulos</td><td style="text-align:center;padding:4px 6px">${c.modQty||''}</td><td style="padding:4px 6px">${esc(c.modModel)}</td></tr>`:''}
+          ${c.invModel?`<tr><td style="padding:4px 6px">Inversor</td><td style="text-align:center;padding:4px 6px">${c.invQty||'1'}</td><td style="padding:4px 6px">${esc(c.invModel)}</td></tr>`:''}
+          ${c.batModel?`<tr><td style="padding:4px 6px">Bateria</td><td style="text-align:center;padding:4px 6px">${c.batQty||'1'}</td><td style="padding:4px 6px">${esc(c.batModel)}</td></tr>`:''}
+          ${c.estrutura?`<tr><td style="padding:4px 6px">Estrutura</td><td style="text-align:center;padding:4px 6px">—</td><td style="padding:4px 6px">${esc(c.estrutura)}</td></tr>`:''}
+        </tbody>
+      </table>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;border-top:1px solid #BBF7D0;padding-top:8px;margin-bottom:10px">
+        ${c.kvp?`<div><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#166534">kWp</div><div style="font-size:12px;font-weight:700;color:#166534">${esc(c.kvp)}</div></div>`:''}
+        ${c.custoKit?`<div><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#166534">Custo Kit</div><div style="font-size:13px;font-weight:800;color:#166534">${fmtBRL(c.custoKit)}</div></div>`:''}
+        ${c.fornecedor?`<div><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#166534">Fornecedor</div><div style="font-size:12px;font-weight:700;color:#166534">${esc(c.fornecedor)}</div></div>`:''}
+      </div>
+      <button class="btn btn-t btn-sm" onclick="copyPedidoCompra('${id}')">📋 Copiar Pedido</button>
+    </div>`;
+  })() : '';
+
   // ── CALCULAR PROPOSTA (colapsado) ──
   const calcHtml = `
   <details class="ms-details">
@@ -2544,12 +2606,14 @@ function openDetail(id) {
           <div class="if"><div class="if-lbl">Criado em</div><input class="if-inp" value="${fmtDate(lead.createdAt)}" disabled style="color:var(--text3)"></div>
         </div>
       </div>
+      ${eqCardHtml}
       ${cpfHtml}
       ${ofCardHtml}
       ${calcHtml}
     </div>
 
     <div class="d-tab-panel" data-panel="comercial">
+      ${poCardHtml}
       ${etapaHtml}
       ${checklistHtml}
       ${scriptsHtml}
@@ -2564,6 +2628,34 @@ function openDetail(id) {
 
   if (lead.valorProjeto) calcPP();
   openModal('ov-detail');
+}
+
+function copyPedidoCompra(leadId) {
+  const lead = getLeads().find(l => l.id === leadId);
+  if (!lead || !lead.contrato) return;
+  const c = lead.contrato;
+  const fmtBRL = v => v ? 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—';
+  const modoLabel = {'cartao':'Cartão de Crédito','parcelado':'Parcelado','personalizado':'Personalizado'}[c.metodoPagamento] || c.metodoPagamento || '—';
+  const lines = [
+    '📋 PEDIDO DE COMPRA — LumenGrid',
+    '',
+    `Cliente: ${lead.nome}`,
+    `Telefone: ${lead.telefone||'—'}`,
+    '',
+    'EQUIPAMENTOS:',
+    c.modModel ? `• ${c.modQty||''}x Módulo — ${c.modModel}` : null,
+    c.invModel ? `• ${c.invQty||'1'}x Inversor — ${c.invModel}` : null,
+    c.batModel ? `• ${c.batQty||'1'}x Bateria — ${c.batModel}` : null,
+    c.estrutura ? `• Estrutura — ${c.estrutura}` : null,
+    '',
+    c.kvp ? `kWp: ${c.kvp}` : null,
+    c.custoKit ? `Custo Kit: ${fmtBRL(c.custoKit)}` : null,
+    c.fornecedor ? `Fornecedor: ${c.fornecedor}` : null,
+    `Pagamento: ${modoLabel}`,
+  ].filter(s => s !== null).join('\n');
+  navigator.clipboard.writeText(lines)
+    .then(() => toast('Pedido copiado!', 'ok'))
+    .catch(() => toast('Erro ao copiar', 'err'));
 }
 
 function toggleLookalike() {

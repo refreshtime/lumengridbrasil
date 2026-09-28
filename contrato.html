@@ -267,6 +267,9 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
       <option value="Laje">Laje</option>
       <option value="Outro">Outro</option>
     </select>
+    <label class="fl">Custo do Kit (R$) <span style="color:#E8641A;font-weight:900">*</span></label>
+    <input class="fi" type="number" id="custoKit" placeholder="0.00" step="0.01">
+    <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:-6px;margin-bottom:8px">Valor de compra no fornecedor (ex: Solfácil) — preencha para agilizar o pedido de compra</div>
     <label class="fl">Itens adicionais (opcional)</label>
     <textarea class="fta" id="eqAdicionais" placeholder="Ex: Wallbox 7,4kW, String box, Cabo solar 120m..."></textarea>
   </div>
@@ -393,13 +396,13 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 
   <div class="fs">
     <div class="fs-toggle fs-title" onclick="toggleSection(this)">
-      Custo / Compra <span style="font-size:9px;font-weight:400;color:rgba(255,255,255,.35)">(interno — não aparece no contrato)</span>
+      Compra / Fornecedor <span style="font-size:9px;font-weight:400;color:rgba(255,255,255,.35)">(interno — não aparece no contrato)</span>
       <span class="fs-arrow">▼</span>
     </div>
     <div class="fs-body collapsed">
-      <div class="frow" style="margin-top:12px">
-        <div><label class="fl">Custo do Kit (R$)</label><input class="fi" type="number" id="custoKit" placeholder="0.00" step="0.01"></div>
-        <div><label class="fl">Fornecedor</label><input class="fi" id="fornecedor" placeholder="Ex: Aldo Solar, GreenWatt..."></div>
+      <div style="margin-top:12px">
+        <label class="fl">Fornecedor</label>
+        <input class="fi" id="fornecedor" placeholder="Ex: Aldo Solar, GreenWatt...">
       </div>
       <label class="fl">Observações de Compra</label>
       <textarea class="fta" id="obsCompra" placeholder="Prazo de entrega, condições especiais, descontos negociados..."></textarea>
@@ -486,11 +489,13 @@ function generateContract(){
   // ── VALIDAÇÃO ──────────────────────────────────────────────
   const _cliNomeRaw=document.getElementById('cliNome').value.trim();
   const _payTotalRaw=parseFloat(document.getElementById('payTotal').value)||0;
+  const _custoKitRaw=parseFloat(document.getElementById('custoKit').value)||0;
   const erros=[];
   const _cliFoneRaw=document.getElementById('cliFone').value.trim();
   if(!_cliNomeRaw)erros.push('• Nome do Cliente');
   if(!_cliFoneRaw)erros.push('• Telefone / WhatsApp');
   if(!_payTotalRaw)erros.push('• Valor Total do Contrato');
+  if(!_custoKitRaw)erros.push('• Custo do Kit');
   if(erros.length){
     document.getElementById('prevPanel').innerHTML='<div style="color:#E8641A;font-family:Montserrat,sans-serif;font-size:13px;padding:40px;text-align:center"><div style="font-size:32px;margin-bottom:16px">⚠️</div><strong>Preencha os campos obrigatórios:</strong><br><br>'+erros.join('<br>')+'</div>';
     return;
@@ -522,6 +527,7 @@ function generateContract(){
   const gen=ext('eqGen');
   const estrutura=ext('eqEstrutura');
   const adicionais=ext('eqAdicionais');
+  const custoKit=parseFloat(document.getElementById('custoKit').value)||null;
   const payTotal=exN('payTotal');
   const payModo=ext('payModo')||'cartao';
   const payParcelas=exN('payParcelas')||12;
@@ -734,10 +740,10 @@ function generateContract(){
 
     document.getElementById('prevPanel').innerHTML=pg1+pg2+pg3+pg4+pg5+pg6+pg7+pgAnexos;
   document.title = cliNome + ' - ' + num + ' - LUMENGRID';
-  sincronizarComCRM(cliNome, cliFone, modModel, invModel, batModel, kvp, payTotal, payModo);
+  sincronizarComCRM(cliNome, cliFone, modModel, invModel, batModel, kvp, payTotal, payModo, modQty, invQty, batQty, estrutura, custoKit, ext('fornecedor'));
 }
 
-function sincronizarComCRM(cliNome, cliFone, modModel, invModel, batModel, kvp, payTotal, payModo) {
+function sincronizarComCRM(cliNome, cliFone, modModel, invModel, batModel, kvp, payTotal, payModo, modQty, invQty, batQty, estrutura, custoKit, fornecedor) {
   if (!cliFone) return;
   try {
     var leads = JSON.parse(localStorage.getItem('lg_leads') || '[]');
@@ -750,8 +756,12 @@ function sincronizarComCRM(cliNome, cliFone, modModel, invModel, batModel, kvp, 
     }
     if (!lead) return;
     lead.contrato = {
-      modModel: modModel||'', invModel: invModel||'', batModel: batModel||'',
-      kvp: kvp||'', valorVendido: payTotal, metodoPagamento: payModo
+      modModel: modModel||'', modQty: modQty||0,
+      invModel: invModel||'', invQty: invQty||0,
+      batModel: batModel||'', batQty: batQty||0,
+      estrutura: estrutura||'', kvp: kvp||'',
+      valorVendido: payTotal, metodoPagamento: payModo,
+      custoKit: custoKit, fornecedor: fornecedor||''
     };
     lead.valorProjeto = payTotal;
     if ((lead.stage||0) < 6) lead.stage = 6;
@@ -1003,6 +1013,7 @@ async function salvarNoDrive() {
       eqInvModel: document.getElementById('eqInvModel').value.trim(),
       eqInvQty: parseInt(document.getElementById('eqInvQty').value)||0,
       eqBatModel: document.getElementById('eqBatModel').value.trim(),
+      eqEstrutura: document.getElementById('eqEstrutura').value,
       payTotal: payTotal,
       payModo: document.getElementById('payModo').value,
       vendNome: document.getElementById('vendNome').value.trim(),

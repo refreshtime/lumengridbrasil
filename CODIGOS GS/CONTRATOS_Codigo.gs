@@ -18,7 +18,7 @@ const COL_STATUS = 13;
 
 const COLS_VENDAS = [
   'Data', 'Nº Contrato', 'Cliente', 'Telefone', 'kVp', 'Tipo Sistema',
-  'Módulo', 'Qtd Módulos', 'Inversor', 'Qtd Inversores', 'Bateria',
+  'Módulo', 'Qtd Módulos', 'Inversor', 'Qtd Inversores', 'Bateria', 'Estrutura',
   'Valor (R$)', 'Forma Pagamento', 'Consultor'
 ];
 
@@ -193,11 +193,11 @@ function salvarContrato(p) {
       p.eqKvp || '', tipoLabel,
       p.eqModModel || '', p.eqModQty || '',
       p.eqInvModel || '', p.eqInvQty || '',
-      p.eqBatModel || '',
+      p.eqBatModel || '', p.eqEstrutura || '',
       parseFloat(p.payTotal) || 0, _pagLabel(p.payModo), p.vendNome || ''
     ]);
     const vRow = vendas.getLastRow();
-    vendas.getRange(vRow, 12).setNumberFormat('R$ #,##0.00');
+    vendas.getRange(vRow, 13).setNumberFormat('R$ #,##0.00');
 
     // — Aba Compras (somente se custo informado) —
     if (p.custoKit) {
