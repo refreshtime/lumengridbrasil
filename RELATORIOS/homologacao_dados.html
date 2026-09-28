@@ -136,6 +136,43 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 /* ─── FOOTER ─── */
 .footer { text-align: center; font-size: 10px; color: var(--t4); padding: 16px; border-top: 1px solid var(--border); margin-top: auto; }
+
+/* ─── IMPORTAR CONTRATO ─── */
+.imp-panel {
+  background: var(--card); border: 1.5px solid var(--or-border);
+  border-radius: 10px; overflow: hidden; margin-bottom: 4px;
+}
+.imp-header {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  cursor: pointer; user-select: none; transition: background .18s;
+}
+.imp-header:hover { background: var(--or-dim); }
+.imp-header-icon { font-size: 16px; }
+.imp-header-text { flex: 1; }
+.imp-header-title {
+  font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--or);
+}
+.imp-header-sub { font-size: 10px; color: var(--t3); margin-top: 1px; }
+.imp-arrow { font-size: 10px; color: var(--t3); transition: transform .2s; }
+.imp-arrow.open { transform: rotate(180deg); }
+.imp-body { display: none; padding: 0 14px 14px; }
+.imp-body.open { display: block; }
+.imp-lista { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.imp-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card2); border: 1px solid var(--border); border-radius: 7px;
+  padding: 10px 12px; cursor: pointer; transition: all .18s;
+}
+.imp-item:hover { border-color: var(--or-border); background: var(--or-dim); }
+.imp-item-nome { font-size: 13px; font-weight: 600; color: var(--t1); flex: 1; }
+.imp-item-info { font-size: 10px; color: var(--t3); text-align: right; line-height: 1.5; }
+.imp-empty { font-size: 12px; color: var(--t3); text-align: center; padding: 14px 0; line-height: 1.6; }
+.imp-badge {
+  font-size: 8px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  background: rgba(242,101,34,.18); color: var(--or); border: 1px solid var(--or-border);
+  border-radius: 4px; padding: 2px 6px; flex-shrink: 0;
+}
 </style>
 </head>
 <body>
@@ -160,6 +197,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div class="sucesso-id" id="sucessoId"></div>
     <div class="sucesso-msg">Os dados foram salvos na planilha e a equipe técnica foi notificada.<br>Agora o instalador pode enviar os vídeos de homologação.</div>
     <button class="btn btn-ghost btn-mini" onclick="novoEnvio()">Novo envio</button>
+  </div>
+
+  <!-- ─── IMPORTAR DO CONTRATO ─── -->
+  <div class="imp-panel" id="impPanel">
+    <div class="imp-header" onclick="toggleImportar()">
+      <div class="imp-header-icon">📋</div>
+      <div class="imp-header-text">
+        <div class="imp-header-title">Importar do Contrato</div>
+        <div class="imp-header-sub">Clique para ver contratos gerados nos últimos 15 dias</div>
+      </div>
+      <div class="imp-arrow" id="impArrow">▼</div>
+    </div>
+    <div class="imp-body" id="impBody">
+      <div class="imp-lista" id="impLista"></div>
+    </div>
   </div>
 
   <!-- ─── FORMULÁRIO ─── -->
@@ -642,6 +694,90 @@ function limparTudo(silencioso) {
 function formatBytes(b) {
   if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
   return (b / 1024 / 1024).toFixed(1) + ' MB';
+}
+
+// ──────────────────────────────────────────────
+// IMPORTAR DO CONTRATO
+// ──────────────────────────────────────────────
+
+function toggleImportar() {
+  const body  = document.getElementById('impBody');
+  const arrow = document.getElementById('impArrow');
+  const open  = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+  if (open) renderImportarLista();
+}
+
+function renderImportarLista() {
+  const lista = document.getElementById('impLista');
+  let leads = [];
+  try { leads = JSON.parse(localStorage.getItem('lg_leads') || '[]'); } catch(e) {}
+
+  const limite = Date.now() - 15 * 24 * 60 * 60 * 1000;
+  const recentes = leads.filter(l => {
+    if (!l.contrato) return false;
+    const ts = l.updatedAt ? new Date(l.updatedAt).getTime() : 0;
+    return ts >= limite;
+  }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  if (recentes.length === 0) {
+    lista.innerHTML = '<div class="imp-empty">Nenhum contrato gerado nos últimos 15 dias encontrado.<br><small>Os dados são lidos do localStorage do CRM neste dispositivo.</small></div>';
+    return;
+  }
+
+  lista.innerHTML = recentes.map(l => {
+    const c = l.contrato;
+    const kvp  = c.kvp  ? c.kvp  : '';
+    const inv  = c.invModel ? c.invModel.split(' ').slice(0,2).join(' ') : '';
+    const mod  = c.modModel ? c.modModel.split(' ').slice(0,2).join(' ') : '';
+    const dias = Math.floor((Date.now() - new Date(l.updatedAt).getTime()) / 86400000);
+    const diasLabel = dias === 0 ? 'hoje' : dias === 1 ? 'ontem' : `há ${dias}d`;
+    return `<div class="imp-item" onclick="importarContrato('${l.id}')">
+      <div>
+        <div class="imp-item-nome">${l.nome}</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:2px">${[inv,mod,kvp].filter(Boolean).join(' · ')}</div>
+      </div>
+      <div class="imp-item-info">
+        <div class="imp-badge">${diasLabel}</div>
+        <div style="margin-top:3px">${l.resp||''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function importarContrato(leadId) {
+  let leads = [];
+  try { leads = JSON.parse(localStorage.getItem('lg_leads') || '[]'); } catch(e) {}
+  const l = leads.find(x => x.id === leadId);
+  if (!l || !l.contrato) return;
+  const c = l.contrato;
+
+  const sv = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+
+  // Dados do cliente
+  sv('cliente',         l.nome);
+  sv('telefoneCliente', l.telefone);
+  sv('emailCliente',    l.email);
+  sv('vendedor',        l.resp);
+
+  // Inversor — extrai marca como primeira palavra
+  if (c.invModel) {
+    sv('invModelo', c.invModel);
+    sv('invMarca',  c.invModel.split(' ')[0]);
+  }
+  if (c.invQty) sv('invQtd', String(c.invQty));
+
+  // Módulo — extrai marca como primeira palavra
+  if (c.modModel) {
+    sv('modModelo', c.modModel);
+    sv('modMarca',  c.modModel.split(' ')[0]);
+  }
+  if (c.modQty) sv('modQtd', String(c.modQty));
+
+  // Fecha o painel e mostra toast
+  document.getElementById('impBody').classList.remove('open');
+  document.getElementById('impArrow').classList.remove('open');
+  showToast('Dados de ' + l.nome + ' importados do contrato.', 'ok');
 }
 
 let toastTimer;
