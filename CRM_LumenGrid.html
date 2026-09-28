@@ -2345,9 +2345,13 @@ function openDetail(id) {
   // ── EQUIPAMENTOS & COMPRA ──
   const eqCardHtml = lead.contrato ? (() => {
     const c = lead.contrato;
+    const desatualizado = !c.custoKit;
     const fmtBRL = v => v ? 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—';
     return `<div class="eq-card">
       <div class="eq-card-title">Equipamentos &amp; Compra</div>
+      ${desatualizado ? `<div style="background:#FEF9C3;border:1px solid #FDE047;border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:11px;color:#92400E;line-height:1.5">
+        ⚠️ <strong>Dados desatualizados.</strong> Estes equipamentos vieram da proposta, não do contrato final. Regenere o contrato para sincronizar os equipamentos e o custo do kit.
+      </div>` : ''}
       <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
         ${c.modModel?`<div style="font-size:11px;color:var(--text)">📦 <strong>${c.modQty||''}x</strong> ${esc(c.modModel)}</div>`:''}
         ${c.invModel?`<div style="font-size:11px;color:var(--text)">⚡ <strong>${c.invQty||'1'}x</strong> ${esc(c.invModel)}</div>`:''}
@@ -2367,9 +2371,13 @@ function openDetail(id) {
   // ── PEDIDO DE COMPRA (stage 9/10) ──
   const poCardHtml = (lead.stage === 9 || lead.stage === 10) && lead.contrato ? (() => {
     const c = lead.contrato;
+    const desatualizadoPO = !c.custoKit;
     const fmtBRL = v => v ? 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—';
     return `<div class="po-card">
       <div class="po-card-title">📋 Pedido de Compra</div>
+      ${desatualizadoPO ? `<div style="background:#FEF9C3;border:1px solid #FDE047;border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:11px;color:#92400E;line-height:1.5">
+        ⚠️ <strong>Contrato desatualizado.</strong> Regenere o contrato para preencher o custo do kit e os dados completos de equipamentos antes de realizar o pedido de compra.
+      </div>` : ''}
       <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
         <div style="flex:1"><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#166534">Cliente</div><div style="font-size:12px;font-weight:700;color:#166534">${esc(lead.nome)}</div></div>
         <div style="flex:1"><div style="font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#166534">Telefone</div><div style="font-size:12px;font-weight:700;color:#166534">${esc(lead.telefone||'—')}</div></div>
