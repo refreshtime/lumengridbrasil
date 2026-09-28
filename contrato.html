@@ -380,6 +380,15 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
       <span id="faturaLabelText">Clique para anexar a fatura…</span>
       <input type="file" id="fileFatura" accept="image/*,.pdf" onchange="_onFileChange(this,'faturaLabel','faturaLabelText')">
     </label>
+
+    <label class="fl" style="margin-top:10px">Documento do Titular da Fatura
+      <span style="color:rgba(255,255,255,.4);font-weight:400;font-size:10px"> — opcional, se o titular for diferente do cliente</span>
+    </label>
+    <label class="fup-label" id="titularLabel">
+      <span style="font-size:18px">🪪</span>
+      <span id="titularLabelText">Clique para anexar CNH ou RG do titular…</span>
+      <input type="file" id="fileTitular" accept="image/*,.pdf" onchange="_onFileChange(this,'titularLabel','titularLabelText')">
+    </label>
   </div>
 
   <div class="fs">
@@ -891,7 +900,8 @@ function _onFileChange(input, labelId, textId) {
     label.classList.add('has-file');
     label.classList.remove('req-miss');
   } else {
-    textEl.textContent = labelId === 'cnhLabel' ? 'Clique para anexar CNH ou RG…' : 'Clique para anexar a fatura…';
+    const defaults = { cnhLabel: 'Clique para anexar CNH ou RG…', faturaLabel: 'Clique para anexar a fatura…', titularLabel: 'Clique para anexar CNH ou RG do titular…' };
+    textEl.textContent = defaults[labelId] || 'Clique para anexar…';
     label.classList.remove('has-file');
   }
 }
@@ -936,6 +946,7 @@ async function salvarNoDrive() {
   }
 
   const faturaFile = document.getElementById('fileFatura').files[0] || null;
+  const titularFile = document.getElementById('fileTitular').files[0] || null;
 
   const pages = Array.from(document.querySelectorAll('#prevPanel .cpage, #prevPanel .cpage-cont'));
   if (!pages.length) {
@@ -971,6 +982,7 @@ async function salvarNoDrive() {
     // Lê arquivos
     const cnhBase64 = await _fileToBase64(cnhFile);
     const faturaBase64 = faturaFile ? await _fileToBase64(faturaFile) : null;
+    const titularBase64 = titularFile ? await _fileToBase64(titularFile) : null;
 
     btn.textContent = '⏳ Enviando ao Drive...';
     _driveToast('loading', 'Enviando arquivos ao Google Drive…', null);
@@ -999,7 +1011,8 @@ async function salvarNoDrive() {
       obsCompra: document.getElementById('obsCompra').value.trim()||null,
       pdf: pdfBase64,
       cnh: { data: cnhBase64, type: cnhFile.type, name: cnhFile.name },
-      fatura: faturaBase64 ? { data: faturaBase64, type: faturaFile.type, name: faturaFile.name } : null
+      fatura: faturaBase64 ? { data: faturaBase64, type: faturaFile.type, name: faturaFile.name } : null,
+      titular: titularBase64 ? { data: titularBase64, type: titularFile.type, name: titularFile.name } : null
     });
 
     fetch(gasUrl + '?action=salvarContrato', {
@@ -1013,7 +1026,8 @@ async function salvarNoDrive() {
       btn.innerHTML = '&#9729; Salvar no Drive';
       if (res.success) {
         const aviso = res.warning ? ' (aviso: ' + res.warning + ')' : '';
-        _driveToast('sucesso', 'Pasta criada no Drive com PDF' + (faturaFile ? ', CNH e Fatura' : ' e CNH') + '!' + aviso, res.folderUrl);
+        const extras = [faturaFile && 'Fatura', titularFile && 'Doc. Titular'].filter(Boolean).join(', ');
+        _driveToast('sucesso', 'Pasta criada no Drive com PDF, CNH' + (extras ? ', ' + extras : '') + '!' + aviso, res.folderUrl);
       } else {
         _driveToast('erro', 'Erro: ' + (res.error || 'Tente novamente.'), null);
       }

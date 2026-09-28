@@ -133,7 +133,15 @@ function salvarContrato(p) {
     saveOrReplaceFile(sub, 'Fatura_' + cliNome + '.' + fatExt, fatBytes, p.fatura.type);
   }
 
-  // 5. Homologacao: raiz homo → mes → cliente (copia CNH + Fatura)
+  // 4b. Doc do titular da fatura (opcional)
+  var titBytes, titExt;
+  if (p.titular) {
+    titBytes = Utilities.base64Decode(p.titular.data);
+    titExt   = _extFromMime(p.titular.type) || _extFromName(p.titular.name) || 'pdf';
+    saveOrReplaceFile(sub, 'DocTitular_' + cliNome + '.' + titExt, titBytes, p.titular.type);
+  }
+
+  // 5. Homologacao: raiz homo → mes → cliente (copia CNH + Fatura + DocTitular)
   const HOMO_ID = '1JPyXaUyZHR2hprOh5WZ_uWAJNri_Zrdg';
   const homoRoot = DriveApp.getFolderById(HOMO_ID);
   const homoMes  = getOrCreateFolder(homoRoot, mesAno);
@@ -141,6 +149,9 @@ function salvarContrato(p) {
   saveOrReplaceFile(homoCli, 'CNH_' + cliNome + '.' + cnhExt, cnhBytes, p.cnh.type);
   if (p.fatura) {
     saveOrReplaceFile(homoCli, 'Fatura_' + cliNome + '.' + fatExt, fatBytes, p.fatura.type);
+  }
+  if (p.titular) {
+    saveOrReplaceFile(homoCli, 'DocTitular_' + cliNome + '.' + titExt, titBytes, p.titular.type);
   }
 
   // 6. Registro na planilha
