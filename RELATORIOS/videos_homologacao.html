@@ -118,6 +118,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .video-preview video {
   width: 100%; border-radius: 6px; max-height: 180px; background: #000; display: block;
 }
+.video-preview img {
+  width: 100%; border-radius: 6px; max-height: 220px; object-fit: contain; background: #000; display: block;
+}
 .video-file-info {
   display: flex; justify-content: space-between; align-items: center; margin-top: 6px;
 }
@@ -586,18 +589,23 @@ function renderVideos() {
 function renderVideoDrop(id) {
   return `
     <div class="video-drop" onclick="document.getElementById('vinput-${id}').click()">
-      <input type="file" id="vinput-${id}" accept="video/*" onchange="carregarVideo('${id}', this)">
-      <div class="video-drop-text">Toque para selecionar o vídeo<br><small style="color:var(--t4)">MP4, MOV, AVI — qualquer formato</small></div>
+      <input type="file" id="vinput-${id}" accept="video/*,image/*" onchange="carregarVideo('${id}', this)">
+      <div class="video-drop-text">Toque para selecionar o arquivo<br><small style="color:var(--t4)">Vídeo (MP4, MOV, AVI) ou Imagem (JPG, PNG)</small></div>
     </div>`;
 }
 
 function renderVideoPreview(id) {
   const info = state.videos[id];
+  const isImage = info.blob.type.startsWith('image/');
+  const mediaEl = isImage
+    ? `<img src="${URL.createObjectURL(info.blob)}" alt="${info.nome}">`
+    : `<video src="${URL.createObjectURL(info.blob)}" controls></video>`;
+  const icone = isImage ? '🖼️' : '📹';
   return `
     <div class="video-preview">
-      <video src="${URL.createObjectURL(info.blob)}" controls></video>
+      ${mediaEl}
       <div class="video-file-info">
-        <span class="video-file-name">📹 ${info.nome}</span>
+        <span class="video-file-name">${icone} ${info.nome}</span>
         <span class="video-file-size">${formatBytes(info.tamanho)}</span>
         <button class="btn-rem-video" onclick="removerVideo('${id}')">× Remover</button>
       </div>
@@ -690,7 +698,7 @@ async function enviarHomologacao() {
 
   const videosInfo = videosComBlob.map(v => {
     const info = state.videos[v.id];
-    return { id: v.id, nome: v.nome, nomeArquivo: info.nome, mimeType: info.blob.type || 'video/mp4', tamanho: info.tamanho, obs: info.obs || '', grande: true };
+    return { id: v.id, nome: v.nome, nomeArquivo: info.nome, mimeType: info.blob.type || 'application/octet-stream', tamanho: info.tamanho, obs: info.obs || '', grande: true };
   });
 
   const dados = {
@@ -728,7 +736,7 @@ async function enviarHomologacao() {
       document.getElementById('overlayMsg').textContent = v.nome + ' — convertendo...';
       document.getElementById('overlayInfo').textContent = idx + ' / ' + total + ' vídeos';
       document.getElementById('overlayBar').style.width = Math.round(10 + ((idx - 1) / total) * 88) + '%';
-      const ext = (info.nome && info.nome.includes('.')) ? info.nome.split('.').pop() : 'mp4';
+      const ext = (info.nome && info.nome.includes('.')) ? info.nome.split('.').pop() : (info.blob.type.startsWith('image/') ? 'jpg' : 'mp4');
       const nomeArquivo = v.nome.replace(/[\/\\:*?"<>|]/g, '_') + '.' + ext;
       const b64 = await fileToBase64(info.blob);
       document.getElementById('overlayMsg').textContent = v.nome + ' — enviando...';
