@@ -163,10 +163,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 
   <div class="sec">
     <div class="sec-title">Sistema</div>
+    <div class="frow">
+      <div class="fg">
+        <label>Qtde de Placas</label>
+        <input class="fi" type="number" id="numPlacas" placeholder="Ex: 10" min="1" step="1" oninput="onPlacasWpChange()">
+      </div>
+      <div class="fg">
+        <label>Potência (Wp)</label>
+        <input class="fi" type="number" id="wpPlaca" placeholder="Ex: 620" min="1" step="1" value="620" oninput="onPlacasWpChange()">
+      </div>
+    </div>
     <div class="fg">
-      <label>kWp do Sistema</label>
-      <input class="fi" type="number" id="kvp" placeholder="Ex: 6.6" step="0.1" min="0">
-      <div class="fi-note">Preencha para calcular instalação e homologação automaticamente</div>
+      <label>kWp do Sistema <span id="kvpAuto" style="font-size:9px;color:var(--blue);margin-left:4px;display:none">● calculado</span></label>
+      <input class="fi" type="number" id="kvp" placeholder="Ex: 6.6" step="0.1" min="0" oninput="onKvpManual()">
+      <div class="fi-note">Preencha placas + potência para calcular automaticamente, ou informe diretamente</div>
     </div>
     <div class="fg">
       <label>Tipo</label>
@@ -180,8 +190,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
   <div class="sec">
     <div class="sec-title">Custos do Projeto</div>
     <div class="fg">
-      <label>Equipamentos — Inversor + Módulos (R$)</label>
+      <label>Equipamentos — Inversor + Módulos (R$) <span id="kitAutoTag" style="font-size:9px;color:var(--blue);margin-left:4px;display:none">● da planilha</span></label>
       <input class="fi" type="number" id="cEquip" placeholder="0,00" step="100">
+      <!-- Seletor de kits da planilha -->
+      <div id="kitSelector" style="display:none;margin-top:6px;border:1px solid var(--b1);border-radius:6px;overflow:hidden"></div>
     </div>
     <div class="fg" id="cBatWrap" style="display:none">
       <label>Bateria (R$)</label>
@@ -203,6 +215,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 
   <div class="sec">
     <div class="sec-title">Parâmetros Financeiros</div>
+    <div class="fg">
+      <label>Forma de Pagamento</label>
+      <select class="fsel" id="formaPagamento" onchange="onFormaPagChange()">
+        <option value="avista">À Vista / PIX / Boleto</option>
+        <option value="cartao">Cartão de Crédito</option>
+        <option value="financiamento">Financiamento</option>
+      </select>
+    </div>
     <div class="frow">
       <div class="fg">
         <label>Gestão OP / Pós-venda %</label>
@@ -445,6 +465,26 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       <span class="bk-val" id="bCashPis">—</span>
       <span class="bk-pct" id="bCashPisPct">—</span>
     </div>
+
+    <!-- Cartão de Crédito — visível apenas quando selecionado -->
+    <div id="ccBlock" style="display:none">
+      <div class="bk-cols bk-section">CARTÃO DE CRÉDITO</div>
+      <div class="bk-cols">
+        <span class="bk-label">Repasse (Venda − Equipamentos)</span>
+        <span class="bk-val" id="bRepasse">—</span>
+        <span class="bk-pct" id="bRepassePct">—</span>
+      </div>
+      <div class="bk-cols bk-neg">
+        <span class="bk-label">(−) Custo Cartão <span class="bk-badge badge-red">5% do repasse</span></span>
+        <span class="bk-val" id="bCustoCC">—</span>
+        <span class="bk-pct" id="bCustoCCPct">—</span>
+      </div>
+      <div class="bk-cols" style="background:rgba(167,139,250,.12);border-top:2px solid rgba(167,139,250,.4)">
+        <span class="bk-label" style="font-weight:700;color:var(--purple)">= MARGEM LÍQUIDA s/ CARTÃO</span>
+        <span class="bk-val" id="bLiquidaCC" style="color:var(--purple);font-size:15px;font-weight:800">—</span>
+        <span class="bk-pct" id="bLiquidaCCPct" style="color:var(--purple);font-weight:800;font-size:12px">—</span>
+      </div>
+    </div>
   </div>
 
   <!-- Tabela de Faixas -->
@@ -470,6 +510,100 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 </div><!-- /main -->
 
 <script>
+// ── PRECIFICAÇÃO DE KITS (sincronizar com precificacao_kits.html) ─────────────
+const KITS_PRECIF = [
+  { placas:4,  inv:'GoodWe 3kW',   mod:'Jinko 620W',    equip:4800  },
+  { placas:4,  inv:'GoodWe 3kW',   mod:'Leapton 620W',  equip:4520  },
+  { placas:5,  inv:'GoodWe 3kW',   mod:'Jinko 620W',    equip:5300  },
+  { placas:5,  inv:'GoodWe 3kW',   mod:'Leapton 620W',  equip:4950  },
+  { placas:6,  inv:'GoodWe 3kW',   mod:'Jinko 620W',    equip:5800  },
+  { placas:6,  inv:'GoodWe 3kW',   mod:'Leapton 620W',  equip:5380  },
+  { placas:7,  inv:'GoodWe 5kW',   mod:'Jinko 620W',    equip:6900  },
+  { placas:7,  inv:'GoodWe 5kW',   mod:'Leapton 620W',  equip:6410  },
+  { placas:8,  inv:'FoxESS Micro', mod:'Jinko 620W',    equip:7832  },
+  { placas:8,  inv:'GoodWe 5kW',   mod:'Jinko 620W',    equip:7400  },
+  { placas:8,  inv:'FoxESS Micro', mod:'Leapton 620W',  equip:7356  },
+  { placas:9,  inv:'GoodWe 5kW',   mod:'Jinko 620W',    equip:7900  },
+  { placas:9,  inv:'GoodWe 5kW',   mod:'Leapton 620W',  equip:7270  },
+  { placas:10, inv:'GoodWe 5kW',   mod:'Jinko 620W',    equip:8400  },
+  { placas:10, inv:'GoodWe 5kW',   mod:'Leapton 620W',  equip:7770  },
+  { placas:11, inv:'GoodWe 7.5kW', mod:'Jinko 620W',    equip:12525 },
+  { placas:11, inv:'GoodWe 7.5kW', mod:'Leapton 620W',  equip:11755 },
+  { placas:12, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:11800 },
+  { placas:12, inv:'GoodWe 6kW',   mod:'Jinko 620W',    equip:12121 },
+  { placas:12, inv:'GoodWe 7.5kW', mod:'Leapton 620W',  equip:12185 },
+  { placas:12, inv:'FoxESS Micro', mod:'Leapton 620W',  equip:11000 },
+  { placas:13, inv:'GoodWe 7.5kW', mod:'Jinko 620W',    equip:13525 },
+  { placas:13, inv:'GoodWe 7.5kW', mod:'Leapton 620W',  equip:12615 },
+  { placas:14, inv:'GoodWe 7.5kW', mod:'Jinko 620W',    equip:14025 },
+  { placas:14, inv:'GoodWe 7.5kW', mod:'Leapton 620W',  equip:13045 },
+  { placas:15, inv:'GoodWe 10kW',  mod:'Jinko 620W',    equip:15400 },
+  { placas:15, inv:'GoodWe 10kW',  mod:'Leapton 620W',  equip:14350 },
+  { placas:16, inv:'GoodWe 7.5kW', mod:'Leapton 620W',  equip:13892 },
+  { placas:16, inv:'GoodWe 7.5kW', mod:'Jinko 620W',    equip:15025 },
+  { placas:16, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:16000 },
+  { placas:16, inv:'FoxESS Micro', mod:'Leapton 620W',  equip:14800 },
+  { placas:17, inv:'GoodWe 10kW',  mod:'Jinko 620W',    equip:16400 },
+  { placas:17, inv:'GoodWe 10kW',  mod:'Leapton 620W',  equip:15210 },
+  { placas:18, inv:'GoodWe 10kW',  mod:'Jinko 620W',    equip:16900 },
+  { placas:18, inv:'GoodWe 10kW',  mod:'Leapton 620W',  equip:15640 },
+  { placas:19, inv:'GoodWe 10kW',  mod:'Jinko 620W',    equip:17400 },
+  { placas:19, inv:'GoodWe 10kW',  mod:'Leapton 620W',  equip:16070 },
+  { placas:20, inv:'GoodWe 10kW',  mod:'Leapton 620W',  equip:16300 },
+  { placas:20, inv:'GoodWe 10kW',  mod:'Jinko 620W',    equip:17900 },
+  { placas:20, inv:'FoxESS Micro', mod:'Leapton 620W',  equip:18000 },
+  { placas:20, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:19500 },
+  { placas:21, inv:'GoodWe 10kW',  mod:'Jinko 620W',    equip:18700 },
+  { placas:21, inv:'GoodWe 10kW',  mod:'Leapton 620W',  equip:17230 },
+  { placas:22, inv:'GoodWe 12kW',  mod:'Jinko 620W',    equip:19500 },
+  { placas:22, inv:'GoodWe 12kW',  mod:'Leapton 620W',  equip:17960 },
+  { placas:23, inv:'GoodWe 12kW',  mod:'Jinko 620W',    equip:20250 },
+  { placas:23, inv:'GoodWe 12kW',  mod:'Leapton 620W',  equip:18640 },
+  { placas:24, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:23000 },
+  { placas:24, inv:'GoodWe 12kW',  mod:'Jinko 620W',    equip:21000 },
+  { placas:24, inv:'FoxESS Micro', mod:'Leapton 620W',  equip:21320 },
+  { placas:25, inv:'GoodWe 12kW',  mod:'Jinko 620W',    equip:21500 },
+  { placas:25, inv:'GoodWe 12kW',  mod:'Leapton 620W',  equip:19750 },
+  { placas:26, inv:'GoodWe 12kW',  mod:'Jinko 620W',    equip:22000 },
+  { placas:26, inv:'GoodWe 12kW',  mod:'Leapton 620W',  equip:20180 },
+  { placas:27, inv:'GoodWe 12kW',  mod:'Jinko 620W',    equip:22500 },
+  { placas:27, inv:'GoodWe 12kW',  mod:'Leapton 620W',  equip:20610 },
+  { placas:28, inv:'GoodWe 15kW',  mod:'Jinko 620W',    equip:25750 },
+  { placas:28, inv:'GoodWe 15kW',  mod:'Leapton 620W',  equip:23790 },
+  { placas:28, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:27300 },
+  { placas:28, inv:'FoxESS Micro', mod:'Leapton 620W',  equip:25340 },
+  { placas:29, inv:'GoodWe 15kW',  mod:'Jinko 620W',    equip:26250 },
+  { placas:29, inv:'GoodWe 15kW',  mod:'Leapton 620W',  equip:24220 },
+  { placas:30, inv:'GoodWe 15kW',  mod:'Jinko 620W',    equip:26750 },
+  { placas:30, inv:'GoodWe 15kW',  mod:'Leapton 620W',  equip:24650 },
+  { placas:31, inv:'GoodWe 15kW',  mod:'Jinko 620W',    equip:27250 },
+  { placas:31, inv:'GoodWe 15kW',  mod:'Leapton 620W',  equip:25080 },
+  { placas:32, inv:'GoodWe 15kW',  mod:'Jinko 620W',    equip:27750 },
+  { placas:32, inv:'GoodWe 15kW',  mod:'Leapton 620W',  equip:25510 },
+  { placas:32, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:31200 },
+  { placas:32, inv:'FoxESS Micro', mod:'Leapton 620W',  equip:28960 },
+  { placas:33, inv:'GoodWe 15kW',  mod:'Jinko 620W',    equip:28250 },
+  { placas:33, inv:'GoodWe 15kW',  mod:'Leapton 620W',  equip:25940 },
+  { placas:34, inv:'GoodWe 20kW',  mod:'Jinko 620W',    equip:33300 },
+  { placas:34, inv:'GoodWe 20kW',  mod:'Leapton 620W',  equip:30920 },
+  { placas:35, inv:'GoodWe 20kW',  mod:'Jinko 620W',    equip:33800 },
+  { placas:35, inv:'GoodWe 20kW',  mod:'Leapton 620W',  equip:31350 },
+  { placas:36, inv:'GoodWe 20kW',  mod:'Jinko 620W',    equip:34300 },
+  { placas:36, inv:'GoodWe 20kW',  mod:'Leapton 620W',  equip:31780 },
+  { placas:36, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:35100 },
+  { placas:36, inv:'FoxESS Micro', mod:'Leapton 620W',  equip:32580 },
+  { placas:37, inv:'GoodWe 20kW',  mod:'Jinko 620W',    equip:34800 },
+  { placas:37, inv:'GoodWe 20kW',  mod:'Leapton 620W',  equip:32210 },
+  { placas:38, inv:'GoodWe 20kW',  mod:'Jinko 620W',    equip:35300 },
+  { placas:38, inv:'GoodWe 20kW',  mod:'Leapton 620W',  equip:32640 },
+  { placas:39, inv:'GoodWe 20kW',  mod:'Jinko 620W',    equip:35800 },
+  { placas:39, inv:'GoodWe 20kW',  mod:'Leapton 620W',  equip:33070 },
+  { placas:40, inv:'GoodWe 20kW',  mod:'Jinko 620W',    equip:36300 },
+  { placas:40, inv:'GoodWe 20kW',  mod:'Leapton 620W',  equip:33500 },
+  { placas:40, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:39000 },
+  { placas:40, inv:'FoxESS Micro', mod:'Leapton 620W',  equip:36200 },
+];
+
 // ── FAIXAS ───────────────────────────────────────────────────
 const FAIXAS = [
   { label:'0 a 3 kWp',   min:0,  max:3,  rsPorWp:0.84, homol:500  },
@@ -499,9 +633,29 @@ function aplicarFaixa(f, tr) {
   calcular();
 }
 
-// ── AUTO FILL kWp ────────────────────────────────────────────
-document.getElementById('kvp').addEventListener('input', function() {
-  const kp = parseFloat(this.value) || 0;
+// ── PLACAS + WP → kWp ────────────────────────────────────────
+function onPlacasWpChange() {
+  const placas  = parseInt(document.getElementById('numPlacas').value)  || 0;
+  const wp      = parseFloat(document.getElementById('wpPlaca').value)  || 0;
+  if (placas > 0 && wp > 0) {
+    const kp = +(placas * wp / 1000).toFixed(2);
+    document.getElementById('kvp').value = kp;
+    document.getElementById('kvpAuto').style.display = 'inline';
+    applyKvp(kp);
+    renderKitSelector(placas);
+  } else {
+    document.getElementById('kvpAuto').style.display = 'none';
+    document.getElementById('kitSelector').style.display = 'none';
+    document.getElementById('kitAutoTag').style.display  = 'none';
+  }
+}
+
+function onKvpManual() {
+  document.getElementById('kvpAuto').style.display = 'none';
+  applyKvp(parseFloat(document.getElementById('kvp').value) || 0);
+}
+
+function applyKvp(kp) {
   if (!kp) return;
   const faixa = FAIXAS.find(f => kp > f.min && kp <= f.max) || FAIXAS[FAIXAS.length - 1];
   document.getElementById('cInst').value  = Math.round(kp * 1000 * faixa.rsPorWp);
@@ -510,6 +664,55 @@ document.getElementById('kvp').addEventListener('input', function() {
   document.getElementById('homolAuto').style.display = 'inline';
   document.querySelectorAll('#faixaBody tr').forEach((tr, i) => tr.classList.toggle('active', FAIXAS[i] === faixa));
   calcular();
+}
+
+function renderKitSelector(placas) {
+  const kits = KITS_PRECIF.filter(k => k.placas === placas);
+  const sel  = document.getElementById('kitSelector');
+  if (!kits.length) { sel.style.display = 'none'; return; }
+
+  let html = '';
+  kits.forEach((k, i) => {
+    const label = k.inv + ' + ' + k.mod;
+    html += `<div class="kit-opt" data-equip="${k.equip}" onclick="selectKit(this,${k.equip})"
+      style="padding:7px 12px;font-size:11px;cursor:pointer;border-bottom:1px solid var(--b2);
+             display:flex;justify-content:space-between;align-items:center;
+             transition:background .15s;${i===0?'border-radius:6px 6px 0 0':''}
+             ${i===kits.length-1?'border-bottom:none;border-radius:0 0 6px 6px':''}">
+      <span style="color:var(--t2)">${label}</span>
+      <span style="font-weight:700;color:var(--or)">R$ ${fmtN(k.equip)}</span>
+    </div>`;
+  });
+  sel.innerHTML = html;
+  sel.style.display = 'block';
+  // Auto-seleciona o primeiro
+  selectKit(sel.querySelector('.kit-opt'), kits[0].equip);
+}
+
+function selectKit(el, equip) {
+  document.querySelectorAll('#kitSelector .kit-opt').forEach(e => e.style.background = '');
+  el.style.background = 'rgba(232,100,26,.10)';
+  document.getElementById('cEquip').value = equip;
+  document.getElementById('kitAutoTag').style.display = 'inline';
+  calcular();
+}
+
+// ── FORMA DE PAGAMENTO ────────────────────────────────────────
+function onFormaPagChange() {
+  const forma = document.getElementById('formaPagamento').value;
+  // Custo Financeiro só aparece para financiamento
+  const finVal = parseFloat(document.getElementById('pFinCusto').value) || 0;
+  if (forma === 'financiamento') {
+    document.getElementById('entradaWrap').style.display = '';
+  } else {
+    document.getElementById('entradaWrap').style.display = 'none';
+  }
+  calcular();
+}
+
+// ── AUTO FILL kWp ────────────────────────────────────────────
+document.getElementById('kvp').addEventListener('input', function() {
+  onKvpManual();
 });
 
 // ── TIPO SISTEMA ─────────────────────────────────────────────
@@ -522,7 +725,6 @@ document.getElementById('tipo').addEventListener('change', function() {
 
 // ── CUSTO FINANCEIRO ─────────────────────────────────────────
 document.getElementById('pFinCusto').addEventListener('input', function() {
-  document.getElementById('entradaWrap').style.display = parseFloat(this.value) > 0 ? '' : 'none';
   calcular();
 });
 
@@ -540,7 +742,8 @@ document.querySelectorAll('.fi,.fsel').forEach(el => {
 
 // ── CÁLCULO PRINCIPAL ────────────────────────────────────────
 function calcular() {
-  const tipo     = document.getElementById('tipo').value;
+  const tipo        = document.getElementById('tipo').value;
+  const formaPag    = document.getElementById('formaPagamento').value;
   const cEquip   = v('cEquip');
   const cBat     = tipo === 'hibrido' ? v('cBat') : 0;
   const cInst    = v('cInst');
@@ -548,7 +751,8 @@ function calcular() {
   const cFrete   = v('cFrete');
   const pPosVenda  = v('pPosVenda')  / 100;
   const pImpostos  = v('pImpostos')  / 100;
-  const pFinCusto  = v('pFinCusto')  / 100;
+  // Custo financeiro só se aplica quando forma = financiamento
+  const pFinCusto  = formaPag === 'financiamento' ? v('pFinCusto') / 100 : 0;
   const pEntrada   = v('pEntrada')   / 100;
   const pMargem    = v('pMargem')    / 100;
   const pComissao  = v('pComissao')  / 100;
@@ -654,6 +858,26 @@ function calcular() {
   set('bLiquida',       fmtR(margemLiq));   set('bLiquidaPct',    fmtPerc(margemLiqPerc));
   set('bCashPis',       fmtR(cashPis));     set('bCashPisPct',    fmtPerc(p(cashPis)));
   set('bPisCofinsPerc', fmtPerc(pPisCofins));
+
+  // ── CARTÃO DE CRÉDITO ─────────────────────────────────────
+  const ccBlock = document.getElementById('ccBlock');
+  if (formaPag === 'cartao' && cEquip > 0) {
+    const repasse    = preco - cEquip;
+    const custoCC    = repasse * 0.05;
+    const liqCC      = margemLiq - custoCC;
+    set('bRepasse',      fmtR(repasse));    set('bRepassePct',    fmtPerc(p(repasse)));
+    set('bCustoCC',      fmtR(custoCC));    set('bCustoCCPct',    fmtPerc(p(custoCC)));
+    set('bLiquidaCC',    fmtR(liqCC));      set('bLiquidaCCPct',  fmtPerc(p(liqCC)));
+    ccBlock.style.display = '';
+    // Atualiza KPI Margem Líquida com valor s/ cartão
+    set('kLiquida',     fmtR(liqCC));
+    set('kLiquidaPerc', fmtPerc(liqCC / preco) + ' do preço');
+  } else {
+    ccBlock.style.display = 'none';
+    // Restaura KPI Margem Líquida sem CC
+    set('kLiquida',     fmtR(margemLiq));
+    set('kLiquidaPerc', fmtPerc(margemLiqPerc) + ' do preço');
+  }
 }
 
 function resetUI() {
