@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Proposta Comercial — Condomínio Zaher · LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* ── TOKENS ── */
+:root{
+  --or:#F26522; --or-l:#FF8040; --or-d:#C44F15;
+  --bg:#080C14; --bg2:#0D1220; --bg3:#121825;
+  --card:rgba(255,255,255,.04); --card-h:rgba(255,255,255,.07);
+  --text:#F0F4F8; --muted:rgba(240,244,248,.58); --dim:rgba(240,244,248,.28);
+  --border:rgba(255,255,255,.08); --bor:rgba(242,101,34,.25);
+  --green:#22C55E; --blue:#38BDF8; --yellow:#FACC15;
+}
+body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--or);border-radius:2px}
+
+/* ── PROGRESS BAR ── */
+#pbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--or),var(--or-l));z-index:9999;width:0%;transition:width .08s linear;box-shadow:0 0 8px rgba(242,101,34,.6)}
+
+/* ── NAV ── */
+nav{position:fixed;top:2px;left:0;right:0;z-index:1000;padding:18px 56px;display:flex;align-items:center;justify-content:space-between;transition:all .4s}
+nav.solid{background:rgba(8,12,20,.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:12px 56px}
+.nav-brand{display:flex;align-items:center;gap:14px}
+.nav-logo-img{height:36px;filter:drop-shadow(0 0 10px rgba(242,101,34,.65))}
+.nav-wordmark{display:flex;flex-direction:column;gap:1px}
+.nav-wm{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;line-height:1;letter-spacing:-.3px}
+.nav-wm .l{color:var(--or)} .nav-wm .g{color:var(--text)}
+.nav-tag{font-size:7.5px;font-weight:700;letter-spacing:.32em;color:rgba(242,101,34,.8);text-transform:uppercase}
+.nav-right{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim)}
+.nav-badge{background:rgba(242,101,34,.12);border:1px solid var(--bor);color:var(--or);padding:5px 14px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+@media(max-width:768px){nav{padding:14px 24px}nav.solid{padding:10px 24px}.nav-right{display:none}}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 80px 80px}
+.hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 70% 40%,rgba(242,101,34,.08) 0%,transparent 60%),radial-gradient(ellipse 50% 80% at 90% 80%,rgba(242,101,34,.05) 0%,transparent 60%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;z-index:0}
+.hero-glow{position:absolute;top:20%;right:10%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(242,101,34,.06) 0%,transparent 70%);z-index:0}
+.hero-content{position:relative;z-index:2;max-width:780px}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.25);border-radius:20px;padding:7px 18px;margin-bottom:32px;animation:fadedown .8s ease both}
+.hero-pill-dot{width:6px;height:6px;border-radius:50%;background:var(--or);animation:blink 2s ease infinite;flex-shrink:0}
+.hero-pill span{font-size:9px;font-weight:800;letter-spacing:2.5px;color:var(--or);text-transform:uppercase}
+.hero-eyebrow{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.5px;margin-bottom:12px;animation:fadein .9s .1s ease both}
+.hero-h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(40px,5.5vw,72px);font-weight:800;line-height:1.02;letter-spacing:-2px;margin-bottom:20px;animation:fadein .9s .2s ease both}
+.hero-h1 em{font-style:normal;color:var(--or)}
+.hero-sub{font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:48px;max-width:560px;animation:fadein .9s .3s ease both}
+.hero-meta{display:flex;flex-wrap:wrap;gap:32px;animation:fadein .9s .4s ease both;padding-top:40px;border-top:1px solid var(--border)}
+.hero-meta-item{}
+.hero-meta-label{font-size:9.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(242,101,34,.7);margin-bottom:5px}
+.hero-meta-value{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text)}
+.hero-stats{display:flex;flex-wrap:wrap;gap:0;margin-top:56px;padding-top:0;animation:fadein .9s .5s ease both}
+.hstat{padding:0 40px 0 0;margin-right:40px;border-right:1px solid var(--border)}
+.hstat:last-child{border-right:none;padding-right:0;margin-right:0}
+.hstat-v{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:800;color:var(--or);line-height:1;letter-spacing:-1.5px;display:block}
+.hstat-l{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.3px;margin-top:4px;display:block;max-width:120px}
+
+/* ── SECTIONS ── */
+.sec{padding:96px 80px}
+.sec-dark{background:var(--bg)}
+.sec-mid{background:var(--bg2)}
+.sec-alt{background:linear-gradient(160deg,var(--bg3),var(--bg2))}
+@media(max-width:768px){.sec{padding:64px 24px}}
+
+/* ── SECTION HEADER ── */
+.sec-hd{margin-bottom:56px}
+.sec-hd.center{text-align:center}
+.sec-num{font-size:9px;font-weight:800;letter-spacing:3px;color:var(--or);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.sec-num::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(242,101,34,.3),transparent)}
+.sec-num.center::after,.sec-num.center::before{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(242,101,34,.3),transparent)}
+.sec-h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.5vw,46px);font-weight:800;line-height:1.08;letter-spacing:-1px;margin-bottom:14px}
+.sec-sub{font-size:15px;color:var(--muted);line-height:1.75;max-width:640px}
+.sec-hd.center .sec-sub{margin:0 auto}
+
+/* ── CARD GRID ── */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+@media(max-width:1024px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;transition:all .3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--or),transparent);opacity:0;transition:opacity .3s}
+.card:hover{background:var(--card-h);border-color:rgba(242,101,34,.2);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.card:hover::before{opacity:1}
+.card-icon{width:44px;height:44px;border-radius:10px;background:rgba(242,101,34,.1);border:1px solid rgba(242,101,34,.2);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px}
+.card-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.card-value{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1px;color:var(--text);line-height:1;margin-bottom:6px}
+.card-value.orange{color:var(--or)}
+.card-value.green{color:var(--green)}
+.card-value.blue{color:var(--blue)}
+.card-value.yellow{color:var(--yellow)}
+.card-desc{font-size:12px;color:var(--dim);line-height:1.5}
+
+/* ── HIGHLIGHT CARD ── */
+.card-hl{background:linear-gradient(135deg,rgba(242,101,34,.1),rgba(242,101,34,.04));border:1px solid rgba(242,101,34,.3);border-radius:14px;padding:28px}
+.card-hl .card-value{color:var(--or)}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:rgba(242,101,34,.08);border-bottom:1px solid var(--border)}
+thead th{padding:14px 18px;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(242,101,34,.8);white-space:nowrap}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .2s}
+tbody tr:hover{background:rgba(255,255,255,.03)}
+tbody tr:last-child{border-bottom:none}
+td{padding:14px 18px;color:var(--muted);line-height:1.4}
+td strong{color:var(--text);font-weight:600}
+td .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px}
+.badge-orange{background:rgba(242,101,34,.12);color:var(--or);border:1px solid rgba(242,101,34,.25)}
+.badge-green{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.badge-blue{background:rgba(56,189,248,.12);color:var(--blue);border:1px solid rgba(56,189,248,.25)}
+.badge-yellow{background:rgba(250,204,21,.12);color:var(--yellow);border:1px solid rgba(250,204,21,.25)}
+
+/* ── CHART BOX ── */
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;position:relative}
+.chart-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.chart-sub{font-size:11px;color:var(--dim);margin-bottom:24px}
+
+/* ── TAG PILL ── */
+.tag{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px}
+.tag-or{background:rgba(242,101,34,.1);border:1px solid rgba(242,101,34,.2);color:var(--or)}
+.tag-green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:var(--green)}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);margin:0}
+
+/* ── INFO BOX ── */
+.info-box{background:rgba(242,101,34,.06);border:1px solid rgba(242,101,34,.2);border-left:4px solid var(--or);border-radius:8px;padding:20px 24px;margin-top:24px}
+.info-box-label{font-size:9.5px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.info-box p{font-size:13px;color:var(--muted);line-height:1.7}
+.info-box p strong{color:var(--text)}
+
+/* ── SCENARIO CARDS ── */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:16px}
+@media(max-width:768px){.scenario-grid{grid-template-columns:1fr}}
+.scenario-card{border-radius:16px;padding:36px;border:2px solid;position:relative;overflow:hidden}
+.scenario-card.base{background:rgba(255,255,255,.03);border-color:var(--border)}
+.scenario-card.premium{background:linear-gradient(135deg,rgba(242,101,34,.06),rgba(242,101,34,.02));border-color:rgba(242,101,34,.4)}
+.scenario-card.premium::before{content:'RECOMENDADO';position:absolute;top:20px;right:-32px;background:var(--or);color:#fff;font-size:9px;font-weight:800;letter-spacing:2px;padding:6px 48px;transform:rotate(45deg)}
+.scenario-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.scenario-label.base{color:var(--muted)} .scenario-label.premium{color:var(--or)}
+.scenario-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;margin-bottom:20px;line-height:1.2}
+.scenario-price{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:800;letter-spacing:-1.5px;margin-bottom:4px;line-height:1}
+.scenario-price.base{color:var(--text)} .scenario-price.premium{color:var(--or)}
+.scenario-price-label{font-size:11px;color:var(--dim);margin-bottom:32px}
+.scenario-items{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.scenario-item{display:flex;align-items:flex-start;gap:12px}
+.scenario-item-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.base .scenario-item-dot{background:var(--dim)}
+.premium .scenario-item-dot{background:var(--or)}
+.scenario-item-text{font-size:13px;color:var(--muted);line-height:1.5}
+.scenario-item-text strong{color:var(--text)}
+.scenario-metrics{display:grid;grid-template-columns:1fr 1fr;gap:16px;border-top:1px solid var(--border);padding-top:24px}
+.scenario-metric-label{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.scenario-metric-value{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700}
+.base .scenario-metric-value{color:var(--text)} .premium .scenario-metric-value{color:var(--or)}
+
+/* ── SUBESTACAO VISUAL ── */
+.sub-layout{display:grid;grid-template-columns:1fr auto 1fr;gap:32px;align-items:center;margin-top:32px}
+@media(max-width:768px){.sub-layout{grid-template-columns:1fr;gap:16px}}
+.sub-node{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center}
+.sub-node.highlight{background:rgba(242,101,34,.05);border-color:rgba(242,101,34,.3)}
+.sub-node-icon{font-size:28px;margin-bottom:10px}
+.sub-node-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--or);margin-bottom:6px}
+.sub-node-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.sub-node-desc{font-size:12px;color:var(--dim);line-height:1.5}
+.sub-arrow{display:flex;flex-direction:column;align-items:center;gap:8px}
+.sub-arrow-line{width:2px;height:60px;background:linear-gradient(to bottom,var(--or),rgba(242,101,34,.3));position:relative}
+.sub-arrow-line::after{content:'▼';position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);color:var(--or);font-size:10px}
+.sub-arrow-label{font-size:10px;font-weight:700;color:var(--or);letter-spacing:1px;writing-mode:horizontal-tb;white-space:nowrap}
+
+/* ── LUMENCARE SECTION ── */
+.lc-hero{background:linear-gradient(135deg,rgba(242,101,34,.06) 0%,rgba(242,101,34,.02) 50%,transparent 100%);border:1px solid rgba(242,101,34,.2);border-radius:20px;padding:56px 64px;position:relative;overflow:hidden;margin-bottom:48px}
+.lc-hero::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(242,101,34,.08) 0%,transparent 70%)}
+.lc-hero-label{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:12px}
+.lc-hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.06;letter-spacing:-1px;margin-bottom:16px}
+.lc-hero-title em{font-style:normal;color:var(--or)}
+.lc-hero-sub{font-size:15px;color:var(--muted);line-height:1.8;max-width:560px}
+.lc-features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:768px){.lc-features{grid-template-columns:1fr}}
+.lc-feat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:all .3s}
+.lc-feat:hover{background:var(--card-h);border-color:var(--bor);transform:translateY(-2px)}
+.lc-feat-icon{font-size:24px;margin-bottom:14px}
+.lc-feat-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px}
+.lc-feat-desc{font-size:12px;color:var(--dim);line-height:1.6}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 80px 32px;display:flex;flex-direction:column;gap:32px}
+.footer-brand{display:flex;align-items:center;gap:14px}
+.footer-links{display:flex;gap:32px;flex-wrap:wrap}
+.footer-link{font-size:12px;color:var(--dim);text-decoration:none;transition:color .2s}
+.footer-link:hover{color:var(--or)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--dim)}
+@media(max-width:768px){footer{padding:40px 24px 24px}}
+
+/* ── ANIMATIONS ── */
+@keyframes fadedown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── STICKY SUMMARY ── */
+.sticky-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(8,12,20,.96);backdrop-filter:blur(20px);border-top:1px solid var(--bor);padding:14px 80px;display:flex;align-items:center;justify-content:space-between;z-index:900;transform:translateY(100%);transition:transform .4s}
+.sticky-bar.visible{transform:none}
+.sticky-left{display:flex;align-items:center;gap:32px}
+.sticky-item-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+.sticky-item-value{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text)}
+.sticky-item-value.or{color:var(--or)}
+.sticky-cta{background:var(--or);color:#fff;padding:11px 28px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer;border:none;font-family:inherit;transition:all .2s;white-space:nowrap}
+.sticky-cta:hover{background:var(--or-l);transform:translateY(-1px);box-shadow:0 8px 20px rgba(242,101,34,.35)}
+@media(max-width:768px){.sticky-bar{padding:12px 24px;flex-wrap:wrap;gap:12px}.sticky-left{gap:16px}}
+
+/* ── GRADIENT TEXT ── */
+.grad{background:linear-gradient(120deg,var(--or),var(--or-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── ROI BAR ── */
+.roi-bar-wrap{display:flex;flex-direction:column;gap:12px}
+.roi-bar-row{display:flex;align-items:center;gap:16px}
+.roi-bar-label{font-size:12px;color:var(--muted);width:140px;flex-shrink:0;text-align:right}
+.roi-bar-track{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.roi-bar-fill{height:100%;border-radius:4px;transition:width 1.2s ease}
+.roi-bar-fill.orange{background:linear-gradient(90deg,var(--or),var(--or-l))}
+.roi-bar-fill.green{background:linear-gradient(90deg,var(--green),#4ADE80)}
+.roi-bar-fill.blue{background:linear-gradient(90deg,var(--blue),#7DD3FC)}
+.roi-bar-value{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);width:90px}
+
+/* ── DEMAND BADGE ── */
+.demand-highlight{display:inline-flex;align-items:center;gap:10px;background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.2);border-radius:10px;padding:16px 24px}
+.demand-highlight-icon{font-size:22px}
+.demand-highlight-text{}
+.demand-highlight-main{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--yellow)}
+.demand-highlight-sub{font-size:11px;color:var(--dim)}
+
+/* ── PRINT ── */
+@media print{#pbar,.sticky-bar,nav{display:none!important}.hero{min-height:auto;padding:48px}.sec{padding:48px 40px}.hero-stats{margin-top:32px}}
+</style>
+</head>
+<body>
+
+<div id="pbar"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-brand">
+    <img class="nav-logo-img" src="imagens/LOGOS/logo-icone.png" alt="LumenGrid" onerror="this.style.display='none'">
+    <div class="nav-wordmark">
+      <div class="nav-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+      <div class="nav-tag">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span>Condomínio Zaher · Leblon, RJ</span>
+    <span class="nav-badge">Proposta Comercial</span>
+  </div>
+</nav>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar" id="stickyBar">
+  <div class="sticky-left">
+    <div>
+      <div class="sticky-item-label">Investimento (Plus · 44 pl.)</div>
+      <div class="sticky-item-value or">R$&nbsp;195.000</div>
+    </div>
+    <div>
+      <div class="sticky-item-label">Economia/mês</div>
+      <div class="sticky-item-value">R$&nbsp;3.765</div>
+    </div>
+    <div>
+      <div class="sticky-item-label">Payback</div>
+      <div class="sticky-item-value">4,3 anos</div>
+    </div>
+    <div>
+      <div class="sticky-item-label">TIR estimada</div>
+      <div class="sticky-item-value">~20%</div>
+    </div>
+  </div>
+  <button class="sticky-cta" onclick="document.getElementById('sec-investimento').scrollIntoView({behavior:'smooth'})">Ver investimento completo ↓</button>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-pill">
+      <div class="hero-pill-dot"></div>
+      <span>Proposta Comercial Personalizada</span>
+    </div>
+    <div class="hero-eyebrow">Condomínio Zaher · R. Timóteo da Costa, 623 – Leblon, Rio de Janeiro/RJ</div>
+    <h1 class="hero-h1">Energia mais inteligente.<br><em>Conta menor. Sempre.</em></h1>
+    <p class="hero-sub">Diagnóstico completo de sua fatura Light com análise de arbitragem Ponta × Fora Ponta, dimensionamento do sistema fotovoltaico + armazenamento e projeção de retorno financeiro — tudo baseado em <strong>12 meses de memória de massa real</strong> do seu condomínio.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Concessionária</div>
+        <div class="hero-meta-value">Light · Grupo A4 (13,8 kV)</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Modalidade tarifária</div>
+        <div class="hero-meta-value">Verde — Demanda Única</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Data da proposta</div>
+        <div class="hero-meta-value">Outubro de 2026</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Responsável comercial</div>
+        <div class="hero-meta-value">LumenGrid Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat">
+        <span class="hstat-v">R$39k</span>
+        <span class="hstat-l">gasto médio mensal atual</span>
+      </div>
+      <div class="hstat">
+        <span class="hstat-v">3,16×</span>
+        <span class="hstat-l">mais caro na ponta vs fora ponta</span>
+      </div>
+      <div class="hstat">
+        <span class="hstat-v">21,24</span>
+        <span class="hstat-l">kWp do sistema proposto</span>
+      </div>
+      <div class="hstat">
+        <span class="hstat-v">4,3</span>
+        <span class="hstat-l">anos payback (cenário Plus · 44 painéis)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SEÇÃO 1: DIAGNÓSTICO ENERGÉTICO ── -->
+<section class="sec sec-mid" id="sec-diagnostico">
+  <div class="sec-hd reveal">
+    <div class="sec-num">01 — Diagnóstico Energético</div>
+    <h2 class="sec-h2">O que sua conta de energia<br>revela sobre seu condomínio</h2>
+    <p class="sec-sub">Análise baseada na fatura Light de Julho/2026 (referência) e 12 meses de memória de massa da UC 400024511 — medidor 9142099.</p>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid-4 reveal" style="margin-bottom:32px">
+    <div class="card-hl">
+      <div class="card-label">Conta mensal (Jul/26)</div>
+      <div class="card-value orange">R$39.352</div>
+      <div class="card-desc">Total a pagar · incluindo COSIP e bandeiras</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Demanda contratada</div>
+      <div class="card-value">140 kW</div>
+      <div class="card-desc">Tarifa R$42,72/kW — independe do uso</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Tarifa Fora Ponta</div>
+      <div class="card-value blue">R$0,787</div>
+      <div class="card-desc">por kWh · 7h às 17h45 e 20h45 às 22h</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Tarifa Ponta</div>
+      <div class="card-value" style="color:var(--yellow)">R$2,485</div>
+      <div class="card-desc">por kWh · 17h45 às 20h45 · dias úteis</div>
+    </div>
+  </div>
+
+  <!-- Chart + breakdown -->
+  <div class="grid-2 reveal">
+    <div class="chart-box">
+      <div class="chart-title">Consumo mensal — 12 meses</div>
+      <div class="chart-sub">kWh separados por posto tarifário (Set/25 – Ago/26)</div>
+      <canvas id="chartConsumo" height="240"></canvas>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="chart-box" style="flex:1">
+        <div class="chart-title">Composição da fatura (Julho/2026)</div>
+        <div class="chart-sub">Custo por componente — R$33.389,22 total NF</div>
+        <canvas id="chartFatura" height="200"></canvas>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">Médias dos últimos 12 meses</div>
+        <p>Consumo <strong>Fora Ponta: 30.556 kWh/mês</strong> (média) · Consumo <strong>Ponta: 3.083 kWh/mês</strong> (média) · Demanda máxima registrada em ponta: <strong>116,9 kW</strong> (Dezembro/25)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fatura detalhada -->
+  <div class="tbl-wrap reveal" style="margin-top:32px">
+    <table>
+      <thead>
+        <tr>
+          <th>Componente da fatura</th>
+          <th>Unidade</th>
+          <th>Quantidade</th>
+          <th>Tarifa</th>
+          <th>Valor (R$)</th>
+          <th>Observação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Demanda Ativa — HFP/Único</strong></td>
+          <td>kW</td>
+          <td>140</td>
+          <td>R$42,72/kW</td>
+          <td><strong>R$ 5.981,40</strong></td>
+          <td><span class="badge badge-yellow">Fixo — mesmo sem usar</span></td>
+        </tr>
+        <tr>
+          <td><strong>Energia Ativa — Fora Ponta</strong></td>
+          <td>kWh</td>
+          <td>25.502</td>
+          <td>R$0,787/kWh</td>
+          <td><strong>R$ 20.078,72</strong></td>
+          <td><span class="badge badge-blue">Maior volume</span></td>
+        </tr>
+        <tr>
+          <td><strong>Energia Ativa — Ponta (HP)</strong></td>
+          <td>kWh</td>
+          <td>2.949</td>
+          <td>R$2,485/kWh</td>
+          <td><strong>R$ 7.329,10</strong></td>
+          <td><span class="badge badge-orange">3,16× mais cara</span></td>
+        </tr>
+        <tr>
+          <td><strong>COSIP — Contribuição Iluminação Pública</strong></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td><strong>R$ 5.195,00</strong></td>
+          <td><span class="badge badge-orange">Não reduzível por solar</span></td>
+        </tr>
+        <tr>
+          <td><strong>Adicional Bandeiras (Amarela)</strong></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td><strong>R$ 768,06</strong></td>
+          <td>—</td>
+        </tr>
+        <tr style="background:rgba(242,101,34,.04)">
+          <td colspan="4"><strong>TOTAL NOTA FISCAL</strong></td>
+          <td><strong style="color:var(--or);font-size:15px">R$ 33.389,22</strong></td>
+          <td><span class="badge badge-orange">+ PIS/COFINS = R$39.352,28</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SEÇÃO 2: AVALIAÇÃO PONTA × FORA PONTA ── -->
+<section class="sec sec-dark" id="sec-arbitragem">
+  <div class="sec-hd reveal">
+    <div class="sec-num">02 — Avaliação de Arbitragem Energética</div>
+    <h2 class="sec-h2">O diferencial de tarifa que<br><span class="grad">custa R$7.329 por mês</span></h2>
+    <p class="sec-sub">Em apenas 3 horas por dia (17h45–20h45), o condomínio consome energia que custa 3,16× mais do que no restante do dia. Essa diferença é a oportunidade de arbitragem que o sistema fotovoltaico + baterias vai capturar.</p>
+  </div>
+
+  <div class="grid-2 reveal" style="margin-bottom:32px">
+    <div class="chart-box">
+      <div class="chart-title">Perfil médio de demanda — Horário de Ponta</div>
+      <div class="chart-sub">kW médio por hora durante o período de ponta (dados reais 12 meses)</div>
+      <canvas id="chartDemanda" height="240"></canvas>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="card" style="flex:1">
+        <div class="card-label">Análise da Arbitragem</div>
+        <div style="display:flex;flex-direction:column;gap:16px;margin-top:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border)">
+            <div>
+              <div style="font-size:11px;color:var(--dim)">Tarifa Fora Ponta</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--blue)">R$0,787<span style="font-size:12px;color:var(--dim)">/kWh</span></div>
+            </div>
+            <div style="font-size:28px;color:var(--dim)">→</div>
+            <div style="text-align:right">
+              <div style="font-size:11px;color:var(--dim)">Tarifa Ponta</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--yellow)">R$2,485<span style="font-size:12px;color:var(--dim)">/kWh</span></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:13px;color:var(--muted)">Diferencial por kWh arbitrado</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--green)">+ R$1,698</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:13px;color:var(--muted)">Bateria disponível (25,6 kWh)</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--text)">24,3 kWh/ciclo</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:13px;color:var(--muted)">Ciclos mensais (dias úteis)</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--text)">22 ciclos</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--border)">
+            <span style="font-size:13px;color:var(--text);font-weight:600">Economia arbitragem/mês</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--or)">R$ 885</span>
+          </div>
+        </div>
+      </div>
+      <div class="demand-highlight">
+        <div class="demand-highlight-icon">⚡</div>
+        <div class="demand-highlight-text">
+          <div class="demand-highlight-main">Pico de 116,9 kW em Dezembro</div>
+          <div class="demand-highlight-sub">Demanda máxima registrada no período analisado · LumenCare pode reduzir esse pico</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela mensal -->
+  <div class="tbl-wrap reveal">
+    <table>
+      <thead>
+        <tr>
+          <th>Mês</th>
+          <th>Fora Ponta (kWh)</th>
+          <th>Ponta (kWh)</th>
+          <th>Total (kWh)</th>
+          <th>Custo FP estimado</th>
+          <th>Custo Ponta estimado</th>
+          <th>Custo Total Energia</th>
+          <th>Max Demanda Ponta</th>
+        </tr>
+      </thead>
+      <tbody id="tblHistorico"></tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SEÇÃO 2B: AVALIAÇÃO BESS — RELATÓRIO EXECUTIVO ── -->
+<section class="sec sec-alt" id="sec-bess">
+  <div class="sec-hd reveal">
+    <div class="sec-num">02B — Avaliação BESS · Relatório Executivo</div>
+    <h2 class="sec-h2">Estudo realizado para avaliar<br>o <span class="grad">potencial máximo de arbitragem</span></h2>
+    <p class="sec-sub">Elaboramos um Relatório Executivo completo para o Condomínio Zaher avaliando a arquitetura de sistema híbrido com armazenamento em larga escala (BESS), com foco na estratégia de deslocamento de consumo entre os postos tarifários Ponta e Fora Ponta.</p>
+  </div>
+
+  <!-- Ficha do relatório -->
+  <div class="card reveal" style="margin-bottom:32px;background:linear-gradient(135deg,rgba(242,101,34,.06),rgba(242,101,34,.02));border-color:rgba(242,101,34,.25)">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;flex-wrap:wrap">
+      <div>
+        <div class="card-label">Documento</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text)">Relatório Executivo BESS</div>
+        <div style="font-size:12px;color:var(--dim)">Sistema Fotovoltaico Híbrido + BESS</div>
+      </div>
+      <div>
+        <div class="card-label">Data de emissão</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text)">01/10/2026</div>
+        <div style="font-size:12px;color:var(--dim)">Cenário atualizado pós-visita técnica</div>
+      </div>
+      <div>
+        <div class="card-label">Período analisado</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text)">24/07 a 24/08/2026</div>
+        <div style="font-size:12px;color:var(--dim)">Memória de massa + fatura Light</div>
+      </div>
+      <div>
+        <div class="card-label">Fatura de referência</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--or)">R$ 34.470/mês</div>
+        <div style="font-size:12px;color:var(--dim)">Custo anual: R$413.640</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Perfil energético vs sistema avaliado -->
+  <div class="grid-2 reveal" style="margin-bottom:32px">
+    <!-- Perfil -->
+    <div class="chart-box">
+      <div class="chart-title">Perfil Energético — Dados do Relatório</div>
+      <div class="chart-sub">Consumo médio analisado no período de estudo</div>
+      <div style="display:flex;flex-direction:column;gap:0;margin-top:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:13px;color:var(--muted)">Consumo total mensal</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--text)">33.639 kWh/mês</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:13px;color:var(--muted)">Consumo na Ponta (HP)</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--yellow)">3.258 kWh/mês · 9,7%</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:13px;color:var(--muted)">Consumo Fora da Ponta (HFP)</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--blue)">30.381 kWh/mês · 90,3%</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:13px;color:var(--muted)">Demanda contratada</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--text)">140 kW</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0">
+          <span style="font-size:13px;color:var(--muted)">Diferencial tarifário Ponta / FP</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--or)">3,16× mais caro na Ponta</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sistema avaliado -->
+    <div class="chart-box">
+      <div class="chart-title">Arquitetura Avaliada — Sistema Híbrido de Grande Porte</div>
+      <div class="chart-sub">Configuração técnica estudada no relatório executivo</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+        <div style="background:rgba(242,101,34,.06);border:1px solid rgba(242,101,34,.15);border-radius:8px;padding:14px 16px">
+          <div style="font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--or);margin-bottom:6px">Sistema Fotovoltaico</div>
+          <div style="font-size:13px;color:var(--text);font-weight:600">47 × Astronergy 620W — N-Type Bifacial</div>
+          <div style="font-size:12px;color:var(--dim)">29,14 kWp · Geração: 3.193 kWh/mês · Eficiência 23%</div>
+        </div>
+        <div style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.15);border-radius:8px;padding:14px 16px">
+          <div style="font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:6px">BESS — Armazenamento</div>
+          <div style="font-size:13px;color:var(--text);font-weight:600">2× GoodWe GW112.6-BAT-AC-G10</div>
+          <div style="font-size:12px;color:var(--dim)">225,2 kWh total · 3h de autonomia em backup · Cargas prioritárias</div>
+        </div>
+        <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.15);border-radius:8px;padding:14px 16px">
+          <div style="font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:6px">Inversores Híbridos</div>
+          <div style="font-size:13px;color:var(--text);font-weight:600">2× GoodWe GW50K-ET-L-G10</div>
+          <div style="font-size:12px;color:var(--dim)">100 kW total · + Chave STS GW375K + Controlador SEC3000C</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicadores financeiros do relatório -->
+  <div class="sec-hd reveal" style="margin-bottom:24px">
+    <div style="font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:8px">Indicadores Financeiros — Relatório Executivo BESS</div>
+  </div>
+  <div class="grid-4 reveal" style="margin-bottom:32px">
+    <div class="card-hl">
+      <div class="card-label">CAPEX total do sistema</div>
+      <div class="card-value orange">R$686.898</div>
+      <div class="card-desc">Sistema completo com BESS de 225,2 kWh</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Economia arbitragem BESS</div>
+      <div class="card-value green">R$5.800</div>
+      <div class="card-desc">por mês — R$69.600/ano · deslocamento Ponta→FP</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Economia geração solar</div>
+      <div class="card-value blue">R$3.272</div>
+      <div class="card-desc">por mês — R$39.264/ano · 3.193 kWh/mês gerados</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Economia total estimada</div>
+      <div class="card-value" style="color:var(--or)">R$9.072</div>
+      <div class="card-desc">por mês · R$108.864/ano · redução de 26,3% da fatura</div>
+    </div>
+  </div>
+
+  <!-- Projeção BESS -->
+  <div class="grid-2 reveal">
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Indicador</th><th>Resultado</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>CAPEX total</td><td><strong>R$ 686.898</strong></td></tr>
+          <tr><td>Economia/mês — Arbitragem BESS</td><td><strong style="color:var(--green)">R$ 5.800</strong></td></tr>
+          <tr><td>Economia/mês — Geração Solar</td><td><strong style="color:var(--blue)">R$ 3.272</strong></td></tr>
+          <tr><td>Economia total mensal</td><td><strong style="color:var(--or)">R$ 9.072</strong></td></tr>
+          <tr><td>Economia anual</td><td><strong>R$ 108.864</strong></td></tr>
+          <tr><td>Redução estimada da fatura</td><td><strong>26,3%</strong></td></tr>
+          <tr><td>Payback simples</td><td><strong>6 anos e 4 meses</strong></td></tr>
+          <tr><td>Economia acumulada em 10 anos</td><td><strong>R$ 1.088.640</strong></td></tr>
+          <tr><td>Saldo líquido após CAPEX — 20 anos</td><td><strong style="color:var(--green)">R$ 1.490.382</strong></td></tr>
+          <tr><td>Saldo líquido após CAPEX — 30 anos</td><td><strong style="color:var(--green)">R$ 2.579.022</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.2);border-radius:12px;padding:28px">
+        <div style="font-size:9.5px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:12px">Backup e Segurança Energética</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">O BESS de <strong style="color:var(--text)">225,2 kWh</strong> garante <strong style="color:var(--text)">3 horas de autonomia</strong> para cargas prioritárias em caso de interrupção da Light, mantendo em operação: <strong style="color:var(--text)">1 elevador + iluminação básica das áreas + sistemas de segurança</strong>.</p>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">Contexto desta proposta</div>
+        <p>O relatório executivo avalia a <strong>escala máxima de implantação</strong> (R$686.898 · 225 kWh de BESS). A proposta que apresentamos agora — com <strong>investimento de R$187.187 a R$195.000</strong> — é a <strong>fase 1 estratégica</strong>: implantação imediata com retorno em 4,3–4,7 anos, viabilizando a expansão para o sistema completo em etapa futura com fluxo de caixa gerado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SEÇÃO 3: TABELA DE CARGAS ── -->
+<section class="sec sec-mid" id="sec-cargas">
+  <div class="sec-hd reveal">
+    <div class="sec-num">03 — Tabela de Cargas / Planta Elétrica</div>
+    <h2 class="sec-h2">Infraestrutura elétrica<br>do Condomínio Zaher</h2>
+    <p class="sec-sub">Levantamento das cargas instaladas com base na visita técnica e análise da memória de massa. O condomínio opera com duas subestações alimentadas em 13,8 kV pela Light.</p>
+  </div>
+
+  <!-- Subestação visual -->
+  <div class="reveal" style="margin-bottom:40px">
+    <div class="chart-box">
+      <div class="chart-title">Diagrama de distribuição — Subestações</div>
+      <div class="chart-sub">Tensão primária 13,8 kV (Light) → rebaixada internamente para 110V / 220V / 380V</div>
+      <div class="sub-layout" style="margin-top:32px">
+        <div class="sub-node" style="background:rgba(56,189,248,.04);border-color:rgba(56,189,248,.2)">
+          <div class="sub-node-icon">🏢</div>
+          <div class="sub-node-label" style="color:var(--blue)">Rede Light</div>
+          <div class="sub-node-name">13,8 kV</div>
+          <div class="sub-node-desc">Energia fornecida pela concessionária · Demanda contratada: 140 kW</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+          <div style="width:60px;height:2px;background:linear-gradient(to right,var(--blue),var(--or))"></div>
+          <div style="font-size:10px;font-weight:700;color:var(--or);letter-spacing:1px">SE TETO →</div>
+          <div style="width:60px;height:2px;background:linear-gradient(to right,var(--or),var(--dim));opacity:.5"></div>
+          <div style="font-size:10px;font-weight:700;color:var(--dim);letter-spacing:1px">SE GARAGEM ↓</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="sub-node highlight">
+            <div class="sub-node-icon">🔋</div>
+            <div class="sub-node-label">Subestação Teto (Superior)</div>
+            <div class="sub-node-name">Local de instalação do sistema solar</div>
+            <div class="sub-node-desc">Alimenta: 3 elevadores + metade dos andares · Tensão saída: 110V / 220V / 380V</div>
+          </div>
+          <div class="sub-node">
+            <div class="sub-node-icon">🅿️</div>
+            <div class="sub-node-label">Subestação Garagem (Inferior)</div>
+            <div class="sub-node-name">Demais cargas do edifício</div>
+            <div class="sub-node-desc">Alimenta: demais andares + área de garagem · Tensão saída: 110V / 220V</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de cargas -->
+  <div class="tbl-wrap reveal">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Equipamento / Carga</th>
+          <th>Qtd.</th>
+          <th>Potência Unit. (kW)</th>
+          <th>Potência Total (kW)</th>
+          <th>Tensão</th>
+          <th>Fator Potência</th>
+          <th>Posto Horário</th>
+          <th>Observação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1</strong></td>
+          <td>
+            <strong>Motor Elevador — WEG 3~ 180L</strong><br>
+            <small style="color:var(--dim)">09APR07 · CB27090 · Gaiola de Esquilo · 60Hz · 1.130 RPM · IP55 · 191 kg</small>
+          </td>
+          <td>3</td>
+          <td>15,0 kW<br><small style="color:var(--dim)">(20 HP)</small></td>
+          <td><strong>45,0 kW</strong></td>
+          <td>380V<br><small style="color:var(--dim)">(29,5 A por elevador)</small></td>
+          <td>cos φ = 0,90<br><small style="color:var(--dim)">η = 85,8%</small></td>
+          <td><span class="badge badge-orange">Ponta + FP</span></td>
+          <td>Carga simultânea estimada: 2 elevadores (~30 kW). Cabine: 1,70×1,40m / 700 kg.</td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td><strong>Iluminação — Áreas Comuns</strong><br><small style="color:var(--dim)">Halls, corredores, escadas, garagem, fachada</small></td>
+          <td>—</td>
+          <td>—</td>
+          <td><strong>~8,0 kW</strong></td>
+          <td>220V</td>
+          <td>~0,95</td>
+          <td><span class="badge badge-blue">Fora Ponta + Ponta</span></td>
+          <td>Estimado com base no perfil de demanda noturna</td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td>
+          <td><strong>Bombas — Recalque e Circulação</strong><br><small style="color:var(--dim)">Água fria, água quente, incêndio</small></td>
+          <td>—</td>
+          <td>—</td>
+          <td><strong>~8,0 kW</strong></td>
+          <td>380V / 220V</td>
+          <td>~0,85</td>
+          <td><span class="badge badge-blue">Fora Ponta</span></td>
+          <td>Operação predominante diurna</td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td><strong>Portaria, CFTV e Sistemas de Segurança</strong><br><small style="color:var(--dim)">No-breaks, central de alarme, controle de acesso</small></td>
+          <td>—</td>
+          <td>—</td>
+          <td><strong>~4,0 kW</strong></td>
+          <td>220V / 110V</td>
+          <td>~0,90</td>
+          <td><span class="badge badge-orange">Ponta + FP (24h)</span></td>
+          <td>Carga contínua — crítica para backup em ponta</td>
+        </tr>
+        <tr>
+          <td><strong>5</strong></td>
+          <td><strong>Ar-Condicionado — Áreas Comuns</strong><br><small style="color:var(--dim)">Salão de festas, academia, espaços compartilhados</small></td>
+          <td>—</td>
+          <td>—</td>
+          <td><strong>~10,0 kW</strong></td>
+          <td>220V</td>
+          <td>~0,85</td>
+          <td><span class="badge badge-orange">Ponta + FP</span></td>
+          <td>Uso variável — pico no verão (Out–Mar)</td>
+        </tr>
+        <tr>
+          <td><strong>6</strong></td>
+          <td><strong>Outras cargas de condomínio</strong><br><small style="color:var(--dim)">Churrasqueira, lavanderia, cargas de apartamentos (subestação)</small></td>
+          <td>—</td>
+          <td>—</td>
+          <td><strong>~25–65 kW</strong></td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge badge-orange">Ponta + FP</span></td>
+          <td>Estimado com base na variação de demanda medida</td>
+        </tr>
+        <tr style="background:rgba(242,101,34,.04)">
+          <td colspan="3"><strong>TOTAL INSTALADO (estimado)</strong></td>
+          <td>—</td>
+          <td><strong style="color:var(--or);font-size:15px">~100–140 kW</strong></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>Demanda medida máxima registrada: <strong>116,9 kW</strong> (Dez/25)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box reveal">
+    <div class="info-box-label">Nota sobre os elevadores — Placa WEG</div>
+    <p>Cada um dos 3 elevadores é acionado por um <strong>motor WEG 3~ 180L, 15 kW (20 HP)</strong>, trifásico, gaiola de esquilo, 60 Hz, 1.130 RPM, tensão operacional em triângulo a 380V (corrente nominal: 29,5 A), fator de potência 0,90 e rendimento de 85,8% — conformidade NBR 7094. Peso do motor: 191 kg. Capacidade da cabine: <strong>700 kg · 1,70 × 1,40 m</strong>. A carga de pico simultânea dos elevadores representa ~30 kW e ocorre principalmente durante o horário de ponta (18h–20h), quando o tráfego de moradores é mais intenso — <strong>este é o ponto ideal de atuação do sistema de armazenamento com arbitragem</strong>.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SEÇÃO 4: SISTEMA PROPOSTO ── -->
+<section class="sec sec-alt" id="sec-sistema">
+  <div class="sec-hd reveal">
+    <div class="sec-num">04 — Sistema Proposto</div>
+    <h2 class="sec-h2">Equipamentos de alto desempenho<br>instalados no seu teto</h2>
+    <p class="sec-sub">Sistema fotovoltaico híbrido com armazenamento em baterias LFP de ciclo profundo, instalado na subestação superior (teto) — mesmos equipamentos avaliados pelo mercado, com a diferença do <strong>ecossistema LumenCare</strong>.</p>
+  </div>
+
+  <div class="tbl-wrap reveal" style="margin-bottom:32px">
+    <table>
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Fabricante / Modelo</th>
+          <th>Especificação</th>
+          <th>Qtd.</th>
+          <th>Total</th>
+          <th>Garantia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-orange">Módulo Fotovoltaico</span></td>
+          <td><strong>OSDA</strong></td>
+          <td>590 Wp por painel · alta eficiência monocristalino</td>
+          <td>36 unidades</td>
+          <td><strong>21,24 kWp total</strong></td>
+          <td>10 anos (defeitos) · 25 anos (eficiência ≥80%)</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">Inversor Híbrido</span></td>
+          <td><strong>GoodWe — GW30K-ET</strong></td>
+          <td>30.000 W · trifásico · Wi-Fi integrado · monitoramento remoto</td>
+          <td>1 unidade</td>
+          <td><strong>30 kW</strong></td>
+          <td>5 anos fabricante</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">Bateria LFP</span></td>
+          <td><strong>GoodWe — LYNX F (G2) LX F3.2-20</strong></td>
+          <td>3,2 kWh por unidade · trifásica · Lítio-Ferro-Fosfato (LFP) · ciclo profundo</td>
+          <td>8 unidades</td>
+          <td><strong>25,6 kWh total</strong></td>
+          <td>10 anos / 6.000 ciclos</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">Controlador Baterias</span></td>
+          <td><strong>GoodWe — PCU-F52</strong></td>
+          <td>Unidade de controle para banco LX F3.2-20</td>
+          <td>1 unidade</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-orange">Kit Instalação</span></td>
+          <td><strong>CCC</strong></td>
+          <td>Kit instalação para 2 painéis em fibrocimento</td>
+          <td>18 kits</td>
+          <td>36 painéis suportados</td>
+          <td>—</td>
+        </tr>
+        <tr style="background:rgba(242,101,34,.04)">
+          <td colspan="2"><span class="badge badge-orange">⚡ LumenCare — Exclusivo LumenGrid</span></td>
+          <td colspan="4"><strong>Controlador de gestão de cargas com IA · monitoramento em tempo real · arbitragem dinâmica · gestão dos elevadores e demais cargas · otimização ponta/fora ponta · alertas e relatórios automáticos</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Capacidades do sistema -->
+  <div class="grid-3 reveal">
+    <div class="card">
+      <div class="card-icon">☀️</div>
+      <div class="card-label">Geração estimada</div>
+      <div class="card-value blue">2.490</div>
+      <div class="card-desc">kWh/mês · irradiação média RJ 5,0 h/dia · PR 78%</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔋</div>
+      <div class="card-label">Armazenamento total</div>
+      <div class="card-value green">25,6</div>
+      <div class="card-desc">kWh · 8 × LFP 3,2 kWh · 24,3 kWh úteis por ciclo (95% ef.)</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <div class="card-label">Potência do inversor</div>
+      <div class="card-value">30</div>
+      <div class="card-desc">kW AC saída · GoodWe GW30K-ET trifásico · MPPT duplo</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SEÇÃO 5: CENÁRIOS E RETORNO ── -->
+<section class="sec sec-dark" id="sec-investimento">
+  <div class="sec-hd reveal">
+    <div class="sec-num">05 — Cenários e Retorno Financeiro</div>
+    <h2 class="sec-h2">Sua escolha define<br>o tamanho do retorno</h2>
+    <p class="sec-sub">Apresentamos dois cenários com os mesmos equipamentos. A diferença está no ecossistema inteligente da LumenGrid que maximiza a captura de valor em cada ciclo de arbitragem.</p>
+  </div>
+
+  <!-- Tabela comparativa rápida -->
+  <div class="tbl-wrap reveal" style="margin-bottom:36px">
+    <table>
+      <thead>
+        <tr>
+          <th>Critério</th>
+          <th>Cenário A — Mercado</th>
+          <th>Cenário B — LumenGrid</th>
+          <th style="background:rgba(242,101,34,.12);color:var(--or)">Cenário C — LumenGrid Plus ⭐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Módulos fotovoltaicos</strong></td>
+          <td>36 × 590 Wp</td>
+          <td>36 × 590 Wp</td>
+          <td style="background:rgba(242,101,34,.04)"><strong style="color:var(--or)">44 × 590 Wp</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Potência FV instalada</strong></td>
+          <td>21,24 kWp</td>
+          <td>21,24 kWp</td>
+          <td style="background:rgba(242,101,34,.04)"><strong style="color:var(--or)">25,96 kWp</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Aproveitamento do inversor (30 kW)</strong></td>
+          <td>70,8% — <span class="badge badge-yellow" style="font-size:9px">27% subutilizado</span></td>
+          <td>70,8% — <span class="badge badge-yellow" style="font-size:9px">27% subutilizado</span></td>
+          <td style="background:rgba(242,101,34,.04)"><strong>86,5%</strong> — <span class="badge badge-green" style="font-size:9px">otimizado</span></td>
+        </tr>
+        <tr>
+          <td><strong>Bateria LFP</strong></td>
+          <td>8 × 3,2 kWh = 25,6 kWh</td>
+          <td>8 × 3,2 kWh = 25,6 kWh</td>
+          <td style="background:rgba(242,101,34,.04)">8 × 3,2 kWh = 25,6 kWh</td>
+        </tr>
+        <tr>
+          <td><strong>LumenCare IA</strong></td>
+          <td><span class="badge" style="background:rgba(148,163,184,.1);color:var(--dim);border:1px solid rgba(148,163,184,.2)">Não incluso</span></td>
+          <td><span class="badge badge-green">Incluso</span></td>
+          <td style="background:rgba(242,101,34,.04)"><span class="badge badge-green">Incluso</span></td>
+        </tr>
+        <tr>
+          <td><strong>Geração solar/mês</strong></td>
+          <td>2.490 kWh</td>
+          <td>2.490 kWh</td>
+          <td style="background:rgba(242,101,34,.04)"><strong>3.044 kWh (+22%)</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Investimento</strong></td>
+          <td>R$ 187.187,50</td>
+          <td>R$ 187.187,50</td>
+          <td style="background:rgba(242,101,34,.04)"><strong style="color:var(--or)">R$ 195.000,00</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Economia mensal total</strong></td>
+          <td>R$ 2.846</td>
+          <td>R$ 3.329</td>
+          <td style="background:rgba(242,101,34,.04)"><strong style="color:var(--or)">R$ 3.765</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Payback simples</strong></td>
+          <td>5,5 anos</td>
+          <td>4,7 anos</td>
+          <td style="background:rgba(242,101,34,.04)"><strong style="color:var(--green)">4,3 anos</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Economia em 10 anos</strong></td>
+          <td>R$ 341.520</td>
+          <td>R$ 399.480</td>
+          <td style="background:rgba(242,101,34,.04)"><strong style="color:var(--or)">R$ 451.800</strong></td>
+        </tr>
+        <tr>
+          <td><strong>TIR estimada</strong></td>
+          <td>~14%</td>
+          <td>~18%</td>
+          <td style="background:rgba(242,101,34,.04)"><strong style="color:var(--or)">~20%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box reveal" style="margin-bottom:36px;background:rgba(242,101,34,.06);border-color:rgba(242,101,34,.3)">
+    <div class="info-box-label">Por que 44 painéis? — Capacidade disponível no inversor GoodWe GW30K-ET</div>
+    <p>O inversor GoodWe GW30K-ET (30 kW AC) suporta até <strong>~36 kWp de entrada DC</strong>. Com 36 painéis de 590 Wp, o sistema utiliza apenas <strong>21,24 kWp — 70,8% da capacidade disponível</strong>, deixando <strong>8,76 kWp de margem</strong> sem nenhum custo adicional de inversor. Ao subir para <strong>44 painéis (25,96 kWp)</strong>, aproveitamos 86,5% do inversor — tecnicamente ideal e sem risco de clipping — gerando <strong>554 kWh/mês a mais</strong> (R$436/mês adicional) com um incremento de apenas R$7.812,50 no investimento. O telhado comporta os 44 painéis conforme o layout aprovado na visita técnica.</p>
+  </div>
+
+  <div class="scenario-grid reveal">
+    <!-- Cenário A -->
+    <div class="scenario-card base">
+      <div class="scenario-label base">Cenário A — Padrão de Mercado</div>
+      <div class="scenario-name">Solar + Storage<br>Sem inteligência</div>
+      <div class="scenario-price base">R$187.187</div>
+      <div class="scenario-price-label">equipamentos equivalentes ao concorrente</div>
+      <div class="scenario-items">
+        <div class="scenario-item">
+          <div class="scenario-item-dot"></div>
+          <div class="scenario-item-text">36 módulos OSDA 590 Wp = 21,24 kWp · inversor GoodWe 30 kW · 8 baterias LFP 25,6 kWh</div>
+        </div>
+        <div class="scenario-item">
+          <div class="scenario-item-dot"></div>
+          <div class="scenario-item-text">Geração solar: <strong>R$1.961/mês</strong> · Arbitragem básica: <strong>R$885/mês</strong></div>
+        </div>
+        <div class="scenario-item">
+          <div class="scenario-item-dot"></div>
+          <div class="scenario-item-text">Sem gestão inteligente — monitoramento básico via app GoodWe</div>
+        </div>
+        <div class="scenario-item">
+          <div class="scenario-item-dot"></div>
+          <div class="scenario-item-text">Inversor 70,8% aproveitado — 27% de capacidade não utilizada</div>
+        </div>
+      </div>
+      <div class="scenario-metrics">
+        <div><div class="scenario-metric-label">Economia/mês</div><div class="scenario-metric-value base">R$ 2.846</div></div>
+        <div><div class="scenario-metric-label">Payback</div><div class="scenario-metric-value base">5,5 anos</div></div>
+        <div><div class="scenario-metric-label">10 anos</div><div class="scenario-metric-value base">R$ 341.520</div></div>
+        <div><div class="scenario-metric-label">TIR</div><div class="scenario-metric-value base">~14%</div></div>
+      </div>
+    </div>
+
+    <!-- Cenário B -->
+    <div class="scenario-card base" style="border-color:rgba(242,101,34,.2);background:rgba(242,101,34,.03)">
+      <div class="scenario-label" style="color:var(--or)">Cenário B — LumenGrid Padrão</div>
+      <div class="scenario-name">Solar + Storage<br>+ LumenCare IA</div>
+      <div class="scenario-price" style="color:var(--or)">R$187.187</div>
+      <div class="scenario-price-label">mesmo preço do concorrente · com IA incluída</div>
+      <div class="scenario-items">
+        <div class="scenario-item">
+          <div class="scenario-item-dot" style="background:var(--or)"></div>
+          <div class="scenario-item-text">36 módulos 590 Wp = 21,24 kWp · mesmos equipamentos + LumenCare</div>
+        </div>
+        <div class="scenario-item">
+          <div class="scenario-item-dot" style="background:var(--or)"></div>
+          <div class="scenario-item-text">Solar: <strong>R$1.961/mês</strong> · Arbitragem IA (+15%): <strong>R$1.018/mês</strong></div>
+        </div>
+        <div class="scenario-item">
+          <div class="scenario-item-dot" style="background:var(--or)"></div>
+          <div class="scenario-item-text">Gestão de cargas (elevadores): <strong>R$350/mês</strong> adicional</div>
+        </div>
+        <div class="scenario-item">
+          <div class="scenario-item-dot" style="background:var(--or)"></div>
+          <div class="scenario-item-text">Dashboard + relatórios mensais + alertas WhatsApp + laudo de demanda</div>
+        </div>
+      </div>
+      <div class="scenario-metrics">
+        <div><div class="scenario-metric-label">Economia/mês</div><div class="scenario-metric-value" style="color:var(--or)">R$ 3.329</div></div>
+        <div><div class="scenario-metric-label">Payback</div><div class="scenario-metric-value" style="color:var(--or)">4,7 anos</div></div>
+        <div><div class="scenario-metric-label">10 anos</div><div class="scenario-metric-value" style="color:var(--or)">R$ 399.480</div></div>
+        <div><div class="scenario-metric-label">TIR</div><div class="scenario-metric-value" style="color:var(--or)">~18%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cenário C — destaque especial -->
+  <div class="reveal" style="margin-top:24px">
+    <div style="background:linear-gradient(135deg,rgba(242,101,34,.10),rgba(242,101,34,.04));border:2px solid rgba(242,101,34,.5);border-radius:18px;padding:40px 48px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;right:0;background:var(--or);color:#fff;font-size:9px;font-weight:800;letter-spacing:2px;padding:8px 28px 8px 20px;border-bottom-left-radius:12px">RECOMENDADO — MELHOR ROI</div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:40px;align-items:flex-start">
+        <div>
+          <div style="font-size:9.5px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--or);margin-bottom:10px">Cenário C — LumenGrid Plus</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;margin-bottom:20px;line-height:1.1">44 painéis · inversor no limite ideal · LumenCare IA<br><span style="color:var(--or)">Máximo retorno com o mesmo inversor</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--or);flex-shrink:0;margin-top:7px"></div>
+              <div style="font-size:13px;color:var(--muted)"><strong style="color:var(--text)">44 × OSDA 590 Wp</strong> = 25,96 kWp (+ 4,72 kWp vs Cenário B)</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--or);flex-shrink:0;margin-top:7px"></div>
+              <div style="font-size:13px;color:var(--muted)">Inversor GW30K-ET a <strong style="color:var(--text)">86,5% de capacidade</strong> — ponto técnico ideal</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--or);flex-shrink:0;margin-top:7px"></div>
+              <div style="font-size:13px;color:var(--muted)">Geração: <strong style="color:var(--text)">3.044 kWh/mês</strong> (+554 kWh vs 36 painéis)</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="width:6px;height;6px;border-radius:50%;background:var(--or);flex-shrink:0;margin-top:7px"></div>
+              <div style="font-size:13px;color:var(--muted)">8 baterias LFP 25,6 kWh · arbitragem IA · gestão de cargas · LumenCare completo</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:7px"></div>
+              <div style="font-size:13px;color:var(--muted)">Telhado comporta os 44 painéis — confirmado na visita técnica</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:7px"></div>
+              <div style="font-size:13px;color:var(--muted)"><strong style="color:var(--text)">Incremento de R$7.812,50</strong> sobre o Cenário B para +R$436/mês de geração extra</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:200px">
+          <div style="text-align:center;background:rgba(0,0,0,.4);border-radius:12px;padding:20px 28px;border:1px solid rgba(242,101,34,.2)">
+            <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Investimento</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;color:var(--or)">R$195.000</div>
+          </div>
+          <div style="text-align:center;background:rgba(0,0,0,.4);border-radius:12px;padding:18px 28px;border:1px solid rgba(34,197,94,.2)">
+            <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Economia/mês</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:var(--green)">R$ 3.765</div>
+          </div>
+          <div style="text-align:center;background:rgba(0,0,0,.4);border-radius:12px;padding:18px 28px;border:1px solid rgba(34,197,94,.2)">
+            <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Payback</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:var(--green)">4,3 anos</div>
+          </div>
+          <div style="text-align:center;background:rgba(0,0,0,.4);border-radius:12px;padding:18px 28px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Economia 10 anos</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--text)">R$ 451.800</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROI Charts -->
+  <div class="grid-2 reveal" style="margin-top:40px">
+    <div class="chart-box">
+      <div class="chart-title">Retorno acumulado ao longo do tempo</div>
+      <div class="chart-sub">Projeção de economia acumulada — Cenário B (com LumenCare) vs investimento inicial</div>
+      <canvas id="chartROI" height="260"></canvas>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="card" style="flex:1">
+        <div class="card-label">Composição da Economia Mensal — Cenário C Plus (44 painéis)</div>
+        <div class="roi-bar-wrap" style="margin-top:20px" id="roiBars">
+          <div class="roi-bar-row">
+            <div class="roi-bar-label">Geração Solar (44 pl.)</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill orange" style="width:0%" data-width="63.7%"></div></div>
+            <div class="roi-bar-value">R$2.397/mês</div>
+          </div>
+          <div class="roi-bar-row">
+            <div class="roi-bar-label">Arbitragem IA</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill orange" style="width:0%" data-width="27.0%"></div></div>
+            <div class="roi-bar-value">R$1.018/mês</div>
+          </div>
+          <div class="roi-bar-row">
+            <div class="roi-bar-label">Gestão de Cargas IA</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill green" style="width:0%" data-width="9.3%"></div></div>
+            <div class="roi-bar-value">R$350/mês</div>
+          </div>
+        </div>
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim)">Total Cenário Plus</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--or)">R$ 3.765/mês</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim)">Por ano</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--text)">R$ 45.180</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Oportunidade adicional -->
+      <div style="background:rgba(250,204,21,.05);border:1px solid rgba(250,204,21,.2);border-radius:12px;padding:24px">
+        <div style="font-size:9.5px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:10px">⚡ Oportunidade adicional — Revisão de Demanda</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.65">Com 12 meses de dados do LumenCare demonstrando demanda real abaixo de 100 kW, você pode solicitar à Light a redução da demanda contratada de <strong>140 kW para 100 kW</strong>, gerando uma economia adicional de <strong style="color:var(--yellow)">R$1.709/mês</strong> somente na componente de demanda — sem nenhum investimento extra.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SEÇÃO 6: LUMENCARE ── -->
+<section class="sec sec-mid" id="sec-lumencare">
+  <div class="sec-hd reveal">
+    <div class="sec-num">06 — LumenCare</div>
+    <h2 class="sec-h2">A inteligência que nenhum<br><span class="grad">concorrente oferece</span></h2>
+    <p class="sec-sub">Enquanto qualquer empresa instala painéis e baterias, só a LumenGrid entrega o ecossistema de gestão com IA que maximiza cada centavo do seu investimento — 24h por dia, 365 dias por ano.</p>
+  </div>
+
+  <div class="lc-hero reveal">
+    <div class="lc-hero-label">LumenCare · Gestão Inteligente de Energia</div>
+    <h3 class="lc-hero-title">O sistema pensa.<br><em>Você economiza.</em></h3>
+    <p class="lc-hero-sub">O LumenCare integra inversor, baterias, cargas e dados da Light para tomar decisões em tempo real: quando carregar, quando descarregar, quando priorizar a geração solar, quando antecipar a arbitragem. Tudo automatizado e com relatórios mensais para o síndico.</p>
+  </div>
+
+  <div class="lc-features reveal">
+    <div class="lc-feat">
+      <div class="lc-feat-icon">🧠</div>
+      <div class="lc-feat-title">Arbitragem Dinâmica com IA</div>
+      <div class="lc-feat-desc">Aprende o padrão de consumo do condomínio e otimiza os ciclos de carga/descarga para maximizar a captura do diferencial tarifário Ponta × FP — sem intervenção humana.</div>
+    </div>
+    <div class="lc-feat">
+      <div class="lc-feat-icon">🔋</div>
+      <div class="lc-feat-title">Gestão dos Elevadores</div>
+      <div class="lc-feat-desc">Monitora e coordena o pico de acionamento dos 3 elevadores (45 kW instalado) no horário de ponta, reduzindo a demanda máxima e evitando picos desnecessários na fatura.</div>
+    </div>
+    <div class="lc-feat">
+      <div class="lc-feat-icon">📊</div>
+      <div class="lc-feat-title">Dashboard do Síndico</div>
+      <div class="lc-feat-desc">Portal web em tempo real com geração solar, nível de bateria, consumo por posto horário, economia acumulada e previsão do próximo ciclo de arbitragem.</div>
+    </div>
+    <div class="lc-feat">
+      <div class="lc-feat-icon">📋</div>
+      <div class="lc-feat-title">Relatório Mensal Automático</div>
+      <div class="lc-feat-desc">Relatório completo comparando fatura anterior vs atual, economia gerada, kWh produzidos, ciclos de bateria realizados e projeção do próximo mês — entregue automaticamente ao síndico.</div>
+    </div>
+    <div class="lc-feat">
+      <div class="lc-feat-icon">🚨</div>
+      <div class="lc-feat-title">Alertas Inteligentes</div>
+      <div class="lc-feat-desc">Notificações via WhatsApp e e-mail para anomalias de consumo, falhas no inversor, baterias abaixo do nível ideal, e oportunidades de melhoria identificadas pelo algoritmo.</div>
+    </div>
+    <div class="lc-feat">
+      <div class="lc-feat-icon">📈</div>
+      <div class="lc-feat-title">Subsídio para Revisão de Demanda</div>
+      <div class="lc-feat-desc">Após 12 meses, o LumenCare gera o laudo técnico com histórico de demanda real para embasar o pedido de redução da demanda contratada junto à Light — potencial de R$1.709/mês extra.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SEÇÃO 7: PRÓXIMOS PASSOS ── -->
+<section class="sec sec-dark" id="sec-fechamento">
+  <div class="sec-hd center reveal">
+    <div class="sec-num center">07 — Próximos Passos</div>
+    <h2 class="sec-h2">Pronto para transformar<br>sua conta de energia?</h2>
+    <p class="sec-sub">O Condomínio Zaher tem tudo o que é preciso para um projeto de excelência: subestação no teto com acesso para instalação, demanda elevada com perfil perfeito para arbitragem, e um diferencial tarifário de 3,16× que o sistema capturará todo mês.</p>
+  </div>
+
+  <div class="grid-3 reveal">
+    <div class="card">
+      <div style="width:44px;height:44px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-bottom:18px">1</div>
+      <div class="card-label">Aprovação da proposta</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6">Aprovação em assembleia ou pelo síndico. Assinatura do contrato e sinal de 30% do investimento.</div>
+    </div>
+    <div class="card">
+      <div style="width:44px;height:44px;background:rgba(242,101,34,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--or);margin-bottom:18px">2</div>
+      <div class="card-label">Engenharia e homologação</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6">Projeto elétrico, ART, protocolo na Light e aprovação da distribuidora. Prazo estimado: 30–45 dias.</div>
+    </div>
+    <div class="card">
+      <div style="width:44px;height:44px;background:rgba(242,101,34,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:rgba(242,101,34,.7);margin-bottom:18px">3</div>
+      <div class="card-label">Instalação e ativação</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6">Instalação dos módulos, inversor e baterias na subestação superior. Ativação do LumenCare. Prazo: 5–7 dias úteis.</div>
+    </div>
+  </div>
+
+  <!-- Resumo final -->
+  <div style="background:linear-gradient(135deg,rgba(242,101,34,.08),rgba(242,101,34,.03));border:1px solid rgba(242,101,34,.25);border-radius:20px;padding:48px 56px;margin-top:40px" class="reveal">
+    <div style="display:grid;grid-template-columns:1fr auto;gap:40px;align-items:flex-start">
+      <div>
+        <div style="font-size:9.5px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:12px">Resumo da Proposta — Condomínio Zaher</div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px">
+          <div style="background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:10px;padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)">Cenário A — Mercado · 36 painéis</div>
+              <div style="font-size:13px;color:var(--muted)">Mesmos equipamentos do concorrente, sem LumenCare</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--text)">R$187.187,50</div>
+              <div style="font-size:11px;color:var(--dim)">R$2.846/mês · 5,5 anos</div>
+            </div>
+          </div>
+          <div style="background:rgba(242,101,34,.04);border:1px solid rgba(242,101,34,.2);border-radius:10px;padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--or)">Cenário B — LumenGrid · 36 painéis + LumenCare</div>
+              <div style="font-size:13px;color:var(--muted)">Mesmo preço · com IA de arbitragem e gestão de cargas</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--or)">R$187.187,50</div>
+              <div style="font-size:11px;color:var(--dim)">R$3.329/mês · 4,7 anos</div>
+            </div>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(242,101,34,.10),rgba(242,101,34,.04));border:2px solid rgba(242,101,34,.5);border-radius:10px;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;background:var(--or);color:#fff;font-size:8px;font-weight:800;letter-spacing:1.5px;padding:4px 14px;border-bottom-left-radius:8px">RECOMENDADO</div>
+            <div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--or)">Cenário C — LumenGrid Plus · 44 painéis + LumenCare</div>
+              <div style="font-size:13px;color:var(--muted)">Máxima geração · inversor no ponto ideal · melhor ROI</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:var(--or)">R$195.000,00</div>
+              <div style="font-size:11px;color:var(--green)">R$3.765/mês · 4,3 anos · TIR ~20%</div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--dim);line-height:1.7">OSDA 590 Wp · GoodWe GW30K-ET 30 kW · 8 × LFP 3,2 kWh (25,6 kWh) · PCU-F52 · Kits instalação fibrocimento · <strong style="color:var(--text)">LumenCare IA incluído nos Cenários B e C</strong></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;min-width:190px">
+        <div style="text-align:center;background:rgba(0,0,0,.4);border-radius:12px;padding:18px 24px;border:1px solid rgba(242,101,34,.25)">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Eco. Plus/mês</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--or)">R$3.765</div>
+        </div>
+        <div style="text-align:center;background:rgba(0,0,0,.4);border-radius:12px;padding:18px 24px;border:1px solid rgba(34,197,94,.2)">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Payback Plus</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--green)">4,3 anos</div>
+        </div>
+        <div style="text-align:center;background:rgba(0,0,0,.4);border-radius:12px;padding:18px 24px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Economia 10 anos</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:var(--text)">R$451.800</div>
+        </div>
+        <div style="text-align:center;background:rgba(0,0,0,.4);border-radius:12px;padding:18px 24px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Potencial com BESS completo</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--yellow)">R$9.072/mês</div>
+          <div style="font-size:10px;color:var(--dim)">Sistema expansível</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px">
+    <div class="footer-brand">
+      <img style="height:36px;filter:drop-shadow(0 0 8px rgba(242,101,34,.6))" src="imagens/LOGOS/logo-icone.png" alt="LumenGrid" onerror="this.style.display='none'">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800"><span style="color:var(--or)">LUMEN</span><span style="color:var(--text)">GRID</span></div>
+        <div style="font-size:8px;font-weight:700;letter-spacing:.3em;color:rgba(242,101,34,.75);text-transform:uppercase">Energia Inteligente</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:12px;color:var(--dim)">Esta proposta foi elaborada com base nos dados da memória de massa</div>
+      <div style="font-size:12px;color:var(--dim)">da UC 400024511 e na fatura Light referência Julho/2026.</div>
+      <div style="font-size:12px;color:var(--dim);margin-top:4px">Validade desta proposta: <strong style="color:var(--text)">30 dias</strong></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>LumenGrid Energia Inteligente · lumengridbrasil.com.br</span>
+    <span>Feito por Domani Consultoria</span>
+  </div>
+</footer>
+
+<!-- ── SCRIPTS ── -->
+<script>
+/* ═══════════════════════════ DADOS ═══════════════════════════ */
+const historico = [
+  {mes:"Set/25", fp:25327, ponta:2729, maxP:72.6},
+  {mes:"Out/25", fp:25850, ponta:2988, maxP:65.5},
+  {mes:"Nov/25", fp:26774, ponta:2665, maxP:66.5},
+  {mes:"Dez/25", fp:36454, ponta:3991, maxP:116.9},
+  {mes:"Jan/26", fp:38107, ponta:3664, maxP:91.2},
+  {mes:"Fev/26", fp:37901, ponta:3711, maxP:96.8},
+  {mes:"Mar/26", fp:35357, ponta:3362, maxP:81.7},
+  {mes:"Abr/26", fp:35144, ponta:3126, maxP:81.7},
+  {mes:"Mai/26", fp:28566, ponta:2492, maxP:65.5},
+  {mes:"Jun/26", fp:23839, ponta:2613, maxP:63.0},
+  {mes:"Jul/26", fp:25510, ponta:2949, maxP:64.5},
+  {mes:"Ago/26", fp:27836, ponta:2705, maxP:77.1},
+];
+const tarFP = 0.78733959, tarP = 2.48528747;
+
+/* ═══════════════════════════ TABELA HISTÓRICO ═══════════════════════════ */
+function fmtR(v){return 'R$\u00A0'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+const tbHist = document.getElementById('tblHistorico');
+historico.forEach(d=>{
+  const custoFP = d.fp*tarFP, custoP = d.ponta*tarP, total = custoFP+custoP;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><strong>${d.mes}</strong></td>
+    <td>${d.fp.toLocaleString('pt-BR')}</td>
+    <td><strong>${d.ponta.toLocaleString('pt-BR')}</strong></td>
+    <td>${(d.fp+d.ponta).toLocaleString('pt-BR')}</td>
+    <td>${fmtR(custoFP)}</td>
+    <td><strong style="color:var(--yellow)">${fmtR(custoP)}</strong></td>
+    <td><strong>${fmtR(total)}</strong></td>
+    <td><span class="badge badge-orange">${d.maxP.toFixed(1)} kW</span></td>`;
+  tbHist.appendChild(tr);
+});
+// Total row
+const totFP=historico.reduce((a,d)=>a+d.fp,0),totP=historico.reduce((a,d)=>a+d.ponta,0);
+const tfp=tbHist.insertRow(),tpct=historico.reduce((a,d)=>Math.max(a,d.maxP),0);
+tfp.style.background='rgba(242,101,34,.04)';
+tfp.innerHTML=`<td><strong>Média/Total</strong></td><td><strong>${Math.round(totFP/12).toLocaleString('pt-BR')}</strong></td><td><strong>${Math.round(totP/12).toLocaleString('pt-BR')}</strong></td><td><strong>${Math.round((totFP+totP)/12).toLocaleString('pt-BR')}</strong></td><td style="color:var(--or)"><strong>${fmtR(totFP/12*tarFP)}</strong></td><td style="color:var(--yellow)"><strong>${fmtR(totP/12*tarP)}</strong></td><td style="color:var(--or)"><strong>${fmtR((totFP+totP)/12*(tarFP+tarP)/2)}</strong></td><td><span class="badge badge-orange">Máx: ${tpct} kW</span></td>`;
+
+/* ═══════════════════════════ CHART.JS CONFIG ═══════════════════════════ */
+Chart.defaults.color = 'rgba(240,244,248,.5)';
+Chart.defaults.borderColor = 'rgba(255,255,255,.06)';
+const fontGrot = {family:"'Space Grotesk', sans-serif", weight:'600'};
+
+/* ── CHART CONSUMO ── */
+new Chart(document.getElementById('chartConsumo'),{
+  type:'bar',
+  data:{
+    labels:historico.map(d=>d.mes),
+    datasets:[
+      {label:'Fora Ponta (kWh)',data:historico.map(d=>d.fp),backgroundColor:'rgba(56,189,248,.65)',borderColor:'rgba(56,189,248,.9)',borderWidth:1,borderRadius:4,order:2},
+      {label:'Ponta (kWh)',data:historico.map(d=>d.ponta),backgroundColor:'rgba(250,204,21,.75)',borderColor:'rgba(250,204,21,.9)',borderWidth:1,borderRadius:4,order:1},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{labels:{font:fontGrot,boxWidth:10}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('pt-BR')} kWh`}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{font:{size:10},callback:v=>v.toLocaleString('pt-BR')}},
+    }
+  }
+});
+
+/* ── CHART FATURA ── */
+new Chart(document.getElementById('chartFatura'),{
+  type:'doughnut',
+  data:{
+    labels:['Energia FP','Energia Ponta','Demanda','COSIP','Bandeiras'],
+    datasets:[{
+      data:[20078.72,7329.10,5981.40,5195.00,768.06],
+      backgroundColor:['rgba(56,189,248,.7)','rgba(250,204,21,.7)','rgba(242,101,34,.7)','rgba(148,163,184,.5)','rgba(100,116,139,.4)'],
+      borderColor:['rgba(56,189,248,.9)','rgba(250,204,21,.9)','rgba(242,101,34,.9)','rgba(148,163,184,.7)','rgba(100,116,139,.6)'],
+      borderWidth:1.5, hoverOffset:8
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    cutout:'62%',
+    plugins:{
+      legend:{position:'bottom',labels:{font:{size:10,family:"'DM Sans',sans-serif"},boxWidth:10,padding:12}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.label}: R$${ctx.parsed.toLocaleString('pt-BR',{minimumFractionDigits:2})}`}}
+    }
+  }
+});
+
+/* ── CHART DEMANDA HORÁRIA ── */
+new Chart(document.getElementById('chartDemanda'),{
+  type:'bar',
+  data:{
+    labels:['17h45–18h','18h–19h','19h–20h','20h–20h45'],
+    datasets:[
+      {label:'Demanda média (kW)',data:[42.9,45.3,49.8,52.4],backgroundColor:'rgba(250,204,21,.65)',borderColor:'rgba(250,204,21,.9)',borderWidth:1,borderRadius:6,yAxisID:'y'},
+      {label:'Tarifa Ponta (R$/kWh × 10)',data:[24.85,24.85,24.85,24.85],type:'line',borderColor:'rgba(242,101,34,.8)',backgroundColor:'rgba(242,101,34,.1)',borderWidth:2,pointRadius:0,fill:true,yAxisID:'y2'},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{
+      legend:{labels:{font:fontGrot,boxWidth:10}},
+      tooltip:{callbacks:{label:ctx=>{if(ctx.datasetIndex===0)return `Demanda: ${ctx.parsed.y} kW`;return `Tarifa Ponta: R$2,485/kWh`}}}
+    },
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{font:{size:11}}},
+      y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{font:{size:10},callback:v=>`${v} kW`},title:{display:true,text:'kW',color:'rgba(240,244,248,.4)',font:{size:10}}},
+      y2:{display:false,min:0,max:80}
+    }
+  }
+});
+
+/* ── CHART ROI ── */
+const inv = 195000, ecoMes = 3765, inflacao = 0.065;
+const labels = [], dataROI = [], dataInv = [];
+let acum = 0;
+for(let m=0;m<=120;m++){
+  if(m%12===0){
+    labels.push(`Ano ${m/12}`);
+    dataInv.push(-inv);
+    dataROI.push(acum - inv);
+  }
+  if(m<120) acum += ecoMes * Math.pow(1+inflacao/12,m);
+}
+new Chart(document.getElementById('chartROI'),{
+  type:'line',
+  data:{
+    labels,
+    datasets:[
+      {label:'Retorno líquido acumulado',data:dataROI,borderColor:'rgba(242,101,34,.9)',backgroundColor:'rgba(242,101,34,.08)',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'rgba(242,101,34,1)',fill:true,tension:.35},
+      {label:'Investimento inicial',data:Array(labels.length).fill(-inv),borderColor:'rgba(148,163,184,.3)',borderWidth:1.5,borderDash:[6,4],pointRadius:0,fill:false}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{
+      legend:{labels:{font:fontGrot,boxWidth:10}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: R$${ctx.parsed.y.toLocaleString('pt-BR',{maximumFractionDigits:0})}`}},
+      annotation:{annotations:{zero:{type:'line',yMin:0,yMax:0,borderColor:'rgba(34,197,94,.4)',borderWidth:1.5,borderDash:[4,4]}}}
+    },
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{font:{size:10},callback:v=>'R$'+Math.round(v/1000)+'k'}}
+    }
+  }
+});
+
+/* ═══════════════════════════ SCROLL / REVEAL ═══════════════════════════ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}
+  })
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ─ ROI bars animation ─ */
+const barIo = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.currentTarget.querySelectorAll('[data-width]').forEach(bar=>{
+        setTimeout(()=>{bar.style.width=bar.dataset.width},200)
+      });
+      barIo.unobserve(e.target)
+    }
+  })
+},{threshold:.3});
+const rbWrap = document.getElementById('roiBars');
+if(rbWrap) barIo.observe(rbWrap.closest('.card')||rbWrap);
+
+/* ─ Nav solid on scroll ─ */
+const nav = document.getElementById('nav');
+const stickyBar = document.getElementById('stickyBar');
+const pbar = document.getElementById('pbar');
+window.addEventListener('scroll',()=>{
+  const s = window.scrollY, h = document.body.scrollHeight-window.innerHeight;
+  nav.classList.toggle('solid',s>60);
+  stickyBar.classList.toggle('visible',s>600);
+  pbar.style.width = (s/h*100)+'%';
+},{passive:true});
+
+/* ─ Print helper ─ */
+window.matchMedia('print').addListener(()=>{
+  document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
+});
+</script>
+</body>
+</html>
