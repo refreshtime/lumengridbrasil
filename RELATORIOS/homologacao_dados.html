@@ -137,6 +137,33 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 /* ─── FOOTER ─── */
 .footer { text-align: center; font-size: 10px; color: var(--t4); padding: 16px; border-top: 1px solid var(--border); margin-top: auto; }
 
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.80);
+  display: none; align-items: center; justify-content: center;
+  z-index: 200; padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--panel); border: 1.5px solid var(--or-border);
+  border-radius: 14px; padding: 28px 24px; max-width: 420px; width: 100%;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.6);
+}
+.modal-icon { font-size: 32px; text-align: center; }
+.modal-title {
+  font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700;
+  color: var(--t1); text-align: center;
+}
+.modal-msg { font-size: 12px; color: var(--t2); line-height: 1.7; text-align: center; }
+.modal-highlight {
+  background: rgba(242,101,34,.08); border: 1px solid var(--or-border);
+  border-radius: 7px; padding: 10px 12px; font-size: 11px; color: var(--t2);
+  line-height: 1.6;
+}
+.modal-highlight strong { color: var(--or); font-family: 'Space Grotesk', sans-serif; }
+.modal-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+
 /* ─── IMPORTAR CONTRATO DROPDOWN ─── */
 .imp-select-wrap {
   background: var(--card); border: 1.5px solid var(--or-border);
@@ -229,13 +256,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <div class="titular-badge-text"><strong>Titular da Fatura de Energia</strong>Os campos abaixo devem ser preenchidos com os dados de quem consta na conta de energia (pode ser diferente do contrato).</div>
       </div>
 
-      <div class="campo">
-        <label>Nome do Titular da Fatura</label>
-        <input type="text" id="cliente" placeholder="Nome completo do titular da conta de energia">
+      <div class="campo-row">
+        <div class="campo">
+          <label>Nome do Titular da Fatura</label>
+          <input type="text" id="cliente" placeholder="Nome completo do titular">
+        </div>
+        <div class="campo">
+          <label>CPF do Titular</label>
+          <input type="text" id="cpfTitular" placeholder="000.000.000-00">
+        </div>
       </div>
-      <div class="campo">
-        <label>Endereço do Titular / Cidade</label>
-        <input type="text" id="endereco" placeholder="Rua, número — Cidade/UF">
+      <div class="campo-row">
+        <div class="campo">
+          <label>Endereço do Titular</label>
+          <input type="text" id="endereco" placeholder="Rua, número — Bairro">
+        </div>
+        <div class="campo">
+          <label>CEP</label>
+          <input type="text" id="cep" placeholder="00000-000">
+        </div>
       </div>
       <div class="campo-row">
         <div class="campo">
@@ -321,10 +360,35 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         </button>
       </div>
 
-      <div class="campo">
-        <label>Disjuntor do Padrão</label>
-        <input type="text" id="disjuntorPadrao" placeholder="Ex: 63A Trifásico">
+      <div class="campo-row">
+        <div class="campo">
+          <label>Disjuntor do Padrão</label>
+          <input type="text" id="disjuntorPadrao" placeholder="Ex: Steck 40A Bifásico">
+        </div>
+        <div class="campo">
+          <label>Foto do Disjuntor</label>
+          <div class="doc-drop" onclick="document.getElementById('dinput-disjuntor').click()">
+            <input type="file" id="dinput-disjuntor" accept="image/*" onchange="carregarDocumento('disjuntor', this)">
+            <div class="doc-drop-text" id="ddrop-disjuntor-txt">Toque para selecionar<br><small style="color:var(--t4)">JPG, PNG...</small></div>
+          </div>
+        </div>
       </div>
+
+      <div class="subtitulo" style="margin-top:8px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="11" r="3"/><path d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+        Acesso ao Portal da Concessionária
+      </div>
+      <div class="campo-row">
+        <div class="campo">
+          <label>Login / E-mail</label>
+          <input type="text" id="loginConc" placeholder="login@email.com ou CPF">
+        </div>
+        <div class="campo">
+          <label>Senha</label>
+          <input type="password" id="senhaConc" placeholder="Senha de acesso">
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--t3);margin-top:-4px">Credenciais do portal da distribuidora (Enel, CPFL, etc.) para envio da documentação.</div>
 
       <div class="subtitulo" style="margin-top:6px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
@@ -396,6 +460,28 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 </div><!-- /conteudo -->
 
+<!-- ─── MODAL: CONFIRMAR ENVIO ─── -->
+<div class="modal-overlay" id="modalEnvio">
+  <div class="modal-box">
+    <div class="modal-icon">📤</div>
+    <div class="modal-title">Enviar para Homologação?</div>
+    <div class="modal-msg">Os dados serão salvos na planilha. Deseja também encaminhar diretamente ao setor de engenharia?</div>
+    <div class="modal-highlight">
+      <strong>Setor de Homologação</strong><br>
+      joaoozeias.engenharia@gmail.com<br>
+      <span style="font-size:10px;color:var(--t3)">Receberá os dados completos e os documentos anexados.</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="confirmarEnvio(true)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Sim — Enviar para homologação
+      </button>
+      <button class="btn btn-ghost" onclick="confirmarEnvio(false)">Não — Apenas salvar os dados</button>
+      <button class="btn btn-dark btn-mini" onclick="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div class="footer">Feito por Domani Consultoria</div>
 <div class="toast" id="toast"></div>
 
@@ -431,8 +517,10 @@ const CONCESSIONARIAS = {
 
 const state = {
   concSelecionada: null,
-  documentos: { fatura: null, documento: null }
+  documentos: { fatura: null, documento: null, disjuntor: null }
 };
+
+let _dadosPendentes = null;
 
 // ──────────────────────────────────────────────
 // INIT
@@ -503,12 +591,12 @@ function carregarDocumento(tipo, input) {
 
 async function enviarDados() {
   const cliente = document.getElementById('cliente').value.trim();
-  if (!cliente) { showToast('Preencha o nome do cliente.', 'err'); return; }
+  if (!cliente) { showToast('Preencha o nome do Titular da Fatura.', 'err'); return; }
   if (!state.concSelecionada) { showToast('Selecione a concessionária.', 'err'); return; }
   if (ENDPOINT_HOMOLAG_DADOS.includes('COLE_A_URL')) { showToast('Configure o endpoint do Apps Script.', 'err'); return; }
 
   document.getElementById('btnEnviar').disabled = true;
-  showToast('Enviando dados...', '');
+  showToast('Preparando dados...', '');
 
   try {
     const docsPayload = {};
@@ -524,19 +612,23 @@ async function enviarDados() {
     const lat = document.getElementById('gpsLat').value;
     const lng = document.getElementById('gpsLng').value;
 
-    const dados = {
-      nomeContrato:    document.getElementById('nomeContrato').value,
-      vendedor:        document.getElementById('vendedor').value,
-      dataInstalacao:  document.getElementById('dataInstalacao').value,
-      cliente:         cliente,
-      endereco:        document.getElementById('endereco').value,
-      protocolo:       document.getElementById('protocolo').value,
-      tipoLigacao:     document.getElementById('tipoLigacao').value,
-      concessionaria:  state.concSelecionada === 'Outra' ? (document.getElementById('outraConc').value || 'Outra') : state.concSelecionada,
-      emailCliente:    document.getElementById('emailCliente').value,
-      telefoneCliente: document.getElementById('telefoneCliente').value,
-      coordenadas:     lat && lng ? lat + ', ' + lng : (lat || lng || ''),
-      disjuntorPadrao: document.getElementById('disjuntorPadrao').value,
+    _dadosPendentes = {
+      nomeContrato:        document.getElementById('nomeContrato').value,
+      vendedor:            document.getElementById('vendedor').value,
+      dataInstalacao:      document.getElementById('dataInstalacao').value,
+      cliente:             cliente,
+      cpfTitular:          document.getElementById('cpfTitular').value,
+      endereco:            document.getElementById('endereco').value,
+      cep:                 document.getElementById('cep').value,
+      protocolo:           document.getElementById('protocolo').value,
+      tipoLigacao:         document.getElementById('tipoLigacao').value,
+      concessionaria:      state.concSelecionada === 'Outra' ? (document.getElementById('outraConc').value || 'Outra') : state.concSelecionada,
+      emailCliente:        document.getElementById('emailCliente').value,
+      telefoneCliente:     document.getElementById('telefoneCliente').value,
+      coordenadas:         lat && lng ? lat + ', ' + lng : (lat || lng || ''),
+      disjuntorPadrao:     document.getElementById('disjuntorPadrao').value,
+      loginConcessionaria: document.getElementById('loginConc').value,
+      senhaConcessionaria: document.getElementById('senhaConc').value,
       inversor: {
         modelo:   document.getElementById('invModelo').value,
         potencia: document.getElementById('invPotencia').value,
@@ -551,24 +643,52 @@ async function enviarDados() {
       documentos: docsPayload
     };
 
-    // Envio via iframe oculto — sem CORS
-    const iframe = document.getElementById('_gasFrame');
-    const form   = document.getElementById('_gasForm');
-    document.getElementById('_gasPayload').value = JSON.stringify({ action: 'save_homologacao_dados', data: dados });
-    form.action = ENDPOINT_HOMOLAG_DADOS;
+    // Mostrar modal de confirmação
+    document.getElementById('modalEnvio').classList.add('show');
 
-    iframe.onload = function() {
-      localStorage.removeItem('lumengrid_homolog_dados_draft');
-      document.getElementById('formWrap').style.display = 'none';
-      document.getElementById('sucessoId').textContent = 'Enviado em ' + new Date().toLocaleString('pt-BR');
-      document.getElementById('sucessoWrap').classList.add('show');
-    };
-
-    form.submit();
   } catch (err) {
     showToast('Erro ao preparar envio: ' + err.message, 'err');
     document.getElementById('btnEnviar').disabled = false;
   }
+}
+
+function fecharModal() {
+  document.getElementById('modalEnvio').classList.remove('show');
+  document.getElementById('btnEnviar').disabled = false;
+  _dadosPendentes = null;
+}
+
+function confirmarEnvio(enviarHomologacao) {
+  document.getElementById('modalEnvio').classList.remove('show');
+  if (!_dadosPendentes) return;
+
+  const payload = {
+    action: 'save_homologacao_dados',
+    data: Object.assign({}, _dadosPendentes, {
+      enviarHomologacao: enviarHomologacao,
+      emailHomologacao:  enviarHomologacao ? 'joaoozeias.engenharia@gmail.com' : null
+    })
+  };
+
+  const iframe = document.getElementById('_gasFrame');
+  const form   = document.getElementById('_gasForm');
+  document.getElementById('_gasPayload').value = JSON.stringify(payload);
+  form.action = ENDPOINT_HOMOLAG_DADOS;
+
+  showToast(enviarHomologacao ? 'Enviando para homologação...' : 'Salvando dados...', '');
+
+  iframe.onload = function() {
+    localStorage.removeItem('lumengrid_homolog_dados_draft');
+    document.getElementById('formWrap').style.display = 'none';
+    const msg = enviarHomologacao
+      ? 'Enviado para o setor de homologação · ' + new Date().toLocaleString('pt-BR')
+      : 'Salvo em ' + new Date().toLocaleString('pt-BR');
+    document.getElementById('sucessoId').textContent = msg;
+    document.getElementById('sucessoWrap').classList.add('show');
+    _dadosPendentes = null;
+  };
+
+  form.submit();
 }
 
 function fileToBase64(file) {
@@ -597,7 +717,9 @@ function salvarRascunho() {
     vendedor:        document.getElementById('vendedor').value,
     dataInstalacao:  document.getElementById('dataInstalacao').value,
     cliente:         document.getElementById('cliente').value,
+    cpfTitular:      document.getElementById('cpfTitular').value,
     endereco:        document.getElementById('endereco').value,
+    cep:             document.getElementById('cep').value,
     protocolo:       document.getElementById('protocolo').value,
     tipoLigacao:     document.getElementById('tipoLigacao').value,
     concSelecionada: state.concSelecionada,
@@ -607,6 +729,8 @@ function salvarRascunho() {
     gpsLat:          document.getElementById('gpsLat').value,
     gpsLng:          document.getElementById('gpsLng').value,
     disjuntorPadrao: document.getElementById('disjuntorPadrao').value,
+    loginConc:       document.getElementById('loginConc').value,
+    senhaConc:       document.getElementById('senhaConc').value,
     invModelo:       document.getElementById('invModelo').value,
     invPotencia:     document.getElementById('invPotencia').value,
     invQtd:          document.getElementById('invQtd').value,
@@ -616,7 +740,8 @@ function salvarRascunho() {
     obsGerais:       document.getElementById('obsGerais').value,
     documentosNomes: {
       fatura:    state.documentos.fatura    ? state.documentos.fatura.nome    : null,
-      documento: state.documentos.documento ? state.documentos.documento.nome : null
+      documento: state.documentos.documento ? state.documentos.documento.nome : null,
+      disjuntor: state.documentos.disjuntor ? state.documentos.disjuntor.nome : null
     }
   };
   localStorage.setItem('lumengrid_homolog_dados_draft', JSON.stringify(dados));
@@ -633,7 +758,9 @@ function carregarRascunho() {
     sv('vendedor', d.vendedor);
     sv('dataInstalacao', d.dataInstalacao);
     sv('cliente', d.cliente);
+    sv('cpfTitular', d.cpfTitular);
     sv('endereco', d.endereco);
+    sv('cep', d.cep);
     sv('protocolo', d.protocolo);
     sv('tipoLigacao', d.tipoLigacao);
     sv('outraConc', d.outraConc);
@@ -642,6 +769,8 @@ function carregarRascunho() {
     sv('gpsLat', d.gpsLat);
     sv('gpsLng', d.gpsLng);
     sv('disjuntorPadrao', d.disjuntorPadrao);
+    sv('loginConc', d.loginConc);
+    sv('senhaConc', d.senhaConc);
     sv('invModelo', d.invModelo);
     sv('invPotencia', d.invPotencia);
     sv('invQtd', d.invQtd);
@@ -656,7 +785,7 @@ function carregarRascunho() {
       document.getElementById('concDica').textContent = CONCESSIONARIAS[d.concSelecionada]?.dica || '';
     }
     if (d.documentosNomes) {
-      ['fatura', 'documento'].forEach(tipo => {
+      ['fatura', 'documento', 'disjuntor'].forEach(tipo => {
         const nome = d.documentosNomes[tipo];
         if (nome) {
           const txt = document.getElementById('ddrop-' + tipo + '-txt');
@@ -672,7 +801,7 @@ function limparTudo(silencioso) {
   if (!silencioso && !confirm('Limpar todos os dados?')) return;
   state.concSelecionada = null;
   state.documentos = { fatura: null, documento: null };
-  ['fatura', 'documento'].forEach(tipo => {
+  ['fatura', 'documento', 'disjuntor'].forEach(tipo => {
     const txt = document.getElementById('ddrop-' + tipo + '-txt');
     if (txt) txt.innerHTML = 'Toque para selecionar<br><small style="color:var(--t4)">PDF, JPG, PNG...</small>';
     const inp = document.getElementById('dinput-' + tipo);
