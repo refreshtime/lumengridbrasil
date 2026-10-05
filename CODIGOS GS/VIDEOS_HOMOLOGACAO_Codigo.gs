@@ -47,8 +47,8 @@ function doOptions(e) {
 function doPost(e) {
   let result;
   try {
-    // Aceita tanto fetch (postData.contents) quanto form iframe (parameter.payload)
-    const raw = (e.postData && e.postData.contents) || (e.parameter && e.parameter.payload) || '{}';
+    // Aceita tanto form iframe (parameter.payload) quanto fetch (postData.contents)
+    const raw = (e.parameter && e.parameter.payload) || (e.postData && e.postData.contents) || '{}';
     const body = JSON.parse(raw);
     const action = body.action || 'save_homologacao';
     if      (action === 'save_homologacao')       result = saveHomologacao(body.data);
