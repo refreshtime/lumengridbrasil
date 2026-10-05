@@ -310,12 +310,15 @@ function obterOuCriarPastaHomolag(nome, pai) {
 const ABA_DADOS = 'Homologacoes_Dados';
 
 const DADOS_HEADERS = [
-  'ID', 'Data/Hora Envio', 'Vendedor', 'Cliente', 'Endereço',
+  'ID', 'Data/Hora Envio',
+  'Nome no Contrato', 'Vendedor',
+  'Titular da Fatura', 'CPF Titular', 'Endereço', 'CEP',
   'Concessionária', 'Data Instalação', 'Tipo Ligação',
-  'E-mail Cliente', 'Telefone Cliente', 'Coordenadas', 'Disjuntor Padrão',
-  'Inversor (Marca/Modelo/Qtd)', 'Módulo (Marca/Modelo/Qtd)',
-  'Fatura (link Drive)', 'Documento Titular (link Drive)',
-  'Protocolo/OS', 'Observações Gerais'
+  'E-mail Titular', 'Telefone Titular', 'Coordenadas',
+  'Disjuntor Padrão', 'Login Concessionária',
+  'Inversor (Modelo/Potência/Qtd)', 'Módulo (Modelo/Potência/Qtd)',
+  'Fatura (link Drive)', 'Documento Titular (link Drive)', 'Foto Disjuntor (link Drive)',
+  'Protocolo/OS', 'Observações Gerais', 'Enviado p/ Homologação'
 ];
 
 function saveHomologacaoDados(data) {
@@ -338,6 +341,7 @@ function saveHomologacaoDados(data) {
   // Salvar documentos no Drive
   let faturaLink = '';
   let documentoLink = '';
+  let disjuntorLink = '';
   const docsInfo = data.documentos || {};
   try {
     const pastaRaiz = DriveApp.getFolderById(DRIVE_PASTA_HOMOLAG_DADOS_ID);
@@ -346,7 +350,11 @@ function saveHomologacaoDados(data) {
     const nomePasta = codContrato ? nomeCliente + ' - ' + codContrato : nomeCliente;
     const pasta = obterOuCriarPastaHomolag(nomePasta, pastaRaiz);
 
-    const labelsDoc = { fatura: 'fatura_energia', documento: 'documento_titular' };
+    const labelsDoc = {
+      fatura:    'fatura_energia',
+      documento: 'documento_titular',
+      disjuntor: 'foto_disjuntor'
+    };
     Object.entries(docsInfo).forEach(([tipo, info]) => {
       if (!info || !info.base64 || info.grande) return;
       try {
@@ -355,8 +363,9 @@ function saveHomologacaoDados(data) {
         const bytes = Utilities.base64Decode(partes[1]);
         const nomeArq = (labelsDoc[tipo] || tipo) + '_' + id + '_' + (info.nome || 'arquivo');
         const f = pasta.createFile(Utilities.newBlob(bytes, mime, nomeArq));
-        if (tipo === 'fatura')    faturaLink = f.getUrl();
+        if (tipo === 'fatura')    faturaLink    = f.getUrl();
         if (tipo === 'documento') documentoLink = f.getUrl();
+        if (tipo === 'disjuntor') disjuntorLink = f.getUrl();
       } catch (e) { Logger.log('Doc error ' + tipo + ': ' + e.message); }
     });
   } catch (driveErr) {
@@ -368,29 +377,40 @@ function saveHomologacaoDados(data) {
 
   const row = [
     id, agora,
-    data.vendedor || '',
-    data.cliente || '',
-    data.endereco || '',
-    data.concessionaria || '',
-    data.dataInstalacao || '',
-    data.tipoLigacao || '',
-    data.emailCliente || '',
+    data.nomeContrato    || '',
+    data.vendedor        || '',
+    data.cliente         || '',
+    data.cpfTitular      || '',
+    data.endereco        || '',
+    data.cep             || '',
+    data.concessionaria  || '',
+    data.dataInstalacao  || '',
+    data.tipoLigacao     || '',
+    data.emailCliente    || '',
     data.telefoneCliente || '',
-    data.coordenadas || '',
+    data.coordenadas     || '',
     data.disjuntorPadrao || '',
-    [inv.marca, inv.modelo, inv.qtd].filter(Boolean).join(' / '),
-    [mod.marca, mod.modelo, mod.qtd].filter(Boolean).join(' / '),
+    data.loginConcessionaria || '',
+    [inv.modelo, inv.potencia ? inv.potencia + ' kW' : '', inv.qtd ? inv.qtd + ' un.' : ''].filter(Boolean).join(' / '),
+    [mod.modelo, mod.potencia ? mod.potencia + ' Wp' : '', mod.qtd ? mod.qtd + ' un.' : ''].filter(Boolean).join(' / '),
     faturaLink,
     documentoLink,
-    data.protocolo || '',
-    data.obsGerais || ''
+    disjuntorLink,
+    data.protocolo  || '',
+    data.obsGerais  || '',
+    data.enviarHomologacao ? 'Sim' : 'Não'
   ];
 
   sheet.appendRow(row);
   sheet.getRange(sheet.getLastRow(), 1, 1, DADOS_HEADERS.length).setVerticalAlignment('top');
 
-  // E-mail automático
-  try { enviarEmailHomologacao(data, '', id); } catch(e) { Logger.log('Mail error: ' + e.message); }
+  // E-mail automático sempre para comercial
+  try { enviarEmailDados(data, id); } catch(e) { Logger.log('Mail error: ' + e.message); }
+
+  // Se vendedor selecionou "Enviar para homologação", notifica também o engenheiro
+  if (data.enviarHomologacao && data.emailHomologacao) {
+    try { enviarEmailDados(data, id, data.emailHomologacao); } catch(e) { Logger.log('Mail homolag error: ' + e.message); }
+  }
 
   return { status: 'ok', id: id };
 }
@@ -451,6 +471,80 @@ function enviarEmailHomologacao(data, pastaLink, id) {
   MailApp.sendEmail({
     to: EMAIL_DESTINO,
     subject: 'LumenGrid — Homologação ' + id + ' — ' + (data.cliente || 'cliente'),
+    htmlBody: corpo
+  });
+}
+
+// ────────────────────────────────────────────────
+// E-MAIL — DADOS DE HOMOLOGAÇÃO (Form vendedor)
+// ────────────────────────────────────────────────
+
+function enviarEmailDados(data, id, destinatario) {
+  const para = destinatario || EMAIL_DESTINO;
+  if (!para) return;
+
+  const inv = data.inversor || {};
+  const mod = data.modulo || {};
+  const invTexto = [inv.modelo, inv.potencia ? inv.potencia + ' kW' : '', inv.qtd ? inv.qtd + ' un.' : ''].filter(Boolean).join(' · ');
+  const modTexto = [mod.modelo, mod.potencia ? mod.potencia + ' Wp' : '', mod.qtd ? mod.qtd + ' un.' : ''].filter(Boolean).join(' · ');
+  const paraHomolog = data.enviarHomologacao ? '✅ Sim' : '—';
+
+  const linha = (label, valor) => valor ? `<tr><td style="padding:5px 0;color:#555;width:190px;vertical-align:top">${label}</td><td><strong>${valor}</strong></td></tr>` : '';
+
+  const corpo = `
+<div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:20px;background:#f5f5f5">
+  <div style="background:#F26522;color:#fff;padding:16px 20px;border-radius:8px 8px 0 0">
+    <strong style="font-size:18px">LumenGrid — Dados de Homologação</strong>
+    <div style="font-size:12px;margin-top:4px;opacity:.85">ID: ${id} · ${new Date().toLocaleString('pt-BR')}</div>
+  </div>
+  <div style="background:#fff;padding:20px;border-radius:0 0 8px 8px;border:1px solid #eee">
+
+    <div style="font-size:10px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#F26522;margin-bottom:8px">Referência do Contrato</div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
+      ${linha('Nome no Contrato', data.nomeContrato)}
+      ${linha('Vendedor', data.vendedor)}
+    </table>
+
+    <div style="font-size:10px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#F26522;margin-bottom:8px;border-top:1px solid #eee;padding-top:12px">Titular da Fatura de Energia</div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
+      ${linha('Nome do Titular', data.cliente)}
+      ${linha('CPF', data.cpfTitular)}
+      ${linha('Endereço', data.endereco)}
+      ${linha('CEP', data.cep)}
+      ${linha('E-mail', data.emailCliente)}
+      ${linha('Telefone', data.telefoneCliente)}
+      ${linha('Coordenadas GPS', data.coordenadas)}
+    </table>
+
+    <div style="font-size:10px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#F26522;margin-bottom:8px;border-top:1px solid #eee;padding-top:12px">Instalação</div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
+      ${linha('Data Instalação', data.dataInstalacao)}
+      ${linha('Concessionária', data.concessionaria)}
+      ${linha('Tipo de Ligação', data.tipoLigacao)}
+      ${linha('Disjuntor do Padrão', data.disjuntorPadrao)}
+      ${linha('Login Portal Conc.', data.loginConcessionaria)}
+      ${linha('Senha Portal Conc.', data.senhaConcessionaria ? '••••••••' : '')}
+      ${linha('Protocolo/OS', data.protocolo)}
+    </table>
+
+    <div style="font-size:10px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#F26522;margin-bottom:8px;border-top:1px solid #eee;padding-top:12px">Kit Solar</div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
+      ${linha('Inversor', invTexto)}
+      ${linha('Módulo', modTexto)}
+    </table>
+
+    ${data.obsGerais ? `<div style="background:#fff8f5;border-left:3px solid #F26522;padding:10px 14px;font-size:12px;color:#333;margin-bottom:16px"><strong>Observações:</strong><br>${data.obsGerais}</div>` : ''}
+
+    <div style="background:${data.enviarHomologacao ? '#f0fff4' : '#f9f9f9'};border:1px solid ${data.enviarHomologacao ? '#22c55e' : '#ddd'};border-radius:6px;padding:10px 14px;font-size:12px;color:#333">
+      <strong>Enviado para Homologação:</strong> ${paraHomolog}
+    </div>
+  </div>
+  <div style="font-size:10px;color:#aaa;margin-top:12px;text-align:center">Feito por Domani Consultoria</div>
+</div>`;
+
+  MailApp.sendEmail({
+    to: para,
+    subject: 'LumenGrid — Homologação ' + id + ' — ' + (data.cliente || 'cliente') + (data.nomeContrato && data.nomeContrato !== data.cliente ? ' (Contrato: ' + data.nomeContrato + ')' : ''),
     htmlBody: corpo
   });
 }
