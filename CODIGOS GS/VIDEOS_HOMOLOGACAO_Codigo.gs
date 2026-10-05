@@ -542,11 +542,14 @@ function enviarEmailDados(data, id, destinatario) {
   <div style="font-size:10px;color:#aaa;margin-top:12px;text-align:center">Feito por Domani Consultoria</div>
 </div>`;
 
-  MailApp.sendEmail({
+  const emailOpts = {
     to: para,
     subject: 'LumenGrid — Homologação ' + id + ' — ' + (data.cliente || 'cliente') + (data.nomeContrato && data.nomeContrato !== data.cliente ? ' (Contrato: ' + data.nomeContrato + ')' : ''),
     htmlBody: corpo
-  });
+  };
+  // Sempre copia comercial (exceto quando o próprio destinatário já é o comercial)
+  if (para !== EMAIL_DESTINO && EMAIL_DESTINO) emailOpts.cc = EMAIL_DESTINO;
+  MailApp.sendEmail(emailOpts);
 }
 
 // ────────────────────────────────────────────────
