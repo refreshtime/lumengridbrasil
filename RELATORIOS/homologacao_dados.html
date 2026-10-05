@@ -137,42 +137,27 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 /* ─── FOOTER ─── */
 .footer { text-align: center; font-size: 10px; color: var(--t4); padding: 16px; border-top: 1px solid var(--border); margin-top: auto; }
 
-/* ─── IMPORTAR CONTRATO ─── */
-.imp-panel {
+/* ─── IMPORTAR CONTRATO DROPDOWN ─── */
+.imp-select-wrap {
   background: var(--card); border: 1.5px solid var(--or-border);
-  border-radius: 10px; overflow: hidden; margin-bottom: 4px;
+  border-radius: 10px; padding: 14px; margin-bottom: 4px;
 }
-.imp-header {
-  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
-  cursor: pointer; user-select: none; transition: background .18s;
+.imp-select-label {
+  font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--or);
+  display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
 }
-.imp-header:hover { background: var(--or-dim); }
-.imp-header-icon { font-size: 16px; }
-.imp-header-text { flex: 1; }
-.imp-header-title {
-  font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase; color: var(--or);
+.imp-select-hint { font-size: 10px; color: var(--t3); margin-top: 5px; }
+
+/* ─── TITULAR BADGE ─── */
+.titular-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(242,101,34,.07); border: 1px solid rgba(242,101,34,.18);
+  border-radius: 7px; padding: 8px 11px; margin-top: 4px;
 }
-.imp-header-sub { font-size: 10px; color: var(--t3); margin-top: 1px; }
-.imp-arrow { font-size: 10px; color: var(--t3); transition: transform .2s; }
-.imp-arrow.open { transform: rotate(180deg); }
-.imp-body { display: none; padding: 0 14px 14px; }
-.imp-body.open { display: block; }
-.imp-lista { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-.imp-item {
-  display: flex; align-items: center; gap: 10px;
-  background: var(--card2); border: 1px solid var(--border); border-radius: 7px;
-  padding: 10px 12px; cursor: pointer; transition: all .18s;
-}
-.imp-item:hover { border-color: var(--or-border); background: var(--or-dim); }
-.imp-item-nome { font-size: 13px; font-weight: 600; color: var(--t1); flex: 1; }
-.imp-item-info { font-size: 10px; color: var(--t3); text-align: right; line-height: 1.5; }
-.imp-empty { font-size: 12px; color: var(--t3); text-align: center; padding: 14px 0; line-height: 1.6; }
-.imp-badge {
-  font-size: 8px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
-  background: rgba(242,101,34,.18); color: var(--or); border: 1px solid var(--or-border);
-  border-radius: 4px; padding: 2px 6px; flex-shrink: 0;
-}
+.titular-badge-icon { font-size: 14px; flex-shrink: 0; }
+.titular-badge-text { font-size: 10px; color: var(--t2); line-height: 1.5; }
+.titular-badge-text strong { color: var(--or); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 1px; }
 </style>
 </head>
 <body>
@@ -200,18 +185,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
 
   <!-- ─── IMPORTAR DO CONTRATO ─── -->
-  <div class="imp-panel" id="impPanel">
-    <div class="imp-header" onclick="toggleImportar()">
-      <div class="imp-header-icon">📋</div>
-      <div class="imp-header-text">
-        <div class="imp-header-title">Importar do Contrato</div>
-        <div class="imp-header-sub">Clique para ver contratos gerados nos últimos 15 dias</div>
-      </div>
-      <div class="imp-arrow" id="impArrow">▼</div>
+  <div class="imp-select-wrap">
+    <div class="imp-select-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Importar do Contrato
     </div>
-    <div class="imp-body" id="impBody">
-      <div class="imp-lista" id="impLista"></div>
-    </div>
+    <select class="campo" id="impSelect" onchange="importarContrato(this.value)" style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:9px 30px 9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--t1);outline:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer;">
+      <option value="">— Selecionar contrato dos últimos 30 dias —</option>
+    </select>
+    <div class="imp-select-hint" id="impSelectHint">Os dados do contrato selecionado preenchem o formulário automaticamente.</div>
   </div>
 
   <!-- ─── FORMULÁRIO ─── -->
@@ -223,6 +205,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         1. Dados da Instalação
       </div>
+
+      <!-- Referência 1: Nome no Contrato -->
+      <div class="campo">
+        <label>Nome no Contrato</label>
+        <input type="text" id="nomeContrato" placeholder="Nome como consta no contrato de venda">
+      </div>
+
       <div class="campo-row">
         <div class="campo">
           <label>Vendedor Responsável</label>
@@ -233,12 +222,19 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <input type="date" id="dataInstalacao">
         </div>
       </div>
+
+      <!-- Referência 2: Titular da Fatura -->
+      <div class="titular-badge">
+        <div class="titular-badge-icon">🧾</div>
+        <div class="titular-badge-text"><strong>Titular da Fatura de Energia</strong>Os campos abaixo devem ser preenchidos com os dados de quem consta na conta de energia (pode ser diferente do contrato).</div>
+      </div>
+
       <div class="campo">
-        <label>Nome do Cliente</label>
-        <input type="text" id="cliente" placeholder="Nome completo do cliente">
+        <label>Nome do Titular da Fatura</label>
+        <input type="text" id="cliente" placeholder="Nome completo do titular da conta de energia">
       </div>
       <div class="campo">
-        <label>Endereço / Cidade</label>
+        <label>Endereço do Titular / Cidade</label>
         <input type="text" id="endereco" placeholder="Rua, número — Cidade/UF">
       </div>
       <div class="campo-row">
@@ -298,11 +294,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
       <div class="campo-row">
         <div class="campo">
-          <label>E-mail do Cliente</label>
-          <input type="email" id="emailCliente" placeholder="cliente@email.com">
+          <label>E-mail do Titular</label>
+          <input type="email" id="emailCliente" placeholder="titular@email.com">
         </div>
         <div class="campo">
-          <label>Telefone do Cliente</label>
+          <label>Telefone do Titular</label>
           <input type="tel" id="telefoneCliente" placeholder="(11) 99999-9999">
         </div>
       </div>
@@ -336,12 +332,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
       <div class="campo-row">
         <div class="campo">
-          <label>Marca do Inversor</label>
-          <input type="text" id="invMarca" placeholder="Ex: GoodWe">
-        </div>
-        <div class="campo">
           <label>Modelo do Inversor</label>
           <input type="text" id="invModelo" placeholder="Ex: GW5000-NS">
+        </div>
+        <div class="campo">
+          <label>Potência (kW)</label>
+          <input type="text" id="invPotencia" placeholder="Ex: 5">
         </div>
       </div>
       <div class="campo">
@@ -355,12 +351,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
       <div class="campo-row">
         <div class="campo">
-          <label>Marca do Módulo</label>
-          <input type="text" id="modMarca" placeholder="Ex: Canadian Solar">
-        </div>
-        <div class="campo">
           <label>Modelo do Módulo</label>
           <input type="text" id="modModelo" placeholder="Ex: CS6R-410MS">
+        </div>
+        <div class="campo">
+          <label>Potência (Wp)</label>
+          <input type="text" id="modPotencia" placeholder="Ex: 410">
         </div>
       </div>
       <div class="campo">
@@ -445,6 +441,7 @@ const state = {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('dataInstalacao').value = new Date().toISOString().split('T')[0];
   renderConcessionarias();
+  popularDropdownContratos();
   carregarRascunho();
 });
 
@@ -528,6 +525,7 @@ async function enviarDados() {
     const lng = document.getElementById('gpsLng').value;
 
     const dados = {
+      nomeContrato:    document.getElementById('nomeContrato').value,
       vendedor:        document.getElementById('vendedor').value,
       dataInstalacao:  document.getElementById('dataInstalacao').value,
       cliente:         cliente,
@@ -540,14 +538,14 @@ async function enviarDados() {
       coordenadas:     lat && lng ? lat + ', ' + lng : (lat || lng || ''),
       disjuntorPadrao: document.getElementById('disjuntorPadrao').value,
       inversor: {
-        marca:  document.getElementById('invMarca').value,
-        modelo: document.getElementById('invModelo').value,
-        qtd:    document.getElementById('invQtd').value
+        modelo:   document.getElementById('invModelo').value,
+        potencia: document.getElementById('invPotencia').value,
+        qtd:      document.getElementById('invQtd').value
       },
       modulo: {
-        marca:  document.getElementById('modMarca').value,
-        modelo: document.getElementById('modModelo').value,
-        qtd:    document.getElementById('modQtd').value
+        modelo:   document.getElementById('modModelo').value,
+        potencia: document.getElementById('modPotencia').value,
+        qtd:      document.getElementById('modQtd').value
       },
       obsGerais:  document.getElementById('obsGerais').value,
       documentos: docsPayload
@@ -595,6 +593,7 @@ function novoEnvio() {
 
 function salvarRascunho() {
   const dados = {
+    nomeContrato:    document.getElementById('nomeContrato').value,
     vendedor:        document.getElementById('vendedor').value,
     dataInstalacao:  document.getElementById('dataInstalacao').value,
     cliente:         document.getElementById('cliente').value,
@@ -608,11 +607,11 @@ function salvarRascunho() {
     gpsLat:          document.getElementById('gpsLat').value,
     gpsLng:          document.getElementById('gpsLng').value,
     disjuntorPadrao: document.getElementById('disjuntorPadrao').value,
-    invMarca:        document.getElementById('invMarca').value,
     invModelo:       document.getElementById('invModelo').value,
+    invPotencia:     document.getElementById('invPotencia').value,
     invQtd:          document.getElementById('invQtd').value,
-    modMarca:        document.getElementById('modMarca').value,
     modModelo:       document.getElementById('modModelo').value,
+    modPotencia:     document.getElementById('modPotencia').value,
     modQtd:          document.getElementById('modQtd').value,
     obsGerais:       document.getElementById('obsGerais').value,
     documentosNomes: {
@@ -630,6 +629,7 @@ function carregarRascunho() {
   try {
     const d = JSON.parse(raw);
     const sv = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
+    sv('nomeContrato', d.nomeContrato);
     sv('vendedor', d.vendedor);
     sv('dataInstalacao', d.dataInstalacao);
     sv('cliente', d.cliente);
@@ -642,11 +642,11 @@ function carregarRascunho() {
     sv('gpsLat', d.gpsLat);
     sv('gpsLng', d.gpsLng);
     sv('disjuntorPadrao', d.disjuntorPadrao);
-    sv('invMarca', d.invMarca);
     sv('invModelo', d.invModelo);
+    sv('invPotencia', d.invPotencia);
     sv('invQtd', d.invQtd);
-    sv('modMarca', d.modMarca);
     sv('modModelo', d.modModelo);
+    sv('modPotencia', d.modPotencia);
     sv('modQtd', d.modQtd);
     sv('obsGerais', d.obsGerais);
     if (d.concSelecionada) {
@@ -678,7 +678,9 @@ function limparTudo(silencioso) {
     const inp = document.getElementById('dinput-' + tipo);
     if (inp) inp.value = '';
   });
-  document.querySelectorAll('input:not([type=file]), textarea, select').forEach(el => el.value = '');
+  document.querySelectorAll('input:not([type=file]), textarea').forEach(el => el.value = '');
+  document.querySelectorAll('select:not(#impSelect)').forEach(el => el.value = '');
+  document.getElementById('impSelect').value = '';
   renderConcessionarias();
   document.getElementById('outraConcWrap').style.display = 'none';
   document.getElementById('concDica').textContent = '';
@@ -697,87 +699,86 @@ function formatBytes(b) {
 }
 
 // ──────────────────────────────────────────────
-// IMPORTAR DO CONTRATO
+// IMPORTAR DO CONTRATO — DROPDOWN
 // ──────────────────────────────────────────────
 
-function toggleImportar() {
-  const body  = document.getElementById('impBody');
-  const arrow = document.getElementById('impArrow');
-  const open  = body.classList.toggle('open');
-  arrow.classList.toggle('open', open);
-  if (open) renderImportarLista();
-}
-
-function renderImportarLista() {
-  const lista = document.getElementById('impLista');
+function popularDropdownContratos() {
+  const sel = document.getElementById('impSelect');
   let leads = [];
   try { leads = JSON.parse(localStorage.getItem('lg_leads') || '[]'); } catch(e) {}
 
-  const limite = Date.now() - 15 * 24 * 60 * 60 * 1000;
+  const limite = Date.now() - 30 * 24 * 60 * 60 * 1000;
   const recentes = leads.filter(l => {
     if (!l.contrato) return false;
     const ts = l.updatedAt ? new Date(l.updatedAt).getTime() : 0;
     return ts >= limite;
   }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
+  // Manter placeholder
+  sel.innerHTML = '<option value="">— Selecionar contrato dos últimos 30 dias —</option>';
+
   if (recentes.length === 0) {
-    lista.innerHTML = '<div class="imp-empty">Nenhum contrato gerado nos últimos 15 dias encontrado.<br><small>Os dados são lidos do localStorage do CRM neste dispositivo.</small></div>';
+    const opt = document.createElement('option');
+    opt.disabled = true;
+    opt.textContent = 'Nenhum contrato encontrado nos últimos 30 dias';
+    sel.appendChild(opt);
+    document.getElementById('impSelectHint').textContent = 'Nenhum contrato dos últimos 30 dias encontrado neste dispositivo.';
     return;
   }
 
-  lista.innerHTML = recentes.map(l => {
+  recentes.forEach(l => {
     const c = l.contrato;
-    const kvp  = c.kvp  ? c.kvp  : '';
-    const inv  = c.invModel ? c.invModel.split(' ').slice(0,2).join(' ') : '';
-    const mod  = c.modModel ? c.modModel.split(' ').slice(0,2).join(' ') : '';
+    const kvp = c.kvp ? c.kvp + ' kWp' : '';
+    const inv = c.invModel ? c.invModel.split(' ').slice(0,2).join(' ') : '';
     const dias = Math.floor((Date.now() - new Date(l.updatedAt).getTime()) / 86400000);
     const diasLabel = dias === 0 ? 'hoje' : dias === 1 ? 'ontem' : `há ${dias}d`;
-    return `<div class="imp-item" onclick="importarContrato('${l.id}')">
-      <div>
-        <div class="imp-item-nome">${l.nome}</div>
-        <div style="font-size:10px;color:var(--t3);margin-top:2px">${[inv,mod,kvp].filter(Boolean).join(' · ')}</div>
-      </div>
-      <div class="imp-item-info">
-        <div class="imp-badge">${diasLabel}</div>
-        <div style="margin-top:3px">${l.resp||''}</div>
-      </div>
-    </div>`;
-  }).join('');
+    const opt = document.createElement('option');
+    opt.value = l.id;
+    opt.textContent = `${l.nome}  —  ${[inv, kvp, diasLabel].filter(Boolean).join(' · ')}`;
+    sel.appendChild(opt);
+  });
 }
 
 function importarContrato(leadId) {
+  if (!leadId) return;
   let leads = [];
   try { leads = JSON.parse(localStorage.getItem('lg_leads') || '[]'); } catch(e) {}
   const l = leads.find(x => x.id === leadId);
   if (!l || !l.contrato) return;
   const c = l.contrato;
 
-  const sv = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+  const sv = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null && val !== '') el.value = val; };
 
-  // Dados do cliente
-  sv('cliente',         l.nome);
-  sv('telefoneCliente', l.telefone);
-  sv('emailCliente',    l.email);
+  // Referência 1: Nome no Contrato
+  sv('nomeContrato',    l.nome);
+
+  // Dados do Vendedor
   sv('vendedor',        l.resp);
 
-  // Inversor — extrai marca como primeira palavra
+  // Dados do Titular da Fatura — preenche telefone e email (nome do titular deixa em branco para o usuário confirmar)
+  sv('telefoneCliente', l.telefone);
+  sv('emailCliente',    l.email);
+
+  // Inversor: modelo + extrai potência pelo número no nome (ex: GW5000-NS → 5 kW)
   if (c.invModel) {
     sv('invModelo', c.invModel);
-    sv('invMarca',  c.invModel.split(' ')[0]);
+    const match = c.invModel.match(/(\d{3,5})/);
+    if (match) {
+      const w = parseInt(match[1]);
+      sv('invPotencia', w >= 1000 ? (w / 1000).toString() : w.toString());
+    }
   }
   if (c.invQty) sv('invQtd', String(c.invQty));
 
-  // Módulo — extrai marca como primeira palavra
+  // Módulo: modelo + extrai potência (ex: CS6R-410MS → 410 Wp)
   if (c.modModel) {
     sv('modModelo', c.modModel);
-    sv('modMarca',  c.modModel.split(' ')[0]);
+    const modPow = c.modModel.match(/\b([2-7]\d{2})\b/);
+    if (modPow) sv('modPotencia', modPow[1]);
   }
   if (c.modQty) sv('modQtd', String(c.modQty));
 
-  // Fecha o painel e mostra toast
-  document.getElementById('impBody').classList.remove('open');
-  document.getElementById('impArrow').classList.remove('open');
-  showToast('Dados de ' + l.nome + ' importados do contrato.', 'ok');
+  showToast('Contrato de ' + l.nome + ' importado.', 'ok');
 }
 
 let toastTimer;
