@@ -496,7 +496,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 // CONFIGURAÇÃO
 // ──────────────────────────────────────────────
 
-const ENDPOINT_HOMOLAG_DADOS = 'https://script.google.com/macros/s/AKfycbx9g9pBVHctzQwR37V18GK9VdiWfEz-WlZzcwdWzBKnings58uMU1UpZoyqUJF4MTcb/exec';
+const ENDPOINT_HOMOLAG_DADOS  = 'https://script.google.com/macros/s/AKfycbx9g9pBVHctzQwR37V18GK9VdiWfEz-WlZzcwdWzBKnings58uMU1UpZoyqUJF4MTcb/exec';
+const ENDPOINT_CONTRATOS      = 'https://script.google.com/macros/s/AKfycbyT64T2p8NdPDs17r8sxjla80SqDuEMvjqDVmtMPNqh9XB58VQ9pNs9o8DwmdL4AIljIg/exec';
 
 // ──────────────────────────────────────────────
 // CONCESSIONÁRIAS
@@ -831,19 +832,55 @@ function formatBytes(b) {
 // IMPORTAR DO CONTRATO — DROPDOWN
 // ──────────────────────────────────────────────
 
-function popularDropdownContratos() {
+async function popularDropdownContratos() {
   const sel = document.getElementById('impSelect');
-  let leads = [];
-  try { leads = JSON.parse(localStorage.getItem('lg_leads') || '[]'); } catch(e) {}
+  const hint = document.getElementById('impSelectHint');
+  sel.innerHTML = '<option value="">Carregando contratos...</option>';
+  window._contratosCache = {};
 
+  let contratos = [];
+  let fonte = 'servidor';
+
+  // 1. Tenta buscar do servidor (planilha de contratos)
+  try {
+    const resp = await fetch(ENDPOINT_CONTRATOS + '?action=get_contratos', { redirect: 'follow' });
+    const json = await resp.json();
+    contratos = (json.contratos || []).map(c => ({
+      _key:        c.id || c.numContrato || c.cliente,
+      nome:        c.cliente       || '',
+      cpf:         c.cpfCnpj       || '',
+      email:       c.email         || '',
+      telefone:    c.telefone      || '',
+      vendedor:    c.consultor     || '',
+      kvp:         c.kvp           || '',
+      dataRef:     c.dataEmissao   || ''
+    }));
+  } catch(e) {
+    // 2. Fallback: localStorage do CRM
+    fonte = 'local';
+    try {
+      const leads = JSON.parse(localStorage.getItem('lg_leads') || '[]');
+      contratos = leads.filter(l => l.contrato).map(l => ({
+        _key:     l.id,
+        nome:     l.nome      || '',
+        cpf:      '',
+        email:    l.email     || '',
+        telefone: l.telefone  || '',
+        vendedor: l.resp      || '',
+        kvp:      l.contrato.kvp || '',
+        dataRef:  l.updatedAt || '',
+        _lead:    l
+      }));
+    } catch(e2) {}
+  }
+
+  // Filtrar últimos 30 dias
   const limite = Date.now() - 30 * 24 * 60 * 60 * 1000;
-  const recentes = leads.filter(l => {
-    if (!l.contrato) return false;
-    const ts = l.updatedAt ? new Date(l.updatedAt).getTime() : 0;
+  const recentes = contratos.filter(c => {
+    const ts = c.dataRef ? new Date(c.dataRef).getTime() : 0;
     return ts >= limite;
-  }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  }).sort((a, b) => new Date(b.dataRef) - new Date(a.dataRef));
 
-  // Manter placeholder
   sel.innerHTML = '<option value="">— Selecionar contrato dos últimos 30 dias —</option>';
 
   if (recentes.length === 0) {
@@ -851,63 +888,55 @@ function popularDropdownContratos() {
     opt.disabled = true;
     opt.textContent = 'Nenhum contrato encontrado nos últimos 30 dias';
     sel.appendChild(opt);
-    document.getElementById('impSelectHint').textContent = 'Nenhum contrato dos últimos 30 dias encontrado neste dispositivo.';
+    hint.textContent = 'Nenhum contrato encontrado.';
     return;
   }
 
-  recentes.forEach(l => {
-    const c = l.contrato;
-    const kvp = c.kvp ? c.kvp + ' kWp' : '';
-    const inv = c.invModel ? c.invModel.split(' ').slice(0,2).join(' ') : '';
-    const dias = Math.floor((Date.now() - new Date(l.updatedAt).getTime()) / 86400000);
+  recentes.forEach(c => {
+    window._contratosCache[c._key] = c;
+    const dias = Math.floor((Date.now() - new Date(c.dataRef).getTime()) / 86400000);
     const diasLabel = dias === 0 ? 'hoje' : dias === 1 ? 'ontem' : `há ${dias}d`;
     const opt = document.createElement('option');
-    opt.value = l.id;
-    opt.textContent = `${l.nome}  —  ${[inv, kvp, diasLabel].filter(Boolean).join(' · ')}`;
+    opt.value = c._key;
+    opt.textContent = `${c.nome}  —  ${[c.kvp ? c.kvp + ' kWp' : '', c.vendedor, diasLabel].filter(Boolean).join(' · ')}`;
     sel.appendChild(opt);
   });
+
+  hint.textContent = recentes.length + ' contrato(s) encontrado(s) — fonte: ' + (fonte === 'servidor' ? 'planilha' : 'dispositivo local');
 }
 
-function importarContrato(leadId) {
-  if (!leadId) return;
-  let leads = [];
-  try { leads = JSON.parse(localStorage.getItem('lg_leads') || '[]'); } catch(e) {}
-  const l = leads.find(x => x.id === leadId);
-  if (!l || !l.contrato) return;
-  const c = l.contrato;
-
+function importarContrato(key) {
+  if (!key) return;
   const sv = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null && val !== '') el.value = val; };
 
-  // Referência 1: Nome no Contrato
-  sv('nomeContrato',    l.nome);
+  // Dados do cache do servidor
+  const c = window._contratosCache && window._contratosCache[key];
+  if (c) {
+    sv('nomeContrato',    c.nome);
+    sv('vendedor',        c.vendedor);
+    sv('emailCliente',    c.email);
+    sv('telefoneCliente', c.telefone);
+    sv('cpfTitular',      c.cpf);
 
-  // Dados do Vendedor
-  sv('vendedor',        l.resp);
-
-  // Dados do Titular da Fatura — preenche telefone e email (nome do titular deixa em branco para o usuário confirmar)
-  sv('telefoneCliente', l.telefone);
-  sv('emailCliente',    l.email);
-
-  // Inversor: modelo + extrai potência pelo número no nome (ex: GW5000-NS → 5 kW)
-  if (c.invModel) {
-    sv('invModelo', c.invModel);
-    const match = c.invModel.match(/(\d{3,5})/);
-    if (match) {
-      const w = parseInt(match[1]);
-      sv('invPotencia', w >= 1000 ? (w / 1000).toString() : w.toString());
+    // Se veio do localStorage (fallback), tenta pegar dados do kit
+    if (c._lead && c._lead.contrato) {
+      const kit = c._lead.contrato;
+      if (kit.invModel) {
+        sv('invModelo', kit.invModel);
+        const match = kit.invModel.match(/(\d{3,5})/);
+        if (match) { const w = parseInt(match[1]); sv('invPotencia', w >= 1000 ? (w/1000).toString() : w.toString()); }
+      }
+      if (kit.invQty) sv('invQtd', String(kit.invQty));
+      if (kit.modModel) {
+        sv('modModelo', kit.modModel);
+        const modPow = kit.modModel.match(/\b([2-7]\d{2})\b/);
+        if (modPow) sv('modPotencia', modPow[1]);
+      }
+      if (kit.modQty) sv('modQtd', String(kit.modQty));
     }
-  }
-  if (c.invQty) sv('invQtd', String(c.invQty));
 
-  // Módulo: modelo + extrai potência (ex: CS6R-410MS → 410 Wp)
-  if (c.modModel) {
-    sv('modModelo', c.modModel);
-    const modPow = c.modModel.match(/\b([2-7]\d{2})\b/);
-    if (modPow) sv('modPotencia', modPow[1]);
+    showToast('Contrato de ' + c.nome + ' importado.', 'ok');
   }
-  if (c.modQty) sv('modQtd', String(c.modQty));
-
-  showToast('Contrato de ' + l.nome + ' importado.', 'ok');
 }
 
 let toastTimer;
