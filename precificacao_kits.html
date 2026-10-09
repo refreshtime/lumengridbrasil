@@ -583,7 +583,9 @@ footer span{color:var(--orange);font-weight:600}
 // ══════════════════════════════════════════════════════════════
 
 const PARAMS = { imposto: 0.10, gestao: 0.20, overloadMax: 0.40, margemRef: 0.24 };
-// Wp por placa — extraído do nome do módulo (ex: "Jinko 620W" → 620)
+// Wp de referência para tabelas de faixa/FoxESS (módulo padrão Jinko 620W)
+const WP = 620;
+// Wp dinâmico extraído do nome do módulo (ex: "DMEGC 625W" → 625)
 function getModWp(mod){const m=(mod||'').match(/(\d+)W/);return m?+m[1]:620;}
 
 const FAIXAS = [
