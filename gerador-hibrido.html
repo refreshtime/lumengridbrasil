@@ -258,6 +258,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
         <option value="0">GoodWe GW5K — 5 kW · Jinko 620W</option>
         <option value="1">GoodWe GW7.5K — 7,5 kW · Jinko 620W</option>
         <option value="2">GoodWe GW12K Trifásico — 12 kW · Leapton 600W</option>
+        <option value="3">⚠ Sofar HYD-7.5K — 7,5 kW · Jinko 620W [NÃO PRIORIZAR]</option>
       </select>
     </div>
     <div>
@@ -340,6 +341,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <option value="FoxESS Híbrido Bifásico 3MPPT 127/220V 11.4kW" data-power="11.4">FoxESS Híbrido Bifásico 11.4kW</option>
       <option value="FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW" data-power="5.7">FoxESS US Híbrido Bifásico 5.7kW</option>
       <option value="GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW" data-power="12">GoodWe GW12K-ET-L-G10 Híbrido Trifásico 12kW</option>
+      <option value="Sofar HYD7.5KTL-EP3 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5">⚠ Sofar HYD7.5KTL-EP3 Híbrido 7.5kW [NÃO PRIORIZAR]</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none" oninput="autoCalcHibrido()">
@@ -699,6 +701,7 @@ const KIT_BATS=[
   [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh'}],
   [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh'},{nbat:3,ci:2,label:'3 Baterias · 15 kWh'}],
   [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'}],
+  [{nbat:1,ci:0,label:'1 Bateria · 5,1 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10,2 kWh'}], // Sofar — NÃO PRIORIZAR
 ];
 
 // Calcula preços Cheio/Mínimo/Bomba para qualquer qtd de placas usando KITS_HIBRIDOS
@@ -781,7 +784,7 @@ function renderKitPreview(ki,ci,pl){
   const kit=KITS_DATA[ki];const conf=kit.configs[ci];
   const precos=dynKitPrecos(ki,ci,pl);
   const fmt=v=>'R$\u00a0'+Math.round(v).toLocaleString('pt-BR');
-  const invName=['GoodWe GW5K','GoodWe GW7.5K','GoodWe GW12K Tri'][ki]||'Inversor';
+  const invName=['GoodWe GW5K','GoodWe GW7.5K','GoodWe GW12K Tri','⚠ Sofar HYD-7.5K'][ki]||'Inversor';
   const modLabel=kit.modPwr+'W '+(kit.modVal.includes('JINKO')||kit.modVal.includes('Jinko')?'Jinko':kit.modVal.includes('Leapton')?'Leapton':'módulo');
   $('kitPreviewInfo').innerHTML=`<strong>${invName}</strong> &nbsp;·&nbsp; ${pl} pl. ${modLabel} &nbsp;·&nbsp; ${conf.nbat} bat${conf.nbat>1?'s':''} · ${(kit.batKwh*conf.nbat).toFixed(0)} kWh &nbsp;·&nbsp; <strong>${(pl*kit.modPwr/1000).toFixed(2)} kVp</strong>`;
   $('kitPreviewPrices').innerHTML=`
@@ -831,7 +834,27 @@ const KITS_HIBRIDOS_FALLBACK=[
   {id:'GW75-12D-0', placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',bats:0,batMod:'Sem bateria',equip:16932},
   // ── GoodWe 10kW Híbrido — DMEGC 625W + Lynx 5kWh — REAL Out/2026 ───────
   {id:'GW10-18D-1', placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',bats:1,batMod:'Lynx 5kWh (GoodWe)',equip:31788},
-  // ── [Sofar Híbrido removido — usar somente GoodWe Híbrido] ─────────────
+  // ── Sofar 7.5kW Híbrido — ⚠ NÃO PRIORIZAR (equip +R$2k sobre cotação anterior) ─
+  {id:'SF75-9L-1',  placas:9,  inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:19579},
+  {id:'SF75-9J-1',  placas:9,  inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:20479},
+  {id:'SF75-10L-1', placas:10, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20139},
+  {id:'SF75-10J-1', placas:10, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21139},
+  {id:'SF75-11L-1', placas:11, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20699},
+  {id:'SF75-11J-1', placas:11, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21799},
+  {id:'SF75-12L-1', placas:12, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:21259},
+  {id:'SF75-12J-1', placas:12, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:22459},
+  {id:'SF75-13L-1', placas:13, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:21819},
+  {id:'SF75-13J-1', placas:13, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:23119},
+  {id:'SF75-14L-1', placas:14, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:22379},
+  {id:'SF75-14J-1', placas:14, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:23779},
+  {id:'SF75-15L-1', placas:15, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:22939},
+  {id:'SF75-15J-1', placas:15, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:24439},
+  {id:'SF75-16L-1', placas:16, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:23499},
+  {id:'SF75-16J-1', placas:16, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:25099},
+  {id:'SF75-9L-2',  placas:9,  inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:23874},
+  {id:'SF75-9J-2',  placas:9,  inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:24774},
+  {id:'SF75-16L-2', placas:16, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:27794},
+  {id:'SF75-16J-2', placas:16, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:29394},
 ];
 let KITS_HIBRIDOS = KITS_HIBRIDOS_FALLBACK;
 function getModWpHi(mod){if(mod.includes('590'))return 590;if(mod.includes('575'))return 575;if(mod.includes('610'))return 610;return 620;}
@@ -875,6 +898,14 @@ const KITS_DATA=[
    batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:11,extras:850,
    configs:[
      {nbat:1,qty:11,preco:51140,precoMin:47130,precoBomba:43790},
+   ]},
+  // 3: Sofar HYD-7.5K — ⚠ NÃO PRIORIZAR — usar somente se cliente exigir ou GoodWe indisponível
+  {invVal:'Sofar HYD7.5KTL-EP3 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
+   modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
+   batVal:'BATERIA LFP UNIPOWER 5,1 kWh',batKwh:5.1,baseQty:9,extras:850,
+   configs:[
+     {nbat:1,preco:35000,precoMin:32500,precoBomba:32000},
+     {nbat:2,preco:41000,precoMin:38500,precoBomba:38000},
    ]},
 ];
 

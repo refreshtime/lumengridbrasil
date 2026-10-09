@@ -183,6 +183,19 @@ function setup() {
     ['GW75-16D-0',16,'GoodWe 7.5kW Híbrido','DMEGC 625W',0,'Sem bateria',20000,'ESTIMADO'],
     ['GW10-12D-0',12,'GoodWe 10kW Híbrido','DMEGC 625W',0,'Sem bateria',20500,'ESTIMADO'],
     ['GW10-16D-1',16,'GoodWe 10kW Híbrido','DMEGC 625W',1,'Lynx 5kWh (GoodWe)',28000,'ESTIMADO'],
+    // ── Sofar 7.5kW Híbrido — NÃO PRIORIZAR (equip +R$2k sobre cotação anterior) ──
+    ['SF75-9L-1',9,'Sofar 7.5kW Híbrido','Leapton 590W',1,'Unipower',19579,'ESTIMADO'],
+    ['SF75-9J-1',9,'Sofar 7.5kW Híbrido','Jinko 620W',1,'Unipower',20479,'ESTIMADO'],
+    ['SF75-10L-1',10,'Sofar 7.5kW Híbrido','Leapton 590W',1,'Unipower',20139,'ESTIMADO'],
+    ['SF75-10J-1',10,'Sofar 7.5kW Híbrido','Jinko 620W',1,'Unipower',21139,'ESTIMADO'],
+    ['SF75-12L-1',12,'Sofar 7.5kW Híbrido','Leapton 590W',1,'Unipower',21259,'ESTIMADO'],
+    ['SF75-12J-1',12,'Sofar 7.5kW Híbrido','Jinko 620W',1,'Unipower',22459,'ESTIMADO'],
+    ['SF75-16L-1',16,'Sofar 7.5kW Híbrido','Leapton 590W',1,'Unipower',23499,'ESTIMADO'],
+    ['SF75-16J-1',16,'Sofar 7.5kW Híbrido','Jinko 620W',1,'Unipower',25099,'ESTIMADO'],
+    ['SF75-9L-2',9,'Sofar 7.5kW Híbrido','Leapton 590W',2,'Unipower',23874,'ESTIMADO'],
+    ['SF75-9J-2',9,'Sofar 7.5kW Híbrido','Jinko 620W',2,'Unipower',24774,'ESTIMADO'],
+    ['SF75-16L-2',16,'Sofar 7.5kW Híbrido','Leapton 590W',2,'Unipower',27794,'ESTIMADO'],
+    ['SF75-16J-2',16,'Sofar 7.5kW Híbrido','Jinko 620W',2,'Unipower',29394,'ESTIMADO'],
   ];
   hi.getRange(1, 1, 1, hiHeaders.length).setValues([hiHeaders]);
   hi.getRange(2, 1, hiData.length, hiHeaders.length).setValues(hiData);
