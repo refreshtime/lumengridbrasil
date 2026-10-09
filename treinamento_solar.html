@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treinamento Vendedor Solar — LumenGrid</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --laranja: #F26522;
+  --fundo: #0d0d0d;
+  --card: #111;
+  --borda: #1e1e1e;
+  --texto: #c8c8c8;
+  --branco: #f0f0f0;
+}
+
+body {
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+/* ── HEADER ── */
+header {
+  background: #0a0a0a;
+  border-bottom: 2px solid var(--laranja);
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.logo { display: flex; align-items: center; gap: 14px; }
+.logo img { height: 54px; filter: drop-shadow(0 0 8px #F26522bb); }
+.logo-nome .lg { font-size: 24px; font-weight: 900; }
+.logo-nome .lumen { color: #F26522; }
+.logo-nome .grid  { color: #f0f0f0; }
+.logo-nome .sub   { font-size: 8px; color: #F26522; letter-spacing: 3px; text-transform: uppercase; }
+.header-titulo { margin-left: auto; text-align: right; }
+.header-titulo h1 { font-size: 18px; color: #fff; font-weight: 800; }
+.header-titulo p  { font-size: 12px; color: #666; margin-top: 2px; }
+
+/* ── TABS ── */
+.tabs {
+  background: #0e0e0e;
+  border-bottom: 1px solid #1a1a1a;
+  display: flex;
+  padding: 0 40px;
+  gap: 0;
+  overflow-x: auto;
+}
+.tab {
+  padding: 14px 22px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.tab:hover { color: #aaa; }
+.tab.ativo { color: var(--laranja); border-bottom-color: var(--laranja); }
+
+/* ── CONTEÚDO DE CADA ABA ── */
+.aba { display: none; }
+.aba.ativa { display: block; }
+
+/* ── LAYOUT GERAL ── */
+.pagina { max-width: 960px; margin: 0 auto; padding: 50px 28px 80px; }
+
+/* ── BLOCOS ── */
+.bloco { margin-bottom: 54px; }
+.tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: var(--laranja);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+h2 { font-size: 22px; color: #fff; font-weight: 800; margin-bottom: 18px; line-height: 1.2; }
+h3 { font-size: 13px; color: var(--laranja); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin: 28px 0 12px; }
+p  { color: var(--texto); margin-bottom: 14px; }
+strong { color: #e8e8e8; }
+
+/* ── LAYOUT DOIS PAINÉIS ── */
+.dois-paineis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 680px) { .dois-paineis { grid-template-columns: 1fr; } }
+
+.painel-esq { }
+.painel-dir { position: sticky; top: 20px; }
+
+/* ── PAINEL SCRIPT (direita) ── */
+.script-painel {
+  background: #0a0a0a;
+  border: 1px solid #1e1e1e;
+  border-top: 3px solid var(--laranja);
+  border-radius: 10px;
+  padding: 20px;
+}
+.script-painel .sp-titulo {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--laranja);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.msg {
+  margin-bottom: 12px;
+}
+.msg .quem {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.msg .quem.v { color: var(--laranja); }
+.msg .quem.c { color: #555; }
+.msg .balao {
+  font-size: 13.5px;
+  color: #ccc;
+  background: #141414;
+  border-radius: 6px;
+  padding: 10px 14px;
+  line-height: 1.6;
+  border-left: 2px solid #222;
+}
+.msg .balao.v { border-left-color: var(--laranja); }
+
+/* ── CARDS NÚMEROS ── */
+.cards-num { display: flex; gap: 14px; flex-wrap: wrap; margin: 20px 0; }
+.card-num {
+  flex: 1; min-width: 160px;
+  background: var(--card);
+  border: 1px solid #1e1e1e;
+  border-radius: 10px;
+  padding: 20px;
+}
+.card-num .n { font-size: 36px; font-weight: 900; color: var(--laranja); line-height: 1; }
+.card-num .l { font-size: 12.5px; color: #888; margin-top: 6px; line-height: 1.5; }
+
+/* ── STEPS ── */
+.steps { margin: 16px 0; }
+.step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid #141414;
+}
+.step:last-child { border-bottom: none; }
+.step-n {
+  min-width: 32px; height: 32px;
+  background: var(--laranja); color: #000;
+  font-weight: 900; font-size: 13px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.step-corpo strong { display: block; color: #fff; font-size: 14.5px; margin-bottom: 3px; }
+.step-corpo span   { color: #999; font-size: 13.5px; }
+
+/* ── DOC BLOCKS ── */
+.doc {
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin: 12px 0;
+}
+.doc h4 {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--laranja);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
+}
+.doc ol { padding-left: 18px; }
+.doc ol li { color: var(--texto); font-size: 14px; margin-bottom: 10px; line-height: 1.65; }
+.doc ol li strong { color: #e0e0e0; }
+.doc .arg {
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+  margin-top: 5px;
+  padding-left: 10px;
+  border-left: 2px solid #2a2a2a;
+}
+
+/* ── EQUIP ── */
+.equip-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 18px 0; }
+.equip {
+  flex: 1; min-width: 180px;
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+}
+.equip .tipo  { font-size: 10px; color: #666; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.equip .marca { font-size: 20px; font-weight: 900; color: var(--laranja); }
+.equip .desc  { font-size: 12px; color: #666; margin-top: 6px; line-height: 1.5; }
+
+/* ── PILARES ── */
+.pilar {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 10px;
+}
+.pilar-i { font-size: 20px; min-width: 34px; text-align: center; padding-top: 2px; }
+.pilar-b strong { display: block; color: #fff; font-size: 14.5px; margin-bottom: 4px; }
+.pilar-b span   { color: #999; font-size: 13.5px; line-height: 1.5; }
+
+/* ── SEGMENTOS ── */
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+@media (max-width: 500px) { .seg { grid-template-columns: 1fr; } }
+.seg-c {
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 18px;
+}
+.seg-c h4 { font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+.seg-c p  { font-size: 13.5px; color: #bbb; margin: 0; }
+
+/* ── FAQ ── */
+.faq { border-top: 1px solid var(--borda); }
+.faq-item { border-bottom: 1px solid var(--borda); padding: 22px 0; }
+.faq-p { font-weight: 700; color: #fff; font-size: 15px; margin-bottom: 10px; display: flex; gap: 10px; align-items: baseline; }
+.faq-p::before { content: "?"; color: var(--laranja); font-size: 18px; font-weight: 900; flex-shrink: 0; }
+.faq-r { color: #b0b0b0; font-size: 14px; line-height: 1.7; margin-bottom: 10px; }
+.faq-script {
+  background: #0a0a0a;
+  border-left: 3px solid var(--laranja);
+  padding: 11px 16px;
+  font-size: 13.5px;
+  color: #ddd;
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+}
+
+/* ── DICA / ALERTA ── */
+.dica {
+  background: #0f160a;
+  border: 1px solid #2a3d18;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: #a8cc80;
+  margin: 16px 0;
+}
+.dica strong { color: #b8dc90; }
+
+.alerta {
+  background: #160f08;
+  border: 1px solid #3a2010;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: #d09050;
+  margin: 16px 0;
+}
+.alerta strong { color: #e0a060; }
+
+/* ── FOLLOW-UP TIMELINE ── */
+.timeline { margin: 18px 0; }
+.tl-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid #141414;
+}
+.tl-item:last-child { border-bottom: none; }
+.tl-n {
+  min-width: 28px; height: 28px;
+  border: 2px solid var(--laranja);
+  color: var(--laranja);
+  font-weight: 800; font-size: 12px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.tl-corpo strong { display: block; color: #ddd; font-size: 14px; margin-bottom: 3px; }
+.tl-corpo span   { color: #888; font-size: 13px; }
+
+/* ── FOOTER ── */
+footer {
+  background: #080808;
+  border-top: 1px solid #141414;
+  padding: 18px 40px;
+  text-align: center;
+  font-size: 12px;
+  color: #444;
+}
+
+/* ── RESPONSIVO ── */
+@media (max-width: 600px) {
+  header { flex-direction: column; align-items: flex-start; }
+  .header-titulo { margin-left: 0; text-align: left; }
+  .tabs { padding: 0 16px; }
+  .pagina { padding: 30px 16px 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="logo-nome">
+      <div class="lg"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+      <div class="sub">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="header-titulo">
+    <h1>Treinamento do Vendedor</h1>
+    <p>Energia Solar — Guia Prático de Vendas</p>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab ativo" onclick="mudarAba('mercado', this)">Mercado</div>
+  <div class="tab" onclick="mudarAba('como-funciona', this)">Como Funciona</div>
+  <div class="tab" onclick="mudarAba('documentos', this)">Documentos</div>
+  <div class="tab" onclick="mudarAba('equipamentos', this)">Equipamentos</div>
+  <div class="tab" onclick="mudarAba('venda', this)">Venda Digital</div>
+  <div class="tab" onclick="mudarAba('script', this)">Script Completo</div>
+  <div class="tab" onclick="mudarAba('faq', this)">FAQ do Cliente</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABA 1 — MERCADO
+══════════════════════════════════════ -->
+<div class="aba ativa" id="aba-mercado">
+<div class="pagina">
+
+  <div class="bloco">
+    <div class="tag">Por onde começar</div>
+    <h2>A oportunidade é enorme — e está em todo lugar</h2>
+    <p>Antes de saber o que vender, entenda <strong>por que o momento é agora</strong>. A conta de luz aumenta todo ano. A tecnologia ficou mais barata. E o mercado ainda está no começo.</p>
+
+    <div class="cards-num">
+      <div class="card-num">
+        <div class="n">~96%</div>
+        <div class="l">dos imóveis residenciais no Brasil <strong>ainda não têm</strong> energia solar</div>
+      </div>
+      <div class="card-num">
+        <div class="n">85%</div>
+        <div class="l">de redução média na conta de luz com um sistema solar bem dimensionado</div>
+      </div>
+      <div class="card-num">
+        <div class="n">5 anos</div>
+        <div class="l">de retorno médio do investimento — depois disso, energia quase de graça por 20+ anos</div>
+      </div>
+    </div>
+
+    <p>Cada pessoa com quem você conversa é, na prática, um cliente em potencial. Poucas vendas têm esse nível de oportunidade.</p>
+
+    <div class="dica">
+      <strong>Argumento de abertura:</strong> "A maioria das pessoas ainda paga uma conta de luz que poderia ser quase zero. Em menos de um mês a gente pode mudar isso pra você."
+    </div>
+  </div>
+
+  <div class="bloco">
+    <div class="tag">O que você vende</div>
+    <h2>Dois produtos. Foco nos dois.</h2>
+
+    <div class="seg">
+      <div class="seg-c">
+        <h4>Solar On-Grid</h4>
+        <p>O mais vendido. Liga direto na rede elétrica. Reduz a conta em até 85%. Sem bateria. Ticket: consulte a tabela de precificação atualizada.</p>
+      </div>
+      <div class="seg-c" style="border-color:#2a2a2a;">
+        <h4>Híbrido</h4>
+        <p>Solar + bateria de armazenamento. Autonomia total. Sem conta de luz. Ticket a partir de <strong>R$ 28.000</strong>. Maior margem por projeto.</p>
+      </div>
+    </div>
+
+    <div class="alerta">
+      <strong>Regra:</strong> Sempre apresente o híbrido primeiro quando o cliente tiver perfil (consumo alto, quer autonomia, qualidade de vida). Se recuar no preço, então apresenta o On-Grid.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABA 2 — COMO FUNCIONA
+══════════════════════════════════════ -->
+<div class="aba" id="aba-como-funciona">
+<div class="pagina">
+
+  <div class="dois-paineis">
+
+    <div class="painel-esq">
+
+      <div class="bloco">
+        <div class="tag">Fundamento</div>
+        <h2>Como funciona o sistema solar — do zero</h2>
+        <p>Você não precisa ser engenheiro. Precisa entender o suficiente para explicar com confiança.</p>
+
+        <h3>A lógica em 4 passos</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-n">1</div>
+            <div class="step-corpo">
+              <strong>As placas captam o sol</strong>
+              <span>Os painéis transformam a luz solar em eletricidade. Funcionam em dias nublados também, só com menos eficiência.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">2</div>
+            <div class="step-corpo">
+              <strong>O inversor transforma a energia</strong>
+              <span>O inversor converte a energia das placas para o padrão da tomada da casa. É o cérebro do sistema.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">3</div>
+            <div class="step-corpo">
+              <strong>A casa consome primeiro</strong>
+              <span>Tudo que está ligado na casa é alimentado pelo solar durante o dia — sem custo nenhum.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">4</div>
+            <div class="step-corpo">
+              <strong>O que sobra vira crédito</strong>
+              <span>O excedente vai para a rede elétrica e se transforma em créditos na conta. Válidos por até 60 meses.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dica">
+          <strong>Sobre à noite:</strong> o cliente usa os créditos acumulados. Não fica sem energia — o sistema é sempre integrado à rede.
+        </div>
+
+        <h3>Etapas da instalação</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-n">A</div>
+            <div class="step-corpo">
+              <strong>Análise e proposta</strong>
+              <span>Avaliamos a fatura e o telhado. Montamos a proposta com o sistema ideal para o consumo do cliente.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">B</div>
+            <div class="step-corpo">
+              <strong>Aprovação e pedido</strong>
+              <span>Cliente aprova. Iniciamos o pedido dos equipamentos e a documentação junto à distribuidora.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">C</div>
+            <div class="step-corpo">
+              <strong>Instalação</strong>
+              <span>Nossa equipe instala no imóvel. Rápido, limpo, sem bagunça. <strong>Prazo: até 20 dias úteis.</strong></span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">D</div>
+            <div class="step-corpo">
+              <strong>Homologação e ativação</strong>
+              <span>A distribuidora troca o medidor. O sistema é liberado e o cliente começa a economizar de imediato.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="painel-dir">
+      <div class="script-painel">
+        <div class="sp-titulo">Como explicar pro cliente</div>
+
+        <div class="msg">
+          <div class="quem v">Você explica assim:</div>
+          <div class="balao v">"Imagina que o sol passa a ser a sua fonte de energia. As placas no telhado captam essa energia, o inversor transforma pra você poder usar nas tomadas, e tudo que sobra a distribuidora guarda como crédito. À noite você usa esses créditos. No fim do mês, sua conta chega quase zerada."</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem c">Cliente pergunta: "E à noite?"</div>
+          <div class="balao">"À noite você consome da rede normalmente — usando os créditos que você mesmo gerou durante o dia. Não tem nenhuma diferença na sua rotina, só na sua conta."</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem c">Cliente pergunta: "E em dia nublado?"</div>
+          <div class="balao">"Funciona sim, com menos eficiência — mas o sistema é projetado considerando isso. A gente dimensiona para cobrir seu consumo mesmo nos meses de menor geração."</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem c">Cliente pergunta: "Quanto tempo demora pra instalar?"</div>
+          <div class="balao">"Até 20 dias úteis após a aprovação. A gente tem cuidado em cada etapa justamente pra não ter retrabalho e você começar a economizar o mais rápido possível."</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABA 3 — DOCUMENTOS
+══════════════════════════════════════ -->
+<div class="aba" id="aba-documentos">
+<div class="pagina">
+
+  <div class="dois-paineis">
+
+    <div class="painel-esq">
+
+      <div class="bloco">
+        <div class="tag">Processo</div>
+        <h2>O que pedir para montar o orçamento</h2>
+        <p>Nunca perca o timing por falta de documento. Se o cliente não tiver a fatura, use as alternativas. <strong>Uma estimativa na hora vale mais do que silêncio.</strong></p>
+
+        <div class="doc">
+          <h4>Sistema Solar On-Grid</h4>
+          <ol>
+            <li>
+              <strong>Fatura de energia elétrica</strong> — peça sempre como primeira opção
+              <div class="arg">"Preciso ver seu consumo em kWh pra dimensionar o sistema certinho. Você consegue me mandar uma foto da fatura mais recente?"</div>
+            </li>
+            <li>
+              <strong>Se não tiver a fatura:</strong> peça média de gasto mensal + endereço completo com CEP
+              <div class="arg">"Sem problema! Me passa o valor médio que você paga por mês e seu endereço — preciso dar uma olhada no telhado pelo Google Maps pra te passar uma estimativa bem próxima do real."</div>
+            </li>
+            <li>
+              <strong>Perguntar sobre consumo futuro</strong>
+              <div class="arg">"Você tem intenção de comprar ar-condicionado novo, piscina ou carro elétrico em breve? Pergunto pra a gente já dimensionar pensando no futuro."</div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="doc">
+          <h4>Sistema Híbrido</h4>
+          <ol>
+            <li>
+              <strong>Já tem sistema solar instalado?</strong>
+              <div class="arg">"Preciso saber porque, se já tiver, instalamos um sistema que se conecte ao existente — sem desperdício do que você já investiu."</div>
+            </li>
+            <li>
+              <strong>Fatura de energia</strong> — ainda mais importante no híbrido
+              <div class="arg">No híbrido precisamos verificar o tipo de conexão com a rede — dado que está na fatura. Esse detalhe define o equipamento.</div>
+            </li>
+            <li>
+              <strong>Se não enviar a fatura:</strong> perguntar o tipo de conexão elétrica
+              <div class="arg">"Me diz: no quadro de disjuntores da sua casa, você tem 2 disjuntores grandes (bifásico/2 fases) ou 3 (trifásico/3 fases)? Isso define qual equipamento a gente usa."</div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="alerta">
+          <strong>Nunca force o cliente a parar o processo por falta de documento.</strong> Use as alternativas, avance na conversa e ajuste depois.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="painel-dir">
+      <div class="script-painel">
+        <div class="sp-titulo">Script — Pedindo os documentos</div>
+
+        <div class="msg">
+          <div class="quem v">Pedindo a fatura</div>
+          <div class="balao v">"[Nome], pra montar sua proposta certinho, você consegue me mandar uma foto da sua fatura de energia mais recente? É só pra eu ver seu consumo e te dar um número real de economia."</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem c">Cliente: "Não tenho aqui agora"</div>
+          <div class="balao">[cliente hesita ou não tem a fatura]</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem v">Alternativa rápida</div>
+          <div class="balao v">"Tranquilo! Me fala quanto você paga de luz por mês em média e seu endereço com CEP. Com isso já consigo dar uma olhada no seu telhado pelo satélite e te passar uma estimativa bem próxima."</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem v">Pergunta sobre consumo futuro</div>
+          <div class="balao v">"Você tem planos de instalar ar-condicionado, piscina ou comprar um carro elétrico em breve? Pergunto pra a gente já dimensionar o sistema pensando nisso — assim você não precisa ampliar depois."</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABA 4 — EQUIPAMENTOS
+══════════════════════════════════════ -->
+<div class="aba" id="aba-equipamentos">
+<div class="pagina">
+
+  <div class="dois-paineis">
+
+    <div class="painel-esq">
+
+      <div class="bloco">
+        <div class="tag">Produto</div>
+        <h2>Os equipamentos que a gente usa</h2>
+        <p>Você não precisa ser técnico. Mas precisa saber <strong>por que</strong> esses equipamentos foram escolhidos — e como explicar isso pro cliente.</p>
+
+        <div class="equip-row">
+          <div class="equip">
+            <div class="tipo">Placas</div>
+            <div class="marca">Jinko</div>
+            <div class="desc">Top do ranking mundial. Alta eficiência, longa durabilidade, melhor custo x benefício.</div>
+          </div>
+          <div class="equip">
+            <div class="tipo">Inversor tradicional</div>
+            <div class="marca">Goodwe</div>
+            <div class="desc">Confiável, monitoramento em tempo real pelo app, ótima assistência no Brasil.</div>
+          </div>
+          <div class="equip">
+            <div class="tipo">Micro-inversor</div>
+            <div class="marca">Foxess</div>
+            <div class="desc">Ideal para telhados com sombreamento. Alta performance por painel individual.</div>
+          </div>
+        </div>
+
+        <h3>Como apresentar na proposta</h3>
+        <p>Sempre envie a proposta com os equipamentos acima. Explique a escolha antes do cliente perguntar — isso passa confiança.</p>
+
+        <div class="dica">
+          <strong>Lógica de apresentação:</strong><br>
+          1. Começa sempre com o melhor equipamento<br>
+          2. Explica que foi escolhido por custo x benefício (não é o mais caro, é o melhor do mercado)<br>
+          3. Deixa aberta a opção de reduzir custo com outras marcas — mas destaca que pagar mais caro em marcas piores não faz sentido
+        </div>
+
+        <h3>Sobre a conta de energia — o que falar</h3>
+        <p>A conta de luz nunca vai a <strong>zero absoluto</strong>. A distribuidora sempre cobra uma taxa mínima de conexão (Custo de Disponibilidade) — geralmente entre R$ 30 e R$ 80 por mês.</p>
+        <p>O cliente precisa saber disso antes de perguntar. Antecipar evita frustração.</p>
+      </div>
+
+    </div>
+
+    <div class="painel-dir">
+      <div class="script-painel">
+        <div class="sp-titulo">Script — Apresentando os equipamentos</div>
+
+        <div class="msg">
+          <div class="quem v">Ao enviar a proposta</div>
+          <div class="balao v">"Escolhemos os melhores equipamentos do mercado pra você: Jinko nas placas e Goodwe no inversor. Eles estão no topo do ranking por custo x benefício — ou seja, a gente está te entregando o melhor com o melhor preço possível."</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem v">Se o cliente perguntar sobre outras marcas</div>
+          <div class="balao v">"Pagar mais caro em outras marcas hoje não faz sentido — as que escolhemos competem com qualquer uma no mercado. Se precisar reduzir custo, posso avaliar outras opções mais em conta, mas com essas você já está com o melhor."</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem c">Cliente: "A conta vai a zero?"</div>
+          <div class="balao">[cliente animado com a economia]</div>
+        </div>
+
+        <div class="msg">
+          <div class="quem v">Sobre a conta mínima</div>
+          <div class="balao v">"A conta não vai a zero absoluto — a distribuidora cobra uma taxa mínima de conexão, geralmente uns R$ 40 a R$ 80. Mas em vez de pagar R$ 600 por mês, você vai pagar R$ 50. É essa transformação que a gente entrega."</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABA 5 — VENDA DIGITAL
+══════════════════════════════════════ -->
+<div class="aba" id="aba-venda">
+<div class="pagina">
+
+  <div class="bloco">
+    <div class="tag">Método</div>
+    <h2>Como vender pelo digital — os pilares</h2>
+    <p>A maioria dos seus leads vão entrar pelo WhatsApp ou Instagram. O jeito que você responde e acompanha define se fecha ou perde.</p>
+  </div>
+
+  <div class="bloco">
+    <div class="pilar">
+      <div class="pilar-i">🤝</div>
+      <div class="pilar-b">
+        <strong>Rapport primeiro, venda depois</strong>
+        <span>Antes de mandar proposta, crie conexão. Pergunte, ouça, mostre que entende a situação do cliente. Ninguém compra de quem parece apressado.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-i">⚡</div>
+      <div class="pilar-b">
+        <strong>Cliente respondeu? Para tudo e responde agora</strong>
+        <span>A janela de atenção é curta. Se você demorar, o próximo vendedor fecha. Respondeu? Você responde primeiro.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-i">🎙</div>
+      <div class="pilar-b">
+        <strong>Tente o telefone ou um áudio — mas deixe tudo escrito</strong>
+        <span>Voz gera mais confiança do que texto. Um áudio humanizado vale mais que 10 mensagens formais. Mas registre tudo por escrito também — o cliente precisa poder voltar e reler no próprio tempo dele.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-i">🔁</div>
+      <div class="pilar-b">
+        <strong>Follow-up não é insistência — é profissionalismo</strong>
+        <span>Você fala com o cliente no horário comercial enquanto ele está trabalhando. Silêncio não é desinteresse. É comum o cliente só responder na 3ª ou 4ª tentativa.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-i">📞</div>
+      <div class="pilar-b">
+        <strong>Depois da proposta: puxe uma chamada</strong>
+        <span>Proposta enviada e sem resposta é proposta perdida. Sempre tente agendar uma chamada para apresentar. Se o engajamento for alto, proponha uma visita.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-i">✨</div>
+      <div class="pilar-b">
+        <strong>Perfumaria importa — tudo precisa estar bonito</strong>
+        <span>Proposta bem feita, imagens organizadas, materiais caprichados. O cliente percebe o cuidado — e isso gera confiança antes mesmo de falar de preço. Faltou material? Solicita na pasta comercial do Drive.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bloco">
+    <div class="tag">Follow-up</div>
+    <h2>Cronograma de retorno</h2>
+    <p>Enviou a proposta e o cliente sumiu? Siga esse ritmo:</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-n">1</div>
+        <div class="tl-corpo">
+          <strong>1 dia depois</strong>
+          <span>"Oi [nome], tudo bem? Queria saber se você teve a chance de ver a proposta. Qualquer dúvida, estou aqui!"</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-n">2</div>
+        <div class="tl-corpo">
+          <strong>2–3 dias depois</strong>
+          <span>"[Nome], sei que a rotina é corrida. Quando tiver um momento me fala o que achou — posso adaptar se precisar."</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-n">3</div>
+        <div class="tl-corpo">
+          <strong>1 semana depois</strong>
+          <span>"Oi [nome], última tentativa da minha parte. Se ainda fizer sentido, estou aqui. Se quiser retomar depois, é só chamar!"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bloco">
+    <div class="tag">Linguagem</div>
+    <h2>Fale na língua do cliente</h2>
+    <p>O produto é o mesmo. O argumento muda conforme o perfil.</p>
+
+    <div class="seg">
+      <div class="seg-c">
+        <h4>Classe A</h4>
+        <p>Foque em <strong>tranquilidade, qualidade e autonomia energética</strong>. Ele quer o melhor equipamento, quer conforto e quer não depender de apagão. Preço não é o principal — segurança e excelência são.</p>
+      </div>
+      <div class="seg-c">
+        <h4>Classe B em diante</h4>
+        <p>Foque em <strong>economia real, retorno no longo prazo e custo x benefício</strong>. Mostre o quanto ele gastaria em 10 anos sem solar versus o investimento único no sistema.</p>
+      </div>
+    </div>
+
+    <div class="dica">
+      <strong>Para todos:</strong> excelência no atendimento e equipamentos de qualidade são inegociáveis. O que muda é o argumento — nunca o padrão do serviço.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABA 6 — SCRIPT COMPLETO
+══════════════════════════════════════ -->
+<div class="aba" id="aba-script">
+<div class="pagina">
+
+  <div class="bloco">
+    <div class="tag">Na prática</div>
+    <h2>Script completo de atendimento</h2>
+    <p>Do primeiro contato ao fechamento. Use como base — adapte ao seu jeito de falar.</p>
+
+    <h3>1. Primeiro contato — WhatsApp</h3>
+    <div class="msg" style="margin-bottom:20px;">
+      <div class="quem v">Vendedor</div>
+      <div class="balao v">"Olá, [nome]! Tudo bem? Aqui é [seu nome], da LumenGrid. Vi que você tem interesse em energia solar — posso te ajudar a entender quanto você economizaria com seu perfil de consumo. Tem uns minutinhos?"</div>
+    </div>
+
+    <h3>2. Qualificação — entendendo o cliente</h3>
+    <div class="msg" style="margin-bottom:8px;">
+      <div class="quem v">Vendedor</div>
+      <div class="balao v">"Me conta: sua conta de luz anda em quanto por mês? E você mora em casa ou apartamento?"</div>
+    </div>
+    <div class="msg" style="margin-bottom:20px;">
+      <div class="quem v">Sobre consumo futuro</div>
+      <div class="balao v">"Você tem planos de instalar ar-condicionado, piscina ou comprar um carro elétrico em breve? Pergunto pra a gente dimensionar o sistema já pensando nisso."</div>
+    </div>
+
+    <h3>3. Pedindo a fatura</h3>
+    <div class="msg" style="margin-bottom:8px;">
+      <div class="quem v">Vendedor</div>
+      <div class="balao v">"Pra montar a proposta certinho, você consegue me mandar uma foto da sua fatura de energia mais recente? Preciso ver seu consumo pra te dar um número real de economia."</div>
+    </div>
+    <div class="msg" style="margin-bottom:8px;">
+      <div class="quem c">Se o cliente não tiver</div>
+      <div class="balao">"Não tenho em mãos agora…"</div>
+    </div>
+    <div class="msg" style="margin-bottom:20px;">
+      <div class="quem v">Alternativa</div>
+      <div class="balao v">"Sem problema! Me passa o valor médio que você paga por mês e seu endereço completo. Com isso consigo dar uma olhada no seu telhado pelo satélite e já te mando uma estimativa."</div>
+    </div>
+
+    <h3>4. Enviando a proposta</h3>
+    <div class="msg" style="margin-bottom:20px;">
+      <div class="quem v">Vendedor</div>
+      <div class="balao v">"[Nome], segue sua proposta! Escolhemos os melhores equipamentos do mercado: Jinko nas placas e Goodwe no inversor — top do ranking por custo x benefício. Com esse sistema você economizaria em média 85% na sua conta. Posso te ligar agora pra apresentar em 5 minutos?"</div>
+    </div>
+
+    <h3>5. Follow-up</h3>
+    <div class="msg" style="margin-bottom:8px;">
+      <div class="quem v">1 dia depois</div>
+      <div class="balao v">"Oi [nome], tudo bem? Queria saber se você teve a chance de ver a proposta. Qualquer dúvida, estou à disposição!"</div>
+    </div>
+    <div class="msg" style="margin-bottom:8px;">
+      <div class="quem v">2–3 dias depois</div>
+      <div class="balao v">"[Nome], sei que a rotina é corrida. Quando tiver um momento, me fala o que achou. Posso adaptar a proposta se precisar — é só avisar."</div>
+    </div>
+    <div class="msg" style="margin-bottom:20px;">
+      <div class="quem v">1 semana depois</div>
+      <div class="balao v">"Oi [nome], última tentativa da minha parte. Se ainda fizer sentido, estou aqui. Se quiser retomar em outro momento, é só me chamar. Cuide-se!"</div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABA 7 — FAQ
+══════════════════════════════════════ -->
+<div class="aba" id="aba-faq">
+<div class="pagina">
+
+  <div class="bloco">
+    <div class="tag">Objeções</div>
+    <h2>Perguntas frequentes dos clientes</h2>
+    <p>Saiba responder sem hesitar. Confiança na resposta gera confiança na compra.</p>
+  </div>
+
+  <div class="faq">
+
+    <div class="faq-item">
+      <div class="faq-p">Os créditos excedentes vão para onde?</div>
+      <div class="faq-r">Ficam registrados junto à distribuidora de energia. Toda energia que você gerar e não usar no momento é injetada na rede e vira crédito, válido por até <strong>60 meses</strong>. Você usa esses créditos à noite, em dias nublados ou nos meses de menor geração.</div>
+      <div class="faq-script">"Tudo que você gerar e não usar fica guardado como crédito na distribuidora — é como um banco de energia. Você usa quando quiser, em até 5 anos."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-p">Se a geração não for suficiente, fico sem energia?</div>
+      <div class="faq-r">Não. O sistema On-Grid está sempre conectado à rede elétrica. Se a geração for insuficiente — à noite, em dias muito nublados ou em picos de consumo — o cliente consome da rede normalmente, usando os créditos acumulados ou pagando a diferença. <strong>Nunca fica sem energia.</strong></div>
+      <div class="faq-script">"Não existe risco de ficar sem energia. O sistema está sempre integrado à rede — se faltar geração, a distribuidora complementa automaticamente. Você não percebe diferença nenhuma na sua rotina."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-p">Quanto tempo leva para instalar?</div>
+      <div class="faq-r">A instalação em si leva de 1 a 2 dias. O prazo total de até <strong>20 dias úteis</strong> considera pedido dos equipamentos, logística e agendamento. Após a instalação, a distribuidora realiza a troca do medidor para ativação.</div>
+      <div class="faq-script">"Instalamos em até 20 dias úteis após a aprovação. A gente tem cuidado em cada etapa justamente pra não ter retrabalho — e você começar a economizar o mais rápido possível."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-p">A conta de luz vai a zero?</div>
+      <div class="faq-r">Não vai a zero absoluto. A distribuidora sempre cobra uma taxa mínima de conexão (Custo de Disponibilidade), independentemente do consumo ou geração. Essa taxa geralmente fica entre <strong>R$ 30 e R$ 80 por mês</strong> — muito diferente de uma conta de R$ 500 ou R$ 800.</div>
+      <div class="faq-script">"A conta não vai a zero porque a distribuidora cobra uma taxa mínima de conexão — em torno de R$ 50. Mas em vez de pagar R$ 700 por mês, você vai pagar isso. É essa transformação que a gente entrega."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-p">Qual é a garantia dos equipamentos?</div>
+      <div class="faq-r">As placas Jinko têm <strong>25 anos de garantia de performance</strong> e 12 anos de garantia de produto. Os inversores Goodwe têm garantia de 5 a 10 anos dependendo do modelo. A LumenGrid acompanha o pós-instalação.</div>
+      <div class="faq-script">"As placas têm 25 anos de garantia de performance. Em 2050 elas ainda vão estar gerando energia pra você. É um ativo que dura décadas."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-p">Em quanto tempo o investimento se paga?</div>
+      <div class="faq-r">Em média <strong>4 a 6 anos</strong>, dependendo do consumo e da tarifa da região. Como os painéis têm vida útil de 25+ anos, o cliente fica com 20 anos de energia praticamente gratuita após o payback.</div>
+      <div class="faq-script">"Você investe uma vez. Em média 5 anos o sistema se paga. Depois disso, são 20 anos de energia quase de graça. É um dos investimentos com melhor retorno que existe hoje."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-p">Funciona em apartamento?</div>
+      <div class="faq-r">Apartamentos convencionais geralmente não têm acesso individual ao telhado. Existem modalidades como <strong>geração compartilhada e autoconsumo remoto</strong>, onde o morador assina energia de uma usina solar e recebe créditos na conta. Vale verificar caso a caso.</div>
+      <div class="faq-script">"Pra apartamento convencional tem uma modalidade diferente — você assina energia de uma usina e recebe os créditos direto na conta. Me passa mais detalhes da sua situação pra a gente ver a melhor opção."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-p">Por que Jinko e Goodwe e não outras marcas?</div>
+      <div class="faq-r">Jinko e Goodwe estão entre as marcas mais vendidas e bem avaliadas do mundo. A escolha é baseada em <strong>custo x benefício real</strong> — não são as mais caras, mas competem com qualquer marca premium. Pagar mais por outras marcas hoje não faz sentido.</div>
+      <div class="faq-script">"Essas marcas estão no topo do ranking mundial por custo x benefício. Você está levando o melhor equipamento pelo melhor preço. Se quiser, posso mostrar o comparativo de rankings."</div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  Feito por Domani Consultoria
+</footer>
+
+<script>
+function mudarAba(id, el) {
+  document.querySelectorAll('.aba').forEach(a => a.classList.remove('ativa'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('ativo'));
+  document.getElementById('aba-' + id).classList.add('ativa');
+  el.classList.add('ativo');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>

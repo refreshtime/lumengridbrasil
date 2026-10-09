@@ -257,8 +257,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
         <option value="">— Selecionar Inversor —</option>
         <option value="0">GoodWe GW5K — 5 kW · Jinko 620W</option>
         <option value="1">GoodWe GW7.5K — 7,5 kW · Jinko 620W</option>
-        <option value="2">Sofar HYD-7.5K — 7,5 kW · Jinko 620W</option>
-        <option value="3">GoodWe GW12K Trifásico — 12 kW · Leapton 600W</option>
+        <option value="2">GoodWe GW12K Trifásico — 12 kW · Leapton 600W</option>
       </select>
     </div>
     <div>
@@ -320,12 +319,12 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Módulo <span class="req-star">*</span></label>
     <select class="fsel" id="modModelSel" onchange="onModModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)" data-power="620" selected>Jinko Bifacial 620W — JKM620N-66HL4M BDV (22.95%) ★ padrão</option>
-      <option value="Maxeon Bifacial PERC 535W" data-power="535">Maxeon Bifacial PERC 535W</option>
-      <option value="Maxeon Bifacial PERC 550W" data-power="550">Maxeon Bifacial PERC 550W</option>
-      <option value="Ronma Solar N-Type 590W Black Frame" data-power="590">Ronma Solar N-Type 590W Black Frame</option>
-      <option value="Leapton LP182-199-M-66-NB-590W Bifacial 590W Frame Composto" data-power="590">Leapton Bifacial 590W Frame Composto (22.84%)</option>
-      <option value="Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)" data-power="600">Leapton Bifacial 600W Frame Composto (23.22%)</option>
+      <option value="JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)" data-power="620" selected>Jinko Bifacial 620W — JKM620N-66HL4M BDV ★ padrão</option>
+      <option value="Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)" data-power="600">Leapton Bifacial 600W — LP182-M-72 (23.22%)</option>
+      <option value="Leapton LP182-182-M-72-NB Bifacial 630W Frame Composto" data-power="630">Leapton Bifacial 630W — LP182-M-72</option>
+      <option value="Ronma Solar N-Type 620W" data-power="620">Ronma N-Type 620W</option>
+      <option value="DMEGC Solar 625W Bifacial N-Type" data-power="625">DMEGC Bifacial 625W N-Type</option>
+      <option value="OSDA Solar 710W Bifacial N-Type" data-power="710">OSDA Bifacial 710W N-Type</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="modModel" placeholder="Modelo personalizado" style="display:none">
@@ -340,8 +339,6 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <option value="GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5">GoodWe GW7.5K-ES-LD-G10 Híbrido 7.5kW</option>
       <option value="FoxESS Híbrido Bifásico 3MPPT 127/220V 11.4kW" data-power="11.4">FoxESS Híbrido Bifásico 11.4kW</option>
       <option value="FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW" data-power="5.7">FoxESS US Híbrido Bifásico 5.7kW</option>
-      <option value="Sofar HYD-5K-LSP1 Híbrido Bifásico 127/220V 5kW" data-power="5">Sofar HYD-5K-LSP1 Híbrido 5kW</option>
-      <option value="Sofar HYD-7.5K-LSP1 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5">Sofar HYD-7.5K-LSP1 Híbrido 7.5kW</option>
       <option value="GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW" data-power="12">GoodWe GW12K-ET-L-G10 Híbrido Trifásico 12kW</option>
       <option value="custom">Outro (digitar)</option>
     </select>
@@ -432,8 +429,18 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <!-- Indicador de nível de preço do kit (aparece após applyKit) -->
     <div id="kitNivelStrip" style="display:none;background:linear-gradient(135deg,rgba(232,100,26,.06),rgba(232,100,26,.02));border:1px solid rgba(232,100,26,.25);border-radius:8px;padding:10px 14px;margin-bottom:10px;flex-wrap:wrap;gap:4px;align-items:flex-end"></div>
     <div class="frow">
-      <div><label class="fl">Preço por kVp (R$) <span class="auto-tag">mín R$5.000</span></label><input class="fi" type="number" id="precoKvp" value="5000" min="5000" max="9000" step="100"></div>
-      <div><label class="fl">Valor Total (R$) <span id="projectValueTag" class="auto-tag">mín R$5.000/kVp</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
+      <div><label class="fl">Valor Total (R$) <span id="projectValueTag" class="auto-tag">kit · Cheio · preço dinâmico</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
+    </div>
+    <!-- Pagamento no Cartão -->
+    <div class="ftw" style="margin-bottom:6px">
+      <label class="ftog"><input type="checkbox" id="hasCartao" onchange="onCartaoToggle()"><span class="sl"></span></label>
+      <span class="ftl">Pagamento no Cartão</span>
+    </div>
+    <div id="cartaoFields" style="display:none;background:#fff8f5;border:1px solid rgba(232,100,26,.3);border-radius:6px;padding:10px 12px;margin-bottom:8px">
+      <div class="frow">
+        <div><label class="fl">Repasse (%)</label><input class="fi" type="number" id="cartaoRepasse" value="11" min="0" max="50" step="0.5" oninput="updateCartaoValue()" style="margin-bottom:0"></div>
+        <div><label class="fl">Valor Cartão (R$) <span class="auto-tag">auto</span></label><input class="fi" type="number" id="cartaoValue" readonly style="margin-bottom:0;background:#f0f2f5"></div>
+      </div>
     </div>
     <div class="frow">
       <div>
@@ -549,6 +556,25 @@ function getHibridoValores(qty,pwr,precoKvp){
 function $(id){return document.getElementById(id);}
 function get(id){const el=$(id);return el?el.value.trim():'';}
 function getN(id){return parseFloat($(id)&&$(id).value)||0;}
+
+// ── CARTÃO ──
+function onCartaoToggle(){
+  const checked=$('hasCartao')&&$('hasCartao').checked;
+  if($('cartaoFields'))$('cartaoFields').style.display=checked?'block':'none';
+  if(checked)updateCartaoValue();
+}
+function updateCartaoValue(){
+  if(!$('hasCartao')||!$('hasCartao').checked)return;
+  const pv=getN('projectValue');
+  const rep=(getN('cartaoRepasse')||11)/100;
+  if(pv>0&&$('cartaoValue'))$('cartaoValue').value=Math.round(pv*(1+rep));
+}
+if(document){
+  document.addEventListener('DOMContentLoaded',function(){
+    const pv=$('projectValue');
+    if(pv)pv.addEventListener('input',updateCartaoValue);
+  });
+}
 function maskPhone(el){let v=el.value.replace(/\D/g,'').slice(0,11);if(v.length>7)v=v.slice(0,2)+' '+v.slice(2,7)+'-'+v.slice(7);else if(v.length>2)v=v.slice(0,2)+' '+v.slice(2);el.value=v;}
 function fmtBRL(v){if(!v&&v!==0)return'—';return'R$\u00a0'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
@@ -672,7 +698,6 @@ let kitAtual=null;
 const KIT_BATS=[
   [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh'}],
   [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh'},{nbat:3,ci:2,label:'3 Baterias · 15 kWh'}],
-  [{nbat:1,ci:0,label:'1 Bateria · 5 kWh (9 placas)'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh (16 placas)'}],
   [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'}],
 ];
 
@@ -756,7 +781,7 @@ function renderKitPreview(ki,ci,pl){
   const kit=KITS_DATA[ki];const conf=kit.configs[ci];
   const precos=dynKitPrecos(ki,ci,pl);
   const fmt=v=>'R$\u00a0'+Math.round(v).toLocaleString('pt-BR');
-  const invName=['GoodWe GW5K','GoodWe GW7.5K','Sofar HYD-7.5K','GoodWe GW12K Tri'][ki];
+  const invName=['GoodWe GW5K','GoodWe GW7.5K','GoodWe GW12K Tri'][ki]||'Inversor';
   const modLabel=kit.modPwr+'W '+(kit.modVal.includes('JINKO')||kit.modVal.includes('Jinko')?'Jinko':kit.modVal.includes('Leapton')?'Leapton':'módulo');
   $('kitPreviewInfo').innerHTML=`<strong>${invName}</strong> &nbsp;·&nbsp; ${pl} pl. ${modLabel} &nbsp;·&nbsp; ${conf.nbat} bat${conf.nbat>1?'s':''} · ${(kit.batKwh*conf.nbat).toFixed(0)} kWh &nbsp;·&nbsp; <strong>${(pl*kit.modPwr/1000).toFixed(2)} kVp</strong>`;
   $('kitPreviewPrices').innerHTML=`
@@ -802,26 +827,11 @@ const KITS_HIBRIDOS_FALLBACK=[
   {id:'GW75-16J-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:2,batMod:'Unipower',equip:27977},
   {id:'GW75-9L-3', placas:9, inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:3,batMod:'Unipower',equip:26765},
   {id:'GW75-9J-3', placas:9, inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:3,batMod:'Unipower',equip:27665},
-  {id:'SF75-9L-1', placas:9, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:17579},
-  {id:'SF75-9J-1', placas:9, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:18479},
-  {id:'SF75-10L-1',placas:10,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:18139},
-  {id:'SF75-10J-1',placas:10,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:19139},
-  {id:'SF75-11L-1',placas:11,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:18699},
-  {id:'SF75-11J-1',placas:11,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:19799},
-  {id:'SF75-12L-1',placas:12,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:19259},
-  {id:'SF75-12J-1',placas:12,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:20459},
-  {id:'SF75-13L-1',placas:13,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:19819},
-  {id:'SF75-13J-1',placas:13,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:21119},
-  {id:'SF75-14L-1',placas:14,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:20379},
-  {id:'SF75-14J-1',placas:14,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:21779},
-  {id:'SF75-15L-1',placas:15,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:20939},
-  {id:'SF75-15J-1',placas:15,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:22439},
-  {id:'SF75-16L-1',placas:16,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:21499},
-  {id:'SF75-16J-1',placas:16,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:23099},
-  {id:'SF75-9L-2', placas:9, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:2,batMod:'Unipower',equip:21874},
-  {id:'SF75-9J-2', placas:9, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:2,batMod:'Unipower',equip:22774},
-  {id:'SF75-16L-2',placas:16,inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W',bats:2,batMod:'Unipower',equip:25794},
-  {id:'SF75-16J-2',placas:16,inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',  bats:2,batMod:'Unipower',equip:27394},
+  // ── GoodWe 7.5kW Híbrido — DMEGC 625W — dados reais Out/2026 ────────────
+  {id:'GW75-12D-0', placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',bats:0,batMod:'Sem bateria',equip:16932},
+  // ── GoodWe 10kW Híbrido — DMEGC 625W + Lynx 5kWh — REAL Out/2026 ───────
+  {id:'GW10-18D-1', placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',bats:1,batMod:'Lynx 5kWh (GoodWe)',equip:31788},
+  // ── [Sofar Híbrido removido — usar somente GoodWe Híbrido] ─────────────
 ];
 let KITS_HIBRIDOS = KITS_HIBRIDOS_FALLBACK;
 function getModWpHi(mod){if(mod.includes('590'))return 590;if(mod.includes('575'))return 575;if(mod.includes('610'))return 610;return 620;}
@@ -859,15 +869,7 @@ const KITS_DATA=[
      {nbat:2,preco:55270,precoMin:52000,precoBomba:48210},
      {nbat:3,preco:62000,precoMin:58700,precoBomba:53520},
    ]},
-  // 2: Sofar HYD-7.5K
-  {invVal:'Sofar HYD-7.5K-LSP1 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
-   modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
-   configs:[
-     {nbat:1,qty:9, preco:44700,precoMin:41080,precoBomba:38300},
-     {nbat:2,qty:16,preco:60740,precoMin:56160,precoBomba:51990},
-   ]},
-  // 3: GoodWe GW12K Trifásico
+  // 2: GoodWe GW12K Trifásico
   {invVal:'GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW',invPwr:12,
    modVal:'Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)',modPwr:600,
    batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:11,extras:850,

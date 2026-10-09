@@ -583,7 +583,8 @@ footer span{color:var(--orange);font-weight:600}
 // ══════════════════════════════════════════════════════════════
 
 const PARAMS = { imposto: 0.10, gestao: 0.20, overloadMax: 0.40, margemRef: 0.24 };
-const WP = 620; // Wp por placa
+// Wp por placa — extraído do nome do módulo (ex: "Jinko 620W" → 620)
+function getModWp(mod){const m=(mod||'').match(/(\d+)W/);return m?+m[1]:620;}
 
 const FAIXAS = [
   { min: 0,  max: 3,  rwp: 0.84, homo: 500  },
@@ -662,141 +663,194 @@ async function parseCSV(url) {
 }
 
 // Kits — dados reais (REAL) e estimados (ESTIMADO)
-// Custo equip estimado: Jinko ~R$500/placa, Leapton ~R$430/placa + inversor
-// Delta Jinko→Leapton: R$70/placa (kits 4–40pl)
-// GW3kW ~R$2.800 | GW5kW ~R$3.400 | GW7.5kW ~R$7.025 | GW10kW ~R$7.900 | GW12kW ~R$9.000 | GW15kW ~R$11.750 | GW20kW ~R$16.300
+// Módulos disponíveis: Leapton 600W, Jinko 620W, Ronma 620W, DMEGC 625W, Leapton 630W, OSDA 710W
+// Inversores: GoodWe (string) · FoxESS Micro (microinversores — 1 por 4 placas)
+// Custo unitário estimado por módulo (para interpolação):
+//   Leapton 600W ~R$250 · Jinko 620W ~R$310 · Ronma 620W ~R$390
+//   DMEGC 625W ~R$340 · Leapton 630W ~R$280 · OSDA 710W ~R$450
 const KITS_FALLBACK = [
+  // ══════════════════════════════════════════════════════
+  // ── JINKO 620W ── (módulo padrão)
+  // ══════════════════════════════════════════════════════
   // ── 4 PLACAS ── ESTIMADO (2,48 kWp · GW3kW · faixa 0-3)
   { placas:4,  inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:4800,  promo:null, src:'ESTIMADO' },
-  { placas:4,  inv:'GoodWe 3kW',  mod:'Leapton 620W', equip:4520,  promo:null, src:'ESTIMADO' },
-  // ── 5 PLACAS ── ESTIMADO (3,10 kWp · GW3kW · faixa 3-6 · overload 3,3%)
+  // ── 5 PLACAS ── ESTIMADO (3,10 kWp · GW3kW · faixa 3-6)
   { placas:5,  inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:5300,  promo:null, src:'ESTIMADO' },
-  { placas:5,  inv:'GoodWe 3kW',  mod:'Leapton 620W', equip:4950,  promo:null, src:'ESTIMADO' },
-  // ── 6 PLACAS ── ESTIMADO (3,72 kWp · GW3kW · faixa 3-6 · overload 24%)
+  // ── 6 PLACAS ── ESTIMADO (3,72 kWp · GW3kW · faixa 3-6)
   { placas:6,  inv:'GoodWe 3kW',  mod:'Jinko 620W',   equip:5800,  promo:null, src:'ESTIMADO' },
-  { placas:6,  inv:'GoodWe 3kW',  mod:'Leapton 620W', equip:5380,  promo:null, src:'ESTIMADO' },
   // ── 7 PLACAS ── ESTIMADO (4,34 kWp · GW5kW · faixa 3-6)
   { placas:7,  inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:6900,  promo:null, src:'ESTIMADO' },
-  { placas:7,  inv:'GoodWe 5kW',  mod:'Leapton 620W', equip:6410,  promo:null, src:'ESTIMADO' },
-  // ── 8 PLACAS ── REAL
-  { placas:8,  inv:'FoxESS Micro', mod:'Jinko 620W',   equip:7832,  promo:14880, src:'REAL' },
-  { placas:8,  inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:7400,  promo:14380, src:'REAL' },
-  { placas:8,  inv:'FoxESS Micro', mod:'Leapton 620W', equip:7356,  promo:14270, src:'REAL' },
-  // ── 9 PLACAS ── ESTIMADO (5,58 kWp · GW5kW · faixa 3-6 · overload 11,6%)
-  { placas:9,  inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:7900,  promo:null,  src:'ESTIMADO' },
-  { placas:9,  inv:'GoodWe 5kW',  mod:'Leapton 620W', equip:7270,  promo:null,  src:'ESTIMADO' },
-  // ── 10 PLACAS ── ESTIMADO
-  { placas:10, inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:8400,  promo:null,  src:'ESTIMADO' },
-  { placas:10, inv:'GoodWe 5kW',  mod:'Leapton 620W', equip:7770,  promo:null,  src:'ESTIMADO' },
-  // ── 11 PLACAS ── ESTIMADO (6,82 kWp · GW7.5kW · faixa 6-9)
-  { placas:11, inv:'GoodWe 7.5kW', mod:'Jinko 620W',  equip:12525, promo:null,  src:'ESTIMADO' },
-  { placas:11, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:11755, promo:null,  src:'ESTIMADO' },
-  // ── 12 PLACAS ── ESTIMADO
-  { placas:12, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:11800, promo:null,  src:'ESTIMADO' },
-  { placas:12, inv:'GoodWe 6kW',   mod:'Jinko 620W',  equip:12121, promo:21755, src:'REAL'     },
-  { placas:12, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:12185, promo:null,  src:'ESTIMADO' },
-  { placas:12, inv:'FoxESS Micro', mod:'Leapton 620W', equip:11000, promo:null,  src:'ESTIMADO' },
-  // ── 13 PLACAS ── ESTIMADO (8,06 kWp · GW7.5kW · faixa 6-9 · overload 7,5%)
-  { placas:13, inv:'GoodWe 7.5kW', mod:'Jinko 620W',  equip:13525, promo:null,  src:'ESTIMADO' },
-  { placas:13, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:12615, promo:null,  src:'ESTIMADO' },
-  // ── 14 PLACAS ── ESTIMADO
-  { placas:14, inv:'GoodWe 7.5kW', mod:'Jinko 620W',  equip:14025, promo:null,  src:'ESTIMADO' },
-  { placas:14, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:13045, promo:null,  src:'ESTIMADO' },
-  // ── 15 PLACAS ── ESTIMADO (9,30 kWp · GW10kW · faixa 9-12)
-  { placas:15, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:15400, promo:null,  src:'ESTIMADO' },
-  { placas:15, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:14350, promo:null,  src:'ESTIMADO' },
-  // ── 16 PLACAS ── REAL
-  { placas:16, inv:'GoodWe 7.5kW', mod:'Leapton 620W',equip:13892, promo:27800, src:'REAL' },
-  { placas:16, inv:'GoodWe 7.5kW', mod:'Jinko 620W',  equip:15025, promo:28990, src:'REAL' },
-  { placas:16, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:16000, promo:30119, src:'REAL' },
-  { placas:16, inv:'FoxESS Micro', mod:'Leapton 620W', equip:14800, promo:28799, src:'REAL' },
-  // ── 17 PLACAS ── ESTIMADO (10,54 kWp · GW10kW · faixa 9-12 · overload 5,4%)
-  { placas:17, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:16400, promo:null,  src:'ESTIMADO' },
-  { placas:17, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:15210, promo:null,  src:'ESTIMADO' },
-  // ── 18 PLACAS ── ESTIMADO
-  { placas:18, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:16900, promo:null,  src:'ESTIMADO' },
-  { placas:18, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:15640, promo:null,  src:'ESTIMADO' },
-  // ── 19 PLACAS ── ESTIMADO (11,78 kWp · GW10kW · faixa 9-12 · overload 17,8%)
-  { placas:19, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:17400, promo:null,  src:'ESTIMADO' },
-  { placas:19, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:16070, promo:null,  src:'ESTIMADO' },
-  // ── 20 PLACAS ── REAL
-  { placas:20, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:16300, promo:32690, src:'REAL' },
-  { placas:20, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:17900, promo:34490, src:'REAL' },
-  { placas:20, inv:'FoxESS Micro', mod:'Leapton 620W', equip:18000, promo:34590, src:'REAL' },
-  { placas:20, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:19500, promo:36290, src:'REAL' },
-  // ── 21 PLACAS ── ESTIMADO (13,02 kWp · GW10kW · faixa 12-20 · overload 30,2%)
-  // Midpoint entre 20pl (R$17.900) e 22pl (R$19.500)
-  { placas:21, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:18700, promo:null,  src:'ESTIMADO' },
-  { placas:21, inv:'GoodWe 10kW', mod:'Leapton 620W', equip:17230, promo:null,  src:'ESTIMADO' },
-  // ── 22 PLACAS ── ESTIMADO (13,64 kWp · GW12kW · faixa 12-20 · overload 13,7%)
-  { placas:22, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:19500, promo:null,  src:'ESTIMADO' },
-  { placas:22, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:17960, promo:null,  src:'ESTIMADO' },
-  // ── 23 PLACAS ── ESTIMADO (14,26 kWp · GW12kW · faixa 12-20 · overload 18,8%)
-  // Midpoint entre 22pl (R$19.500) e 24pl (R$21.000)
-  { placas:23, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:20250, promo:null,  src:'ESTIMADO' },
-  { placas:23, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:18640, promo:null,  src:'ESTIMADO' },
-  // ── 24 PLACAS ── ESTIMADO
-  { placas:24, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:23000, promo:null,  src:'ESTIMADO' },
-  { placas:24, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:21000, promo:null,  src:'ESTIMADO' },
-  { placas:24, inv:'FoxESS Micro', mod:'Leapton 620W', equip:21320, promo:null,  src:'ESTIMADO' },
-  // ── 25 PLACAS ── ESTIMADO (15,50 kWp · GW12kW · overload 29%)
-  { placas:25, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:21500, promo:null,  src:'ESTIMADO' },
-  { placas:25, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:19750, promo:null,  src:'ESTIMADO' },
-  // ── 26 PLACAS ── ESTIMADO (16,12 kWp · GW12kW · overload 34%)
-  { placas:26, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:22000, promo:null,  src:'ESTIMADO' },
-  { placas:26, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:20180, promo:null,  src:'ESTIMADO' },
-  // ── 27 PLACAS ── ESTIMADO (16,74 kWp · GW12kW · overload 39%)
-  { placas:27, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:22500, promo:null,  src:'ESTIMADO' },
-  { placas:27, inv:'GoodWe 12kW', mod:'Leapton 620W', equip:20610, promo:null,  src:'ESTIMADO' },
-  // ── 28 PLACAS ── ESTIMADO (17,36 kWp · GW15kW overload 16% · FoxESS ×7 overload 3%)
-  { placas:28, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:25750, promo:null,  src:'ESTIMADO' },
-  { placas:28, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:23790, promo:null,  src:'ESTIMADO' },
-  { placas:28, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:27300, promo:null,  src:'ESTIMADO' },
-  { placas:28, inv:'FoxESS Micro', mod:'Leapton 620W', equip:25340, promo:null,  src:'ESTIMADO' },
-  // ── 29 PLACAS ── ESTIMADO (17,98 kWp · GW15kW · overload 20%)
-  { placas:29, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:26250, promo:null,  src:'ESTIMADO' },
-  { placas:29, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:24220, promo:null,  src:'ESTIMADO' },
-  // ── 30 PLACAS ── ESTIMADO (18,60 kWp · GW15kW · overload 24%)
-  { placas:30, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:26750, promo:null,  src:'ESTIMADO' },
-  { placas:30, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:24650, promo:null,  src:'ESTIMADO' },
-  // ── 31 PLACAS ── ESTIMADO (19,22 kWp · GW15kW · overload 28%)
-  { placas:31, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:27250, promo:null,  src:'ESTIMADO' },
-  { placas:31, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:25080, promo:null,  src:'ESTIMADO' },
-  // ── 32 PLACAS ── ESTIMADO (19,84 kWp · GW15kW overload 32% · FoxESS ×8 overload 3%)
-  { placas:32, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:27750, promo:null,  src:'ESTIMADO' },
-  { placas:32, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:25510, promo:null,  src:'ESTIMADO' },
-  { placas:32, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:31200, promo:null,  src:'ESTIMADO' },
-  { placas:32, inv:'FoxESS Micro', mod:'Leapton 620W', equip:28960, promo:null,  src:'ESTIMADO' },
-  // ── 33 PLACAS ── ESTIMADO (20,46 kWp · GW15kW · overload 36%)
-  { placas:33, inv:'GoodWe 15kW',  mod:'Jinko 620W',   equip:28250, promo:null,  src:'ESTIMADO' },
-  { placas:33, inv:'GoodWe 15kW',  mod:'Leapton 620W', equip:25940, promo:null,  src:'ESTIMADO' },
-  // ── 34 PLACAS ── ESTIMADO (21,08 kWp · GW20kW · overload 5%)
-  { placas:34, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:33300, promo:null,  src:'ESTIMADO' },
-  { placas:34, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:30920, promo:null,  src:'ESTIMADO' },
-  // ── 35 PLACAS ── ESTIMADO (21,70 kWp · GW20kW · overload 9%)
-  { placas:35, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:33800, promo:null,  src:'ESTIMADO' },
-  { placas:35, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:31350, promo:null,  src:'ESTIMADO' },
-  // ── 36 PLACAS ── ESTIMADO (22,32 kWp · GW20kW overload 12% · FoxESS ×9 overload 3%)
-  { placas:36, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:34300, promo:null,  src:'ESTIMADO' },
-  { placas:36, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:31780, promo:null,  src:'ESTIMADO' },
-  { placas:36, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:35100, promo:null,  src:'ESTIMADO' },
-  { placas:36, inv:'FoxESS Micro', mod:'Leapton 620W', equip:32580, promo:null,  src:'ESTIMADO' },
-  // ── 37 PLACAS ── ESTIMADO (22,94 kWp · GW20kW · overload 15%)
-  { placas:37, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:34800, promo:null,  src:'ESTIMADO' },
-  { placas:37, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:32210, promo:null,  src:'ESTIMADO' },
-  // ── 38 PLACAS ── ESTIMADO (23,56 kWp · GW20kW · overload 18%)
-  { placas:38, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:35300, promo:null,  src:'ESTIMADO' },
-  { placas:38, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:32640, promo:null,  src:'ESTIMADO' },
-  // ── 39 PLACAS ── ESTIMADO (24,18 kWp · GW20kW · overload 21%)
-  { placas:39, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:35800, promo:null,  src:'ESTIMADO' },
-  { placas:39, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:33070, promo:null,  src:'ESTIMADO' },
-  // ── 40 PLACAS ── ESTIMADO + REAL_COTAÇÃO (24,80 kWp · GW20kW overload 24% · FoxESS ×10 overload 3%)
-  { placas:40, inv:'GoodWe 20kW',  mod:'Jinko 620W',   equip:36300, promo:null,  src:'ESTIMADO' },
-  { placas:40, inv:'GoodWe 20kW',  mod:'Leapton 620W', equip:33500, promo:null,  src:'ESTIMADO' },
-  { placas:40, inv:'FoxESS Micro', mod:'Jinko 620W',   equip:39000, promo:null,  src:'ESTIMADO' },
-  { placas:40, inv:'FoxESS Micro', mod:'Leapton 620W', equip:36200, promo:null,  src:'ESTIMADO' },
-  { placas:40, inv:'GoodWe 20kW',  mod:'Hanersun 610W', equip:32016, promo:null, src:'REAL_COTAÇÃO' },
-  { placas:40, inv:'FoxESS Micro', mod:'Hanersun 610W', equip:34697, promo:null, src:'REAL_COTAÇÃO' },
+  // ── 8 PLACAS ── REAL (Out/2026)
+  { placas:8,  inv:'FoxESS Micro',mod:'Jinko 620W',   equip:7276,  promo:null, src:'REAL' },
+  { placas:8,  inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:7400,  promo:14380,src:'REAL' },
+  // ── 9–10 ── ESTIMADO
+  { placas:9,  inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:7900,  promo:null, src:'ESTIMADO' },
+  { placas:10, inv:'GoodWe 5kW',  mod:'Jinko 620W',   equip:8400,  promo:null, src:'ESTIMADO' },
+  { placas:11, inv:'GoodWe 7.5kW',mod:'Jinko 620W',   equip:12525, promo:null, src:'ESTIMADO' },
+  // ── 12 PLACAS ──
+  { placas:12, inv:'FoxESS Micro',mod:'Jinko 620W',   equip:11800, promo:null, src:'ESTIMADO' },
+  { placas:12, inv:'GoodWe 6kW',  mod:'Jinko 620W',   equip:12121, promo:21755,src:'REAL'     },
+  // ── 13–27 ──
+  { placas:13, inv:'GoodWe 7.5kW',mod:'Jinko 620W',   equip:13525, promo:null, src:'ESTIMADO' },
+  { placas:14, inv:'GoodWe 7.5kW',mod:'Jinko 620W',   equip:14025, promo:null, src:'ESTIMADO' },
+  { placas:15, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:15400, promo:null, src:'ESTIMADO' },
+  { placas:16, inv:'GoodWe 7.5kW',mod:'Jinko 620W',   equip:15025, promo:28990,src:'REAL'     },
+  { placas:16, inv:'FoxESS Micro',mod:'Jinko 620W',   equip:16000, promo:30119,src:'REAL'     },
+  { placas:17, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:16400, promo:null, src:'ESTIMADO' },
+  { placas:18, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:16900, promo:null, src:'ESTIMADO' },
+  { placas:19, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:17400, promo:null, src:'ESTIMADO' },
+  { placas:20, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:17900, promo:34490,src:'REAL'     },
+  { placas:20, inv:'FoxESS Micro',mod:'Jinko 620W',   equip:19500, promo:36290,src:'REAL'     },
+  { placas:21, inv:'GoodWe 10kW', mod:'Jinko 620W',   equip:18700, promo:null, src:'ESTIMADO' },
+  { placas:22, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:19500, promo:null, src:'ESTIMADO' },
+  { placas:23, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:20250, promo:null, src:'ESTIMADO' },
+  { placas:24, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:21000, promo:null, src:'ESTIMADO' },
+  { placas:24, inv:'FoxESS Micro',mod:'Jinko 620W',   equip:23000, promo:null, src:'ESTIMADO' },
+  { placas:25, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:21500, promo:null, src:'ESTIMADO' },
+  { placas:26, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:22000, promo:null, src:'ESTIMADO' },
+  { placas:27, inv:'GoodWe 12kW', mod:'Jinko 620W',   equip:22500, promo:null, src:'ESTIMADO' },
+  { placas:28, inv:'GoodWe 15kW', mod:'Jinko 620W',   equip:25750, promo:null, src:'ESTIMADO' },
+  { placas:28, inv:'FoxESS Micro',mod:'Jinko 620W',   equip:27300, promo:null, src:'ESTIMADO' },
+  { placas:29, inv:'GoodWe 15kW', mod:'Jinko 620W',   equip:26250, promo:null, src:'ESTIMADO' },
+  { placas:30, inv:'GoodWe 15kW', mod:'Jinko 620W',   equip:26750, promo:null, src:'ESTIMADO' },
+  { placas:31, inv:'GoodWe 15kW', mod:'Jinko 620W',   equip:27250, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'GoodWe 15kW', mod:'Jinko 620W',   equip:27750, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'FoxESS Micro',mod:'Jinko 620W',   equip:31200, promo:null, src:'ESTIMADO' },
+  { placas:33, inv:'GoodWe 15kW', mod:'Jinko 620W',   equip:28250, promo:null, src:'ESTIMADO' },
+  { placas:34, inv:'GoodWe 20kW', mod:'Jinko 620W',   equip:33300, promo:null, src:'ESTIMADO' },
+  { placas:35, inv:'GoodWe 20kW', mod:'Jinko 620W',   equip:33800, promo:null, src:'ESTIMADO' },
+  { placas:36, inv:'GoodWe 20kW', mod:'Jinko 620W',   equip:34300, promo:null, src:'ESTIMADO' },
+  { placas:36, inv:'FoxESS Micro',mod:'Jinko 620W',   equip:35100, promo:null, src:'ESTIMADO' },
+  { placas:37, inv:'GoodWe 20kW', mod:'Jinko 620W',   equip:34800, promo:null, src:'ESTIMADO' },
+  { placas:38, inv:'GoodWe 20kW', mod:'Jinko 620W',   equip:35300, promo:null, src:'ESTIMADO' },
+  { placas:39, inv:'GoodWe 20kW', mod:'Jinko 620W',   equip:35800, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'GoodWe 20kW', mod:'Jinko 620W',   equip:36300, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'FoxESS Micro',mod:'Jinko 620W',   equip:39000, promo:null, src:'ESTIMADO' },
+
+  // ══════════════════════════════════════════════════════
+  // ── LEAPTON 600W ── (substitui Leapton 620W)
+  // ══════════════════════════════════════════════════════
+  { placas:4,  inv:'GoodWe 3kW',  mod:'Leapton 600W', equip:4960,  promo:null, src:'ESTIMADO' },
+  { placas:5,  inv:'GoodWe 3kW',  mod:'Leapton 600W', equip:5480,  promo:null, src:'ESTIMADO' },
+  { placas:6,  inv:'GoodWe 3kW',  mod:'Leapton 600W', equip:5990,  promo:null, src:'ESTIMADO' },
+  { placas:7,  inv:'GoodWe 5kW',  mod:'Leapton 600W', equip:6590,  promo:null, src:'ESTIMADO' },
+  // ── 8 PLACAS ── REAL (Out/2026)
+  { placas:8,  inv:'FoxESS Micro',mod:'Leapton 600W', equip:7514,  promo:null, src:'REAL'     },
+  { placas:8,  inv:'GoodWe 5kW',  mod:'Leapton 600W', equip:7650,  promo:null, src:'ESTIMADO' },
+  { placas:9,  inv:'GoodWe 5kW',  mod:'Leapton 600W', equip:8160,  promo:null, src:'ESTIMADO' },
+  { placas:10, inv:'GoodWe 5kW',  mod:'Leapton 600W', equip:8680,  promo:null, src:'ESTIMADO' },
+  { placas:11, inv:'GoodWe 7.5kW',mod:'Leapton 600W', equip:12180, promo:null, src:'ESTIMADO' },
+  // ── 12 PLACAS ── REAL (Out/2026)
+  { placas:12, inv:'GoodWe 6kW',  mod:'Leapton 600W', equip:10690, promo:null, src:'REAL'     },
+  { placas:12, inv:'FoxESS Micro',mod:'Leapton 600W', equip:11800, promo:null, src:'ESTIMADO' },
+  // ── 13 PLACAS ── REAL (Out/2026)
+  { placas:13, inv:'GoodWe 6kW',  mod:'Leapton 600W', equip:10898, promo:null, src:'REAL'     },
+  { placas:14, inv:'GoodWe 7.5kW',mod:'Leapton 600W', equip:12480, promo:null, src:'ESTIMADO' },
+  { placas:15, inv:'GoodWe 10kW', mod:'Leapton 600W', equip:13860, promo:null, src:'ESTIMADO' },
+  { placas:16, inv:'GoodWe 7.5kW',mod:'Leapton 600W', equip:13892, promo:27800,src:'REAL'     },
+  { placas:16, inv:'FoxESS Micro',mod:'Leapton 600W', equip:14800, promo:28799,src:'REAL'     },
+  { placas:17, inv:'GoodWe 10kW', mod:'Leapton 600W', equip:14840, promo:null, src:'ESTIMADO' },
+  { placas:18, inv:'GoodWe 10kW', mod:'Leapton 600W', equip:15340, promo:null, src:'ESTIMADO' },
+  { placas:19, inv:'GoodWe 10kW', mod:'Leapton 600W', equip:15840, promo:null, src:'ESTIMADO' },
+  { placas:20, inv:'GoodWe 10kW', mod:'Leapton 600W', equip:16300, promo:32690,src:'REAL'     },
+  { placas:20, inv:'FoxESS Micro',mod:'Leapton 600W', equip:18000, promo:34590,src:'REAL'     },
+  { placas:22, inv:'GoodWe 12kW', mod:'Leapton 600W', equip:18500, promo:null, src:'ESTIMADO' },
+  { placas:24, inv:'GoodWe 12kW', mod:'Leapton 600W', equip:19600, promo:null, src:'ESTIMADO' },
+  { placas:24, inv:'FoxESS Micro',mod:'Leapton 600W', equip:21200, promo:null, src:'ESTIMADO' },
+  { placas:26, inv:'GoodWe 12kW', mod:'Leapton 600W', equip:20700, promo:null, src:'ESTIMADO' },
+  { placas:28, inv:'GoodWe 15kW', mod:'Leapton 600W', equip:23480, promo:null, src:'ESTIMADO' },
+  { placas:28, inv:'FoxESS Micro',mod:'Leapton 600W', equip:24800, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'GoodWe 15kW', mod:'Leapton 600W', equip:26160, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'FoxESS Micro',mod:'Leapton 600W', equip:28500, promo:null, src:'ESTIMADO' },
+  { placas:36, inv:'GoodWe 20kW', mod:'Leapton 600W', equip:31180, promo:null, src:'ESTIMADO' },
+  { placas:36, inv:'FoxESS Micro',mod:'Leapton 600W', equip:32580, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'GoodWe 20kW', mod:'Leapton 600W', equip:33500, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'FoxESS Micro',mod:'Leapton 600W', equip:34800, promo:null, src:'ESTIMADO' },
+
+  // ══════════════════════════════════════════════════════
+  // ── LEAPTON 630W ──
+  // ══════════════════════════════════════════════════════
+  { placas:4,  inv:'GoodWe 3kW',  mod:'Leapton 630W', equip:5120,  promo:null, src:'ESTIMADO' },
+  { placas:5,  inv:'GoodWe 3kW',  mod:'Leapton 630W', equip:5650,  promo:null, src:'ESTIMADO' },
+  // ── 6 PLACAS ── REAL (Out/2026) — FoxESS 2× · 3,78 kWp
+  { placas:6,  inv:'FoxESS Micro',mod:'Leapton 630W', equip:6501,  promo:null, src:'REAL'     },
+  { placas:6,  inv:'GoodWe 3kW',  mod:'Leapton 630W', equip:6180,  promo:null, src:'ESTIMADO' },
+  { placas:7,  inv:'GoodWe 5kW',  mod:'Leapton 630W', equip:6800,  promo:null, src:'ESTIMADO' },
+  { placas:8,  inv:'FoxESS Micro',mod:'Leapton 630W', equip:7760,  promo:null, src:'ESTIMADO' },
+  { placas:8,  inv:'GoodWe 5kW',  mod:'Leapton 630W', equip:7800,  promo:null, src:'ESTIMADO' },
+  { placas:9,  inv:'GoodWe 5kW',  mod:'Leapton 630W', equip:8320,  promo:null, src:'ESTIMADO' },
+  { placas:12, inv:'FoxESS Micro',mod:'Leapton 630W', equip:12580, promo:null, src:'ESTIMADO' },
+  { placas:12, inv:'GoodWe 6kW',  mod:'Leapton 630W', equip:11400, promo:null, src:'ESTIMADO' },
+  { placas:16, inv:'FoxESS Micro',mod:'Leapton 630W', equip:17060, promo:null, src:'ESTIMADO' },
+  { placas:16, inv:'GoodWe 7.5kW',mod:'Leapton 630W', equip:16010, promo:null, src:'ESTIMADO' },
+  { placas:20, inv:'GoodWe 10kW', mod:'Leapton 630W', equip:19080, promo:null, src:'ESTIMADO' },
+  { placas:24, inv:'GoodWe 12kW', mod:'Leapton 630W', equip:22370, promo:null, src:'ESTIMADO' },
+  { placas:28, inv:'GoodWe 15kW', mod:'Leapton 630W', equip:27440, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'GoodWe 15kW', mod:'Leapton 630W', equip:29580, promo:null, src:'ESTIMADO' },
+  { placas:36, inv:'GoodWe 20kW', mod:'Leapton 630W', equip:36560, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'GoodWe 20kW', mod:'Leapton 630W', equip:38700, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'FoxESS Micro',mod:'Leapton 630W', equip:41580, promo:null, src:'ESTIMADO' },
+
+  // ══════════════════════════════════════════════════════
+  // ── RONMA 620W ──
+  // ══════════════════════════════════════════════════════
+  { placas:4,  inv:'GoodWe 3kW',  mod:'Ronma 620W',   equip:5210,  promo:null, src:'ESTIMADO' },
+  { placas:5,  inv:'GoodWe 3kW',  mod:'Ronma 620W',   equip:5760,  promo:null, src:'ESTIMADO' },
+  { placas:6,  inv:'GoodWe 3kW',  mod:'Ronma 620W',   equip:6300,  promo:null, src:'ESTIMADO' },
+  { placas:7,  inv:'GoodWe 5kW',  mod:'Ronma 620W',   equip:7490,  promo:null, src:'ESTIMADO' },
+  // ── 8 PLACAS ── REAL (Out/2026) — FoxESS 2× · 4,96 kWp
+  { placas:8,  inv:'FoxESS Micro',mod:'Ronma 620W',   equip:7901,  promo:null, src:'REAL'     },
+  { placas:8,  inv:'GoodWe 5kW',  mod:'Ronma 620W',   equip:8040,  promo:null, src:'ESTIMADO' },
+  { placas:9,  inv:'GoodWe 5kW',  mod:'Ronma 620W',   equip:8580,  promo:null, src:'ESTIMADO' },
+  { placas:12, inv:'FoxESS Micro',mod:'Ronma 620W',   equip:12820, promo:null, src:'ESTIMADO' },
+  { placas:12, inv:'GoodWe 6kW',  mod:'Ronma 620W',   equip:13160, promo:null, src:'ESTIMADO' },
+  { placas:16, inv:'FoxESS Micro',mod:'Ronma 620W',   equip:17380, promo:null, src:'ESTIMADO' },
+  { placas:16, inv:'GoodWe 7.5kW',mod:'Ronma 620W',   equip:16320, promo:null, src:'ESTIMADO' },
+  { placas:20, inv:'GoodWe 10kW', mod:'Ronma 620W',   equip:19430, promo:null, src:'ESTIMADO' },
+  { placas:24, inv:'GoodWe 12kW', mod:'Ronma 620W',   equip:22810, promo:null, src:'ESTIMADO' },
+  { placas:28, inv:'GoodWe 15kW', mod:'Ronma 620W',   equip:27960, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'GoodWe 15kW', mod:'Ronma 620W',   equip:30150, promo:null, src:'ESTIMADO' },
+  { placas:36, inv:'GoodWe 20kW', mod:'Ronma 620W',   equip:37250, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'GoodWe 20kW', mod:'Ronma 620W',   equip:39420, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'FoxESS Micro',mod:'Ronma 620W',   equip:42350, promo:null, src:'ESTIMADO' },
+
+  // ══════════════════════════════════════════════════════
+  // ── DMEGC 625W ──
+  // ══════════════════════════════════════════════════════
+  { placas:8,  inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:8010,  promo:null, src:'ESTIMADO' },
+  { placas:8,  inv:'GoodWe 5kW',  mod:'DMEGC 625W',   equip:8150,  promo:null, src:'ESTIMADO' },
+  { placas:12, inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:12980, promo:null, src:'ESTIMADO' },
+  { placas:12, inv:'GoodWe 6kW',  mod:'DMEGC 625W',   equip:13330, promo:null, src:'ESTIMADO' },
+  { placas:16, inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:17600, promo:null, src:'ESTIMADO' },
+  { placas:16, inv:'GoodWe 7.5kW',mod:'DMEGC 625W',   equip:16530, promo:null, src:'ESTIMADO' },
+  { placas:20, inv:'GoodWe 10kW', mod:'DMEGC 625W',   equip:19690, promo:null, src:'ESTIMADO' },
+  { placas:20, inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:21450, promo:null, src:'ESTIMADO' },
+  { placas:24, inv:'GoodWe 12kW', mod:'DMEGC 625W',   equip:23100, promo:null, src:'ESTIMADO' },
+  // ── 26 PLACAS ── REAL (Out/2026) — FoxESS 7× · 16,25 kWp
+  { placas:26, inv:'GoodWe 12kW', mod:'DMEGC 625W',   equip:24200, promo:null, src:'ESTIMADO' },
+  { placas:26, inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:24168, promo:null, src:'REAL'     },
+  { placas:28, inv:'GoodWe 15kW', mod:'DMEGC 625W',   equip:27060, promo:null, src:'ESTIMADO' },
+  { placas:28, inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:26220, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'GoodWe 15kW', mod:'DMEGC 625W',   equip:30530, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:30320, promo:null, src:'ESTIMADO' },
+  { placas:34, inv:'GoodWe 20kW', mod:'DMEGC 625W',   equip:36630, promo:null, src:'ESTIMADO' },
+  { placas:36, inv:'GoodWe 20kW', mod:'DMEGC 625W',   equip:37750, promo:null, src:'ESTIMADO' },
+  { placas:36, inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:34420, promo:null, src:'ESTIMADO' },
+  // ── 40 PLACAS ── REAL (Out/2026) — FoxESS 10× · 25,0 kWp
+  { placas:40, inv:'GoodWe 20kW', mod:'DMEGC 625W',   equip:39990, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'FoxESS Micro',mod:'DMEGC 625W',   equip:38520, promo:null, src:'REAL'     },
+
+  // ══════════════════════════════════════════════════════
+  // ── OSDA 710W ── (painéis grandes — sistemas maiores)
+  // ══════════════════════════════════════════════════════
+  { placas:20, inv:'GoodWe 12kW', mod:'OSDA 710W',    equip:22740, promo:null, src:'ESTIMADO' },
+  { placas:24, inv:'GoodWe 12kW', mod:'OSDA 710W',    equip:26640, promo:null, src:'ESTIMADO' },
+  { placas:28, inv:'GoodWe 15kW', mod:'OSDA 710W',    equip:31940, promo:null, src:'ESTIMADO' },
+  { placas:32, inv:'GoodWe 15kW', mod:'OSDA 710W',    equip:36650, promo:null, src:'ESTIMADO' },
+  // ── 34 PLACAS ── REAL (Out/2026) — GoodWe 12kW TRI 2× · 24,14 kWp
+  { placas:34, inv:'GoodWe 12kW', mod:'OSDA 710W',    equip:39820, promo:null, src:'REAL'     },
+  { placas:36, inv:'GoodWe 20kW', mod:'OSDA 710W',    equip:41160, promo:null, src:'ESTIMADO' },
+  { placas:40, inv:'GoodWe 20kW', mod:'OSDA 710W',    equip:40200, promo:null, src:'ESTIMADO' },
 ];
 let KITS = KITS_FALLBACK;
 
@@ -809,7 +863,7 @@ function getFaixa(kwp) {
 }
 
 function calcKit(k) {
-  const wp      = k.placas * WP;
+  const wp      = k.placas * getModWp(k.mod);
   const kwp     = wp / 1000;
   const faixa   = getFaixa(kwp);
   const instal  = faixa.rwp * wp + faixa.homo;
@@ -1188,28 +1242,7 @@ const KITS_HIBRIDOS_FALLBACK = [
   // ── GoodWe 7.5kW Híbrido — 3 Unipower ──────────────────────────────────
   { id:'GW75-9L-3',  placas:9,  inv:'GoodWe 7.5kW Híbrido', mod:'Leapton 590W', bats:3, batMod:'Unipower', equip:26765, status:'REAL_COTAÇÃO' },
   { id:'GW75-9J-3',  placas:9,  inv:'GoodWe 7.5kW Híbrido', mod:'Jinko 620W',   bats:3, batMod:'Unipower', equip:27665, status:'ESTIMADO'    },
-  // ── Sofar 7.5kW Híbrido — 1 Unipower — 9–16pl ──────────────────────────
-  { id:'SF75-9L-1',  placas:9,  inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:17579, status:'REAL_COTAÇÃO' },
-  { id:'SF75-9J-1',  placas:9,  inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:18479, status:'ESTIMADO'    },
-  { id:'SF75-10L-1', placas:10, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:18139, status:'ESTIMADO'    },
-  { id:'SF75-10J-1', placas:10, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:19139, status:'ESTIMADO'    },
-  { id:'SF75-11L-1', placas:11, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:18699, status:'ESTIMADO'    },
-  { id:'SF75-11J-1', placas:11, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:19799, status:'ESTIMADO'    },
-  { id:'SF75-12L-1', placas:12, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:19259, status:'ESTIMADO'    },
-  { id:'SF75-12J-1', placas:12, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:20459, status:'ESTIMADO'    },
-  { id:'SF75-13L-1', placas:13, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:19819, status:'ESTIMADO'    },
-  { id:'SF75-13J-1', placas:13, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21119, status:'ESTIMADO'    },
-  { id:'SF75-14L-1', placas:14, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20379, status:'ESTIMADO'    },
-  { id:'SF75-14J-1', placas:14, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21779, status:'ESTIMADO'    },
-  { id:'SF75-15L-1', placas:15, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20939, status:'ESTIMADO'    },
-  { id:'SF75-15J-1', placas:15, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:22439, status:'ESTIMADO'    },
-  { id:'SF75-16L-1', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:21499, status:'ESTIMADO'    },
-  { id:'SF75-16J-1', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:23099, status:'ESTIMADO'    },
-  // ── Sofar 7.5kW Híbrido — 2 Unipower ───────────────────────────────────
-  { id:'SF75-9L-2',  placas:9,  inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:21874, status:'ESTIMADO'    },
-  { id:'SF75-9J-2',  placas:9,  inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:22774, status:'ESTIMADO'    },
-  { id:'SF75-16L-2', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:25794, status:'REAL_COTAÇÃO' },
-  { id:'SF75-16J-2', placas:16, inv:'Sofar 7.5kW Híbrido',  mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:27394, status:'ESTIMADO'    },
+  // ── [Sofar Híbrido removido — usar somente GoodWe Híbrido] ──────────────
 ];
 let KITS_HIBRIDOS = KITS_HIBRIDOS_FALLBACK;
 

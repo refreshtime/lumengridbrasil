@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treinamento Comercial — LumenGrid</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0d0d;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: #111;
+    border-bottom: 2px solid #F26522;
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .logo-wrap { display: flex; align-items: center; gap: 14px; }
+  .logo-wrap img {
+    height: 58px;
+    filter: drop-shadow(0 0 8px #F26522aa);
+  }
+  .logo-text { line-height: 1.1; }
+  .logo-text .lg { font-size: 26px; font-weight: 900; letter-spacing: 1px; }
+  .logo-text .lumen { color: #F26522; }
+  .logo-text .grid  { color: #FAFAFA; }
+  .logo-text .sub   { font-size: 8px; color: #F26522; letter-spacing: 2px; text-transform: uppercase; }
+  header .title-block { margin-left: auto; text-align: right; }
+  header .title-block h1 { font-size: 20px; color: #fff; font-weight: 700; }
+  header .title-block p  { font-size: 12px; color: #888; }
+
+  /* ── ÍNDICE ── */
+  .index-bar {
+    background: #161616;
+    border-bottom: 1px solid #222;
+    padding: 14px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+  }
+  .index-bar a {
+    color: #F26522;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.85;
+    transition: opacity .2s;
+  }
+  .index-bar a:hover { opacity: 1; }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 50px 30px 80px; }
+
+  /* ── SEÇÕES ── */
+  section { margin-bottom: 60px; }
+  section + section { border-top: 1px solid #1e1e1e; padding-top: 50px; }
+
+  .section-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #F26522;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-size: 24px;
+    color: #fff;
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  h3 {
+    font-size: 16px;
+    color: #F26522;
+    font-weight: 700;
+    margin: 28px 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  p { margin-bottom: 14px; color: #ccc; }
+  strong { color: #fff; }
+
+  /* ── CARDS DE DESTAQUE ── */
+  .card-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 24px 0; }
+  .card {
+    flex: 1;
+    min-width: 200px;
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 22px 20px;
+  }
+  .card .num {
+    font-size: 38px;
+    font-weight: 900;
+    color: #F26522;
+    line-height: 1;
+  }
+  .card .label { font-size: 13px; color: #999; margin-top: 6px; line-height: 1.4; }
+
+  /* ── STEPS ── */
+  .steps { counter-reset: step; margin: 20px 0; }
+  .step {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .step-num {
+    min-width: 36px;
+    height: 36px;
+    background: #F26522;
+    color: #000;
+    font-weight: 900;
+    font-size: 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-body strong { display: block; color: #fff; font-size: 15px; margin-bottom: 4px; }
+  .step-body span   { color: #aaa; font-size: 14px; }
+
+  /* ── TABELAS ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #1a1a1a;
+    color: #F26522;
+    font-weight: 700;
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 2px solid #F26522;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #1e1e1e;
+    color: #ccc;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #151515; }
+
+  /* ── SCRIPT BOX ── */
+  .script-box {
+    background: #111;
+    border-left: 3px solid #F26522;
+    border-radius: 0 8px 8px 0;
+    padding: 18px 22px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .script-box .who {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .script-box .who.vendedor { color: #F26522; }
+  .script-box .who.cliente  { color: #aaa; }
+  .script-box p { margin: 0; color: #ddd; }
+
+  /* ── ALERTA / DICA ── */
+  .tip {
+    background: #161a12;
+    border: 1px solid #3a4a20;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #b8d890;
+  }
+  .tip strong { color: #c8e8a0; }
+
+  .warn {
+    background: #1a1208;
+    border: 1px solid #4a3010;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #e0b060;
+  }
+  .warn strong { color: #f0c070; }
+
+  /* ── COMPARATIVO SOLAR vs HÍBRIDO ── */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .compare-col {
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 22px 20px;
+  }
+  .compare-col.hibrido { border-color: #F26522; }
+  .compare-col h4 {
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #222;
+  }
+  .compare-col.solar   h4 { color: #aaa; }
+  .compare-col.hibrido h4 { color: #F26522; }
+  .compare-col ul { list-style: none; }
+  .compare-col ul li {
+    font-size: 13.5px;
+    color: #bbb;
+    padding: 5px 0;
+    display: flex;
+    gap: 8px;
+  }
+  .compare-col ul li::before { content: "→"; color: #555; flex-shrink: 0; }
+  .compare-col.hibrido ul li::before { color: #F26522; }
+
+  /* ── PILARES ── */
+  .pilar {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: #161616;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    border: 1px solid #1e1e1e;
+  }
+  .pilar-icon {
+    font-size: 22px;
+    min-width: 36px;
+    text-align: center;
+  }
+  .pilar-body strong { display: block; color: #fff; margin-bottom: 4px; font-size: 15px; }
+  .pilar-body span   { color: #aaa; font-size: 13.5px; }
+
+  /* ── FAQ ── */
+  .faq-item {
+    border-bottom: 1px solid #1e1e1e;
+    padding: 18px 0;
+  }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q {
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+  .faq-q::before { content: "?  "; color: #F26522; font-size: 17px; font-weight: 900; }
+  .faq-a { color: #bbb; font-size: 14px; line-height: 1.6; }
+  .faq-script {
+    background: #111;
+    border-left: 3px solid #F26522;
+    padding: 10px 16px;
+    margin-top: 10px;
+    font-size: 13.5px;
+    color: #ddd;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+  }
+
+  /* ── EQUIPAMENTOS ── */
+  .equip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .equip-card {
+    background: #161616;
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  .equip-card .tipo { font-size: 11px; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .equip-card .marca { font-size: 20px; font-weight: 900; color: #F26522; }
+  .equip-card .desc  { font-size: 12px; color: #777; margin-top: 6px; line-height: 1.4; }
+
+  /* ── DOCS ── */
+  .doc-block {
+    background: #161616;
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 16px 0;
+  }
+  .doc-block h4 {
+    font-size: 14px;
+    font-weight: 800;
+    color: #F26522;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .doc-block ol { padding-left: 20px; }
+  .doc-block ol li { color: #bbb; font-size: 14px; margin-bottom: 10px; line-height: 1.6; }
+  .doc-block ol li strong { color: #fff; }
+  .doc-block .arg {
+    font-size: 13px;
+    color: #aaa;
+    font-style: italic;
+    margin-top: 4px;
+    padding-left: 4px;
+    border-left: 2px solid #333;
+  }
+
+  /* ── SEGMENTOS ── */
+  .seg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .seg-card {
+    background: #161616;
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .seg-card h4 { font-size: 13px; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .seg-card p  { font-size: 14px; color: #ccc; margin: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #111;
+    border-top: 1px solid #1e1e1e;
+    padding: 20px 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+  }
+
+  @media (max-width: 600px) {
+    header { flex-direction: column; align-items: flex-start; }
+    header .title-block { text-align: left; margin-left: 0; }
+    .compare, .seg-grid { grid-template-columns: 1fr; }
+    .index-bar { padding: 14px 20px; }
+    main { padding: 30px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="logo-text">
+      <div class="lg"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+      <div class="sub">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="title-block">
+    <h1>Treinamento Comercial</h1>
+    <p>Guia do Vendedor — Solar, Híbrido e EV</p>
+  </div>
+</header>
+
+<!-- ÍNDICE -->
+<div class="index-bar">
+  <a href="#mercado">Mercado</a>
+  <a href="#solar">Como funciona o Solar</a>
+  <a href="#hibrido">Sistema Híbrido</a>
+  <a href="#comparativo">Solar vs Híbrido</a>
+  <a href="#documentos">Documentos</a>
+  <a href="#equipamentos">Equipamentos</a>
+  <a href="#venda-digital">Venda Digital</a>
+  <a href="#linguagem">Linguagem do Cliente</a>
+  <a href="#script">Script de Venda</a>
+  <a href="#faq">FAQ do Cliente</a>
+  <a href="#ev">Carregador EV</a>
+</div>
+
+<main>
+
+  <!-- ── 1. MERCADO ── -->
+  <section id="mercado">
+    <div class="section-tag">Oportunidade</div>
+    <h2>Por que energia solar agora?</h2>
+
+    <div class="card-row">
+      <div class="card">
+        <div class="num">96%</div>
+        <div class="label">dos imóveis residenciais no Brasil <strong>ainda não têm</strong> energia solar instalada</div>
+      </div>
+      <div class="card">
+        <div class="num">+11mi</div>
+        <div class="label">de unidades consumidoras conectadas à rede até 2024 — crescimento acelerado</div>
+      </div>
+      <div class="card">
+        <div class="num">85%</div>
+        <div class="label">de redução média na conta de luz com um sistema On-Grid bem dimensionado</div>
+      </div>
+    </div>
+
+    <p>O Brasil é o <strong>quinto maior mercado solar do mundo</strong>. A conta de energia não para de subir, e a tecnologia fotovoltaica nunca foi tão acessível. Cada cliente que você encontra é, na prática, um lead quente que ainda não sabe disso.</p>
+
+    <div class="tip">
+      <strong>Argumento de abertura:</strong> "A maioria das pessoas ainda paga uma conta de luz que poderia ser quase zero. Você provavelmente é uma dessas pessoas — e a gente pode mudar isso em menos de um mês."
+    </div>
+  </section>
+
+  <!-- ── 2. COMO FUNCIONA SOLAR ── -->
+  <section id="solar">
+    <div class="section-tag">Fundamento</div>
+    <h2>Como funciona o sistema de energia solar (On-Grid)</h2>
+
+    <p>O sistema On-Grid é o mais comum. Ele <strong>gera energia do sol e injeta direto na rede elétrica</strong>, abatendo a conta de luz. Não tem bateria.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>As placas captam a luz solar</strong>
+          <span>Os painéis fotovoltaicos convertem a luz do sol em corrente elétrica contínua (DC).</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>O inversor transforma a energia</strong>
+          <span>Converte a corrente DC em corrente alternada (AC), o padrão usado na tomada da casa.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>A energia abastece a residência</strong>
+          <span>Tudo que o cliente está consumindo naquele momento é alimentado pela geração solar — sem custo.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>O excedente vai para a rede (créditos)</strong>
+          <span>O que sobra é injetado na distribuidora e vira crédito de energia, válido por até 60 meses.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>À noite ou em dias nublados</strong>
+          <span>O cliente consome da rede normalmente — usando os créditos acumulados. Não fica sem energia.</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Etapas do processo de instalação</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">A</div>
+        <div class="step-body">
+          <strong>Análise e proposta</strong>
+          <span>Avaliamos a fatura, o consumo e o telhado. Enviamos proposta com sistema dimensionado.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">B</div>
+        <div class="step-body">
+          <strong>Aprovação e pedido</strong>
+          <span>Cliente aprova. Iniciamos o pedido dos equipamentos e a documentação junto à distribuidora.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">C</div>
+        <div class="step-body">
+          <strong>Instalação</strong>
+          <span>Nossa equipe instala em até <strong>20 dias úteis</strong>. Rápido, organizado, sem bagunça.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">D</div>
+        <div class="step-body">
+          <strong>Homologação e ativação</strong>
+          <span>A distribuidora troca o medidor e libera o sistema. O cliente começa a economizar.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. HÍBRIDO ── -->
+  <section id="hibrido">
+    <div class="section-tag">Produto Premium</div>
+    <h2>Sistema Híbrido</h2>
+
+    <p>O sistema híbrido é On-Grid com <strong>bateria de armazenamento</strong>. O cliente gera energia, armazena o excedente nas baterias e usa à noite ou em caso de queda da rede. <strong>Zero dependência da distribuidora.</strong></p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Placas geram energia durante o dia</strong>
+          <span>Igual ao sistema On-Grid convencional.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>O excedente carrega as baterias</strong>
+          <span>Em vez de apenas injetar na rede, a energia que sobra fica armazenada no próprio imóvel.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>À noite: baterias abastecem a casa</strong>
+          <span>O cliente não precisa dos créditos da distribuidora. Usa o que produziu e armazenou.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Em caso de apagão: a casa continua ligada</strong>
+          <span>O sistema muda para modo off-grid automaticamente. Geladeira, luz e internet seguem funcionando.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Argumento de venda:</strong> "Com o híbrido, o cliente não depende mais da distribuidora — nem de dia, nem de noite, nem em apagão. É autonomia energética de verdade."
+    </div>
+  </section>
+
+  <!-- ── 4. COMPARATIVO ── -->
+  <section id="comparativo">
+    <div class="section-tag">Rentabilidade</div>
+    <h2>Solar On-Grid vs Híbrido — qual vender?</h2>
+
+    <p>Ambos são ótimos produtos. O híbrido tem ticket maior e margem melhor. Sempre que o cliente tiver perfil, apresente o híbrido como primeira opção.</p>
+
+    <div class="compare">
+      <div class="compare-col solar">
+        <h4>On-Grid (Solar)</h4>
+        <ul>
+          <li>Sem bateria</li>
+          <li>Redução de até 85% na conta</li>
+          <li>Ticket: consulte a tabela de precificação atualizada</li>
+          <li>Retorno médio: 4–6 anos</li>
+          <li>Ideal para consumo diurno alto</li>
+          <li>Depende da rede à noite</li>
+          <li>Sem proteção contra apagão</li>
+        </ul>
+      </div>
+      <div class="compare-col hibrido">
+        <h4>Híbrido ★ Recomendado</h4>
+        <ul>
+          <li>Com bateria de armazenamento</li>
+          <li>Redução de 90–100% na conta</li>
+          <li>Ticket: consulte a tabela de precificação atualizada</li>
+          <li>Maior margem por projeto</li>
+          <li>Ideal para consumo noturno ou crítico</li>
+          <li>Independência total da rede</li>
+          <li>Proteção contra quedas de energia</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="warn">
+      <strong>Regra de ouro:</strong> Sempre apresente o híbrido primeiro. Se o cliente recuar no preço, então apresente o On-Grid. Nunca apresente o menor primeiro — você perde o teto.
+    </div>
+  </section>
+
+  <!-- ── 5. DOCUMENTOS ── -->
+  <section id="documentos">
+    <div class="section-tag">Processo</div>
+    <h2>Documentos para iniciar o orçamento</h2>
+
+    <div class="doc-block">
+      <h4>Sistema Solar On-Grid</h4>
+      <ol>
+        <li>
+          <strong>Fatura de energia elétrica</strong> (preferencial)<br>
+          <div class="arg">Precisamos ver o consumo em kWh e os dados da instalação para dimensionar o sistema corretamente.</div>
+        </li>
+        <li>
+          <strong>Se o cliente não tiver a fatura em mãos:</strong> peça a <strong>média de gasto mensal</strong> + <strong>endereço completo</strong><br>
+          <div class="arg">"Sem problema. Me passa o valor médio que você paga por mês e o endereço — preciso dar uma olhada no telhado pelo Google para ter uma ideia geral e já te passar uma estimativa."</div>
+        </li>
+        <li>
+          <strong>Perguntar se há intenção de aumentar o consumo em breve</strong><br>
+          <div class="arg">Carro elétrico, piscina, ar-condicionado novo? Importante dimensionar já para o futuro.</div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="doc-block">
+      <h4>Sistema Híbrido</h4>
+      <ol>
+        <li>
+          <strong>O cliente já possui sistema solar instalado?</strong><br>
+          <div class="arg">"Preciso saber porque, se já tiver, vamos instalar um sistema que se conecte ao existente — para não desperdiçar o que já tem."</div>
+        </li>
+        <li>
+          <strong>Fatura de energia</strong> (essencial para híbrido)<br>
+          <div class="arg">No híbrido, além do consumo, precisamos verificar o tipo de conexão com a rede — dado que está na fatura e é fundamental para o projeto.</div>
+        </li>
+        <li>
+          <strong>Se o cliente não enviar a fatura:</strong> perguntar o tipo de conexão elétrica<br>
+          <div class="arg">"Me diz: no quadro de disjuntores da sua casa, você tem 2 disjuntores principais (bifásico) ou 3 (trifásico)? Isso define o equipamento que vamos usar."</div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="tip">
+      <strong>Nunca perca o timing</strong> por falta de documento. Se o cliente não consegue enviar a fatura na hora, use as alternativas acima e avance no processo. Proposta aproximada é melhor do que silêncio.
+    </div>
+  </section>
+
+  <!-- ── 6. EQUIPAMENTOS ── -->
+  <section id="equipamentos">
+    <div class="section-tag">Produto</div>
+    <h2>Equipamentos recomendados</h2>
+
+    <p>Sempre apresente a proposta com os melhores equipamentos disponíveis. Deixe claro que a escolha é estratégica — não por capricho.</p>
+
+    <div class="equip-grid">
+      <div class="equip-card">
+        <div class="tipo">Placas Fotovoltaicas</div>
+        <div class="marca">Jinko</div>
+        <div class="desc">Top do ranking mundial. Eficiência e durabilidade comprovadas. Melhor custo x benefício do mercado.</div>
+      </div>
+      <div class="equip-card">
+        <div class="tipo">Inversor On-Grid</div>
+        <div class="marca">Goodwe</div>
+        <div class="desc">Um dos mais confiáveis do mercado. Monitoramento em tempo real via app.</div>
+      </div>
+      <div class="equip-card">
+        <div class="tipo">Micro-inversor</div>
+        <div class="marca">Foxess</div>
+        <div class="desc">Ideal para telhados com sombreamento parcial. Alta performance por painel.</div>
+      </div>
+    </div>
+
+    <div class="script-box">
+      <div class="who vendedor">Como apresentar na proposta</div>
+      <p>"Escolhemos os melhores equipamentos do mercado hoje: Jinko nas placas e Goodwe no inversor. Eles estão no topo do ranking por custo x benefício — ou seja, a gente está te entregando o melhor pelo menor preço possível. Se fizer sentido reduzir custos, posso avaliar outras opções, mas pagar mais caro em outras marcas nesse momento não faz sentido."</p>
+    </div>
+  </section>
+
+  <!-- ── 7. VENDA DIGITAL ── -->
+  <section id="venda-digital">
+    <div class="section-tag">Método</div>
+    <h2>Pilares da venda digital</h2>
+
+    <div class="pilar">
+      <div class="pilar-icon">🤝</div>
+      <div class="pilar-body">
+        <strong>Rapport antes de vender</strong>
+        <span>Crie conexão antes de apresentar qualquer produto. Pergunte sobre a situação, ouça, mostre que entende. Cliente compra de quem confia, não de quem fala mais rápido.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-icon">⚡</div>
+      <div class="pilar-body">
+        <strong>Responda na hora — sem exceção</strong>
+        <span>Cliente respondeu? Para tudo. Responde agora. A janela de atenção é curta. Quem responde primeiro, fecha primeiro.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-icon">🎙</div>
+      <div class="pilar-body">
+        <strong>Telefone ou áudio sempre que possível</strong>
+        <span>Voz gera mais conexão do que texto. Tente uma chamada ou mande um áudio humanizado. Mas deixe tudo registrado por escrito também — o cliente precisa poder voltar e reler.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-icon">🔁</div>
+      <div class="pilar-body">
+        <strong>Follow-up é essencial — não opcional</strong>
+        <span>Você está falando com o cliente no horário comercial enquanto ele está trabalhando. É comum ele só responder na 3ª ou 4ª tentativa. Não interprete silêncio como desinteresse. Persista com elegância.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-icon">📞</div>
+      <div class="pilar-body">
+        <strong>Após enviar a proposta: puxe uma chamada</strong>
+        <span>Nunca deixe a proposta "solta". Após enviar, tente agendar uma chamada para apresentar. Se o engajamento for alto, proponha uma visita. Proposta sem apresentação é proposta perdida.</span>
+      </div>
+    </div>
+
+    <div class="pilar">
+      <div class="pilar-icon">✨</div>
+      <div class="pilar-body">
+        <strong>Perfumaria importa</strong>
+        <span>Tudo que você envia precisa estar organizado e bonito. Proposta, apresentação, imagens. Se faltar material visual, solicite na pasta comercial do Drive. O cliente percebe o capricho — e isso vende.</span>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Material comercial disponível em:</strong> Google Drive — pasta Comercial LumenGrid. Acesse sempre antes de mandar proposta.
+    </div>
+  </section>
+
+  <!-- ── 8. LINGUAGEM ── -->
+  <section id="linguagem">
+    <div class="section-tag">Comunicação</div>
+    <h2>Fale na língua do cliente</h2>
+
+    <p>O mesmo produto, vendido de forma diferente, para perfis diferentes. Adapte o argumento — nunca o produto.</p>
+
+    <div class="seg-grid">
+      <div class="seg-card">
+        <h4>Classe A</h4>
+        <p>Foque em <strong>tranquilidade, qualidade e autonomia energética</strong>. Ele não quer depender de apagão, quer o melhor equipamento, quer conforto sem preocupação.</p>
+      </div>
+      <div class="seg-card">
+        <h4>Classe B em diante</h4>
+        <p>Foque em <strong>economia real, retorno no longo prazo e custo vs benefício</strong>. Mostre o quanto ele pagaria em 10 anos sem solar versus o que paga uma vez com o sistema.</p>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Para todos os clientes:</strong> tratamos o projeto e o cliente com excelência. Equipamentos de qualidade são inegociáveis — o que muda é o argumento, nunca o padrão.
+    </div>
+  </section>
+
+  <!-- ── 9. SCRIPT ── -->
+  <section id="script">
+    <div class="section-tag">Na prática</div>
+    <h2>Script de atendimento</h2>
+
+    <h3>Primeiro contato — WhatsApp</h3>
+
+    <div class="script-box">
+      <div class="who vendedor">Vendedor</div>
+      <p>Olá, [nome]! Tudo bem? Aqui é [seu nome], da LumenGrid. Vi seu interesse em energia solar — posso te ajudar a entender como funciona e quanto você economizaria com o seu perfil de consumo. Tem 2 minutinhos?</p>
+    </div>
+
+    <h3>Qualificação — puxando a fatura</h3>
+
+    <div class="script-box">
+      <div class="who vendedor">Vendedor</div>
+      <p>Para eu te montar uma proposta real, preciso de uma informação: você consegue me mandar a sua fatura de energia mais recente? Com ela consigo calcular exatamente quanto você economizaria por mês.</p>
+    </div>
+
+    <div class="script-box">
+      <div class="who cliente">Se o cliente não tiver a fatura</div>
+      <p>[Resposta do cliente: "não tenho aqui agora"]</p>
+    </div>
+
+    <div class="script-box">
+      <div class="who vendedor">Vendedor</div>
+      <p>Sem problema! Me passa então: quanto você paga de luz por mês, em média? E o endereço completo com CEP. Já consigo dar uma olhada no telhado pelo satélite e te passar uma estimativa bem próxima do real.</p>
+    </div>
+
+    <h3>Apresentação de proposta</h3>
+
+    <div class="script-box">
+      <div class="who vendedor">Vendedor</div>
+      <p>Segue sua proposta, [nome]. Escolhi o melhor custo x benefício do mercado pra você: Jinko nas placas e Goodwe no inversor — equipamentos no topo do ranking, com ótima garantia e monitoramento pelo app. Você economizaria em média 85% na sua conta. Posso te ligar agora pra apresentar os detalhes em 5 minutos?</p>
+    </div>
+
+    <h3>Follow-up após silêncio</h3>
+
+    <div class="script-box">
+      <div class="who vendedor">Vendedor — 1ª tentativa (1 dia depois)</div>
+      <p>Oi [nome], tudo bem? Queria saber se você teve a chance de ver a proposta que enviei. Qualquer dúvida, estou à disposição!</p>
+    </div>
+
+    <div class="script-box">
+      <div class="who vendedor">Vendedor — 2ª tentativa (2–3 dias depois)</div>
+      <p>[Nome], sei que a rotina é corrida. Quando tiver um momento, me fala o que achou. Posso adaptar a proposta se precisar — é só avisar.</p>
+    </div>
+
+    <div class="script-box">
+      <div class="who vendedor">Vendedor — 3ª tentativa (1 semana depois)</div>
+      <p>Oi [nome], última tentativa da minha parte. Se ainda fizer sentido, estou aqui. Se quiser retomar em outro momento, é só me chamar. Cuide-se!</p>
+    </div>
+  </section>
+
+  <!-- ── 10. FAQ ── -->
+  <section id="faq">
+    <div class="section-tag">Objeções</div>
+    <h2>Perguntas frequentes dos clientes</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Os créditos que sobram, para onde vão?</div>
+      <div class="faq-a">Ficam registrados junto à distribuidora de energia. Toda vez que o sistema gera mais do que o cliente consome, o excedente é injetado na rede e vira crédito, válido por até <strong>60 meses</strong>. Esses créditos são usados à noite, em dias nublados ou em qualquer mês de menor geração.</div>
+      <div class="faq-script">"Tudo que você gerar e não usar fica guardado como crédito na distribuidora — como um banco de energia. Você usa quando quiser, em até 5 anos."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Se a geração não for suficiente, fico sem energia?</div>
+      <div class="faq-a">Não. O sistema On-Grid está sempre conectado à rede. Se a geração for insuficiente — à noite, em dias muito nublados ou em picos de consumo — o cliente simplesmente consome da rede normalmente, usando os créditos acumulados ou pagando a diferença.</div>
+      <div class="faq-script">"Não existe risco de ficar sem energia. O sistema é integrado à rede — se faltar geração, a distribuidora complementa automaticamente. Você não percebe diferença nenhuma."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Quanto tempo leva para instalar?</div>
+      <div class="faq-a">Instalamos em até <strong>20 dias úteis</strong> após a aprovação da proposta e o pedido dos equipamentos. Temos cuidado e agilidade para que o cliente tenha a melhor economia o mais rápido possível.</div>
+      <div class="faq-script">"Nosso prazo é de até 20 dias úteis após a aprovação — é um dos mais rápidos do mercado. A gente tem cuidado em cada etapa justamente pra não ter retrabalho e você começar a economizar logo."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Vai aparecer conta de luz zero?</div>
+      <div class="faq-a">A conta de luz nunca vai a zero porque a distribuidora cobra uma taxa mínima obrigatória (Custo de Disponibilidade), independente do quanto o cliente consome ou gera. O que muda é que essa taxa é muito baixa — geralmente entre R$ 30 e R$ 80 — comparada com o que o cliente pagava antes.</div>
+      <div class="faq-script">"A conta nunca vai a zero porque a distribuidora cobra uma tarifa mínima por manter a conexão com a rede. Mas em vez de pagar R$ 800, você vai pagar R$ 50. É esse o impacto real."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Qual é a garantia dos equipamentos?</div>
+      <div class="faq-a">As placas Jinko têm garantia de produto de <strong>12 anos</strong> e garantia de performance de <strong>25 anos</strong>. Os inversores Goodwe têm garantia de <strong>5 a 10 anos</strong> (dependendo do modelo). A LumenGrid também oferece suporte técnico pós-instalação.</div>
+      <div class="faq-script">"As placas têm 25 anos de garantia de performance — ou seja, em 2050 elas ainda estarão gerando energia pra você. É um ativo que dura décadas."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Em quanto tempo o investimento se paga?</div>
+      <div class="faq-a">Em média, sistemas On-Grid se pagam em <strong>4 a 6 anos</strong>, dependendo do consumo e da tarifa local. Como os painéis duram 25+ anos, o cliente fica com 20 anos de energia praticamente gratuita após o payback.</div>
+      <div class="faq-script">"Você paga o sistema uma vez. Em média 5 anos, o investimento se paga. Depois disso, são 20 anos de energia praticamente de graça. É praticamente o melhor investimento que existe hoje."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Funciona em apartamento?</div>
+      <div class="faq-a">Apartamentos convencionais geralmente não têm acesso ao telhado para instalação individual. Mas existe a modalidade de <strong>geração compartilhada</strong> e <strong>autoconsumo remoto</strong>, que permite ao morador de apartamento assinar energia de uma usina solar e receber créditos na conta. Vale verificar caso a caso.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">O sistema híbrido funciona em apagão?</div>
+      <div class="faq-a">Sim — esse é um dos grandes diferenciais. No apagão, o sistema híbrido detecta a queda da rede e comuta automaticamente para o modo off-grid, alimentando a casa pelas baterias. O On-Grid convencional desliga por segurança quando a rede cai.</div>
+      <div class="faq-script">"Com o híbrido, quando cair a energia do bairro, a sua casa continua ligada. Geladeira, luz, internet — tudo funcionando. O sistema troca automaticamente para as baterias."</div>
+    </div>
+  </section>
+
+  <!-- ── 11. EV ── -->
+  <section id="ev">
+    <div class="section-tag">Produto Complementar</div>
+    <h2>Carregador de Veículo Elétrico (EV)</h2>
+
+    <p>O carregador elétrico é um produto complementar, ideal para clientes que já têm ou pretendem ter um carro elétrico. Quando combinado com energia solar, o custo de "abastecer" cai para perto de zero.</p>
+
+    <h3>O que saber para vender</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Velocidade</th>
+          <th>Indicado para</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Carregador Nível 1 (tomada comum)</strong></td>
+          <td>Lento — 8 a 20h para carga completa</td>
+          <td>Uso eventual, quem roda pouco</td>
+        </tr>
+        <tr>
+          <td><strong>Wallbox Nível 2 (instalação dedicada)</strong></td>
+          <td>Rápido — 4 a 8h para carga completa</td>
+          <td>Uso diário, residencial e comercial</td>
+        </tr>
+        <tr>
+          <td><strong>Carregador DC (rápido)</strong></td>
+          <td>Muito rápido — 30 a 60 min</td>
+          <td>Postos, condomínios, frotas</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      <strong>Argumento de venda combinada:</strong> "Com solar + carregador, você abastece o carro com energia que você mesmo produziu. O custo por km cai para praticamente zero. É a combinação mais inteligente do mercado."
+    </div>
+
+    <div class="warn">
+      <strong>Atenção:</strong> se o cliente tem ou planeja ter um EV, isso aumenta significativamente o consumo de energia — e deve ser considerado no dimensionamento do sistema solar. Sempre pergunte.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Feito por Domani Consultoria
+</footer>
+
+</body>
+</html>

@@ -94,8 +94,13 @@ Antes de qualquer edição:
 
 ## Calculos do Gerador Solar
 
-- **On-Grid:** R$ 3.500 / kWp, 65 kWh/placa/mes
-- **Hibrido:** R$ 5.000 / kWp, minimo R$ 28.000, 65 kWh/placa/mes
+- **On-Grid:** preço vem da tabela de kits (`KITS_OG_FALLBACK` em `gerador-solar-v3.html`). NÃO usar R$/kWp fixo.
+- **Hibrido:** preço vem da tabela de kits (`KITS_HIBRIDOS_FALLBACK` em `gerador-hibrido.html`). NÃO usar R$/kWp fixo.
+- Geração: 65 kWh/placa/mês (On-Grid e Híbrido)
+- **Módulos disponíveis (Out/2026):** Leapton 600W, Jinko 620W, Ronma 620W, DMEGC 625W, Leapton 630W, OSDA 710W
+- **Inversores On-Grid:** GoodWe (string) e FoxESS Micro (microinversores)
+- **Inversores Híbridos:** GoodWe apenas (Sofar híbrido removido)
+- **Cartão:** repasse de 11% (5% custo/taxas + 6% emissão NF) — campo toggle nos geradores
 
 ## Precificação de Kits — Lógica Obrigatória
 
@@ -150,6 +155,20 @@ Preço de Venda (Cheio)          = 100%
 ## Geracao de PDF
 
 - Usa `html2canvas` (scale: 2, allowTaint: true) + `jsPDF`
+
+## ⚡ REGRA PERMANENTE — Banco de Dados (Supabase)
+
+> Qualquer nova ferramenta ou funcionalidade criada para a LumenGrid
+> **DEVE ler e escrever no PostgreSQL (Supabase)**. O banco é o centro do ecossistema.
+
+- Supabase URL/Key: configurados no topo de `admin.html` (`LG_SUPABASE_URL`, `LG_SUPABASE_KEY`)
+- Schema completo: `migration/schema.sql` (23 tabelas + 3 views + RLS)
+- Script de migração: `migration/import-sheets.js` (Google Sheets → Supabase)
+- Script de validação: `migration/validate.js` (compara contagens Sheet vs banco)
+- Painel admin: `admin.html` (busca universal + CRUD de kits)
+- Kits públicos (anon read): `kit_pricing_ongrid` e `kit_pricing_hybrid` têm RLS aberto para SELECT
+- **Fase 3**: cada HTML recebe integração Supabase COM fallback para .gs (sem romper o que existe)
+- **Fases 1-2 concluídas**: arquivos existentes NÃO foram alterados (exceto portal.html — link adicionado)
 
 ## Design
 
