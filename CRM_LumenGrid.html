@@ -789,6 +789,10 @@ tbody tr td:first-child{font-weight:700}
       <div class="lg-avatar av-a">A</div>
       <div class="lg-uname">Ana</div>
     </div>
+    <div class="lg-user" onclick="selectUser('Bruno')">
+      <div class="lg-avatar" style="background:linear-gradient(135deg,#FCD34D,#D97706)">B</div>
+      <div class="lg-uname">Bruno</div>
+    </div>
   </div>
   <!-- Painel de senha -->
   <div id="pw-area" style="display:none;flex-direction:column;align-items:center;gap:14px;min-width:280px">
@@ -1384,8 +1388,9 @@ const USER_GRADIENTS = {
   'Kelly':'linear-gradient(135deg,#60A5FA,#2563EB)',
   'Hingrid':'linear-gradient(135deg,#A78BFA,#7C3AED)',
   'Ana':'linear-gradient(135deg,#F9A8D4,#EC4899)',
+  'Bruno':'linear-gradient(135deg,#FCD34D,#D97706)',
 };
-const USER_INITIALS = {'Comercial Lumen':'C','Lucas':'L','Kelly':'K','Hingrid':'H','Ana':'A'};
+const USER_INITIALS = {'Comercial Lumen':'C','Lucas':'L','Kelly':'K','Hingrid':'H','Ana':'A','Bruno':'B'};
 
 let currentUser = null;
 let kanbanFilter = 'all';
