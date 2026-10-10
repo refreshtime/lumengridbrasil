@@ -709,9 +709,9 @@ const KIT_BATS=[
 function _findBaseKitHi(ki,ci){
   const kit=KITS_DATA[ki];const conf=kit.configs[ci];
   const nbat=conf.nbat;
-  const modKey=kit.modVal.toLowerCase().includes('jinko')?'Jinko':'Leapton';
-  const isSofar=kit.invVal.toLowerCase().includes('sofar');
-  const invSearch=(isSofar?'Sofar ':'GoodWe ')+kit.invPwr+'kW';
+  const mv=kit.modVal.toLowerCase();
+  const modKey=mv.includes('jinko')?'Jinko':mv.includes('dmegc')?'DMEGC':'Leapton';
+  const invSearch='GoodWe '+kit.invPwr+'kW';
   return KITS_HIBRIDOS.find(k=>k.bats===nbat&&k.mod.includes(modKey)&&k.inv.includes(invSearch))||null;
 }
 function dynKitPrecos(ki,ci,pl){
@@ -729,7 +729,7 @@ function dynKitPrecos(ki,ci,pl){
   }
   // Interpola custo de equip por placa a partir do kit base
   const wpUnit=getModWpHi(baseKh.mod);
-  const plDelta=wpUnit===590?560:wpUnit===575?490:660;
+  const plDelta=wpUnit<=600?560:wpUnit<=625?600:660;
   const delta=pl-baseKh.placas;
   const synKit={...baseKh,placas:pl,equip:baseKh.equip+delta*plDelta};
   return calcHibridoKit(synKit);
@@ -796,75 +796,58 @@ function renderKitPreview(ki,ci,pl){
   $('kitPreviewCard').style.display='block';
 }
 
-// ── KITS HÍBRIDOS — dados e fórmulas (sincronizado com precificacao_kits.html) ──
+// ── KITS HÍBRIDOS — dados (sincronizado com precificacao_kits.html) ──
+// Compatibilidade baterias: BT (Lynx A 5kWh, Unipower 5.1kWh) = monofásico/bifásico
+//                           AT (Lynx F 3.2kWh) = trifásico (GW12kW+) OBRIGATÓRIO
 const KITS_HIBRIDOS_FALLBACK=[
-  {id:'GW35-6J', placas:6, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:13873},
-  {id:'GW35-7J', placas:7, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:14533},
-  {id:'GW35-8J', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:15193},
-  {id:'GW35-8A', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'Astron 575W', bats:1,batMod:'Lynx A (GoodWe)',equip:14334},
-  {id:'GW5-7J',  placas:7, inv:'GoodWe 5kW Híbrido',  mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:17252},
-  {id:'GW5-8J',  placas:8, inv:'GoodWe 5kW Híbrido',  mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:17912},
-  {id:'GW5-9J',  placas:9, inv:'GoodWe 5kW Híbrido',  mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:18572},
-  {id:'GW5-10J', placas:10,inv:'GoodWe 5kW Híbrido',  mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:19232},
-  {id:'GW5-11J', placas:11,inv:'GoodWe 5kW Híbrido',  mod:'Jinko 620W',  bats:1,batMod:'Lynx A (GoodWe)',equip:19892},
-  {id:'GW75-9J575-LX1',placas:9,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 575W', bats:1,batMod:'Lynx A (GoodWe)',equip:19900},
-  {id:'GW75-9J620-LX1',placas:9,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W', bats:1,batMod:'Lynx A (GoodWe)',equip:20353},
-  {id:'GW75-9L-1', placas:9, inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:18149},
-  {id:'GW75-9J-1', placas:9, inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:19049},
-  {id:'GW75-10L-1',placas:10,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:18709},
-  {id:'GW75-10J-1',placas:10,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:19709},
-  {id:'GW75-11L-1',placas:11,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:19269},
-  {id:'GW75-11J-1',placas:11,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:20369},
-  {id:'GW75-12L-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:19829},
-  {id:'GW75-12J-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:21029},
-  {id:'GW75-13L-1',placas:13,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:20389},
-  {id:'GW75-13J-1',placas:13,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:21689},
-  {id:'GW75-14L-1',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:20949},
-  {id:'GW75-14J-1',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:22349},
-  {id:'GW75-15L-1',placas:15,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:21509},
-  {id:'GW75-15J-1',placas:15,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:23009},
-  {id:'GW75-16L-1',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:1,batMod:'Unipower',equip:22069},
-  {id:'GW75-16J-1',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Unipower',equip:23669},
-  {id:'GW75-9L-2', placas:9, inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:2,batMod:'Unipower',equip:22457},
-  {id:'GW75-9J-2', placas:9, inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:2,batMod:'Unipower',equip:23357},
-  {id:'GW75-16L-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:2,batMod:'Unipower',equip:26377},
-  {id:'GW75-16J-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:2,batMod:'Unipower',equip:27977},
-  {id:'GW75-9L-3', placas:9, inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 590W',bats:3,batMod:'Unipower',equip:26765},
-  {id:'GW75-9J-3', placas:9, inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:3,batMod:'Unipower',equip:27665},
-  // ── GoodWe 7.5kW Híbrido — DMEGC 625W — dados reais Out/2026 ────────────
-  {id:'GW75-12D-0', placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',bats:0,batMod:'Sem bateria',equip:16932},
-  // ── GoodWe 10kW Híbrido — DMEGC 625W + Lynx 5kWh — REAL Out/2026 ───────
-  {id:'GW10-18D-1', placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',bats:1,batMod:'Lynx 5kWh (GoodWe)',equip:31788},
-  // ── Sofar 7.5kW Híbrido — ⚠ NÃO PRIORIZAR (equip +R$2k sobre cotação anterior) ─
-  {id:'SF75-9L-1',  placas:9,  inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:19579},
-  {id:'SF75-9J-1',  placas:9,  inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:20479},
-  {id:'SF75-10L-1', placas:10, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20139},
-  {id:'SF75-10J-1', placas:10, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21139},
-  {id:'SF75-11L-1', placas:11, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:20699},
-  {id:'SF75-11J-1', placas:11, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:21799},
-  {id:'SF75-12L-1', placas:12, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:21259},
-  {id:'SF75-12J-1', placas:12, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:22459},
-  {id:'SF75-13L-1', placas:13, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:21819},
-  {id:'SF75-13J-1', placas:13, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:23119},
-  {id:'SF75-14L-1', placas:14, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:22379},
-  {id:'SF75-14J-1', placas:14, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:23779},
-  {id:'SF75-15L-1', placas:15, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:22939},
-  {id:'SF75-15J-1', placas:15, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:24439},
-  {id:'SF75-16L-1', placas:16, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:1, batMod:'Unipower', equip:23499},
-  {id:'SF75-16J-1', placas:16, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:1, batMod:'Unipower', equip:25099},
-  {id:'SF75-9L-2',  placas:9,  inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:23874},
-  {id:'SF75-9J-2',  placas:9,  inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:24774},
-  {id:'SF75-16L-2', placas:16, inv:'Sofar 7.5kW Híbrido', mod:'Leapton 590W', bats:2, batMod:'Unipower', equip:27794},
-  {id:'SF75-16J-2', placas:16, inv:'Sofar 7.5kW Híbrido', mod:'Jinko 620W',   bats:2, batMod:'Unipower', equip:29394},
+  // GoodWe 3.5kW Híbrido (Mono 127V) + Lynx A 5kWh BT
+  {id:'GW35-7L-1', placas:7, inv:'GoodWe 3.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:16242},
+  {id:'GW35-7D-1', placas:7, inv:'GoodWe 3.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:16547},
+  {id:'GW35-7J-1', placas:7, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:17318},
+  {id:'GW35-8L-1', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:16900},
+  {id:'GW35-8D-1', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:17200},
+  {id:'GW35-8J-1', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:18000},
+  // GoodWe 7.5kW Híbrido (Bifásico 220V) + Lynx A 5kWh BT — 1 bateria
+  {id:'GW75-12L-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:22500},
+  {id:'GW75-12D-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:23100},
+  {id:'GW75-12J-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:24500},
+  {id:'GW75-14L-1',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:24882},
+  {id:'GW75-14D-1',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:25492},
+  {id:'GW75-14J-1',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:27035},
+  {id:'GW75-16L-1',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:26694},
+  {id:'GW75-16D-1',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:27400},
+  {id:'GW75-16J-1',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:29000},
+  // GoodWe 7.5kW Híbrido — 2 baterias
+  {id:'GW75-14L-2',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:2,batMod:'Lynx A 5kWh BT',equip:30559},
+  {id:'GW75-14D-2',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:2,batMod:'Lynx A 5kWh BT',equip:31169},
+  {id:'GW75-14J-2',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:2,batMod:'Lynx A 5kWh BT',equip:32712},
+  {id:'GW75-16L-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:2,batMod:'Lynx A 5kWh BT',equip:32371},
+  {id:'GW75-16D-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:2,batMod:'Lynx A 5kWh BT',equip:33000},
+  {id:'GW75-16J-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:2,batMod:'Lynx A 5kWh BT',equip:34600},
+  // GoodWe 10kW Híbrido (Mono 220V) + Lynx A 5kWh BT
+  {id:'GW10-16L-1',placas:16,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:27500},
+  {id:'GW10-18L-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:29000},
+  {id:'GW10-18D-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:29700},
+  {id:'GW10-18J-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:31600},
+  {id:'GW10-18L-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:2,batMod:'Lynx A 5kWh BT',equip:35500},
+  {id:'GW10-18D-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',  bats:2,batMod:'Lynx A 5kWh BT',equip:36200},
+  {id:'GW10-18J-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Jinko 620W',  bats:2,batMod:'Lynx A 5kWh BT',equip:38100},
+  // GoodWe 12kW Híbrido (Trifásico 220V) + Lynx F 3.2kWh AT — OBRIGATÓRIO
+  {id:'GW12-20L-3',placas:20,inv:'GoodWe 12kW Híbrido', mod:'Leapton 600W',bats:3,batMod:'Lynx F 3.2kWh AT',equip:42843},
+  {id:'GW12-20J-3',placas:20,inv:'GoodWe 12kW Híbrido', mod:'Jinko 620W',  bats:3,batMod:'Lynx F 3.2kWh AT',equip:45918},
+  {id:'GW12-20D-3',placas:20,inv:'GoodWe 12kW Híbrido', mod:'DMEGC 625W',  bats:3,batMod:'Lynx F 3.2kWh AT',equip:44000},
+  {id:'GW12-24L-3',placas:24,inv:'GoodWe 12kW Híbrido', mod:'Leapton 600W',bats:3,batMod:'Lynx F 3.2kWh AT',equip:47500},
+  {id:'GW12-24J-3',placas:24,inv:'GoodWe 12kW Híbrido', mod:'Jinko 620W',  bats:3,batMod:'Lynx F 3.2kWh AT',equip:51000},
 ];
 let KITS_HIBRIDOS = KITS_HIBRIDOS_FALLBACK;
-function getModWpHi(mod){if(mod.includes('590'))return 590;if(mod.includes('575'))return 575;if(mod.includes('610'))return 610;return 620;}
+function getModWpHi(mod){const m=(mod||'').match(/(\d+)W/);return m?+m[1]:620;}
 function margemHi(bats){if(bats<=2)return 0.31;if(bats<=4)return 0.32;return 0.33;}
 function degInstalHi(placas,bats){return 4000+placas*350+bats*1200+400;}
 function calcHibridoKit(k){
   const wpUnit=getModWpHi(k.mod);
+  const kwp=k.placas*wpUnit/1000;
   const instalDEG=degInstalHi(k.placas,k.bats);
-  const homo=500;
+  const homo=kwp<=6?500:kwp<=9?800:kwp<=12?950:kwp<=20?1050:1450;
   const custoDireto=k.equip+instalDEG+homo;
   const margem=margemHi(k.bats);
   const minimo=Math.round(custoDireto/(1-margem)/10)*10;
