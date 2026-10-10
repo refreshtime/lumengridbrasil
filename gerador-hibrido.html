@@ -433,17 +433,6 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <div class="frow">
       <div><label class="fl">Valor Total (R$) <span id="projectValueTag" class="auto-tag">kit · Cheio · preço dinâmico</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
     </div>
-    <!-- Pagamento no Cartão -->
-    <div class="ftw" style="margin-bottom:6px">
-      <label class="ftog"><input type="checkbox" id="hasCartao" onchange="onCartaoToggle()"><span class="sl"></span></label>
-      <span class="ftl">Pagamento no Cartão</span>
-    </div>
-    <div id="cartaoFields" style="display:none;background:#fff8f5;border:1px solid rgba(232,100,26,.3);border-radius:6px;padding:10px 12px;margin-bottom:8px">
-      <div class="frow">
-        <div><label class="fl">Repasse (%)</label><input class="fi" type="number" id="cartaoRepasse" value="11" min="0" max="50" step="0.5" oninput="updateCartaoValue()" style="margin-bottom:0"></div>
-        <div><label class="fl">Valor Cartão (R$) <span class="auto-tag">auto</span></label><input class="fi" type="number" id="cartaoValue" readonly style="margin-bottom:0;background:#f0f2f5"></div>
-      </div>
-    </div>
     <div class="frow">
       <div>
         <label class="fl">Validade da Proposta</label>
@@ -560,24 +549,6 @@ function $(id){return document.getElementById(id);}
 function get(id){const el=$(id);return el?el.value.trim():'';}
 function getN(id){return parseFloat($(id)&&$(id).value)||0;}
 
-// ── CARTÃO ──
-function onCartaoToggle(){
-  const checked=$('hasCartao')&&$('hasCartao').checked;
-  if($('cartaoFields'))$('cartaoFields').style.display=checked?'block':'none';
-  if(checked)updateCartaoValue();
-}
-function updateCartaoValue(){
-  if(!$('hasCartao')||!$('hasCartao').checked)return;
-  const pv=getN('projectValue');
-  const rep=(getN('cartaoRepasse')||11)/100;
-  if(pv>0&&$('cartaoValue'))$('cartaoValue').value=Math.round(pv*(1+rep));
-}
-if(document){
-  document.addEventListener('DOMContentLoaded',function(){
-    const pv=$('projectValue');
-    if(pv)pv.addEventListener('input',updateCartaoValue);
-  });
-}
 function maskPhone(el){let v=el.value.replace(/\D/g,'').slice(0,11);if(v.length>7)v=v.slice(0,2)+' '+v.slice(2,7)+'-'+v.slice(7);else if(v.length>2)v=v.slice(0,2)+' '+v.slice(2);el.value=v;}
 function fmtBRL(v){if(!v&&v!==0)return'—';return'R$\u00a0'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
@@ -807,10 +778,12 @@ const KITS_HIBRIDOS_FALLBACK=[
   {id:'GW35-8L-1', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:16900},
   {id:'GW35-8D-1', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:17200},
   {id:'GW35-8J-1', placas:8, inv:'GoodWe 3.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:18000},
-  // GoodWe 7.5kW Híbrido (Bifásico 220V) + Lynx A 5kWh BT — 1 bateria
-  {id:'GW75-12L-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:22500},
-  {id:'GW75-12D-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:23100},
-  {id:'GW75-12J-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:24500},
+  // GoodWe 7.5kW Híbrido (Bifásico 220V) — sem bateria
+  {id:'GW75-12D-0',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:0,batMod:'Sem bateria',    equip:16932},  // cotação Out/2026 REAL
+  // GoodWe 7.5kW Híbrido — 1 bateria
+  {id:'GW75-12L-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:22060},
+  {id:'GW75-12D-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:22610},
+  {id:'GW75-12J-1',placas:12,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:23940},
   {id:'GW75-14L-1',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:24882},
   {id:'GW75-14D-1',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:25492},
   {id:'GW75-14J-1',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:27035},
@@ -822,16 +795,18 @@ const KITS_HIBRIDOS_FALLBACK=[
   {id:'GW75-14D-2',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:2,batMod:'Lynx A 5kWh BT',equip:31169},
   {id:'GW75-14J-2',placas:14,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:2,batMod:'Lynx A 5kWh BT',equip:32712},
   {id:'GW75-16L-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Leapton 600W',bats:2,batMod:'Lynx A 5kWh BT',equip:32371},
-  {id:'GW75-16D-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:2,batMod:'Lynx A 5kWh BT',equip:33000},
-  {id:'GW75-16J-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:2,batMod:'Lynx A 5kWh BT',equip:34600},
+  {id:'GW75-16D-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'DMEGC 625W',  bats:2,batMod:'Lynx A 5kWh BT',equip:32460},
+  {id:'GW75-16J-2',placas:16,inv:'GoodWe 7.5kW Híbrido',mod:'Jinko 620W',  bats:2,batMod:'Lynx A 5kWh BT',equip:32680},
   // GoodWe 10kW Híbrido (Mono 220V) + Lynx A 5kWh BT
-  {id:'GW10-16L-1',placas:16,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:27500},
-  {id:'GW10-18L-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:29000},
-  {id:'GW10-18D-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:29700},
-  {id:'GW10-18J-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:31600},
-  {id:'GW10-18L-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:2,batMod:'Lynx A 5kWh BT',equip:35500},
-  {id:'GW10-18D-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',  bats:2,batMod:'Lynx A 5kWh BT',equip:36200},
-  {id:'GW10-18J-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Jinko 620W',  bats:2,batMod:'Lynx A 5kWh BT',equip:38100},
+  {id:'GW10-16L-1',placas:16,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:29150},
+  {id:'GW10-16D-1',placas:16,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:29880},
+  {id:'GW10-16J-1',placas:16,inv:'GoodWe 10kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:31760},
+  {id:'GW10-18L-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:1,batMod:'Lynx A 5kWh BT',equip:30960},
+  {id:'GW10-18D-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',  bats:1,batMod:'Lynx A 5kWh BT',equip:31788},  // cotação Out/2026 REAL
+  {id:'GW10-18J-1',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Jinko 620W',  bats:1,batMod:'Lynx A 5kWh BT',equip:33790},
+  {id:'GW10-18L-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Leapton 600W',bats:2,batMod:'Lynx A 5kWh BT',equip:36640},
+  {id:'GW10-18D-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'DMEGC 625W',  bats:2,batMod:'Lynx A 5kWh BT',equip:37470},
+  {id:'GW10-18J-2',placas:18,inv:'GoodWe 10kW Híbrido', mod:'Jinko 620W',  bats:2,batMod:'Lynx A 5kWh BT',equip:39470},
   // GoodWe 12kW Híbrido (Trifásico 220V) + Lynx F 3.2kWh AT — OBRIGATÓRIO
   {id:'GW12-20L-3',placas:20,inv:'GoodWe 12kW Híbrido', mod:'Leapton 600W',bats:3,batMod:'Lynx F 3.2kWh AT',equip:42843},
   {id:'GW12-20J-3',placas:20,inv:'GoodWe 12kW Híbrido', mod:'Jinko 620W',  bats:3,batMod:'Lynx F 3.2kWh AT',equip:45918},
@@ -842,11 +817,15 @@ const KITS_HIBRIDOS_FALLBACK=[
 let KITS_HIBRIDOS = KITS_HIBRIDOS_FALLBACK;
 function getModWpHi(mod){const m=(mod||'').match(/(\d+)W/);return m?+m[1]:620;}
 function margemHi(bats){if(bats<=2)return 0.31;if(bats<=4)return 0.32;return 0.33;}
-function degInstalHi(placas,bats){return 4000+placas*350+bats*1200+400;}
+// Instalação híbrida: mesma faixa on-grid + R$2.000 (complexidade híbrido) + R$1.200/bateria
+function degInstalHi(placas,bats,kwp){
+  const rwp=kwp<=3?0.84:kwp<=6?0.60:kwp<=9?0.50:kwp<=12?0.44:kwp<=20?0.42:0.38;
+  return Math.round(kwp*1000*rwp)+2000+bats*1200;
+}
 function calcHibridoKit(k){
   const wpUnit=getModWpHi(k.mod);
   const kwp=k.placas*wpUnit/1000;
-  const instalDEG=degInstalHi(k.placas,k.bats);
+  const instalDEG=degInstalHi(k.placas,k.bats,kwp);
   const homo=kwp<=6?500:kwp<=9?800:kwp<=12?950:kwp<=20?1050:1450;
   const custoDireto=k.equip+instalDEG+homo;
   const margem=margemHi(k.bats);
@@ -1590,7 +1569,10 @@ function generateProposal(criarCard){
         <div class="inv-total" style="font-size:44px">${projectVal?fmtBRL(projectVal):'<span style="font-size:22px;color:var(--lmuted)">A consultar</span>'}</div>
         <div class="inv-sub">${instType} &middot; ${kVp?kVp.toFixed(2)+' kVp':'—'}${batKwh?' + '+batKwh+' kWh':''} &middot; V\u00e1lida at\u00e9 ${validUntil}</div>
       </div>
-      <div style="font-size:9px;color:var(--lmuted);font-style:italic;margin-bottom:14px;padding-left:2px">* Valor referente ao pagamento \u00e0 vista (PIX / Boleto).</div>
+      <div style="background:rgba(232,100,26,.07);border:1.5px solid rgba(232,100,26,.35);border-radius:8px;padding:11px 14px;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:900;color:var(--or);margin-bottom:3px">★ VALOR À VISTA — PIX / Boleto</div>
+        <div style="font-size:9.5px;color:var(--ltext);line-height:1.5">Pagamento no cartão de crédito necessita simulação específica conforme número de parcelas e bandeira. Solicite ao seu consultor.</div>
+      </div>
       ${hasWallbox?`<div style="background:rgba(232,100,26,.06);border:1px solid rgba(232,100,26,.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--lmuted)">
         <div style="font-weight:800;color:var(--ltext);margin-bottom:4px">&#9889; Carregador Veicular (Wallbox)</div>
         <div>${wallboxModel?wallboxModel+' &mdash; ':''}<span style="font-weight:700;color:var(--ltext)">${wallboxPower}</span></div>
