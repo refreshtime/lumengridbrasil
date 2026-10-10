@@ -894,7 +894,10 @@ function applyKit(ki,ci,nivel){
   f=false;for(let i=0;i<modSel.options.length;i++){if(modSel.options[i].value===kit.modVal){modSel.selectedIndex=i;f=true;break;}}
   if(!f)modSel.value='custom';
   $('modModel').value=kit.modVal;$('modModel').style.display='none';$('modPower').value=kit.modPwr;
-  const qty=conf.qty||kit.baseQty||9;$('modQty').value=qty;
+  // Preserva qtd de placas atual se o mesmo kit já estiver ativo (ex: mudança de nível Cheio→Mínimo)
+  const baseQtyKit=conf.qty||kit.baseQty||9;
+  const qty=(kitAtivo&&kitAtual&&kitAtual.ki===ki&&getN('modQty')>0)?getN('modQty'):baseQtyKit;
+  $('modQty').value=qty;
   // Bateria
   const batSel=$('batModelSel');
   f=false;for(let i=0;i<batSel.options.length;i++){if(batSel.options[i].value===kit.batVal){batSel.selectedIndex=i;f=true;break;}}
