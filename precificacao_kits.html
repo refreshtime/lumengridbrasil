@@ -1407,10 +1407,13 @@ function margemHi(bats) {
   return 0.33;
 }
 
-// Instalação híbrida: mesma faixa on-grid + R$2.000 (complexidade híbrido) + R$1.200/bateria
+// Instalação híbrida: sem bateria = on-grid + R$2.000 | com bateria = base fixa + por placa + por bateria
 function degInstalHi(placas, bats, kwp) {
-  const rwp = kwp<=3?0.84:kwp<=6?0.60:kwp<=9?0.50:kwp<=12?0.44:kwp<=20?0.42:0.38;
-  return Math.round(kwp * 1000 * rwp) + 2000 + bats * 1200;
+  if(bats === 0){
+    const rwp = kwp<=3?0.84:kwp<=6?0.60:kwp<=9?0.50:kwp<=12?0.44:kwp<=20?0.42:0.38;
+    return Math.round(kwp * 1000 * rwp) + 2000;
+  }
+  return 4400 + placas * 350 + bats * 1200;
 }
 
 // Menor configuração S+ que atende ao número de inversores e baterias
