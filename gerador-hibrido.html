@@ -667,6 +667,7 @@ function onBatModelChange(sel){
 // ── KITS PRÉ-DEFINIDOS ──
 let kitAtivo=false;
 let kitAtual=null;
+let currentNivelHi='cheio'; // nível de preço ativo: 'cheio' | 'minimo' | 'bomba'
 
 // Baterias disponíveis por inversor (ki → [{nbat, ci, label}])
 const KIT_BATS=[
@@ -676,34 +677,51 @@ const KIT_BATS=[
   [{nbat:1,ci:0,label:'1 Bateria · 5,1 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10,2 kWh'}], // Sofar — NÃO PRIORIZAR
 ];
 
-// Calcula preços Cheio/Mínimo/Bomba para qualquer qtd de placas usando KITS_HIBRIDOS
-function _findBaseKitHi(ki,ci){
-  const kit=KITS_DATA[ki];const conf=kit.configs[ci];
-  const nbat=conf.nbat;
-  const mv=kit.modVal.toLowerCase();
-  const modKey=mv.includes('jinko')?'Jinko':mv.includes('dmegc')?'DMEGC':'Leapton';
-  const invSearch='GoodWe '+kit.invPwr+'kW';
-  return KITS_HIBRIDOS.find(k=>k.bats===nbat&&k.mod.includes(modKey)&&k.inv.includes(invSearch))||null;
+// Deriva chave de marca do módulo selecionado (Jinko / DMEGC / Leapton)
+function getModKeyHi(){
+  const v=($('modModelSel')?.value||'').toLowerCase();
+  if(v.includes('jinko'))return'Jinko';
+  if(v.includes('dmegc'))return'DMEGC';
+  if(v.includes('osda'))return'Jinko';   // OSDA → preço próximo ao Jinko
+  return'Leapton';                        // Leapton 600/630W, Ronma → base Leapton
 }
-function dynKitPrecos(ki,ci,pl){
-  const kit=KITS_DATA[ki];const conf=kit.configs[ci];
-  const nbat=conf.nbat;
-  const baseKh=_findBaseKitHi(ki,ci);
-  if(!baseKh){
-    // Fallback para kits fora da tabela (ex: GW12K)
-    const basePl=conf.qty||kit.baseQty||9;const delta=pl-basePl;
-    const margem=margemHi(nbat);
-    const minDelta=Math.round(1010/(1-margem)/10)*10;
-    const bomDelta=Math.round(1010/0.76/10)*10;
-    const cheiDelta=Math.round(minDelta/0.94/10)*10;
-    return{cheio:conf.preco+delta*cheiDelta,minimo:conf.precoMin+delta*minDelta,bomba:conf.precoBomba+delta*bomDelta};
+
+// Busca preço em KITS_HIBRIDOS por (placas, modKey, invKw, bats) com interpolação linear
+// Leva em conta marca do módulo: Jinko > DMEGC > Leapton (reflete custo real de equip)
+function getKitPrecosHi(placas,modKey,invKw,bats){
+  // Filtra por marca + qtd baterias; aceita qualquer inversor (encontra o mais próximo depois)
+  let pool=KITS_HIBRIDOS.filter(k=>k.bats===bats&&k.mod.includes(modKey));
+  if(!pool.length){
+    // Marca sem entrada na tabela → fallback para Leapton
+    pool=KITS_HIBRIDOS.filter(k=>k.bats===bats&&k.mod.includes('Leapton'));
   }
-  // Interpola custo de equip por placa a partir do kit base
-  const wpUnit=getModWpHi(baseKh.mod);
-  const plDelta=wpUnit<=600?560:wpUnit<=625?600:660;
-  const delta=pl-baseKh.placas;
-  const synKit={...baseKh,placas:pl,equip:baseKh.equip+delta*plDelta};
-  return calcHibridoKit(synKit);
+  if(!pool.length)return null;
+
+  // Seleciona inversor mais próximo disponível na tabela
+  const invKws=[...new Set(pool.map(k=>{const m=k.inv.match(/(\d+\.?\d*)kW/);return m?+m[1]:0;}))];
+  const nearKw=invKws.reduce((a,b)=>Math.abs(a-invKw)<=Math.abs(b-invKw)?a:b);
+  const candidates=pool.filter(k=>k.inv.includes(nearKw+'kW'));
+  if(!candidates.length)return null;
+
+  const sorted=[...candidates].sort((a,b)=>a.placas-b.placas);
+  const exact=sorted.find(k=>k.placas===placas);
+  if(exact)return calcHibridoKit(exact);
+
+  const below=sorted.filter(k=>k.placas<placas).pop();
+  const above=sorted.find(k=>k.placas>placas);
+  const wpUnit=getModWpHi(candidates[0].mod);
+  const perPlate=wpUnit<=600?560:wpUnit<=625?600:660;
+
+  if(below&&above){
+    // Interpolação linear entre os dois vizinhos
+    const ratio=(placas-below.placas)/(above.placas-below.placas);
+    const equip=Math.round(below.equip+ratio*(above.equip-below.equip));
+    return calcHibridoKit({...below,placas,equip});
+  }else if(below){
+    return calcHibridoKit({...below,placas,equip:Math.round(below.equip+(placas-below.placas)*perPlate)});
+  }else{
+    return calcHibridoKit({...above,placas,equip:Math.round(above.equip+(placas-above.placas)*perPlate)});
+  }
 }
 
 function onKitInvChange(){
@@ -754,10 +772,13 @@ function onKitBatChange(){
 
 function renderKitPreview(ki,ci,pl){
   const kit=KITS_DATA[ki];const conf=kit.configs[ci];
-  const precos=dynKitPrecos(ki,ci,pl);
+  const mv=kit.modVal.toLowerCase();
+  const modKeyPv=mv.includes('jinko')?'Jinko':mv.includes('dmegc')?'DMEGC':'Leapton';
+  const precos=getKitPrecosHi(pl,modKeyPv,kit.invPwr,conf.nbat);
+  if(!precos)return;
   const fmt=v=>'R$\u00a0'+Math.round(v).toLocaleString('pt-BR');
   const invName=['GoodWe GW5K','GoodWe GW7.5K','GoodWe GW12K Tri','⚠ Sofar HYD-7.5K'][ki]||'Inversor';
-  const modLabel=kit.modPwr+'W '+(kit.modVal.includes('JINKO')||kit.modVal.includes('Jinko')?'Jinko':kit.modVal.includes('Leapton')?'Leapton':'módulo');
+  const modLabel=kit.modPwr+'W '+(mv.includes('jinko')?'Jinko':mv.includes('leapton')?'Leapton':mv.includes('dmegc')?'DMEGC':'módulo');
   $('kitPreviewInfo').innerHTML=`<strong>${invName}</strong> &nbsp;·&nbsp; ${pl} pl. ${modLabel} &nbsp;·&nbsp; ${conf.nbat} bat${conf.nbat>1?'s':''} · ${(kit.batKwh*conf.nbat).toFixed(0)} kWh &nbsp;·&nbsp; <strong>${(pl*kit.modPwr/1000).toFixed(2)} kVp</strong>`;
   $('kitPreviewPrices').innerHTML=`
     <button class="btn bp" style="flex:1;font-size:9px;padding:6px 4px;text-align:center" onclick="applyKit(${ki},${ci},'cheio')">Cheio<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.cheio)}</span></button>
@@ -905,16 +926,8 @@ function applyKit(ki,ci,nivel){
   $('batModel').value=kit.batVal;$('batModel').style.display='none';
   $('batQty').value=conf.nbat;$('batteryKwh').value=(kit.batKwh*conf.nbat).toFixed(1);
   $('isencaoICMS').checked=true;
-  $('totalPower').value=(qty*kit.modPwr/1000).toFixed(2)+' kVp';
-  if(!$('monthlyGen').dataset.manual)$('monthlyGen').value=Math.round(qty*65);
-  // Define preço via dynKitPrecos (respeita qtd de placas atual)
-  const precos=dynKitPrecos(ki,ci,qty);
-  const precoFinal=nivel==='bomba'?precos.bomba:nivel==='minimo'?precos.minimo:precos.cheio;
-  $('projectValue').value=precoFinal;
-  const tag=$('projectValueTag');
-  const nLabel=nivel==='bomba'?'BOMBA':nivel==='minimo'?'Mínimo':'Cheio';
-  if(tag)tag.textContent='kit · '+nLabel+' · preço dinâmico';
-  updateNivelIndicator({preco:precos.cheio,precoMin:precos.minimo,precoBomba:precos.bomba},nivel);
+  currentNivelHi=nivel;
+  autoCalcHibrido();
   recalcAutonomy();
 }
 
@@ -946,35 +959,18 @@ function updateNivelIndicator(conf,nivel){
 }
 
 function changeKitNivel(nivel){
-  if(!kitAtual)return;
-  applyKit(kitAtual.ki,kitAtual.ci,nivel);
+  if(nivel==='bomba'){
+    const ok=confirm('⚠ ATENÇÃO: PREÇO BOMBA SOMENTE DEPOIS DE VISITA TÉCNICA E VALIDAÇÃO\n\nEsse preço só pode ser utilizado após visita técnica realizada e autorização da gestão.\n\nDeseja continuar com o Preço Bomba?');
+    if(!ok)return;
+  }
+  currentNivelHi=nivel;
+  autoCalcHibrido();
 }
 
 function onBatQtyChange(){
   const sel=$('batModelSel');
   const kwh=sel&&sel.options[sel.selectedIndex]&&sel.options[sel.selectedIndex].dataset.kwh;
   if(kwh){const qty=parseInt($('batQty').value)||1;$('batteryKwh').value=(parseFloat(kwh)*qty).toFixed(1);recalcAutonomy();}
-  if(kitAtivo&&kitAtual){
-    const nbat=Math.max(1,getN('batQty')||1);
-    const ci=kitAtual.kit.configs.findIndex(c=>c.nbat===nbat);
-    const conf=ci>=0?kitAtual.kit.configs[ci]:null;
-    if(conf){
-      const nivel=kitAtual.nivel||'cheio';
-      kitAtual={kit:kitAtual.kit,conf,nivel,ki:kitAtual.ki,ci};
-      if(conf.qty)$('modQty').value=conf.qty;
-      $('batteryKwh').value=(kitAtual.kit.batKwh*conf.nbat).toFixed(1);
-      const pl=Math.max(1,getN('modQty')||conf.qty||kitAtual.kit.baseQty||9);
-      const precos=dynKitPrecos(kitAtual.ki,ci,pl);
-      const precoFinal=nivel==='bomba'?precos.bomba:nivel==='minimo'?precos.minimo:precos.cheio;
-      $('projectValue').value=precoFinal;
-      const tag=$('projectValueTag');
-      const nLabel=nivel==='bomba'?'BOMBA':nivel==='minimo'?'Mínimo':'Cheio';
-      if(tag)tag.textContent='kit · '+nLabel+' · preço dinâmico';
-      updateNivelIndicator({preco:precos.cheio,precoMin:precos.minimo,precoBomba:precos.bomba},nivel);
-      renderKitPreview(kitAtual.ki,ci,pl);
-      recalcAutonomy();return;
-    }else{kitAtivo=false;const el=$('kitNivelStrip');if(el)el.style.display='none';}
-  }
   autoCalcHibrido();
 }
 
@@ -1001,26 +997,29 @@ function calcOverload(){
 }
 function autoCalcHibrido(){
   const qty=getN('modQty'),pwr=getN('modPower');
-  const precoKvp=Math.max(PRECO_KVP_MIN,getN('precoKvp')||5000);
   const batQtyVal=Math.max(1,getN('batQty')||1);
-  const tag=$('projectValueTag');
-  if(tag&&!kitAtivo)tag.textContent='mín R$'+PRECO_KVP_MIN.toLocaleString('pt-BR')+'/kVp';
   // ICMS: garantir mínimo 5 placas/bateria
   if($('isencaoICMS')&&$('isencaoICMS').checked){
     const minPlacas=batQtyVal*5;
-    if(qty>0&&qty<minPlacas){$('modQty').value=minPlacas;}
+    if(qty>0&&qty<minPlacas)$('modQty').value=minPlacas;
   }
   const qtyFinal=getN('modQty');
-  if(qtyFinal>0&&pwr>0){$('totalPower').value=(qtyFinal*pwr/1000).toFixed(2)+' kVp';}else{$('totalPower').value='';}
+  if(qtyFinal>0&&pwr>0){$('totalPower').value=(qtyFinal*pwr/1000).toFixed(2)+' kVp';}
+  else{$('totalPower').value='';}
   const genEl=$('monthlyGen');
-  if(!genEl.dataset.manual&&qtyFinal>0){genEl.value=Math.round(qtyFinal*65);}
-  if(!kitAtivo){
-    const projEl=$('projectValue');
-    const extraBat=(batQtyVal-1)*10000;
-    if(qtyFinal>0&&pwr>0){
-      const kVp=qtyFinal*pwr/1000;
-      // Mínimo dinâmico: kVp × precoKvp — SEMPRE sobe com mais placas
-      projEl.value=Math.round(kVp*precoKvp+extraBat);
+  if(!genEl.dataset.manual&&qtyFinal>0)genEl.value=Math.round(qtyFinal*65);
+  // Preço: sempre via tabela de kits (marca + placas + inversor + baterias)
+  const invKw=getN('invPower');
+  if(qtyFinal>0&&invKw>0){
+    const modKey=getModKeyHi();
+    const precos=getKitPrecosHi(qtyFinal,modKey,invKw,batQtyVal);
+    if(precos){
+      const nivel=currentNivelHi;
+      $('projectValue').value=Math.round(nivel==='bomba'?precos.bomba:nivel==='minimo'?precos.minimo:precos.cheio);
+      const tag=$('projectValueTag');
+      const nLabel=nivel==='bomba'?'BOMBA':nivel==='minimo'?'Mínimo':'Cheio';
+      if(tag)tag.textContent='kit · '+nLabel+' · '+modKey;
+      updateNivelIndicator({preco:precos.cheio,precoMin:precos.minimo,precoBomba:precos.bomba},nivel);
     }
   }
   calcOverload();
@@ -1835,22 +1834,7 @@ function printPDF(){
 }
 
 // ── AUTO CALC ──
-function onModQtyChange(){
-  if(kitAtivo&&kitAtual){
-    autoCalcHibrido();
-    const pl=Math.max(1,getN('modQty')||1);
-    const precos=dynKitPrecos(kitAtual.ki,kitAtual.ci,pl);
-    const nivel=kitAtual.nivel||'cheio';
-    const precoFinal=nivel==='bomba'?precos.bomba:nivel==='minimo'?precos.minimo:precos.cheio;
-    $('projectValue').value=precoFinal;
-    const tag=$('projectValueTag');
-    const nLabel=nivel==='bomba'?'BOMBA':nivel==='minimo'?'Mínimo':'Cheio';
-    if(tag)tag.textContent='kit · '+nLabel+' · preço dinâmico';
-    updateNivelIndicator({preco:precos.cheio,precoMin:precos.minimo,precoBomba:precos.bomba},nivel);
-    // Atualiza preview card com novo preço
-    renderKitPreview(kitAtual.ki,kitAtual.ci,pl);
-  }else{kitAtivo=false;autoCalcHibrido();}
-}
+function onModQtyChange(){ autoCalcHibrido(); }
 $('modQty').addEventListener('input',onModQtyChange);
 $('modQty').addEventListener('change',onModQtyChange);
 $('modPower').addEventListener('input',function(){kitAtivo=false;autoCalcHibrido();});
