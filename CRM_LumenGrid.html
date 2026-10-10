@@ -1378,10 +1378,10 @@ const SERVICE_SUBTASKS = {
   3: ['Relatório de serviço gerado','Pagamento recebido','NF emitida','Registro atualizado no sistema'],
 };
 
-const USERS = ['Comercial Lumen','Lucas','Kelly','Hingrid','Ana'];
+const USERS = ['Comercial Lumen','Lucas','Kelly','Hingrid','Ana','Bruno'];
 const ADMINS = ['Comercial Lumen'];
-const PASSWORDS = {'Comercial Lumen':'Lumen@2026','Lucas':'Lucas@2026','Kelly':'Kelly@2026','Hingrid':'Lumen@2026','Ana':'Ana@2026'};
-const USER_COLORS = {'Comercial Lumen':'#F26522','Lucas':'#0D9488','Kelly':'#3B82F6','Hingrid':'#8B5CF6','Ana':'#EC4899'};
+const PASSWORDS = {'Comercial Lumen':'Lumen@2026','Lucas':'Lucas@2026','Kelly':'Kelly@2026','Hingrid':'Lumen@2026','Ana':'Ana@2026','Bruno':'BRUNOCOMERCIAL2026'};
+const USER_COLORS = {'Comercial Lumen':'#F26522','Lucas':'#0D9488','Kelly':'#3B82F6','Hingrid':'#8B5CF6','Ana':'#EC4899','Bruno':'#D97706'};
 const USER_GRADIENTS = {
   'Comercial Lumen':'linear-gradient(135deg,#F47A3A,#C94E0F)',
   'Lucas':'linear-gradient(135deg,#34D399,#059669)',
@@ -1744,11 +1744,25 @@ function initApp() {
   if (isEmpty) {
     const overlay = document.getElementById('syncOverlay');
     if (overlay) overlay.style.display = 'flex';
-    loadFromSheets(false, 5).then(ok => {
-      if (overlay) overlay.style.display = 'none';
-      renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner();
-      if (!ok) toast('Não foi possível sincronizar com o servidor. Verifique a conexão e recarregue.', 'err');
-    });
+    function tentarSync() {
+      const msgEl = document.getElementById('syncOverlayMsg');
+      const retryEl = document.getElementById('syncOverlayRetry');
+      if (msgEl) msgEl.textContent = 'Sincronizando dados...';
+      if (retryEl) retryEl.style.display = 'none';
+      loadFromSheets(false, 5).then(ok => {
+        if (ok) {
+          if (overlay) overlay.style.display = 'none';
+          renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner();
+        } else {
+          if (msgEl) msgEl.textContent = 'Falha ao carregar dados do servidor.';
+          if (retryEl) {
+            retryEl.innerHTML = '<button onclick="tentarSync()" style="margin-top:8px;padding:10px 24px;background:#F26522;border:none;border-radius:8px;color:#111;font-size:12px;font-weight:800;cursor:pointer;letter-spacing:1px">TENTAR NOVAMENTE</button>';
+            retryEl.style.display = 'block';
+          }
+        }
+      });
+    }
+    tentarSync();
   } else {
     // Tem dados locais — renderiza já e sincroniza em segundo plano
     renderDashboard();
