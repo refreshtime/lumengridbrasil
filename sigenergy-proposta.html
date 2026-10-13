@@ -350,6 +350,36 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
 }
 
 /* ── RESPONSIVE 560px ── */
+/* ── CARGAS PERSONALIZADAS ── */
+.carga-tab{padding:11px 28px;border-radius:40px;font-size:12px;font-weight:700;letter-spacing:.4px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .25s;font-family:inherit;display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.carga-tab.active{background:var(--or);border-color:var(--or);color:#fff;box-shadow:0 6px 22px rgba(242,101,34,.3)}
+.carga-tab svg{flex-shrink:0}
+.carga-tab-wrap{display:flex;gap:8px;justify-content:center;margin-bottom:32px;flex-wrap:wrap}
+.carga-table{width:100%;border-collapse:collapse}
+.carga-table thead tr{border-bottom:2px solid var(--bor)}
+.carga-table th{padding:10px 14px;text-align:right;font-size:9px;font-weight:800;letter-spacing:2px;color:var(--or);text-transform:uppercase;background:rgba(242,101,34,.06);white-space:nowrap}
+.carga-table th:first-child{text-align:left}
+.carga-table td{padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;text-align:right;color:var(--muted)}
+.carga-table td:first-child{text-align:left;color:var(--text);font-weight:700}
+.carga-table td:last-child{color:var(--or);font-weight:800}
+.carga-table tbody tr:hover td{background:rgba(255,255,255,.015)}
+.carga-table tfoot td{padding:12px 14px;font-size:13px;font-weight:900;border-top:2px solid rgba(242,101,34,.35);border-bottom:none;background:rgba(242,101,34,.04)}
+.carga-table tfoot td:first-child{color:var(--text)}
+.carga-table tfoot td:last-child{color:var(--or);font-size:15px}
+.carga-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+.carga-sum-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 16px;text-align:center}
+.carga-sum-card.hi{border-color:var(--bor);background:rgba(242,101,34,.05)}
+.carga-sum-v{font-size:26px;font-weight:900;color:var(--or);line-height:1;letter-spacing:-.8px;margin-bottom:5px}
+.carga-sum-l{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text);text-transform:uppercase;margin-bottom:3px}
+.carga-sum-d{font-size:10px;color:var(--muted)}
+.carga-gen-bar{margin-top:20px;background:rgba(0,180,216,.06);border:1px solid rgba(0,180,216,.18);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.carga-gen-ico{width:40px;height:40px;border-radius:10px;background:rgba(0,180,216,.12);display:flex;align-items:center;justify-content:center;color:var(--sig);flex-shrink:0}
+.carga-gen-info{flex:1;min-width:0}
+.carga-gen-t{font-size:12px;font-weight:800;color:var(--text);margin-bottom:4px}
+.carga-gen-d{font-size:11px;color:var(--muted);line-height:1.55}
+.carga-progress{margin-top:10px;background:rgba(255,255,255,.07);border-radius:6px;height:8px;overflow:hidden;width:100%}
+.carga-progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--sig),var(--sig-l))}
+
 @media(max-width:560px){
   .cincos{grid-template-columns:1fr 1fr}
   .wgrid{grid-template-columns:1fr}
@@ -380,6 +410,8 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
   .qs-diff{grid-template-columns:1fr}
   .ev-cta-bar{padding:24px 20px}
   .ev-cta-inner{padding:22px 20px;gap:16px}
+  .carga-sum{grid-template-columns:1fr 1fr}
+  .carga-tab{padding:9px 16px;font-size:11px}
 }
 </style>
 </head>
@@ -1042,6 +1074,204 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
   </div>
 </section>
 
+<!-- ── CARGAS PERSONALIZADAS ── -->
+<section class="sec sec-mid" id="cargas">
+  <div class="sec-c rv">
+    <div class="eye">Consumo Real</div>
+    <h2 class="sh2">Cargas <span class="grad-or">Personalizadas.</span></h2>
+    <div class="rule"></div>
+    <p class="ssub">Levantamento dos equipamentos identificados na residência com estimativa de consumo e autonomia por cenário.</p>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto">
+    <div class="carga-tab-wrap rv">
+      <button class="carga-tab active" onclick="switchCarga('pleno',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Uso Pleno
+      </button>
+      <button class="carga-tab" onclick="switchCarga('basico',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+        Uso Básico · Bateria
+      </button>
+      <button class="carga-tab" onclick="switchCarga('painel',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        Uso Painel
+      </button>
+    </div>
+
+    <!-- PAINEL USO PLENO -->
+    <div id="carga-pleno" class="rv">
+      <div style="overflow-x:auto;border-radius:16px;border:1px solid var(--border)">
+        <table class="carga-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">Equipamento</th>
+              <th>Potência</th>
+              <th>Qtde</th>
+              <th>Horas/dia</th>
+              <th>kWh/dia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Geladeira</td><td>35 W</td><td>1</td><td>24</td><td>0,84</td></tr>
+            <tr><td>Freezer</td><td>55 W</td><td>1</td><td>24</td><td>1,32</td></tr>
+            <tr><td>Adega</td><td>65 W</td><td>1</td><td>24</td><td>1,56</td></tr>
+            <tr><td>Coifa</td><td>90 W</td><td>1</td><td>1</td><td>0,09</td></tr>
+            <tr><td>Fogão Indução</td><td>2.500 W</td><td>1</td><td>1</td><td>2,50</td></tr>
+            <tr><td>Forno</td><td>1.750 W</td><td>1</td><td>1</td><td>1,75</td></tr>
+            <tr><td>Micro-ondas</td><td>1.150 W</td><td>1</td><td>0,08</td><td>0,09</td></tr>
+            <tr><td>Filtro de Água</td><td>20 W</td><td>1</td><td>24</td><td>0,48</td></tr>
+            <tr><td>Lava e Seca</td><td>380 W</td><td>1</td><td>1</td><td>0,38</td></tr>
+            <tr><td>Lava Louças</td><td>1.000 W</td><td>1</td><td>1</td><td>1,00</td></tr>
+            <tr><td>Wi-Fi</td><td>15 W</td><td>1</td><td>24</td><td>0,36</td></tr>
+            <tr><td>Aquecedor a gás</td><td>50 W</td><td>2</td><td>0,5</td><td>0,05</td></tr>
+            <tr><td>Celulares</td><td>3 W</td><td>2</td><td>1</td><td>0,01</td></tr>
+            <tr><td>Notebook</td><td>70 W</td><td>2</td><td>8</td><td>1,12</td></tr>
+            <tr><td>TV</td><td>240 W</td><td>1</td><td>2</td><td>0,48</td></tr>
+            <tr><td>Tomadas</td><td>40 W</td><td>3</td><td>8</td><td>0,96</td></tr>
+            <tr><td>Ar-cond. 18.000 BTU</td><td>1.290 W</td><td>1</td><td>8</td><td>10,32</td></tr>
+            <tr><td>Ar-cond. 9.000 BTU</td><td>645 W</td><td>1</td><td>8</td><td>5,16</td></tr>
+            <tr><td>Outros equipamentos</td><td>100 W</td><td>4</td><td>1</td><td>0,40</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="4">Total estimado</td><td>28,87 kWh/dia</td></tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="carga-sum">
+        <div class="carga-sum-card hi">
+          <div class="carga-sum-v">28,87</div>
+          <div class="carga-sum-l">kWh/dia</div>
+          <div class="carga-sum-d">consumo total</div>
+        </div>
+        <div class="carga-sum-card">
+          <div class="carga-sum-v">~6,7h</div>
+          <div class="carga-sum-l">1 bateria</div>
+          <div class="carga-sum-d">8,1 kWh úteis</div>
+        </div>
+        <div class="carga-sum-card">
+          <div class="carga-sum-v">~13,5h</div>
+          <div class="carga-sum-l">2 baterias</div>
+          <div class="carga-sum-d">16,2 kWh úteis</div>
+        </div>
+      </div>
+      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Todos os equipamentos em uso simultâneo. Autonomia calculada com 90% DoD.</p>
+    </div>
+
+    <!-- PAINEL USO BÁSICO — BATERIA -->
+    <div id="carga-basico" style="display:none">
+      <div style="overflow-x:auto;border-radius:16px;border:1px solid var(--border)">
+        <table class="carga-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">Equipamento</th>
+              <th>Potência</th>
+              <th>Qtde</th>
+              <th>Horas/dia</th>
+              <th>kWh/dia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Geladeira</td><td>35 W</td><td>1</td><td>24</td><td>0,84</td></tr>
+            <tr><td>Freezer</td><td>55 W</td><td>1</td><td>24</td><td>1,32</td></tr>
+            <tr><td>Adega</td><td>65 W</td><td>1</td><td>24</td><td>1,56</td></tr>
+            <tr><td>Micro-ondas</td><td>1.150 W</td><td>1</td><td>0,08</td><td>0,09</td></tr>
+            <tr><td>Filtro de Água</td><td>20 W</td><td>1</td><td>24</td><td>0,48</td></tr>
+            <tr><td>Lava e Seca</td><td>380 W</td><td>1</td><td>1</td><td>0,38</td></tr>
+            <tr><td>Wi-Fi</td><td>15 W</td><td>1</td><td>24</td><td>0,36</td></tr>
+            <tr><td>Aquecedor a gás</td><td>50 W</td><td>2</td><td>0,5</td><td>0,05</td></tr>
+            <tr><td>Celulares</td><td>3 W</td><td>2</td><td>1</td><td>0,01</td></tr>
+            <tr><td>Notebook</td><td>70 W</td><td>2</td><td>8</td><td>1,12</td></tr>
+            <tr><td>TV</td><td>240 W</td><td>1</td><td>2</td><td>0,48</td></tr>
+            <tr><td>Tomadas</td><td>40 W</td><td>3</td><td>8</td><td>0,96</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="4">Total estimado</td><td>7,65 kWh/dia</td></tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="carga-sum">
+        <div class="carga-sum-card hi">
+          <div class="carga-sum-v">7,65</div>
+          <div class="carga-sum-l">kWh/dia</div>
+          <div class="carga-sum-d">consumo básico</div>
+        </div>
+        <div class="carga-sum-card">
+          <div class="carga-sum-v">~1d 1h</div>
+          <div class="carga-sum-l">1 bateria</div>
+          <div class="carga-sum-d">8,1 kWh úteis</div>
+        </div>
+        <div class="carga-sum-card">
+          <div class="carga-sum-v">~2d 3h</div>
+          <div class="carga-sum-l">2 baterias</div>
+          <div class="carga-sum-d">16,2 kWh úteis</div>
+        </div>
+      </div>
+      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Somente essenciais — sem climatização, fogão de indução ou eletrodomésticos de alta potência. Autonomia com 90% DoD.</p>
+    </div>
+
+    <!-- PAINEL USO PAINEL SOLAR -->
+    <div id="carga-painel" style="display:none">
+      <div style="overflow-x:auto;border-radius:16px;border:1px solid var(--border)">
+        <table class="carga-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">Equipamento</th>
+              <th>Potência</th>
+              <th>Qtde</th>
+              <th>Horas/dia</th>
+              <th>kWh/dia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Geladeira</td><td>35 W</td><td>1</td><td>24</td><td>0,84</td></tr>
+            <tr><td>Freezer</td><td>55 W</td><td>1</td><td>24</td><td>1,32</td></tr>
+            <tr><td>Adega</td><td>65 W</td><td>1</td><td>24</td><td>1,56</td></tr>
+            <tr><td>Filtro de Água</td><td>20 W</td><td>1</td><td>24</td><td>0,48</td></tr>
+            <tr><td>Wi-Fi</td><td>15 W</td><td>1</td><td>24</td><td>0,36</td></tr>
+            <tr><td>Aquecedor a gás</td><td>50 W</td><td>2</td><td>0,5</td><td>0,05</td></tr>
+            <tr><td>Celulares</td><td>3 W</td><td>2</td><td>1</td><td>0,01</td></tr>
+            <tr><td>Notebook</td><td>70 W</td><td>2</td><td>8</td><td>1,12</td></tr>
+            <tr><td>TV</td><td>240 W</td><td>1</td><td>2</td><td>0,48</td></tr>
+            <tr><td>Tomadas</td><td>40 W</td><td>3</td><td>8</td><td>0,96</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="4">Total estimado</td><td>7,18 kWh/dia</td></tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="carga-gen-bar">
+        <div class="carga-gen-ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </div>
+        <div class="carga-gen-info">
+          <div class="carga-gen-t">Geração: 2 painéis × 550 W × 4h/dia = 4,4 kWh/dia — cobertura de 61% do consumo básico</div>
+          <div class="carga-gen-d">Os painéis cobrem 61% do consumo diário. O déficit restante (2,78 kWh/dia) é suprido pela bateria, ampliando significativamente a autonomia.</div>
+          <div class="carga-progress"><div class="carga-progress-fill" style="width:61%"></div></div>
+        </div>
+      </div>
+      <div class="carga-sum">
+        <div class="carga-sum-card" style="border-color:rgba(0,180,216,.35);background:rgba(0,180,216,.05)">
+          <div class="carga-sum-v" style="color:var(--sig)">61%</div>
+          <div class="carga-sum-l">Cobertura Solar</div>
+          <div class="carga-sum-d">4,4 kWh gerados / dia</div>
+        </div>
+        <div class="carga-sum-card">
+          <div class="carga-sum-v">~2,9d</div>
+          <div class="carga-sum-l">1 bat + painel</div>
+          <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
+        </div>
+        <div class="carga-sum-card">
+          <div class="carga-sum-v">~5,8d</div>
+          <div class="carga-sum-l">2 bat + painel</div>
+          <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
+        </div>
+      </div>
+      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Geração estimada: 2 painéis 550 W × 4h sol pleno/dia. Autonomia da bateria calculada apenas sobre o déficit após cobertura solar, com 90% DoD.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ── 14. INVESTIMENTO ── -->
 <section class="sec sec-dark" id="investimento">
   <div class="sec-c rv">
@@ -1442,6 +1672,16 @@ document.querySelectorAll('.eq-hours-input').forEach(function (inp) {
 });
 
 calcAutonomia();
+
+// ── CARGAS PERSONALIZADAS ──
+function switchCarga(id, btn) {
+  document.querySelectorAll('.carga-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  ['pleno','basico','painel'].forEach(function(k){
+    var el = document.getElementById('carga-' + k);
+    if (el) el.style.display = k === id ? 'block' : 'none';
+  });
+}
 </script>
 <!-- Feito por Domani Consultoria -->
 </body>
