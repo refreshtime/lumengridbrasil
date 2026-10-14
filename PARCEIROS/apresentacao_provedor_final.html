@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Proposta de Parceria</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08080d;--surface:#12121c;--surface2:#1a1a28;
+  --border:rgba(255,255,255,.07);
+  --orange:#F26522;--orange2:#C94E0F;
+  --text:#FAFAFA;--muted:rgba(250,250,250,.50);--muted2:rgba(250,250,250,.22);
+  --green:#22C55E;
+}
+html,body{width:100%;height:100%;background:#000;font-family:'DM Sans',sans-serif;color:var(--text);overflow:hidden;}
+.deck{width:100vw;height:100vh;position:relative;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .40s ease;}
+.slide.active{opacity:1;pointer-events:all;}
+
+/* NAV */
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:99;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:all .25s;border:none;padding:0;}
+.dot.active{background:#F26522;width:22px;border-radius:4px;}
+.nav-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.50);font-size:16px;width:34px;height:34px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;}
+.nav-btn:hover{border-color:#F26522;color:#F26522;}
+.counter{position:fixed;top:22px;right:32px;z-index:99;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.20);letter-spacing:2px;}
+
+/* SHARED */
+.logo-block{display:flex;align-items:center;gap:10px;}
+.logo-icon{height:38px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(242,101,34,.80)) drop-shadow(0 0 5px rgba(242,101,34,.50));}
+.logo-text-wrap{display:flex;flex-direction:column;gap:2px;}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;line-height:1;}
+.logo-name .o{color:#F26522;}.logo-name .w{color:#FAFAFA;}
+.logo-sub{font-family:'DM Sans',sans-serif;font-weight:600;font-size:7px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.85);}
+.slide-header{display:flex;align-items:center;justify-content:space-between;padding:22px 72px 0;flex-shrink:0;}
+.slide-header-tag{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.18);}
+.slide-footer{text-align:center;padding:10px;flex-shrink:0;font-size:10px;color:rgba(255,255,255,.10);letter-spacing:1px;}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#F26522;margin-bottom:14px;opacity:.85;}
+.htitle{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:800;line-height:1.08;letter-spacing:-1px;color:#FAFAFA;}
+.htitle span{color:#F26522;}
+.hdivider{width:32px;height:3px;background:#F26522;border-radius:2px;margin:18px 0 22px;}
+
+/* =============================================
+   SLIDE 1 — CAPA
+   ============================================= */
+.s1-body{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px;text-align:center;
+  background:radial-gradient(ellipse 1000px 500px at 50% 55%,rgba(242,101,34,.08) 0%,transparent 70%),var(--bg);
+}
+.s1-tag{font-size:11px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:#F26522;margin-bottom:24px;opacity:.90;}
+.s1-title{font-family:'Space Grotesk',sans-serif;font-size:62px;font-weight:800;line-height:1.0;letter-spacing:-2px;color:#FAFAFA;margin-bottom:14px;}
+.s1-title span{color:#F26522;}
+.s1-sub{font-size:18px;color:rgba(250,250,250,.50);max-width:500px;line-height:1.6;margin-bottom:48px;}
+.s1-bar{width:44px;height:3px;background:#F26522;border-radius:2px;margin:0 auto 44px;}
+
+/* =============================================
+   SLIDE 2 — QUEM SOMOS
+   ============================================= */
+.s2-body{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.s2-left{display:flex;flex-direction:column;justify-content:center;padding:56px 48px 56px 72px;border-right:1px solid var(--border);}
+.s2-right{display:flex;flex-direction:column;justify-content:center;padding:56px 72px 56px 48px;gap:14px;}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--border);font-size:12px;font-weight:600;color:rgba(250,250,250,.65);}
+.pill.orange{border-color:rgba(242,101,34,.30);color:#F26522;background:rgba(242,101,34,.07);}
+.feature-row{display:flex;gap:14px;padding:16px 18px;border-radius:10px;background:var(--surface);border:1px solid var(--border);}
+.feature-row:hover{border-color:rgba(242,101,34,.25);}
+.feat-num{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;color:rgba(242,101,34,.20);flex-shrink:0;line-height:1;}
+.feat-body h4{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#FAFAFA;margin-bottom:3px;}
+.feat-body p{font-size:12px;color:var(--muted);line-height:1.45;}
+
+/* =============================================
+   SLIDE 3 — REGIOES
+   ============================================= */
+.s3-body{flex:1;display:flex;flex-direction:column;padding:24px 72px 16px;overflow:hidden;}
+.s3-intro{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-shrink:0;}
+.s3-intro-left .eyebrow{margin-bottom:6px;}
+.fid-badge{display:flex;align-items:center;gap:12px;background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.25);border-radius:10px;padding:10px 18px;}
+.fid-badge .fb-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.fid-badge .fb-val{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:#F26522;}
+
+.tier-section{display:flex;flex-direction:column;gap:10px;flex:1;}
+.tier-block{display:flex;flex-direction:column;gap:6px;}
+.tier-label{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);}
+.tier-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.region-card{
+  display:flex;flex-direction:column;gap:2px;
+  padding:8px 14px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:border-color .2s;min-width:140px;
+}
+.region-card:hover{border-color:rgba(242,101,34,.30);}
+.region-card.top{border-color:rgba(242,101,34,.20);background:linear-gradient(135deg,rgba(242,101,34,.05) 0%,var(--surface) 100%);}
+.region-state{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:rgba(250,250,250,.50);letter-spacing:.5px;}
+.region-dist{font-size:10px;color:var(--muted2);}
+.region-disc{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800;color:#F26522;line-height:1;}
+.region-fid{font-size:9px;font-weight:600;color:rgba(242,101,34,.55);letter-spacing:1px;}
+
+/* =============================================
+   SLIDE 4 — GANHOS
+   ============================================= */
+.s4-body{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.s4-left{display:flex;flex-direction:column;justify-content:center;padding:52px 48px 52px 72px;border-right:1px solid var(--border);}
+.s4-right{display:flex;flex-direction:column;justify-content:center;padding:52px 72px 52px 48px;gap:12px;}
+
+.scenario-row{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 18px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:border-color .2s;
+}
+.scenario-row:hover{border-color:rgba(242,101,34,.25);}
+.scenario-row.featured{border-color:rgba(242,101,34,.35);background:linear-gradient(135deg,rgba(242,101,34,.06) 0%,var(--surface) 80%);}
+.sc-tag{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+.sc-clients{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:rgba(250,250,250,.45);flex:1;}
+.sc-comm{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#FAFAFA;white-space:nowrap;}
+.sc-comm.accent{color:#F26522;}
+
+.ltv-card{
+  padding:18px 20px;border-radius:10px;
+  background:var(--surface);border:1px solid rgba(242,101,34,.30);
+  position:relative;overflow:hidden;margin-top:4px;
+}
+.ltv-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#C94E0F,#F26522);}
+.ltv-row{display:flex;justify-content:space-between;align-items:center;}
+.ltv-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(242,101,34,.70);}
+.ltv-val{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:#F26522;}
+.ltv-sub{font-size:11px;color:var(--muted2);margin-top:4px;}
+
+.comm-note{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);}
+.comm-note p{font-size:12px;color:rgba(34,197,94,.80);line-height:1.45;}
+
+/* =============================================
+   SLIDE 5 — ETAPAS
+   ============================================= */
+.s5-body{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.s5-col{display:flex;flex-direction:column;justify-content:center;padding:52px 56px;}
+.s5-col:first-child{border-right:1px solid var(--border);}
+.steps-list{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.step-item{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:16px 18px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+}
+.step-item:hover{border-color:rgba(242,101,34,.25);}
+.step-n{
+  width:30px;height:30px;border-radius:7px;flex-shrink:0;
+  background:rgba(242,101,34,.12);border:1px solid rgba(242,101,34,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:800;color:#F26522;
+}
+.step-body h4{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#FAFAFA;margin-bottom:3px;}
+.step-body p{font-size:12px;color:var(--muted);line-height:1.45;}
+.impl-tag{
+  display:inline-block;margin-top:18px;
+  font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(242,101,34,.60);padding:6px 12px;border-radius:5px;
+  border:1px solid rgba(242,101,34,.20);background:rgba(242,101,34,.05);
+}
+</style>
+</head>
+<body>
+
+<div class="counter" id="counter">01 / 05</div>
+<div class="deck">
+
+<!-- ===== SLIDE 1 — CAPA ===== -->
+<div class="slide active" data-index="0" style="background:var(--bg);">
+  <div class="slide-header">
+    <div class="logo-block">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+      <div class="logo-text-wrap">
+        <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+        <div class="logo-sub">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="slide-header-tag">Proposta de Parceria · 2026</div>
+  </div>
+  <div class="s1-body">
+    <div class="s1-tag">Parceria B2B — Provedores de Internet</div>
+    <h1 class="s1-title">Receita recorrente<br>na sua <span>base de clientes.</span></h1>
+    <p class="s1-sub">Sem contratar, sem investir, sem risco operacional. Sua base vira ativo financeiro.</p>
+    <div class="s1-bar"></div>
+    <div class="logo-block" style="justify-content:center;">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon" style="height:30px;">
+      <div class="logo-text-wrap">
+        <div class="logo-name" style="font-size:15px;"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+        <div class="logo-sub">Energia Inteligente</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Feito por Domani Consultoria</div>
+</div>
+
+<!-- ===== SLIDE 2 — QUEM SOMOS ===== -->
+<div class="slide" data-index="1" style="background:var(--bg);">
+  <div class="slide-header">
+    <div class="logo-block">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+      <div class="logo-text-wrap">
+        <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+        <div class="logo-sub">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="slide-header-tag">Quem Somos</div>
+  </div>
+  <div class="s2-body">
+    <div class="s2-left">
+      <div class="eyebrow">LumenGrid</div>
+      <h2 class="htitle">Gestao de<br>energia solar<br><span>para todos.</span></h2>
+      <div class="hdivider"></div>
+      <p style="font-size:15px;color:var(--muted);line-height:1.65;margin-bottom:20px;">
+        Plataforma de gestao de energia solar distribuida. Conecta clientes finais a usinas de energia renovavel — sem instalacao, sem obra, sem complicacao.
+      </p>
+      <div class="pill-row">
+        <span class="pill orange">Energia Solar por Assinatura</span>
+        <span class="pill">Sem instalacao fisica</span>
+        <span class="pill">Desconto na conta de energia</span>
+        <span class="pill">100% digital</span>
+      </div>
+    </div>
+    <div class="s2-right">
+      <div class="feature-row">
+        <div class="feat-num">01</div>
+        <div class="feat-body">
+          <h4>O cliente assina, nao instala</h4>
+          <p>O desconto chega diretamente na fatura de energia. Sem painel, sem telhado, sem investimento do cliente.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feat-num">02</div>
+        <div class="feat-body">
+          <h4>Valido para PF e PJ</h4>
+          <p>Qualquer pessoa fisica ou juridica com conta de energia no proprio nome pode aderir.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feat-num">03</div>
+        <div class="feat-body">
+          <h4>Fidelidade gera mais desconto</h4>
+          <p>Contratos de 2 anos garantem os maiores percentuais de desconto — beneficio direto para o cliente e para o parceiro.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feat-num">04</div>
+        <div class="feat-body">
+          <h4>O provedor so indica</h4>
+          <p>Zero burocracia para o parceiro. A operacao e gerida pelo ecossistema de parceiros especializados.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Feito por Domani Consultoria</div>
+</div>
+
+<!-- ===== SLIDE 3 — REGIOES ===== -->
+<div class="slide" data-index="2" style="background:var(--bg);">
+  <div class="slide-header">
+    <div class="logo-block">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+      <div class="logo-text-wrap">
+        <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+        <div class="logo-sub">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="slide-header-tag">Regioes de Atendimento</div>
+  </div>
+  <div class="s3-body">
+    <div class="s3-intro">
+      <div class="s3-intro-left">
+        <div class="eyebrow">Cobertura Nacional — Baixa Tensao · GD</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#FAFAFA;">17 estados, <span style="color:#F26522;">desconto garantido</span> com fidelidade.</div>
+      </div>
+      <div class="fid-badge">
+        <div>
+          <div class="fb-label">Melhor desconto</div>
+          <div class="fb-val">Fidelidade 2 anos</div>
+        </div>
+        <div style="width:1px;height:32px;background:var(--border);"></div>
+        <div style="text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:#F26522;line-height:1;">ate 30%</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:1px;">na fatura de energia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section">
+      <!-- 30% -->
+      <div class="tier-block">
+        <div class="tier-label">30% de desconto — fidelidade 2 anos</div>
+        <div class="tier-grid">
+          <div class="region-card top"><span class="region-state">AL</span><span class="region-dist">Equatorial AL</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">BA</span><span class="region-dist">Neoenergia Coelba</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">CE</span><span class="region-dist">Enel CE</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">GO</span><span class="region-dist">Equatorial GO</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">MG</span><span class="region-dist">Cemig</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">MT</span><span class="region-dist">Energisa MT</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">PI</span><span class="region-dist">Equatorial PI</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">RN</span><span class="region-dist">Neoenergia Cosern</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">SP</span><span class="region-dist">CPFL Paulista</span><span class="region-disc">30%</span></div>
+          <div class="region-card top"><span class="region-state">TO</span><span class="region-dist">Energisa TO</span><span class="region-disc">30%</span></div>
+        </div>
+      </div>
+      <!-- 25% -->
+      <div class="tier-block">
+        <div class="tier-label">25% de desconto — fidelidade 2 anos</div>
+        <div class="tier-grid">
+          <div class="region-card"><span class="region-state">ES</span><span class="region-dist">EDP ES</span><span class="region-disc" style="color:rgba(242,101,34,.70);">25%</span></div>
+          <div class="region-card"><span class="region-state">MS</span><span class="region-dist">Energisa MS</span><span class="region-disc" style="color:rgba(242,101,34,.70);">25%</span></div>
+          <div class="region-card"><span class="region-state">PE</span><span class="region-dist">Neoenergia PE</span><span class="region-disc" style="color:rgba(242,101,34,.70);">25%</span></div>
+          <div class="region-card"><span class="region-state">PR</span><span class="region-dist">Copel</span><span class="region-disc" style="color:rgba(242,101,34,.70);">25%</span></div>
+          <div class="region-card"><span class="region-state">SP</span><span class="region-dist">Elektro</span><span class="region-disc" style="color:rgba(242,101,34,.70);">25%</span></div>
+        </div>
+      </div>
+      <!-- 20% -->
+      <div class="tier-block">
+        <div class="tier-label">20% de desconto — fidelidade 2 anos</div>
+        <div class="tier-grid">
+          <div class="region-card"><span class="region-state">RJ</span><span class="region-dist">Enel RJ</span><span class="region-disc" style="color:rgba(242,101,34,.50);">20%</span></div>
+          <div class="region-card"><span class="region-state">SE</span><span class="region-dist">Energisa SE</span><span class="region-disc" style="color:rgba(242,101,34,.50);">20%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:10px;color:var(--muted2);text-align:center;padding-bottom:4px;font-style:italic;">
+      Valido para PF e PJ · Baixa Tensao · Planos com fidelidade de 2 anos
+    </div>
+  </div>
+  <div class="slide-footer">Feito por Domani Consultoria</div>
+</div>
+
+<!-- ===== SLIDE 4 — GANHOS ===== -->
+<div class="slide" data-index="3" style="background:var(--bg);">
+  <div class="slide-header">
+    <div class="logo-block">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+      <div class="logo-text-wrap">
+        <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+        <div class="logo-sub">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="slide-header-tag">Simulacao de Ganhos</div>
+  </div>
+  <div class="s4-body">
+    <div class="s4-left">
+      <div class="eyebrow">Base de trabalho — Piloto</div>
+      <h2 class="htitle">O que esta<br>na <span>mesa.</span></h2>
+      <div class="hdivider"></div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--border);">
+          <span style="font-size:13px;color:var(--muted);">Provedores no piloto</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:#FAFAFA;">2 parceiros</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--border);">
+          <span style="font-size:13px;color:var(--muted);">Base total de clientes</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:#FAFAFA;">10.000</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--border);">
+          <span style="font-size:13px;color:var(--muted);">Ticket medio (fatura de energia)</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:#F26522;">R$ 300</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--border);">
+          <span style="font-size:13px;color:var(--muted);">Modelo de comissao</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:#F26522;">1% <span style="font-size:13px;font-weight:600;">Recorrente · Mensal</span></span>
+        </div>
+      </div>
+      <div class="comm-note">
+        <p><strong style="color:#22C55E;">1% de recorrencia mensal.</strong> Calculado sobre o valor da fatura de energia de cada cliente ativado, todo mes.</p>
+      </div>
+    </div>
+    <div class="s4-right">
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Projecao mensal por cenario</div>
+
+      <div class="scenario-row">
+        <div style="flex:1;">
+          <div class="sc-tag">Conservador · 25%</div>
+          <div class="sc-clients">2.500 clientes ativados</div>
+        </div>
+        <div class="sc-comm">R$ 7.500</div>
+      </div>
+
+      <div class="scenario-row featured">
+        <div style="flex:1;">
+          <div class="sc-tag" style="color:#F26522;">Realista · 50%</div>
+          <div class="sc-clients" style="color:rgba(250,250,250,.65);">5.000 clientes ativados</div>
+        </div>
+        <div class="sc-comm accent">R$ 15.000</div>
+      </div>
+
+      <div class="scenario-row">
+        <div style="flex:1;">
+          <div class="sc-tag">Otimista · 75%</div>
+          <div class="sc-clients">7.500 clientes ativados</div>
+        </div>
+        <div class="sc-comm">R$ 22.500</div>
+      </div>
+
+      <div class="ltv-card">
+        <div class="ltv-row">
+          <div>
+            <div class="ltv-label">Cenario Realista · 24 meses</div>
+            <div class="ltv-val">R$ 360.000</div>
+            <div class="ltv-sub">R$ 15.000 / mes &times; 24 meses de fidelidade</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);margin-bottom:4px;">LTV</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:rgba(242,101,34,.50);">da parceria</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px;">
+        <div style="padding:12px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border);text-align:center;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);margin-bottom:4px;">Conservador 24m</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:800;color:rgba(250,250,250,.45);">R$ 180.000</div>
+        </div>
+        <div style="padding:12px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border);text-align:center;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);margin-bottom:4px;">Otimista 24m</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:800;color:rgba(250,250,250,.45);">R$ 540.000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">Feito por Domani Consultoria</div>
+</div>
+
+<!-- ===== SLIDE 5 — ETAPAS ===== -->
+<div class="slide" data-index="4" style="background:var(--bg);">
+  <div class="slide-header">
+    <div class="logo-block">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+      <div class="logo-text-wrap">
+        <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+        <div class="logo-sub">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="slide-header-tag">Proximos Passos</div>
+  </div>
+  <div class="s5-body">
+    <!-- ESTRUTURACAO -->
+    <div class="s5-col">
+      <div class="eyebrow">Fase 1</div>
+      <h2 class="htitle">Etapas de<br><span>Estruturacao.</span></h2>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-n">1</div>
+          <div class="step-body">
+            <h4>Validacao do Contrato de Parceria</h4>
+            <p>Alinhamento comercial entre as partes — territorios de atuacao e modelo de comissionamento de 1% recorrente.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-n">2</div>
+          <div class="step-body">
+            <h4>Dashboard de Envio de Dados</h4>
+            <p>Plataforma para o provedor submeter indicacoes de clientes e acompanhar o status de cada adesao.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-n">3</div>
+          <div class="step-body">
+            <h4>Contrato de Adesao Automatico</h4>
+            <p>Cliente assina o contrato de adesao via link digital — sem papel e sem presenca fisica.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- IMPLEMENTACAO -->
+    <div class="s5-col">
+      <div class="eyebrow">Fase 2</div>
+      <h2 class="htitle">Etapas de<br><span>Implementacao.</span></h2>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-n">1</div>
+          <div class="step-body">
+            <h4>Onboarding da Equipe do Provedor</h4>
+            <p>Treinamento do time de atendimento para identificar e qualificar clientes elegíveis na base.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-n">2</div>
+          <div class="step-body">
+            <h4>Primeiras Indicacoes</h4>
+            <p>Ativacao das primeiras adesoes e validacao do fluxo completo de indicacao.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-n">3</div>
+          <div class="step-body">
+            <h4>Primeiro Ciclo de Comissao</h4>
+            <p>Clientes ativados geram 1% de comissao recorrente sobre a fatura — pagamento mensal.</p>
+          </div>
+        </div>
+      </div>
+      <span class="impl-tag">Escala gradual mes a mes</span>
+    </div>
+  </div>
+  <div class="slide-footer">Feito por Domani Consultoria</div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="nav">
+  <button class="nav-btn" onclick="go(-1)">&#8592;</button>
+  <button class="dot active" onclick="goTo(0)"></button>
+  <button class="dot" onclick="goTo(1)"></button>
+  <button class="dot" onclick="goTo(2)"></button>
+  <button class="dot" onclick="goTo(3)"></button>
+  <button class="dot" onclick="goTo(4)"></button>
+  <button class="nav-btn" onclick="go(1)">&#8594;</button>
+</div>
+
+<script>
+let cur=0;const total=5;
+const slides=document.querySelectorAll('.slide');
+const dots=document.querySelectorAll('.dot');
+const counter=document.getElementById('counter');
+function goTo(n){
+  slides[cur].classList.remove('active');dots[cur].classList.remove('active');
+  cur=Math.max(0,Math.min(total-1,n));
+  slides[cur].classList.add('active');dots[cur].classList.add('active');
+  counter.textContent=String(cur+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+}
+function go(d){goTo(cur+d);}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ')go(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
+});
+</script>
+</body>
+</html>

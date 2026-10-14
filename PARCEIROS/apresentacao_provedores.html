@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Proposta de Parceria B2B</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08080d;
+  --surface:#12121c;
+  --surface2:#1a1a28;
+  --border:rgba(255,255,255,.07);
+  --orange:#F26522;
+  --orange2:#C94E0F;
+  --text:#FAFAFA;
+  --muted:rgba(250,250,250,.50);
+  --muted2:rgba(250,250,250,.22);
+  --green:#22C55E;
+}
+html,body{
+  width:100%;height:100%;
+  background:#000;
+  font-family:'DM Sans',sans-serif;
+  color:var(--text);
+  overflow:hidden;
+}
+
+/* ---- DECK ---- */
+.deck{
+  width:100vw;height:100vh;
+  position:relative;
+}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity .45s ease;
+}
+.slide.active{opacity:1;pointer-events:all;}
+
+/* ---- LOGO ---- */
+.logo-block{
+  display:flex;align-items:center;gap:10px;
+}
+.logo-icon{
+  height:40px;width:auto;object-fit:contain;
+  filter:drop-shadow(0 0 14px rgba(242,101,34,.80)) drop-shadow(0 0 5px rgba(242,101,34,.50));
+}
+.logo-text-wrap{display:flex;flex-direction:column;gap:2px;}
+.logo-name{
+  font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:20px;
+  text-transform:uppercase;line-height:1;letter-spacing:-.2px;
+}
+.logo-name .o{color:#F26522;}
+.logo-name .w{color:#FAFAFA;}
+.logo-sub{
+  font-family:'DM Sans',sans-serif;font-weight:600;font-size:7px;
+  text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.85);
+}
+
+/* ---- NAV DOTS ---- */
+.nav{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;z-index:99;
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,255,255,.18);cursor:pointer;
+  transition:all .25s;border:none;padding:0;
+}
+.dot.active{background:#F26522;width:22px;border-radius:4px;}
+.nav-btn{
+  background:transparent;border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.50);font-size:16px;width:34px;height:34px;
+  border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;font-family:inherit;
+}
+.nav-btn:hover{border-color:#F26522;color:#F26522;}
+
+/* ---- SLIDE COUNTER ---- */
+.counter{
+  position:fixed;top:24px;right:36px;z-index:99;
+  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.22);letter-spacing:2px;
+}
+
+/* ===================================================
+   SLIDE 1 — CAPA
+   =================================================== */
+.s1{background:var(--bg);}
+.s1-inner{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px;text-align:center;
+  background:
+    radial-gradient(ellipse 900px 500px at 50% 60%, rgba(242,101,34,.07) 0%, transparent 70%),
+    var(--bg);
+}
+.s1-eyebrow{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:5px;text-transform:uppercase;color:#F26522;
+  margin-bottom:28px;opacity:.90;
+}
+.s1-title{
+  font-family:'Space Grotesk',sans-serif;font-size:68px;font-weight:800;
+  line-height:1.0;letter-spacing:-2px;color:#FAFAFA;
+  margin-bottom:16px;
+}
+.s1-title span{color:#F26522;}
+.s1-sub{
+  font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400;
+  color:rgba(250,250,250,.55);max-width:560px;line-height:1.55;
+  margin-bottom:52px;
+}
+.s1-divider{
+  width:50px;height:3px;background:#F26522;border-radius:2px;
+  margin:0 auto 52px;
+}
+.s1-logo-wrap{margin-bottom:0;}
+
+/* ===================================================
+   SLIDE 2 — SUMÁRIO
+   =================================================== */
+.s2{background:var(--bg);}
+.s2-inner{
+  flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0;
+}
+.s2-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:72px 60px 72px 80px;
+  border-right:1px solid var(--border);
+}
+.s2-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:4px;
+  text-transform:uppercase;color:#F26522;margin-bottom:24px;opacity:.90;
+}
+.s2-headline{
+  font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:800;
+  line-height:1.05;letter-spacing:-1px;color:#FAFAFA;margin-bottom:20px;
+}
+.s2-headline span{color:#F26522;}
+.s2-desc{
+  font-size:16px;color:rgba(250,250,250,.60);line-height:1.65;
+}
+.s2-right{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:72px 80px 72px 60px;gap:20px;
+}
+.agenda-item{
+  display:flex;align-items:flex-start;gap:20px;
+  padding:20px 24px;border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  transition:border-color .2s;
+}
+.agenda-item:hover{border-color:rgba(242,101,34,.30);}
+.agenda-num{
+  font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+  color:rgba(242,101,34,.20);line-height:1;flex-shrink:0;width:36px;
+}
+.agenda-body h3{
+  font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;
+  color:#FAFAFA;margin-bottom:5px;
+}
+.agenda-body p{font-size:13px;color:var(--muted);line-height:1.5;}
+
+/* ===================================================
+   SLIDE 3 — RACIONAL DA BASE
+   =================================================== */
+.s3{background:var(--bg);}
+.s3-inner{
+  flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0;
+}
+.s3-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px 50px 60px 80px;
+  border-right:1px solid var(--border);
+}
+.slide-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:4px;
+  text-transform:uppercase;color:#F26522;margin-bottom:18px;opacity:.85;
+}
+.slide-title{
+  font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:800;
+  line-height:1.08;letter-spacing:-1px;color:#FAFAFA;margin-bottom:18px;
+}
+.slide-title span{color:#F26522;}
+.slide-divider{
+  width:36px;height:3px;background:#F26522;border-radius:2px;margin-bottom:24px;
+}
+.insight-list{display:flex;flex-direction:column;gap:18px;}
+.insight{
+  display:flex;align-items:flex-start;gap:14px;
+}
+.insight-icon{
+  width:36px;height:36px;border-radius:8px;
+  background:rgba(242,101,34,.12);border:1px solid rgba(242,101,34,.20);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.insight-text h4{
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;
+  color:#FAFAFA;margin-bottom:4px;
+}
+.insight-text p{font-size:13px;color:var(--muted);line-height:1.5;}
+
+.s3-right{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px 80px 60px 50px;gap:14px;
+}
+.funnel-block{display:flex;flex-direction:column;gap:10px;}
+.funnel-label-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:4px;
+}
+.funnel-step{display:flex;flex-direction:column;gap:6px;}
+.funnel-step-label{
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;
+  color:rgba(250,250,250,.70);
+}
+.funnel-bar-bg{
+  height:44px;background:var(--surface2);border-radius:6px;overflow:hidden;
+  position:relative;
+}
+.funnel-bar-fill{
+  height:100%;border-radius:6px;display:flex;align-items:center;
+  padding:0 16px;gap:10px;
+}
+.funnel-bar-fill strong{
+  font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:#111;
+}
+.funnel-bar-fill span{font-size:12px;font-weight:600;color:rgba(0,0,0,.60);}
+.funnel-pct-tag{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  font-size:12px;font-weight:600;color:rgba(250,250,250,.45);
+}
+.funnel-note{
+  font-size:11px;color:var(--muted2);text-align:center;margin-top:6px;
+  font-style:italic;
+}
+.metric-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(242,101,34,.10);border:1px solid rgba(242,101,34,.25);
+  border-radius:8px;padding:12px 18px;
+}
+.metric-pill .val{
+  font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;color:#F26522;
+}
+.metric-pill .lbl{font-size:12px;color:var(--muted);line-height:1.3;}
+
+/* ===================================================
+   SLIDE 4 — CENÁRIOS
+   =================================================== */
+.s4{background:var(--bg);}
+.s4-inner{
+  flex:1;display:flex;flex-direction:column;
+  padding:52px 80px 60px;
+}
+.s4-header{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:36px;
+}
+.s4-header-left .slide-title{margin-bottom:6px;font-size:34px;}
+.s4-header-left .slide-eyebrow{margin-bottom:10px;}
+.rate-badge{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(242,101,34,.10);border:1px solid rgba(242,101,34,.25);
+  border-radius:10px;padding:14px 22px;
+}
+.rate-badge .rate-num{
+  font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:800;color:#F26522;
+}
+.rate-badge .rate-info{font-size:12px;color:var(--muted);line-height:1.4;}
+
+.scenarios-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;flex:1;
+}
+.scenario-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:28px 26px;
+  display:flex;flex-direction:column;gap:0;
+  position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.scenario-card:hover{border-color:rgba(242,101,34,.30);}
+.scenario-card.featured{
+  border-color:rgba(242,101,34,.35);
+  background:linear-gradient(160deg, rgba(242,101,34,.06) 0%, var(--surface) 60%);
+}
+.scenario-card.featured::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,var(--orange2),var(--orange));
+}
+.featured-tag{
+  position:absolute;top:16px;right:16px;
+  background:#F26522;color:#111;
+  font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 10px;border-radius:4px;
+}
+.sc-eyebrow{
+  font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:12px;
+}
+.sc-name{
+  font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;
+  color:#FAFAFA;margin-bottom:6px;
+}
+.sc-pct{
+  font-size:13px;color:var(--muted);margin-bottom:22px;
+}
+.sc-divider{width:28px;height:2px;background:rgba(242,101,34,.40);border-radius:1px;margin-bottom:22px;}
+.sc-row{
+  display:flex;flex-direction:column;gap:4px;margin-bottom:16px;
+}
+.sc-row-label{
+  font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);
+}
+.sc-row-value{
+  font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#FAFAFA;
+}
+.sc-row-value.orange{color:#F26522;}
+.sc-row.highlight{
+  margin-top:auto;padding-top:16px;border-top:1px solid var(--border);
+}
+.sc-row.highlight .sc-row-label{color:rgba(242,101,34,.70);}
+.sc-row.highlight .sc-row-value{font-size:28px;}
+
+/* ===================================================
+   SLIDE 5 — COMISSIONAMENTO
+   =================================================== */
+.s5{background:var(--bg);}
+.s5-inner{
+  flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0;
+}
+.s5-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px 50px 60px 80px;
+  border-right:1px solid var(--border);
+}
+.s5-right{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px 80px 60px 50px;gap:16px;
+}
+.commission-model{
+  display:flex;flex-direction:column;gap:12px;
+  margin-top:24px;
+}
+.cm-step{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;border-radius:10px;
+  border:1px solid var(--border);background:var(--surface);
+}
+.cm-num{
+  width:34px;height:34px;border-radius:8px;
+  background:rgba(242,101,34,.12);border:1px solid rgba(242,101,34,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;color:#F26522;
+  flex-shrink:0;
+}
+.cm-body h4{
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;
+  color:#FAFAFA;margin-bottom:3px;
+}
+.cm-body p{font-size:12px;color:var(--muted);line-height:1.4;}
+
+.projection-card{
+  background:var(--surface);border:1px solid rgba(242,101,34,.30);
+  border-radius:12px;padding:24px;
+  position:relative;overflow:hidden;
+}
+.projection-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,var(--orange2),var(--orange));
+}
+.proj-tag{
+  font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.proj-scenario{
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;
+  color:rgba(250,250,250,.60);margin-bottom:20px;
+}
+.proj-values{display:flex;flex-direction:column;gap:10px;}
+.proj-row{display:flex;justify-content:space-between;align-items:center;}
+.proj-row-label{font-size:13px;color:var(--muted);}
+.proj-row-val{
+  font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#FAFAFA;
+}
+.proj-row-val.accent{color:#F26522;}
+.proj-sep{height:1px;background:var(--border);margin:4px 0;}
+.proj-total{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:12px;border-top:1px solid rgba(242,101,34,.25);
+  margin-top:4px;
+}
+.proj-total .lbl{
+  font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(242,101,34,.70);
+}
+.proj-total .val{
+  font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:800;color:#F26522;
+}
+
+.scale-cards{display:flex;flex-direction:column;gap:8px;}
+.scale-row{
+  display:flex;align-items:center;gap:14px;
+  padding:10px 14px;border-radius:8px;background:var(--surface2);
+  border:1px solid var(--border);
+}
+.scale-scenario{
+  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;
+  color:var(--muted);width:80px;flex-shrink:0;
+}
+.scale-bar-bg{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;}
+.scale-bar-fill{height:100%;border-radius:4px;background:#F26522;}
+.scale-val{
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#FAFAFA;
+  width:100px;text-align:right;flex-shrink:0;
+}
+
+/* ===================================================
+   SLIDE 6 — PRÓXIMOS PASSOS
+   =================================================== */
+.s6{background:var(--bg);}
+.s6-inner{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px 80px;
+  background:
+    radial-gradient(ellipse 800px 400px at 50% 40%, rgba(242,101,34,.06) 0%, transparent 70%),
+    var(--bg);
+}
+.s6-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:5px;text-transform:uppercase;
+  color:#F26522;margin-bottom:20px;opacity:.85;
+}
+.s6-title{
+  font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:800;
+  line-height:1.05;letter-spacing:-1.5px;color:#FAFAFA;text-align:center;
+  margin-bottom:10px;
+}
+.s6-title span{color:#F26522;}
+.s6-sub{
+  font-size:17px;color:rgba(250,250,250,.50);text-align:center;
+  margin-bottom:52px;line-height:1.6;max-width:520px;
+}
+.steps-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:860px;
+  margin-bottom:44px;
+}
+.step-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:22px 20px;text-align:center;
+}
+.step-num{
+  font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;
+  color:rgba(242,101,34,.25);margin-bottom:10px;
+}
+.step-title{
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;
+  color:#FAFAFA;margin-bottom:6px;
+}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.s6-logo{margin-top:0;}
+
+/* ---- HEADER BAR ---- */
+.slide-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 80px 0;flex-shrink:0;
+}
+.slide-header-right{
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.20);
+}
+
+/* ---- FOOTER ---- */
+.slide-footer{
+  text-align:center;padding:12px;flex-shrink:0;
+  font-size:10px;color:rgba(255,255,255,.12);letter-spacing:1px;
+}
+</style>
+</head>
+<body>
+
+<div class="counter" id="counter">01 / 06</div>
+
+<div class="deck" id="deck">
+
+  <!-- ===== SLIDE 1 — CAPA ===== -->
+  <div class="slide s1 active" data-index="0">
+    <div class="slide-header">
+      <div class="logo-block">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+        <div class="logo-text-wrap">
+          <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+          <div class="logo-sub">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="slide-header-right">Confidencial · 2026</div>
+    </div>
+    <div class="s1-inner">
+      <div class="s1-eyebrow">Proposta de Parceria B2B</div>
+      <h1 class="s1-title">Energia Solar<br>na Base do<br><span>seu Provedor.</span></h1>
+      <p class="s1-sub">Como transformar sua carteira de clientes em uma nova fonte de receita recorrente — sem contratar, sem investir, sem risco.</p>
+      <div class="s1-divider"></div>
+      <div class="s1-logo-wrap">
+        <div class="logo-block" style="justify-content:center;">
+          <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon" style="height:32px;">
+          <div class="logo-text-wrap">
+            <div class="logo-name" style="font-size:16px;"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+            <div class="logo-sub">Energia Inteligente</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">Feito por Domani Consultoria</div>
+  </div>
+
+  <!-- ===== SLIDE 2 — AGENDA ===== -->
+  <div class="slide s2" data-index="1">
+    <div class="slide-header">
+      <div class="logo-block">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+        <div class="logo-text-wrap">
+          <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+          <div class="logo-sub">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="slide-header-right">Agenda</div>
+    </div>
+    <div class="s2-inner">
+      <div class="s2-left">
+        <div class="s2-eyebrow">O que vamos ver</div>
+        <h2 class="s2-headline">Direto ao<br><span>ponto.</span></h2>
+        <p class="s2-desc">Três blocos simples: de onde vêm os clientes, quanto dinheiro está em jogo, e como a comissão funciona.</p>
+      </div>
+      <div class="s2-right">
+        <div class="agenda-item">
+          <div class="agenda-num">1</div>
+          <div class="agenda-body">
+            <h3>A Base de Clientes</h3>
+            <p>Por que começamos com 10.000 clientes e qual o racional de conversão real.</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">2</div>
+          <div class="agenda-body">
+            <h3>Os 3 Cenários de Ganho</h3>
+            <p>Conservador, realista e otimista — quanto dinheiro está na mesa em cada um.</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">3</div>
+          <div class="agenda-body">
+            <h3>O Modelo de Comissionamento</h3>
+            <p>Como o provedor recebe, sem burocracia e sem risco operacional.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">Feito por Domani Consultoria</div>
+  </div>
+
+  <!-- ===== SLIDE 3 — RACIONAL DA BASE ===== -->
+  <div class="slide s3" data-index="2">
+    <div class="slide-header">
+      <div class="logo-block">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+        <div class="logo-text-wrap">
+          <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+          <div class="logo-sub">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="slide-header-right">Base de Clientes</div>
+    </div>
+    <div class="s3-inner">
+      <div class="s3-left">
+        <div class="slide-eyebrow">Por que 10.000?</div>
+        <h2 class="slide-title">O Racional<br>da <span>Base.</span></h2>
+        <div class="slide-divider"></div>
+        <div class="insight-list">
+          <div class="insight">
+            <div class="insight-text">
+              <h4>O Tamanho do Piloto</h4>
+              <p>2 provedores &times; 5.000 assinantes = <strong style="color:#FAFAFA;">10.000 clientes</strong> na base total de trabalho.</p>
+            </div>
+          </div>
+          <div class="insight">
+            <div class="insight-text">
+              <h4>Filtros de Negativa</h4>
+              <p>Identificar filtros de negativa.</p>
+            </div>
+          </div>
+          <div class="insight">
+            <div class="insight-text">
+              <h4>A Métrica-Base</h4>
+              <p>Ticket médio conservador de <strong style="color:#F26522;">R$ 300,00</strong> de fatura de energia por cliente ativado.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="s3-right">
+        <div class="funnel-label-row">
+          <span>Funil de Conversão</span>
+          <span>Base: 10.000</span>
+        </div>
+        <div class="funnel-block">
+          <div class="funnel-step">
+            <div class="funnel-step-label">Base total de clientes</div>
+            <div class="funnel-bar-bg">
+              <div class="funnel-bar-fill" style="width:100%;background:rgba(242,101,34,.35);">
+                <strong style="color:#F26522;">10.000</strong>
+                <span style="color:rgba(242,101,34,.70);">clientes</span>
+              </div>
+              <span class="funnel-pct-tag">100%</span>
+            </div>
+          </div>
+          <div class="funnel-step">
+            <div class="funnel-step-label">Cenario Conservador</div>
+            <div class="funnel-bar-bg">
+              <div class="funnel-bar-fill" style="width:25%;background:rgba(242,101,34,.45);">
+                <strong style="color:#F26522;">2.500</strong>
+              </div>
+              <span class="funnel-pct-tag">25%</span>
+            </div>
+          </div>
+          <div class="funnel-step">
+            <div class="funnel-step-label">Cenario Realista</div>
+            <div class="funnel-bar-bg">
+              <div class="funnel-bar-fill" style="width:50%;background:rgba(242,101,34,.60);">
+                <strong style="color:#F26522;">5.000</strong>
+              </div>
+              <span class="funnel-pct-tag">50%</span>
+            </div>
+          </div>
+          <div class="funnel-step">
+            <div class="funnel-step-label">Cenario Otimista</div>
+            <div class="funnel-bar-bg">
+              <div class="funnel-bar-fill" style="width:75%;background:#F26522;">
+                <strong>7.500</strong>
+                <span>clientes</span>
+              </div>
+              <span class="funnel-pct-tag">75%</span>
+            </div>
+          </div>
+        </div>
+        <div class="funnel-note">A conversao ocorre de forma gradual ao longo dos meses</div>
+        <div style="display:flex;gap:12px;margin-top:8px;">
+          <div class="metric-pill">
+            <div>
+              <div class="val">R$ 300</div>
+              <div class="lbl">Ticket medio<br>conservador</div>
+            </div>
+          </div>
+          <div class="metric-pill" style="flex:1;">
+            <div>
+              <div class="val" style="font-size:18px;">Recorrencia</div>
+              <div class="lbl">Comissao mensal<br>sobre a fatura</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">Feito por Domani Consultoria</div>
+  </div>
+
+  <!-- ===== SLIDE 4 — CENARIOS ===== -->
+  <div class="slide s4" data-index="3">
+    <div class="slide-header">
+      <div class="logo-block">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+        <div class="logo-text-wrap">
+          <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+          <div class="logo-sub">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="slide-header-right">Simulacao de Ganhos</div>
+    </div>
+    <div class="s4-inner">
+      <div class="s4-header">
+        <div class="s4-header-left">
+          <div class="slide-eyebrow">Quanto esta em jogo</div>
+          <h2 class="slide-title">Os <span>3 Cenarios</span><br>de Receita.</h2>
+        </div>
+        <div class="rate-badge">
+          <div class="rate-num">5%</div>
+          <div class="rate-info">Recorrencia Premium<br>sobre o valor da fatura</div>
+        </div>
+      </div>
+      <div class="scenarios-grid">
+
+        <div class="scenario-card">
+          <div class="sc-eyebrow">Cenario 01</div>
+          <div class="sc-name">Conservador</div>
+          <div class="sc-pct">25% da base convertida</div>
+          <div class="sc-divider"></div>
+          <div class="sc-row">
+            <div class="sc-row-label">Clientes Ativados</div>
+            <div class="sc-row-value">2.500</div>
+          </div>
+          <div class="sc-row">
+            <div class="sc-row-label">Volume Gerido / mes</div>
+            <div class="sc-row-value" style="font-size:17px;">R$ 750.000</div>
+          </div>
+          <div class="sc-row highlight">
+            <div class="sc-row-label">Comissao Total / mes</div>
+            <div class="sc-row-value orange">R$ 37.500</div>
+          </div>
+        </div>
+
+        <div class="scenario-card featured">
+          <div class="featured-tag">Referencia</div>
+          <div class="sc-eyebrow">Cenario 02</div>
+          <div class="sc-name">Realista</div>
+          <div class="sc-pct">50% da base convertida</div>
+          <div class="sc-divider"></div>
+          <div class="sc-row">
+            <div class="sc-row-label">Clientes Ativados</div>
+            <div class="sc-row-value">5.000</div>
+          </div>
+          <div class="sc-row">
+            <div class="sc-row-label">Volume Gerido / mes</div>
+            <div class="sc-row-value" style="font-size:17px;">R$ 1.500.000</div>
+          </div>
+          <div class="sc-row highlight">
+            <div class="sc-row-label">Comissao Total / mes</div>
+            <div class="sc-row-value orange">R$ 75.000</div>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <div class="sc-eyebrow">Cenario 03</div>
+          <div class="sc-name">Otimista</div>
+          <div class="sc-pct">75% da base convertida</div>
+          <div class="sc-divider"></div>
+          <div class="sc-row">
+            <div class="sc-row-label">Clientes Ativados</div>
+            <div class="sc-row-value">7.500</div>
+          </div>
+          <div class="sc-row">
+            <div class="sc-row-label">Volume Gerido / mes</div>
+            <div class="sc-row-value" style="font-size:17px;">R$ 2.250.000</div>
+          </div>
+          <div class="sc-row highlight">
+            <div class="sc-row-label">Comissao Total / mes</div>
+            <div class="sc-row-value orange">R$ 112.500</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="slide-footer">Feito por Domani Consultoria</div>
+  </div>
+
+  <!-- ===== SLIDE 5 — COMISSIONAMENTO ===== -->
+  <div class="slide s5" data-index="4">
+    <div class="slide-header">
+      <div class="logo-block">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+        <div class="logo-text-wrap">
+          <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+          <div class="logo-sub">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="slide-header-right">Comissionamento</div>
+    </div>
+    <div class="s5-inner">
+      <div class="s5-left">
+        <div class="slide-eyebrow">Como voce recebe</div>
+        <h2 class="slide-title">Modelo de<br><span>Recorrencia</span><br>Premium.</h2>
+        <div class="slide-divider"></div>
+        <p style="font-size:15px;color:var(--muted);line-height:1.65;margin-bottom:24px;">A cada mes, enquanto o cliente tiver energia solar gerida pela LumenGrid, a comissao e gerada automaticamente. Sem meta, sem prazo, sem interrupcao.</p>
+        <div class="commission-model">
+          <div class="cm-step">
+            <div class="cm-num">1</div>
+            <div class="cm-body">
+              <h4>Indicacao do Cliente</h4>
+              <p>O provedor indica o cliente. A LumenGrid faz toda a gestao documental e operacional.</p>
+            </div>
+          </div>
+          <div class="cm-step">
+            <div class="cm-num">2</div>
+            <div class="cm-body">
+              <h4>Ativacao da Energia Solar</h4>
+              <p>Sistema instalado e homologado. A fatura de energia passa a ser gerida pela plataforma.</p>
+            </div>
+          </div>
+          <div class="cm-step">
+            <div class="cm-num">3</div>
+            <div class="cm-body">
+              <h4>5% ao mes, todo mes</h4>
+              <p>Comissao de recorrencia calculada sobre o valor total da fatura de energia do cliente.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="s5-right">
+        <div class="projection-card">
+          <div class="proj-tag">Projecao — Cenario Realista</div>
+          <div class="proj-scenario">5.000 clientes &times; R$ 300 de fatura</div>
+          <div class="proj-values">
+            <div class="proj-row">
+              <span class="proj-row-label">Volume financeiro gerido</span>
+              <span class="proj-row-val">R$ 1.500.000 / mes</span>
+            </div>
+            <div style="font-size:11px;color:var(--muted2);padding:6px 0 2px;line-height:1.5;">
+              5.000 clientes &times; R$ 300 de fatura = R$ 1.500.000 &mdash; base de calculo dos 5%
+            </div>
+            <div class="proj-sep"></div>
+            <div class="proj-row">
+              <span class="proj-row-label">Taxa de Recorrencia Premium</span>
+              <span class="proj-row-val accent">5%</span>
+            </div>
+          </div>
+          <div class="proj-total">
+            <span class="lbl">Comissao Total / mes</span>
+            <span class="val">R$ 75.000</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Escala por cenario</div>
+          <div class="scale-cards">
+            <div class="scale-row">
+              <div class="scale-scenario">Conservador</div>
+              <div class="scale-bar-bg"><div class="scale-bar-fill" style="width:33%;opacity:.50;"></div></div>
+              <div class="scale-val">R$ 37.500</div>
+            </div>
+            <div class="scale-row" style="border-color:rgba(242,101,34,.30);">
+              <div class="scale-scenario" style="color:#F26522;">Realista</div>
+              <div class="scale-bar-bg"><div class="scale-bar-fill" style="width:66%;"></div></div>
+              <div class="scale-val" style="color:#F26522;">R$ 75.000</div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-scenario">Otimista</div>
+              <div class="scale-bar-bg"><div class="scale-bar-fill" style="width:100%;opacity:.80;"></div></div>
+              <div class="scale-val">R$ 112.500</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:14px 18px;border-radius:8px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.18);">
+          <p style="font-size:12px;color:rgba(34,197,94,.80);line-height:1.55;">
+            <strong style="color:#22C55E;">Recorrencia vitalicia.</strong> A comissao e paga enquanto o cliente utilizar a solucao — mes apos mes, automaticamente.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">Feito por Domani Consultoria</div>
+  </div>
+
+  <!-- ===== SLIDE 6 — FIDELIDADE & LTV ===== -->
+  <div class="slide" data-index="5" style="background:var(--bg);">
+    <div class="slide-header">
+      <div class="logo-block">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+        <div class="logo-text-wrap">
+          <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+          <div class="logo-sub">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="slide-header-right">Fidelidade e LTV</div>
+    </div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0;">
+      <!-- ESQUERDA -->
+      <div style="display:flex;flex-direction:column;justify-content:center;padding:60px 50px 60px 80px;border-right:1px solid var(--border);">
+        <div class="slide-eyebrow">Por que 24 meses importam</div>
+        <h2 class="slide-title">Fidelidade<br>que <span>multiplica</span><br>o resultado.</h2>
+        <div class="slide-divider"></div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="padding:18px 20px;border-radius:10px;border:1px solid rgba(242,101,34,.30);background:rgba(242,101,34,.06);">
+            <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.70);margin-bottom:8px;">Condicao</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#F26522;">Fidelidade &ge; 24 meses</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Contrato fidelizado com o cliente final</div>
+          </div>
+          <div style="padding:18px 20px;border-radius:10px;border:1px solid var(--border);background:var(--surface);">
+            <div style="font-size:13px;color:rgba(250,250,250,.65);line-height:1.65;">
+              Contratos fidelizados garantem a <strong style="color:#FAFAFA;">maior taxa de comissao</strong> — o percentual mais alto e reservado para quem constroi uma base estavel e duradoura.
+            </div>
+          </div>
+          <div style="padding:18px 20px;border-radius:10px;border:1px solid var(--border);background:var(--surface);">
+            <div style="font-size:13px;color:rgba(250,250,250,.65);line-height:1.65;">
+              Cada cliente ativado hoje <strong style="color:#FAFAFA;">maximiza o LTV</strong> da sua carteira e constroi uma receita recorrente que cresce mes a mes, de forma previsivel e escalavel.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- DIREITA -->
+      <div style="display:flex;flex-direction:column;justify-content:center;padding:60px 80px 60px 50px;gap:18px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);">Acumulado em 24 meses por cenario</div>
+
+        <!-- Conservador -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:rgba(250,250,250,.50);">Conservador</div>
+            <div style="font-size:11px;color:var(--muted);">R$ 37.500 / mes</div>
+          </div>
+          <div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:12px;">
+            <div style="height:100%;width:33%;background:#F26522;opacity:.45;border-radius:3px;"></div>
+          </div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:rgba(250,250,250,.55);">R$ 900.000</div>
+          <div style="font-size:11px;color:var(--muted2);margin-top:2px;">em 24 meses &times; R$ 37.500</div>
+        </div>
+
+        <!-- Realista -->
+        <div style="background:var(--surface);border:1px solid rgba(242,101,34,.35);border-radius:10px;padding:20px 22px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#C94E0F,#F26522);"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#F26522;">Realista</div>
+            <div style="font-size:11px;color:var(--muted);">R$ 75.000 / mes</div>
+          </div>
+          <div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:12px;">
+            <div style="height:100%;width:66%;background:#F26522;border-radius:3px;"></div>
+          </div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:800;color:#F26522;">R$ 1.800.000</div>
+          <div style="font-size:11px;color:rgba(242,101,34,.55);margin-top:2px;">em 24 meses &times; R$ 75.000</div>
+        </div>
+
+        <!-- Otimista -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:rgba(250,250,250,.50);">Otimista</div>
+            <div style="font-size:11px;color:var(--muted);">R$ 112.500 / mes</div>
+          </div>
+          <div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:12px;">
+            <div style="height:100%;width:100%;background:#F26522;opacity:.75;border-radius:3px;"></div>
+          </div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:rgba(250,250,250,.55);">R$ 2.700.000</div>
+          <div style="font-size:11px;color:var(--muted2);margin-top:2px;">em 24 meses &times; R$ 112.500</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">Feito por Domani Consultoria</div>
+  </div>
+
+  <!-- ===== SLIDE 7 — PROXIMOS PASSOS ===== -->
+  <div class="slide s6" data-index="6">
+    <div class="slide-header" style="position:absolute;top:0;left:0;right:0;">
+      <div class="logo-block">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+        <div class="logo-text-wrap">
+          <div class="logo-name"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+          <div class="logo-sub">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="slide-header-right">Proximos Passos</div>
+    </div>
+    <div class="s6-inner">
+      <div class="s6-eyebrow">O que vem a seguir</div>
+      <h2 class="s6-title">Vamos <span>comecar</span><br>o piloto?</h2>
+      <p class="s6-sub">Sem contrato complicado, sem investimento inicial. Basta alinhar o processo e comecar a indicar.</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-title">Alinhamento</div>
+          <p class="step-desc">Definir fluxo de indicacao e integracao entre as equipes.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-title">Primeiras Indicacoes</div>
+          <p class="step-desc">Iniciar com clientes selecionados da base do provedor.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-title">Primeira Comissao</div>
+          <p class="step-desc">Primeiro pagamento de recorrencia apos ativacao dos clientes.</p>
+        </div>
+      </div>
+      <div class="logo-block" style="justify-content:center;">
+        <img src="../imagens/LOGOS/logo-icone.png" alt="" class="logo-icon" style="height:44px;">
+        <div class="logo-text-wrap">
+          <div class="logo-name" style="font-size:22px;"><span class="o">LUMEN</span><span class="w">GRID</span></div>
+          <div class="logo-sub">Energia Inteligente</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer" style="position:absolute;bottom:0;left:0;right:0;">Feito por Domani Consultoria</div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<div class="nav" id="nav">
+  <button class="nav-btn" id="prev" onclick="go(-1)">&#8592;</button>
+  <button class="dot active" onclick="goTo(0)" id="d0"></button>
+  <button class="dot" onclick="goTo(1)" id="d1"></button>
+  <button class="dot" onclick="goTo(2)" id="d2"></button>
+  <button class="dot" onclick="goTo(3)" id="d3"></button>
+  <button class="dot" onclick="goTo(4)" id="d4"></button>
+  <button class="dot" onclick="goTo(5)" id="d5"></button>
+  <button class="dot" onclick="goTo(6)" id="d6"></button>
+  <button class="nav-btn" id="next" onclick="go(1)">&#8594;</button>
+</div>
+
+<script>
+let cur = 0;
+const total = 7;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+const counter = document.getElementById('counter');
+
+function goTo(n){
+  slides[cur].classList.remove('active');
+  dots[cur].classList.remove('active');
+  cur = Math.max(0, Math.min(total-1, n));
+  slides[cur].classList.add('active');
+  dots[cur].classList.add('active');
+  counter.textContent = String(cur+1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+}
+
+function go(dir){ goTo(cur+dir); }
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') go(1);
+  if(e.key === 'ArrowLeft'  || e.key === 'ArrowUp') go(-1);
+});
+</script>
+</body>
+</html>
