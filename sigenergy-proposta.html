@@ -1075,7 +1075,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
 </section>
 
 <!-- ── CARGAS PERSONALIZADAS ── -->
-<section class="sec sec-mid" id="cargas">
+<section class="sec sec-mid" id="cargas" style="display:none">
   <div class="sec-c rv">
     <div class="eye">Consumo Real</div>
     <h2 class="sh2">Cargas <span class="grad-or">Personalizadas.</span></h2>
@@ -1302,8 +1302,8 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <a class="btn-inv" id="inv-wpp1" href="#cta">Quero este sistema →</a>
     </div>
 
-    <div class="inv-card destaque rv" data-d="2">
-      <div class="inv-badge">
+    <div class="inv-card destaque rv" data-d="2" id="inv-card-2">
+      <div class="inv-badge" id="inv-badge-2">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         Recomendado
       </div>
@@ -1322,6 +1322,29 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         <div class="inv-price-l">Instalação inclusa · Preço fixo</div>
       </div>
       <a class="btn-inv" id="inv-wpp2" href="#cta">Quero este sistema →</a>
+    </div>
+
+    <!-- Opção personalizada via ?plan=VALOR -->
+    <div class="inv-card destaque rv" id="inv-card-plan" style="display:none" data-d="3">
+      <div class="inv-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Proposta Exclusiva
+      </div>
+      <div class="inv-name">Opção Personalizada</div>
+      <div class="inv-title" id="inv-plan-title">Condições Especiais</div>
+      <div class="inv-subtitle" id="inv-plan-subtitle">Proposta elaborada para você</div>
+      <table class="inv-table" id="inv-plan-table">
+        <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
+        <tr><td>Bateria</td><td>2× SigenStor LFP 9 kWh</td></tr>
+        <tr><td>Energia útil</td><td class="highlight">18 kWh (100% DoD)</td></tr>
+        <tr><td>Garantia inversor</td><td>10 anos</td></tr>
+        <tr><td>Garantia bateria</td><td>10 anos</td></tr>
+      </table>
+      <div class="inv-price">
+        <div class="inv-price-v"><span>R$</span> <span id="inv-plan-val">—</span></div>
+        <div class="inv-price-l" id="inv-plan-note">Instalação inclusa · Condições exclusivas</div>
+      </div>
+      <a class="btn-inv" id="inv-plan-wpp" href="#cta">Quero este sistema →</a>
     </div>
   </div>
 
@@ -1675,6 +1698,56 @@ document.querySelectorAll('.eq-hours-input').forEach(function (inp) {
 });
 
 calcAutonomia();
+
+// ── PARÂMETRO: cargas=1 → exibe seção de cargas personalizadas ──
+if (P.get('cargas')) {
+  var cargasSec = document.getElementById('cargas');
+  if (cargasSec) cargasSec.style.display = '';
+}
+
+// ── PARÂMETRO: plan=VALOR → exibe terceiro card de investimento ──
+var PLAN = P.get('plan');
+if (PLAN) {
+  var planVal = parseInt(PLAN.replace(/\D/g, ''));
+  if (!isNaN(planVal) && planVal > 0) {
+    // Mostrar card
+    var cardPlan = document.getElementById('inv-card-plan');
+    if (cardPlan) cardPlan.style.display = '';
+
+    // Preencher valor formatado
+    var planValEl = document.getElementById('inv-plan-val');
+    if (planValEl) planValEl.textContent = planVal.toLocaleString('pt-BR');
+
+    // Parâmetros opcionais: plan_titulo, plan_nota
+    var planTitulo = P.get('plan_titulo');
+    if (planTitulo) {
+      var el = document.getElementById('inv-plan-title');
+      if (el) el.textContent = planTitulo;
+    }
+    var planNota = P.get('plan_nota');
+    if (planNota) {
+      var el2 = document.getElementById('inv-plan-note');
+      if (el2) el2.textContent = planNota;
+    }
+
+    // Remover badge "Recomendado" do card 2 e mover destaque
+    var badge2 = document.getElementById('inv-badge-2');
+    if (badge2) badge2.style.display = 'none';
+    var card2 = document.getElementById('inv-card-2');
+    if (card2) card2.classList.remove('destaque');
+
+    // Grid 3 colunas em telas grandes
+    var invCards = document.querySelector('.inv-cards');
+    if (invCards) invCards.style.gridTemplateColumns = 'repeat(auto-fit,minmax(260px,1fr))';
+
+    // Botão WhatsApp do card personalizado
+    if (C) {
+      var msgPlan = encodeURIComponent('Olá' + (CLIENTE ? ', ' + CLIENTE : '') + '! Tenho interesse na proposta personalizada Sigenergy.');
+      var btnPlan = document.getElementById('inv-plan-wpp');
+      if (btnPlan) btnPlan.href = 'https://wa.me/' + C.wpp + '?text=' + msgPlan;
+    }
+  }
+}
 
 // ── CARGAS PERSONALIZADAS ──
 function switchCarga(id, btn) {
