@@ -276,15 +276,30 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);-webkit-backdr
 .inv-note{font-size:11px;color:var(--dim);line-height:1.65;margin-bottom:4px;display:flex;align-items:flex-start;gap:8px;justify-content:center}
 .inv-note svg{flex-shrink:0;margin-top:1px}
 
-/* ── EV CTA BAR ── */
-.ev-cta-bar{background:var(--bg2);border-top:1px solid var(--border);padding:36px 56px}
-.ev-cta-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap;background:var(--card);border:1px solid var(--bor);border-radius:18px;padding:28px 32px}
-.ev-cta-ico{width:52px;height:52px;border-radius:14px;background:rgba(242,101,34,.12);border:1px solid rgba(242,101,34,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--or)}
-.ev-cta-body{flex:1;min-width:200px}
-.ev-cta-t{font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px}
-.ev-cta-d{font-size:12px;color:var(--muted);line-height:1.65}
-.ev-cta-btn{flex-shrink:0;background:var(--or);color:#fff;padding:13px 24px;border-radius:9px;font-size:12px;font-weight:700;letter-spacing:.4px;text-decoration:none;white-space:nowrap;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
-.ev-cta-btn:hover{background:var(--or-l);transform:translateY(-1px);box-shadow:0 8px 22px rgba(242,101,34,.32)}
+/* ── V2X SECTION ── */
+.v2x-sec{background:linear-gradient(135deg,#070B14 0%,#0a1020 60%,#0d1428 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:64px 56px}
+.v2x-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.v2x-launch{display:inline-flex;align-items:center;gap:8px;background:rgba(242,101,34,.12);border:1px solid rgba(242,101,34,.3);border-radius:40px;padding:7px 18px;font-size:11px;font-weight:800;color:var(--or);letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px}
+.v2x-launch-dot{width:7px;height:7px;border-radius:50%;background:var(--or);animation:pulse-or 1.6s ease-in-out infinite}
+@keyframes pulse-or{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.v2x-h{font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:800;line-height:1.15;letter-spacing:-.5px;margin-bottom:16px}
+.v2x-h .accent{color:var(--or)}
+.v2x-desc{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:28px}
+.v2x-pills{display:flex;flex-wrap:wrap;gap:10px}
+.v2x-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:40px;padding:8px 16px;font-size:12px;font-weight:600;color:var(--text)}
+.v2x-pill svg{flex-shrink:0;color:var(--or)}
+.v2x-card{background:rgba(242,101,34,.06);border:1.5px solid rgba(242,101,34,.22);border-radius:20px;padding:32px 28px}
+.v2x-card-eye{font-size:10px;font-weight:800;letter-spacing:.15em;color:var(--or);text-transform:uppercase;margin-bottom:18px}
+.v2x-flow{display:flex;align-items:center;gap:10px;margin-bottom:28px;flex-wrap:wrap}
+.v2x-node{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-align:center;flex:1;min-width:70px}
+.v2x-node-ico{font-size:20px;margin-bottom:4px;line-height:1}
+.v2x-node-t{font-size:10px;font-weight:700;color:var(--text);margin-bottom:2px}
+.v2x-node-d{font-size:9px;color:var(--muted)}
+.v2x-arrow{color:var(--or);font-size:18px;font-weight:900;flex-shrink:0}
+.v2x-badge-wrap{display:flex;align-items:center;gap:10px;background:rgba(0,180,216,.08);border:1px solid rgba(0,180,216,.2);border-radius:12px;padding:14px 16px}
+.v2x-badge-ico{width:36px;height:36px;background:var(--sig);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.v2x-badge-t{font-size:12px;font-weight:700;color:var(--sig);margin-bottom:2px}
+.v2x-badge-d{font-size:11px;color:var(--muted);line-height:1.4}
 
 /* ── GARANTIAS ── */
 .wgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:960px;margin:0 auto}
@@ -436,8 +451,9 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
   .fb-text-r p{text-align:left !important}
   .qs-services-grid{grid-template-columns:1fr 1fr}
   .qs-diff{grid-template-columns:1fr}
-  .ev-cta-bar{padding:24px 20px}
-  .ev-cta-inner{padding:22px 20px;gap:16px}
+  .v2x-sec{padding:48px 20px}
+  .v2x-inner{grid-template-columns:1fr;gap:32px}
+  .v2x-h{font-size:26px}
   .carga-sum{grid-template-columns:1fr 1fr}
   .carga-tab{padding:9px 16px;font-size:11px}
   .laudo-split{grid-template-columns:1fr}
@@ -1403,19 +1419,73 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
   </p>
 </section>
 
-<!-- ── EV CHARGER CTA ── -->
-<div class="ev-cta-bar rv">
-  <div class="ev-cta-inner">
-    <div class="ev-cta-ico">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+<!-- ── V2X ── -->
+<div class="v2x-sec rv">
+  <div class="v2x-inner">
+    <div>
+      <div class="v2x-launch">
+        <div class="v2x-launch-dot"></div>
+        Novidade · Outubro 2026
+      </div>
+      <h2 class="v2x-h">Seu carro vira<br><span class="accent">bateria da casa.</span></h2>
+      <p class="v2x-desc">A Sigenergy lança em outubro o primeiro carregador bidirecional <strong>V2X homologado no Brasil</strong>. Com ele, a bateria do seu veículo elétrico se torna uma reserva de energia para a residência — funcionalidade nativa, sem adaptações, sem gambiarras.</p>
+      <div class="v2x-pills">
+        <div class="v2x-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          1º V2X homologado no Brasil
+        </div>
+        <div class="v2x-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Nativo — sem adaptações
+        </div>
+        <div class="v2x-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Gerenciado pelo mesmo app
+        </div>
+        <div class="v2x-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Disponível como módulo adicional
+        </div>
+      </div>
     </div>
-    <div class="ev-cta-body">
-      <div class="ev-cta-t">Quer adicionar o carregador para veículo elétrico?</div>
-      <div class="ev-cta-d">O módulo EV Charger Sigenergy (25 kW DC integrado) está disponível separadamente. Carregue seu carro com energia que você mesmo gera — sem custo adicional de combustível.</div>
+
+    <div class="v2x-card">
+      <div class="v2x-card-eye">Como o V2X funciona</div>
+      <div class="v2x-flow">
+        <div class="v2x-node">
+          <div class="v2x-node-ico">☀️</div>
+          <div class="v2x-node-t">Painel Solar</div>
+          <div class="v2x-node-d">Gera energia</div>
+        </div>
+        <div class="v2x-arrow">⇄</div>
+        <div class="v2x-node">
+          <div class="v2x-node-ico">🔋</div>
+          <div class="v2x-node-t">Bateria Casa</div>
+          <div class="v2x-node-d">Sigenergy LFP</div>
+        </div>
+        <div class="v2x-arrow">⇄</div>
+        <div class="v2x-node">
+          <div class="v2x-node-ico">🚗</div>
+          <div class="v2x-node-t">Bateria Carro</div>
+          <div class="v2x-node-d">Via V2X</div>
+        </div>
+        <div class="v2x-arrow">→</div>
+        <div class="v2x-node">
+          <div class="v2x-node-ico">🏠</div>
+          <div class="v2x-node-t">Residência</div>
+          <div class="v2x-node-d">Sempre abastecida</div>
+        </div>
+      </div>
+      <div class="v2x-badge-wrap">
+        <div class="v2x-badge-ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div>
+          <div class="v2x-badge-t">Integrado ao ecossistema Sigenergy</div>
+          <div class="v2x-badge-d">Gerenciado pelo mesmo Gateway e app do seu sistema — sem hubs externos ou integrações manuais.</div>
+        </div>
+      </div>
     </div>
-    <a class="ev-cta-btn" href="https://lumengridbrasil.com.br" target="_blank" rel="noopener">
-      Saiba mais →
-    </a>
   </div>
 </div>
 
