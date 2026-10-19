@@ -1185,6 +1185,11 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
           <div class="carga-sum-l">2 baterias</div>
           <div class="carga-sum-d">18 kWh úteis</div>
         </div>
+        <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
+          <div class="carga-sum-v" style="color:var(--sig)">~1d 21h</div>
+          <div class="carga-sum-l">6 baterias</div>
+          <div class="carga-sum-d">54 kWh úteis</div>
+        </div>
       </div>
       <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Todos os equipamentos em uso simultâneo. Autonomia calculada com 100% DoD.</p>
     </div>
@@ -1237,6 +1242,11 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
           <div class="carga-sum-v">~2d 8h</div>
           <div class="carga-sum-l">2 baterias</div>
           <div class="carga-sum-d">18 kWh úteis</div>
+        </div>
+        <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
+          <div class="carga-sum-v" style="color:var(--sig)">~7d</div>
+          <div class="carga-sum-l">6 baterias</div>
+          <div class="carga-sum-d">54 kWh úteis</div>
         </div>
       </div>
       <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Somente essenciais — sem climatização, fogão de indução ou eletrodomésticos de alta potência. Autonomia com 100% DoD.</p>
@@ -1297,6 +1307,11 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         <div class="carga-sum-card">
           <div class="carga-sum-v">~6,5d</div>
           <div class="carga-sum-l">2 bat + painel</div>
+          <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
+        </div>
+        <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
+          <div class="carga-sum-v" style="color:var(--sig)">~19d</div>
+          <div class="carga-sum-l">6 bat + painel</div>
           <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
         </div>
       </div>
@@ -1361,12 +1376,12 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         Proposta Exclusiva
       </div>
       <div class="inv-name">Opção Personalizada</div>
-      <div class="inv-title" id="inv-plan-title">Condições Especiais</div>
-      <div class="inv-subtitle" id="inv-plan-subtitle">Proposta elaborada para você</div>
+      <div class="inv-title" id="inv-plan-title">Autonomia Máxima</div>
+      <div class="inv-subtitle" id="inv-plan-subtitle">Máximo armazenamento disponível</div>
       <table class="inv-table" id="inv-plan-table">
         <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
-        <tr><td>Bateria</td><td>2× SigenStor LFP 9 kWh</td></tr>
-        <tr><td>Energia útil</td><td class="highlight">18 kWh (100% DoD)</td></tr>
+        <tr><td>Bateria</td><td>6× SigenStor LFP 9 kWh</td></tr>
+        <tr><td>Energia útil</td><td class="highlight">54 kWh (100% DoD)</td></tr>
         <tr><td>Garantia inversor</td><td>10 anos</td></tr>
         <tr><td>Garantia bateria</td><td>10 anos</td></tr>
       </table>
@@ -1871,6 +1886,10 @@ if (PLAN) {
     // Mostrar laudo de visita técnica
     var laudoSec = document.getElementById('relatorio-visita');
     if (laudoSec) laudoSec.style.display = '';
+
+    // Mostrar cards de 6 baterias na seção de cargas e ajustar grid para 4 colunas
+    document.querySelectorAll('.carga-sum-6bat').forEach(function(el){ el.style.display = ''; });
+    document.querySelectorAll('.carga-sum').forEach(function(el){ el.style.gridTemplateColumns = 'repeat(4,1fr)'; });
   }
 }
 
