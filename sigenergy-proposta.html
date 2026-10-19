@@ -1334,6 +1334,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <div class="inv-title">Essencial</div>
       <div class="inv-subtitle">Autonomia para o essencial da casa</div>
       <table class="inv-table">
+        <tr><td>Painéis</td><td>3 painéis inclusos</td></tr>
         <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
         <tr><td>Bateria</td><td>1× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight">9 kWh (100% DoD)</td></tr>
@@ -1356,6 +1357,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <div class="inv-title">Autonomia Total</div>
       <div class="inv-subtitle">Máxima independência energética</div>
       <table class="inv-table">
+        <tr><td>Painéis</td><td>3 painéis inclusos</td></tr>
         <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
         <tr><td>Bateria</td><td>2× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight">18 kWh (100% DoD)</td></tr>
@@ -1775,6 +1777,11 @@ if (PLAN) {
     if (planNota) {
       var el2 = document.getElementById('inv-plan-note');
       if (el2) el2.textContent = planNota;
+    }
+    var planSubtitulo = P.get('plan_subtitulo');
+    if (planSubtitulo) {
+      var el3 = document.getElementById('inv-plan-subtitle');
+      if (el3) el3.textContent = planSubtitulo;
     }
 
     // Parâmetros de configuração do sistema: plan_bats, plan_placas, plan_modulo, plan_geracao
