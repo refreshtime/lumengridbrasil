@@ -99,6 +99,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var
 #s2 .stat+.stat{padding-left:36px;border-left:1px solid rgba(255,255,255,.07)}
 #s2 .stat-n{font-family:'Montserrat',sans-serif;font-size:38px;font-weight:900;color:var(--or-hi);line-height:1;letter-spacing:-.03em}
 #s2 .stat-l{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--w50);margin-top:8px;line-height:1.55}
+#s2 .tags{position:absolute;right:72px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:20px;width:260px}
+#s2 .tag{background:rgba(9,9,12,.72);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--or);padding:22px 26px;border-radius:2px}
+#s2 .tag-v{font-family:'Montserrat',sans-serif;font-size:36px;font-weight:900;line-height:1;letter-spacing:-.03em;color:var(--or-hi)}
+#s2 .tag-l{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:400;color:rgba(250,250,250,.60);line-height:1.55;margin-top:8px;text-transform:uppercase;letter-spacing:1.5px}
 
 /* ================================================================
    S03 — O PROBLEMA (tipografico)
@@ -359,6 +363,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var
     <h2 class="hl a3">Energia inteligente<br>exige mais do que<br><em>painéis no telhado.</em></h2>
     <p class="body a4">A LumenGrid desenvolve soluções para que residências e empresas tenham mais controle sobre a energia, os gastos e a continuidade de suas atividades. Nosso time reúne profissionais com 8 anos de experiência em projetos de energia solar, sistemas híbridos com baterias e carregadores para veículos elétricos. Cada projeto começa com uma análise da necessidade do cliente e considera consumo, características do imóvel, prioridades e possibilidades de expansão.</p>
 
+  </div>
+  <div class="tags a5">
+    <div class="tag">
+      <div class="tag-v">+8</div>
+      <div class="tag-l">Anos de experiência<br>do time</div>
+    </div>
+    <div class="tag">
+      <div class="tag-v">+500</div>
+      <div class="tag-l">Projetos<br>homologados</div>
+    </div>
+    <div class="tag">
+      <div class="tag-v">+100</div>
+      <div class="tag-l">kWh em residências<br>híbridas</div>
+    </div>
   </div>
   <div class="foot"><span>Feito por Domani Consultoria</span></div>
 </div>
