@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Política de Privacidade da LumenGrid — como coletamos, usamos e protegemos seus dados pessoais, conforme a LGPD."/>
+<title>Política de Privacidade | LumenGrid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NC2ZVM48');</script>
+<!-- End Google Tag Manager -->
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#C95209;--or-l:#D85E10;
+  --or-dim:rgba(201,82,9,.07);
+  --ink:#09090C;
+  --s1:#FFFFFF;--s2:#F8F8F6;--warm:#F8F4EE;
+  --b1:rgba(0,0,0,.07);
+  --t1:#0D0D10;--t2:#52525B;--t3:#A1A1AA;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#fff;color:var(--t1);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 6vw;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-icon{height:36px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(242,101,34,.75)) drop-shadow(0 0 5px rgba(242,101,34,.45)) drop-shadow(0 2px 8px rgba(0,0,0,.9))}
+.nav-wordmark{display:flex;flex-direction:column;gap:1px;line-height:1}
+.nav-wname{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-0.3px;line-height:1}
+.nw-l{color:#F26522}
+.nw-g{color:#FAFAFA}
+.nav-wtag{font-family:'DM Sans',sans-serif;font-weight:600;font-size:7px;text-transform:uppercase;letter-spacing:.32em;color:rgba(242,101,34,.88);display:block;margin-top:2px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,.70);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:#fff}
+.nav-cta{padding:9px 20px;background:var(--or);color:#fff!important;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;transition:background .15s}
+.nav-cta:hover{background:var(--or-l)!important}
+.nav-menu{display:none;cursor:pointer;color:rgba(255,255,255,.7);background:none;border:none}
+.mob-menu{display:none;position:fixed;inset:0;top:64px;background:rgba(9,9,11,.97);backdrop-filter:blur(12px);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:20px;font-weight:600;color:#FFFFFF;text-decoration:none}
+
+/* ── HERO SHORT ── */
+.pp-hero{
+  padding:120px 6vw 60px;
+  background:var(--ink);
+  text-align:center;
+}
+.pp-hero-inner{max-width:640px;margin:0 auto}
+.pp-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:rgba(201,82,9,.85);margin-bottom:18px}
+.pp-hero h1{font-family:'Montserrat',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:-1.5px;line-height:1.05;color:#F4F4F5;margin-bottom:16px}
+.pp-hero p{font-size:14px;color:rgba(241,241,245,.5);line-height:1.75}
+.pp-update{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-size:11px;color:rgba(241,241,245,.3);font-weight:500}
+.pp-update svg{width:13px;height:13px;color:rgba(201,82,9,.6)}
+
+/* ── CONTENT ── */
+.pp-content{max-width:780px;margin:0 auto;padding:80px 6vw 100px}
+.pp-toc{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:24px 28px;margin-bottom:60px}
+.pp-toc-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--t3);margin-bottom:14px}
+.pp-toc ol{list-style:none;counter-reset:toc;display:flex;flex-direction:column;gap:6px}
+.pp-toc ol li{counter-increment:toc;display:flex;align-items:center;gap:8px}
+.pp-toc ol li::before{content:counter(toc,decimal-leading-zero);font-size:10px;font-weight:700;color:var(--or);min-width:20px}
+.pp-toc a{font-size:13px;color:var(--t2);text-decoration:none;transition:color .15s}
+.pp-toc a:hover{color:var(--or)}
+
+.pp-section{margin-bottom:56px}
+.pp-section-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--or);margin-bottom:8px;opacity:.85}
+.pp-section h2{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:16px;color:var(--t1)}
+.pp-section p{font-size:14px;color:var(--t2);line-height:1.8;margin-bottom:14px}
+.pp-section p:last-child{margin-bottom:0}
+.pp-section ul,.pp-section ol{margin:12px 0 12px 20px;display:flex;flex-direction:column;gap:8px}
+.pp-section li{font-size:14px;color:var(--t2);line-height:1.7}
+.pp-section strong{color:var(--t1);font-weight:600}
+
+.pp-divider{height:1px;background:var(--b1);margin:48px 0}
+
+.pp-contact-box{
+  background:var(--warm);border:1px solid rgba(201,82,9,.15);
+  border-radius:16px;padding:32px;margin-top:48px;
+}
+.pp-contact-box h3{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;margin-bottom:12px;letter-spacing:-.3px}
+.pp-contact-box p{font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:8px}
+.pp-contact-box a{color:var(--or);text-decoration:none}
+.pp-contact-box a:hover{text-decoration:underline}
+
+/* ── FOOTER ── */
+footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:var(--ink)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-copy{font-size:11px;color:rgba(161,161,170,.7)}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:rgba(161,161,170,.75);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:rgba(241,241,245,.9)}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-menu{display:block}
+  .pp-content{padding:60px 5vw 80px}
+  .pp-toc{padding:18px 20px}
+}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC2ZVM48"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-brand" href="index.html">
+    <img class="nav-icon" src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="nav-wordmark">
+      <div class="nav-wname"><span class="nw-l">LUMEN</span><span class="nw-g">GRID</span></div>
+      <span class="nav-wtag">Energia Inteligente</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#sobre">Sobre</a>
+    <a href="index.html#solucoes">Soluções</a>
+    <a href="index.html#projetos">Projetos</a>
+    <a href="index.html#faq">FAQ</a>
+    <a href="orcamento.html" class="nav-cta">Solicitar Orçamento</a>
+  </div>
+  <button class="nav-menu" id="navMenuBtn" aria-label="Menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="index.html#sobre" onclick="closeMobMenu()">Sobre</a>
+  <a href="index.html#solucoes" onclick="closeMobMenu()">Soluções</a>
+  <a href="index.html#projetos" onclick="closeMobMenu()">Projetos</a>
+  <a href="orcamento.html" onclick="closeMobMenu()" style="color:var(--or)">Solicitar Orçamento</a>
+</div>
+
+<!-- HERO -->
+<section class="pp-hero">
+  <div class="pp-hero-inner">
+    <div class="pp-tag">Transparência &amp; Privacidade</div>
+    <h1>Política de Privacidade</h1>
+    <p>Saiba como a LumenGrid coleta, usa e protege suas informações pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).</p>
+    <div class="pp-update">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Última atualização: setembro de 2026
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<div class="pp-content">
+
+  <!-- Índice -->
+  <div class="pp-toc">
+    <div class="pp-toc-title">Índice</div>
+    <ol>
+      <li><a href="#s1">Quem somos</a></li>
+      <li><a href="#s2">Dados que coletamos</a></li>
+      <li><a href="#s3">Finalidade do tratamento</a></li>
+      <li><a href="#s4">Base legal</a></li>
+      <li><a href="#s5">Compartilhamento de dados</a></li>
+      <li><a href="#s6">Armazenamento e segurança</a></li>
+      <li><a href="#s7">Cookies e rastreamento</a></li>
+      <li><a href="#s8">Direitos do titular</a></li>
+      <li><a href="#s9">Retenção dos dados</a></li>
+      <li><a href="#s10">Contato e DPO</a></li>
+    </ol>
+  </div>
+
+  <!-- 1. Quem somos -->
+  <div class="pp-section" id="s1">
+    <div class="pp-section-num">01</div>
+    <h2>Quem somos</h2>
+    <p><strong>Lumen Grid Energia Inteligente</strong>, inscrita no CNPJ sob o nº <strong>36.028.241/0001-96</strong>, é a controladora dos dados pessoais coletados por meio deste site e de suas atividades comerciais.</p>
+    <p>Operamos no segmento de energia fotovoltaica, sistemas híbridos com armazenamento em bateria e carregadores para veículos elétricos (Wallbox), com atuação na Grande São Paulo e interior do estado.</p>
+    <p>Para entrar em contato conosco: <strong>comercial@lumengridbrasil.com.br</strong> | (11) 94556-0188</p>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 2. Dados que coletamos -->
+  <div class="pp-section" id="s2">
+    <div class="pp-section-num">02</div>
+    <h2>Dados que coletamos</h2>
+    <p>Coletamos as seguintes categorias de dados pessoais:</p>
+    <ul>
+      <li><strong>Dados de identificação:</strong> nome, sobrenome.</li>
+      <li><strong>Dados de contato:</strong> endereço de e-mail e número de telefone (WhatsApp).</li>
+      <li><strong>Dados de localização:</strong> estado e cidade de residência ou do imóvel a ser atendido.</li>
+      <li><strong>Dados financeiros indicativos:</strong> faixa de valor médio da conta de energia elétrica (sem CPF, conta bancária ou dados de pagamento).</li>
+      <li><strong>Dados de navegação:</strong> endereço IP, tipo de dispositivo, navegador, páginas visitadas, duração da sessão e parâmetros UTM de campanhas de marketing (utm_source, utm_medium, utm_campaign, click_id).</li>
+    </ul>
+    <p>Não coletamos dados sensíveis (saúde, origem racial, convicção religiosa, biometria etc.), nem dados de menores de 18 anos.</p>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 3. Finalidade -->
+  <div class="pp-section" id="s3">
+    <div class="pp-section-num">03</div>
+    <h2>Finalidade do tratamento</h2>
+    <p>Os dados coletados são utilizados exclusivamente para as seguintes finalidades:</p>
+    <ul>
+      <li>Responder às solicitações de orçamento e contato comercial.</li>
+      <li>Elaborar propostas técnicas e comerciais personalizadas.</li>
+      <li>Entrar em contato via telefone, WhatsApp ou e-mail para dar continuidade ao processo de venda.</li>
+      <li>Enviar comunicações relacionadas aos nossos produtos e serviços (com possibilidade de opt-out a qualquer momento).</li>
+      <li>Mensurar a performance de nossas campanhas de marketing digital (Google Ads, Facebook Ads) por meio de parâmetros UTM e ferramentas de rastreamento.</li>
+      <li>Cumprir obrigações legais e regulatórias.</li>
+    </ul>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 4. Base legal -->
+  <div class="pp-section" id="s4">
+    <div class="pp-section-num">04</div>
+    <h2>Base legal</h2>
+    <p>O tratamento dos seus dados é realizado com base nas seguintes hipóteses legais previstas na LGPD (Art. 7º):</p>
+    <ul>
+      <li><strong>Consentimento (Art. 7º, I):</strong> ao preencher e enviar o formulário de orçamento, marcando o checkbox de concordância com esta política.</li>
+      <li><strong>Legítimo interesse (Art. 7º, IX):</strong> para análise de dados de navegação visando à melhoria da experiência no site e otimização de campanhas de marketing.</li>
+      <li><strong>Cumprimento de obrigação legal (Art. 7º, II):</strong> quando exigido por lei ou autoridade competente.</li>
+    </ul>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 5. Compartilhamento -->
+  <div class="pp-section" id="s5">
+    <div class="pp-section-num">05</div>
+    <h2>Compartilhamento de dados</h2>
+    <p>A LumenGrid <strong>não vende nem comercializa</strong> seus dados pessoais a terceiros. Os dados poderão ser compartilhados apenas nas seguintes situações:</p>
+    <ul>
+      <li><strong>Prestadores de serviço tecnológico:</strong> Google (Google Sheets para armazenamento interno de leads, Google Tag Manager, Google Analytics), operando como operadores de dados sob instruções nossas e sujeitos às respectivas políticas de privacidade.</li>
+      <li><strong>Plataformas de marketing:</strong> Meta (Facebook/Instagram Ads) e Google Ads, exclusivamente para fins de rastreamento de conversões e criação de públicos semelhantes — mediante seus próprios termos de serviço.</li>
+      <li><strong>Obrigação legal:</strong> quando exigido por lei, ordem judicial ou autoridade regulatória competente.</li>
+    </ul>
+    <p>Nenhuma transferência internacional de dados é realizada fora das ferramentas Google/Meta acima mencionadas, que possuem certificações adequadas de proteção de dados.</p>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 6. Armazenamento e segurança -->
+  <div class="pp-section" id="s6">
+    <div class="pp-section-num">06</div>
+    <h2>Armazenamento e segurança</h2>
+    <p>Os dados de formulário são armazenados em planilha Google Sheets, acessível apenas por colaboradores autorizados da LumenGrid, com autenticação de dois fatores habilitada nas contas Google.</p>
+    <p>Adotamos medidas técnicas e organizacionais proporcionais ao risco, incluindo:</p>
+    <ul>
+      <li>Acesso restrito por permissão explícita de colaboradores.</li>
+      <li>Transmissão dos dados via HTTPS (TLS).</li>
+      <li>Revisão periódica dos acessos concedidos.</li>
+    </ul>
+    <p>Em caso de incidente de segurança que possa acarretar risco ao titular, notificaremos a Autoridade Nacional de Proteção de Dados (ANPD) e os titulares afetados nos prazos previstos em lei.</p>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 7. Cookies -->
+  <div class="pp-section" id="s7">
+    <div class="pp-section-num">07</div>
+    <h2>Cookies e rastreamento</h2>
+    <p>Nosso site utiliza as seguintes tecnologias de rastreamento:</p>
+    <ul>
+      <li><strong>Google Tag Manager (GTM-NC2ZVM48):</strong> gerenciador de tags que permite instalar e atualizar scripts de rastreamento sem alterar o código do site.</li>
+      <li><strong>Google Analytics:</strong> coleta dados de audiência e comportamento de navegação de forma agregada e anonimizada.</li>
+      <li><strong>Google Ads / Meta Pixel:</strong> utilizados para mensurar conversões de campanhas pagas e criar públicos de remarketing.</li>
+      <li><strong>Parâmetros UTM:</strong> lidos da URL de entrada para identificar a origem do tráfego (ex.: utm_source=google&utm_medium=cpc).</li>
+    </ul>
+    <p>Você pode desativar cookies de terceiros nas configurações do seu navegador. A desativação pode limitar algumas funcionalidades do site.</p>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 8. Direitos do titular -->
+  <div class="pp-section" id="s8">
+    <div class="pp-section-num">08</div>
+    <h2>Direitos do titular</h2>
+    <p>Em conformidade com os Arts. 17 a 22 da LGPD, você tem os seguintes direitos:</p>
+    <ul>
+      <li><strong>Confirmação e acesso:</strong> saber se tratamos seus dados e ter acesso a eles.</li>
+      <li><strong>Correção:</strong> solicitar a correção de dados incompletos, inexatos ou desatualizados.</li>
+      <li><strong>Anonimização, bloqueio ou eliminação:</strong> de dados desnecessários, excessivos ou tratados em desconformidade com a LGPD.</li>
+      <li><strong>Portabilidade:</strong> receber seus dados em formato estruturado e interoperável.</li>
+      <li><strong>Eliminação:</strong> dos dados tratados com base em consentimento, salvo nas hipóteses de guarda obrigatória.</li>
+      <li><strong>Revogação do consentimento:</strong> a qualquer momento, sem prejuízo à licitude dos tratamentos realizados anteriormente.</li>
+      <li><strong>Oposição:</strong> ao tratamento realizado com base em legítimo interesse.</li>
+    </ul>
+    <p>Para exercer qualquer desses direitos, entre em contato pelo e-mail <strong>comercial@lumengridbrasil.com.br</strong> com o assunto "LGPD — [seu direito]". Responderemos em até 15 dias úteis.</p>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 9. Retenção -->
+  <div class="pp-section" id="s9">
+    <div class="pp-section-num">09</div>
+    <h2>Retenção dos dados</h2>
+    <p>Os dados pessoais coletados pelo formulário de orçamento são mantidos pelo período necessário para:</p>
+    <ul>
+      <li>Atendimento da solicitação e condução do processo comercial.</li>
+      <li>Cumprimento de obrigações legais e fiscais (mínimo de 5 anos após o encerramento da relação comercial, conforme legislação tributária).</li>
+    </ul>
+    <p>Ao término do prazo ou mediante solicitação de eliminação, os dados são removidos de forma segura.</p>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <!-- 10. Contato -->
+  <div class="pp-section" id="s10">
+    <div class="pp-section-num">10</div>
+    <h2>Contato e DPO</h2>
+    <div class="pp-contact-box">
+      <h3>Entre em contato com o Encarregado de Dados</h3>
+      <p>Para dúvidas, solicitações ou reclamações relacionadas à privacidade e proteção de dados:</p>
+      <p>
+        <strong>E-mail:</strong> <a href="mailto:comercial@lumengridbrasil.com.br">comercial@lumengridbrasil.com.br</a><br>
+        <strong>WhatsApp:</strong> (11) 94556-0188<br>
+        <strong>Empresa:</strong> Lumen Grid Energia Inteligente LTDA<br>
+        <strong>CNPJ:</strong> 36.028.241/0001-96
+      </p>
+      <p>Você também pode registrar reclamações junto à <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong> através do site <strong>gov.br/anpd</strong>.</p>
+    </div>
+  </div>
+
+  <div class="pp-divider"></div>
+
+  <div class="pp-section">
+    <p style="font-size:13px;color:var(--t3);line-height:1.7">Esta Política de Privacidade pode ser atualizada periodicamente para refletir mudanças em nossas práticas ou obrigações legais. Recomendamos revisitá-la regularmente. A data da última atualização está indicada no topo desta página.</p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div style="display:flex;align-items:center;gap:9px">
+        <img src="imagens/LOGOS/logo-icone.png" alt="" style="height:30px;width:auto;filter:drop-shadow(0 0 10px rgba(242,101,34,.6))">
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:-0.3px;line-height:1"><span style="color:#F26522">LUMEN</span><span style="color:rgba(241,241,245,.75)">GRID</span></div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:7px;font-weight:600;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.8);margin-top:2px">Energia Inteligente</div>
+        </div>
+      </div>
+      <div class="footer-copy" style="margin-top:4px">comercial@lumengridbrasil.com.br</div>
+      <div class="footer-copy" style="margin-top:2px">CNPJ 36.028.241/0001-96</div>
+      <div class="footer-copy" style="margin-top:6px">© 2026 Lumen Grid Energia Inteligente. Todos os direitos reservados.</div>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Início</a>
+      <a href="index.html#solucoes">Soluções</a>
+      <a href="orcamento.html">Solicitar Orçamento</a>
+      <a href="politica-de-privacidade.html">Política de Privacidade</a>
+    </div>
+    <div class="footer-copy">lumengridbrasil.com.br<br><span style="opacity:.5;font-size:10px">Feito por Domani Consultoria</span></div>
+  </div>
+</footer>
+
+<script>
+const navBtn = document.getElementById('navMenuBtn');
+const mobMenu = document.getElementById('mobMenu');
+navBtn.addEventListener('click', () => mobMenu.classList.toggle('open'));
+function closeMobMenu() { mobMenu.classList.remove('open'); }
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').style.borderBottomColor =
+    window.scrollY > 20 ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.07)';
+});
+</script>
+</body>
+</html>

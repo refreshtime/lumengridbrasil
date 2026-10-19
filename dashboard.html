@@ -315,21 +315,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 
 <!-- ═══ DESPESAS ═══ -->
 <div class="tab-pane active" id="pane-despesas">
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
-    <button class="pill on" onclick="setDespPeriodo('mes',this)">Mês Atual</button>
-    <button class="pill" onclick="setDespPeriodo('mesant',this)">Mês Ant.</button>
-    <button class="pill" onclick="setDespPeriodo('3m',this)">3 Meses</button>
-    <button class="pill" onclick="setDespPeriodo('6m',this)">6 Meses</button>
-    <button class="pill" onclick="setDespPeriodo('ano',this)">Este Ano</button>
-    <button class="pill" onclick="setDespPeriodo('todos',this)">Todos</button>
-    <div style="display:flex;gap:6px;margin-left:auto;align-items:center">
-      <input class="fi" id="despDe" type="date" style="width:130px;height:28px;padding:3px 8px;font-size:11px" oninput="setDespCustom()" title="De">
-      <span style="color:var(--t3);font-size:11px">até</span>
-      <input class="fi" id="despAte" type="date" style="width:130px;height:28px;padding:3px 8px;font-size:11px" oninput="setDespCustom()" title="Até">
-    </div>
-  </div>
+  <!-- Pills de Mês -->
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;align-items:center" id="despMesesPills"></div>
   <div class="kpi-row" id="despKpis"></div>
 
+  <!-- Card Reembolsos -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+        Reembolsos Pendentes
+      </div>
+      <span style="font-size:10px;color:var(--t3)">Despesas pagas por pessoa — aguardando reembolso da empresa</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--b1)" id="reembolsoCards">
+      <div style="background:var(--s1);padding:18px 20px;text-align:center;color:var(--t3);font-size:12px;grid-column:1/-1">Nenhum reembolso pendente</div>
+    </div>
+  </div>
+
+  <!-- Nova Despesa -->
   <div class="card">
     <div class="card-hdr">
       <div class="card-title">
@@ -339,87 +343,71 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     </div>
     <div class="card-body">
       <div class="frow">
-        <div class="fg" style="max-width:140px"><label>Data</label><input class="fi" id="despData" type="date"></div>
-        <div class="fg" style="max-width:140px"><label>Competência</label><input class="fi" id="despCompetencia" type="date" title="Data de competência econômica (DRE)"></div>
-        <div class="fg" style="flex:2"><label>Descrição</label><input class="fi" id="despDesc" placeholder="Ex: Frete painel solar — Projeto João Silva"></div>
-        <div class="fg" style="max-width:190px">
+        <div class="fg" style="max-width:130px"><label>Data Venc.</label><input class="fi" id="despDataVenc" type="date"></div>
+        <div class="fg" style="max-width:185px">
+          <label>Classificação</label>
+          <select class="fsel" id="despClassif">
+            <option>Custo Variável (CPV)</option>
+            <option>Despesa Fixa</option>
+            <option>Despesa Variável</option>
+          </select>
+        </div>
+        <div class="fg" style="max-width:210px">
           <label>Categoria</label>
-          <select class="fsel" id="despCat">
-            <optgroup label="Custos Diretos">
-              <option>Módulos</option><option>Inversores</option><option>Baterias</option>
-              <option>Estruturas</option><option>Cabos e conectores</option><option>Proteções e quadros</option>
-              <option>Carregadores</option><option>Frete</option><option>Mão de obra</option>
-              <option>Engenharia, ART e homologação</option><option>Visita técnica</option>
-              <option>Deslocamento do projeto</option><option>Locação de equipamentos</option>
-              <option>Comissão comercial</option><option>Terceirizados</option><option>Retrabalho e garantia</option>
-            </optgroup>
-            <optgroup label="Despesas Operacionais">
-              <option>Marketing</option><option>Softwares</option><option>Contabilidade</option>
-              <option>Jurídico</option><option>Tarifas bancárias</option><option>Taxas de cartão</option>
-              <option>Juros</option><option>Impostos</option><option>Pró-labore</option>
-              <option>Salários e encargos</option><option>Escritório</option>
-              <option>Telefonia e internet</option><option>Veículos</option><option>Seguros</option>
-              <option>Treinamentos</option><option>EPIs e uniformes</option>
-              <option>Materiais de escritório</option><option>Outras despesas</option>
-            </optgroup>
+          <select class="fsel" id="despCatV2">
+            <option>Operacional - Instalação</option>
+            <option>Operacional - Equipamentos</option>
+            <option>Comercial - Vendas</option>
+            <option>Abertura - Fiscal</option>
+            <option>Despesa Fixa</option>
+            <option>Marketing</option>
+            <option>Contabilidade</option>
+            <option>Jurídico</option>
+            <option>Software / Assinaturas</option>
+            <option>Outros</option>
           </select>
         </div>
-        <div class="fg" style="max-width:130px"><label>Valor Pago (R$)</label><input class="fi" id="despValor" type="number" placeholder="0,00" step="0.01"></div>
-        <div class="fg" style="max-width:130px"><label>Valor Previsto (R$)</label><input class="fi" id="despValorPrev" type="number" placeholder="0,00" step="0.01" title="Se diferente do valor pago"></div>
-        <div class="fg" style="max-width:170px">
-          <label>Método</label>
-          <select class="fsel" id="despMetodo">
-            <option>PIX</option><option>Cartão de Crédito</option><option>Boleto</option>
-            <option>Transferência</option><option>Dinheiro</option><option>Cheque</option>
-          </select>
-        </div>
-        <div class="fg" style="max-width:150px">
-          <label>Lançado por</label>
-          <select class="fsel" id="despLancadoPor">
-            <option value="">— Selecione —</option>
-            <option>Hingrid</option><option>Lucas</option>
-          </select>
-        </div>
+        <div class="fg" style="flex:2"><label>Descrição</label><input class="fi" id="despDescV2" placeholder="Ex: Compra de drone, regularização MEI…"></div>
+        <div class="fg" style="flex:1"><label>Detalhes</label><input class="fi" id="despDetalhes" placeholder="Opcional"></div>
       </div>
-      <div class="frow">
-        <div class="fg" style="max-width:140px"><label>Vencimento</label><input class="fi" id="despVencimento" type="date" title="Data de vencimento"></div>
-        <div class="fg" style="max-width:140px"><label>Prev. de Pagamento</label><input class="fi" id="despDataPrev" type="date" title="Data prevista de saída de caixa"></div>
-        <div class="fg" style="flex:1"><label>Cliente / Fornecedor</label><input class="fi" id="despClienteFor" placeholder="Nome do fornecedor ou prestador"></div>
-        <div class="fg" style="max-width:170px">
-          <label>Conta Financeira</label>
-          <select class="fsel" id="despConta">
-            <option value="">— Conta —</option>
-            <option>Conta Principal</option><option>Caixa</option><option>Conta Parceiros</option>
-          </select>
-        </div>
-        <div class="fg" style="max-width:160px">
-          <label>Situação</label>
-          <select class="fsel" id="despSituacao">
-            <option value="Em aberto">Em aberto</option>
-            <option value="Previsto">Previsto</option>
-            <option value="Liquidado">Liquidado</option>
-            <option value="Cancelado">Cancelado</option>
-          </select>
-        </div>
-        <div class="fg" style="max-width:170px;display:flex;flex-direction:column;gap:8px;justify-content:flex-end;padding-bottom:2px">
-          <label class="chk-row"><input type="checkbox" id="despJaPago" onchange="onJaPagoChange()"> Já foi pago</label>
-          <label class="chk-row"><input type="checkbox" id="despSemVinculo"> Salvar sem vínculo</label>
-        </div>
-      </div>
-      <div class="frow">
-        <div class="fg" style="flex:2"><label>Observação</label><input class="fi" id="despObs" placeholder="NF, fornecedor, referência..."></div>
-        <div class="fg ac-wrap" style="max-width:260px">
-          <label>Vincular ao Projeto</label>
-          <input class="fi" id="despProjetoBusca" placeholder="Buscar cliente ou contrato (3+ letras)…" autocomplete="off" oninput="buscarProjeto(this.value)">
-          <div class="ac-results" id="despProjetoResults"></div>
-          <input type="hidden" id="despProjetoId">
-          <input type="hidden" id="despProjetoNc">
-          <div id="despProjetoSel" style="display:none">
-            <div class="ac-sel-badge"><span id="despProjetoSelLabel"></span><button onclick="limparProjeto()" title="Remover vínculo">✕</button></div>
+      <div class="frow" style="align-items:flex-end">
+        <div class="fg" style="max-width:290px">
+          <label>Pagador</label>
+          <div style="display:flex;gap:6px;margin-top:4px" id="pagadorPillsDiv">
+            <button type="button" class="pill" onclick="setPagador('Empresa',this)">Empresa</button>
+            <button type="button" class="pill" onclick="setPagador('Hingrid',this)">Hingrid</button>
+            <button type="button" class="pill" onclick="setPagador('Lucas',this)">Lucas</button>
           </div>
+          <input type="hidden" id="despPagador" value="">
+        </div>
+        <div class="fg" style="max-width:140px"><label>Valor Total (R$)</label><input class="fi" id="despValorTotal" type="number" placeholder="0,00" step="0.01" oninput="onValorParcelasChange()"></div>
+        <div class="fg" style="max-width:120px">
+          <label>Parcelas</label>
+          <select class="fsel" id="despQtdParcelas" onchange="onValorParcelasChange()">
+            <option value="1">1x</option><option value="2">2x</option><option value="3">3x</option>
+            <option value="4">4x</option><option value="5">5x</option><option value="6">6x</option>
+            <option value="10">10x</option><option value="12">12x</option><option value="24">24x</option>
+            <option value="36">36x</option><option value="48">48x</option><option value="60">60x</option>
+          </select>
+        </div>
+        <div class="fg" style="max-width:80px" id="fgNParcela" style="display:none">
+          <label>Nº Parc.</label>
+          <input class="fi" id="despNParcela" type="number" min="1" value="1">
+        </div>
+        <div class="fg" style="max-width:130px">
+          <label>Vlr. Parcela</label>
+          <input class="fi" id="despValorParcela" placeholder="auto" readonly style="opacity:.6">
         </div>
         <div class="fg" style="max-width:190px">
-          <label>Comprovante / Foto</label>
+          <label>Status</label>
+          <div style="display:flex;gap:6px;margin-top:4px" id="despStatusPills">
+            <button type="button" class="pill on" onclick="setDespStatus('Pago',this)">Pago</button>
+            <button type="button" class="pill" onclick="setDespStatus('A Pagar',this)">A Pagar</button>
+          </div>
+          <input type="hidden" id="despStatusV2" value="Pago">
+        </div>
+        <div class="fg" style="max-width:155px">
+          <label>Comprovante</label>
           <div class="upzone" id="despZone" onclick="document.getElementById('despFile').click()">
             <input type="file" id="despFile" accept="image/*,application/pdf" onchange="handleDespFile(this)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -438,23 +426,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     </div>
   </div>
 
+  <!-- Registro -->
   <div class="card">
     <div class="card-hdr">
       <div class="card-title">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         Registro de Despesas
       </div>
-      <div style="display:flex;gap:8px">
-        <select class="fsel" id="despFiltroCat" style="padding:5px 10px;font-size:11px;height:32px;min-width:150px" onchange="renderDespesas()">
-          <option value="">Todas as categorias</option>
-          <option>Materiais</option><option>Mão de Obra</option><option>Logística</option>
-          <option>Marketing</option><option>Comercial / Vendas</option>
-          <option>Administrativo</option><option>Equipamentos</option><option>Outros</option>
-        </select>
-      </div>
+      <select class="fsel" id="despFiltroClassif" style="padding:5px 10px;font-size:11px;height:32px;min-width:185px" onchange="renderDespesas()">
+        <option value="">Todas as classificações</option>
+        <option>Custo Variável (CPV)</option>
+        <option>Despesa Fixa</option>
+        <option>Despesa Variável</option>
+      </select>
     </div>
     <div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Projeto</th><th>Método</th><th>Valor</th><th>Por</th><th>Obs.</th><th>Anexo</th><th></th></tr></thead>
+      <thead><tr><th>Data Venc.</th><th>Classificação</th><th>Categoria</th><th>Descrição</th><th>Pagador</th><th>Parcela</th><th>Valor</th><th>Status</th><th>Anexo</th><th></th></tr></thead>
       <tbody id="despBody"></tbody>
     </table></div>
     <div class="empty" id="despEmpty" style="display:none">

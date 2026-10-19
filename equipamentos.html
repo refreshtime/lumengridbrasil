@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Equipamentos Protegidos & Baterias — LumenGrid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0D0D0D;
+    --surface:#161616;
+    --surface2:#1E1E1E;
+    --border:rgba(255,255,255,.08);
+    --or:#F26522;
+    --or-dim:rgba(242,101,34,.15);
+    --or-mid:rgba(242,101,34,.35);
+    --text:#F5F5F5;
+    --muted:rgba(245,245,245,.55);
+    --sg:Space Grotesk,sans-serif;
+    --dm:DM Sans,sans-serif;
+  }
+  body{background:var(--bg);color:var(--text);font-family:var(--dm);min-height:100vh;display:flex;flex-direction:column}
+
+  /* ── HEADER ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:28px 48px;display:flex;align-items:center;gap:20px}
+  .logo-wrap{display:flex;align-items:center;gap:14px}
+  .logo-wrap img{height:58px;filter:drop-shadow(0 0 12px rgba(242,101,34,.6))}
+  .logo-text{display:flex;flex-direction:column;gap:3px}
+  .logo-name{font-family:var(--sg);font-weight:800;font-size:28px;line-height:1;letter-spacing:-.3px}
+  .logo-name .lumen{color:var(--or)}
+  .logo-name .grid{color:#FAFAFA}
+  .logo-sub{font-family:var(--dm);font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.9)}
+  .header-divider{width:1px;height:48px;background:var(--border);margin:0 8px}
+  .header-title{font-family:var(--sg);font-size:20px;font-weight:700;color:var(--text)}
+  .header-title span{color:var(--or)}
+
+  /* ── MAIN ── */
+  main{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:56px 32px}
+  .section{margin-bottom:56px}
+  .section-eye{font-family:var(--dm);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--or);margin-bottom:8px}
+  .section-h2{font-family:var(--sg);font-size:30px;font-weight:800;line-height:1.2;margin-bottom:6px}
+  .section-rule{height:2px;width:48px;background:var(--or);border-radius:2px;margin-bottom:28px}
+  .section-desc{font-size:15px;color:var(--muted);line-height:1.6;margin-bottom:24px;max-width:720px}
+
+  /* ── TABLE ── */
+  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  thead tr{background:var(--or-dim)}
+  thead th{padding:12px 20px;text-align:left;font-family:var(--sg);font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--or)}
+  thead th.right{text-align:right}
+  thead th.center{text-align:center}
+  tbody tr{border-bottom:1px solid var(--border)}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(255,255,255,.025)}
+  tbody td{padding:13px 20px;font-size:14px;color:var(--text)}
+  tbody td.right{text-align:right;font-weight:700;color:var(--or)}
+  tbody td.center{text-align:center;color:var(--muted)}
+  tfoot tr{background:var(--or-dim)}
+  tfoot td{padding:11px 20px;font-family:var(--sg);font-size:13px;font-weight:800}
+  tfoot td.right{text-align:right;color:var(--or)}
+  .table-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:12px;padding-left:4px}
+
+  /* ── BRAND CARDS ── */
+  .brand-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media(max-width:720px){.brand-grid{grid-template-columns:1fr}}
+  .brand-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;transition:border-color .2s}
+  .brand-card:hover{border-color:var(--or-mid)}
+  .brand-name{font-family:var(--sg);font-size:22px;font-weight:800;color:var(--or);margin-bottom:4px}
+  .brand-tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:18px}
+  .brand-desc{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:24px}
+  .spec-group{margin-bottom:20px}
+  .spec-group-title{font-family:var(--sg);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(242,101,34,.75);margin-bottom:10px}
+  .spec-list{display:flex;flex-direction:column;gap:8px}
+  .spec-item{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .spec-item:last-child{border-bottom:none;padding-bottom:0}
+  .spec-key{font-size:13px;color:var(--muted)}
+  .spec-val{font-size:13px;font-weight:700;color:var(--text);text-align:right}
+  .pill-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .pill{background:var(--or-dim);border:1px solid var(--or-mid);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--or)}
+
+  /* ── FOOTER ── */
+  footer{background:var(--surface);border-top:1px solid var(--border);text-align:center;padding:20px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="logo-text">
+      <div class="logo-name"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+      <div class="logo-sub">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="header-divider"></div>
+  <div class="header-title">Equipamentos Protegidos &amp; <span>Baterias</span></div>
+</header>
+
+<main>
+
+  <!-- ── TABELA DE CARGAS ── -->
+  <section class="section">
+    <div class="section-eye">Autonomia de Bateria</div>
+    <h2 class="section-h2">Equipamentos Protegidos</h2>
+    <div class="section-rule"></div>
+    <p class="section-desc">Estes são os equipamentos essenciais contemplados no dimensionamento padrão do sistema híbrido LumenGrid. A autonomia real depende da capacidade da bateria instalada e das cargas ativas no momento da falta de energia.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Equipamento</th>
+            <th class="center">Qtd.</th>
+            <th>Potência Nominal</th>
+            <th class="right">Consumo Efetivo*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Geladeira</td><td class="center">1</td><td>260 W (duty 35%)</td><td class="right">91 W</td></tr>
+          <tr><td>Freezer</td><td class="center">1</td><td>200 W (duty 35%)</td><td class="right">70 W</td></tr>
+          <tr><td>Iluminação LED (conjunto)</td><td class="center">1</td><td>90 W</td><td class="right">90 W</td></tr>
+          <tr><td>Aparelho de TV</td><td class="center">1</td><td>100 W</td><td class="right">100 W</td></tr>
+          <tr><td>Roteador Wi-Fi</td><td class="center">1</td><td>10 W</td><td class="right">10 W</td></tr>
+          <tr><td>Sistema de Câmeras</td><td class="center">1</td><td>60 W</td><td class="right">60 W</td></tr>
+          <tr><td>Alarme</td><td class="center">1</td><td>60 W</td><td class="right">60 W</td></tr>
+          <tr><td>Filtro de Água</td><td class="center">1</td><td>70 W (duty 50%)</td><td class="right">35 W</td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Total de consumo simultâneo</td>
+            <td class="right">516 W</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="table-note">* Consumo efetivo = potência nominal × ciclo de trabalho do equipamento. A autonomia é ampliada quando o sistema está gerando energia solar simultaneamente.</p>
+  </section>
+
+  <!-- ── MARCAS ── -->
+  <section class="section">
+    <div class="section-eye">Tecnologia Embarcada</div>
+    <h2 class="section-h2">Marcas &amp; Equipamentos</h2>
+    <div class="section-rule"></div>
+    <p class="section-desc">O sistema híbrido LumenGrid utiliza inversores e baterias de marcas líderes com presença global, homologação ANEEL e suporte técnico no Brasil.</p>
+
+    <div class="brand-grid">
+
+      <!-- GoodWe -->
+      <div class="brand-card">
+        <div class="brand-name">GoodWe</div>
+        <div class="brand-tag">Inversores &amp; Baterias Residenciais</div>
+        <p class="brand-desc">Fundada em 2010, a GoodWe é uma das maiores fabricantes de inversores solares do mundo, com mais de 2 milhões de unidades instaladas em 100+ países. Focada em soluções residenciais e comerciais de alto desempenho.</p>
+
+        <div class="spec-group">
+          <div class="spec-group-title">Linha Lynx — Baterias de Lítio</div>
+          <div class="spec-list">
+            <div class="spec-item"><span class="spec-key">Tecnologia</span><span class="spec-val">LFP (LiFePO₄)</span></div>
+            <div class="spec-item"><span class="spec-key">Capacidades disponíveis</span><span class="spec-val">3,6 kWh / 6,0 kWh / 9,6 kWh</span></div>
+            <div class="spec-item"><span class="spec-key">Ciclos de vida (80% DoD)</span><span class="spec-val">&gt; 6.000 ciclos</span></div>
+            <div class="spec-item"><span class="spec-key">Profundidade de descarga</span><span class="spec-val">90% DoD</span></div>
+            <div class="spec-item"><span class="spec-key">Garantia</span><span class="spec-val">10 anos</span></div>
+          </div>
+        </div>
+
+        <div class="spec-group">
+          <div class="spec-group-title">Inversores Híbridos</div>
+          <div class="spec-list">
+            <div class="spec-item"><span class="spec-key">Modelos residenciais</span><span class="spec-val">3 kW / 5 kW / 6 kW / 10 kW</span></div>
+            <div class="spec-item"><span class="spec-key">Tipo de saída</span><span class="spec-val">Monofásico / Bifásico</span></div>
+            <div class="spec-item"><span class="spec-key">Eficiência máxima</span><span class="spec-val">97,6%</span></div>
+            <div class="spec-item"><span class="spec-key">Garantia inversor</span><span class="spec-val">5–10 anos</span></div>
+          </div>
+        </div>
+
+        <div class="pill-list">
+          <span class="pill">ANEEL Homologado</span>
+          <span class="pill">App SolarGo</span>
+          <span class="pill">UPS integrado</span>
+          <span class="pill">Monitoramento 24h</span>
+        </div>
+      </div>
+
+      <!-- Sigenergy -->
+      <div class="brand-card">
+        <div class="brand-name">Sigenergy</div>
+        <div class="brand-tag">Inversores Trifásicos &amp; Bifásicos</div>
+        <p class="brand-desc">A Sigenergy é uma fabricante de nova geração especializada em sistemas de energia integrada (inversor + bateria + EV charger), com arquitetura modular e foco em escalabilidade residencial e comercial.</p>
+
+        <div class="spec-group">
+          <div class="spec-group-title">Inversores Trifásicos</div>
+          <div class="spec-list">
+            <div class="spec-item"><span class="spec-key">5 kW (trifásico)</span><span class="spec-val">Residencial compacto</span></div>
+            <div class="spec-item"><span class="spec-key">12 kW (trifásico)</span><span class="spec-val">Residencial / Pequeno comércio</span></div>
+            <div class="spec-item"><span class="spec-key">30 kW (trifásico)</span><span class="spec-val">Comercial</span></div>
+          </div>
+        </div>
+
+        <div class="spec-group">
+          <div class="spec-group-title">Inversores Bifásicos</div>
+          <div class="spec-list">
+            <div class="spec-item"><span class="spec-key">4,8 kW (bifásico)</span><span class="spec-val">Residencial</span></div>
+            <div class="spec-item"><span class="spec-key">7,5 kW (bifásico)</span><span class="spec-val">Residencial ampliado</span></div>
+            <div class="spec-item"><span class="spec-key">11,4 kW (bifásico)</span><span class="spec-val">Residencial / Comercial leve</span></div>
+          </div>
+        </div>
+
+        <div class="spec-group">
+          <div class="spec-group-title">Baterias (LFP Modular)</div>
+          <div class="spec-list">
+            <div class="spec-item"><span class="spec-key">Módulo 6 kWh</span><span class="spec-val">Expansível em stack</span></div>
+            <div class="spec-item"><span class="spec-key">Módulo 9 kWh</span><span class="spec-val">Expansível em stack</span></div>
+            <div class="spec-item"><span class="spec-key">Profundidade de descarga</span><span class="spec-val">90% DoD</span></div>
+            <div class="spec-item"><span class="spec-key">Garantia</span><span class="spec-val">10 anos</span></div>
+          </div>
+        </div>
+
+        <div class="pill-list">
+          <span class="pill">Arquitetura Modular</span>
+          <span class="pill">EV Charger integrado</span>
+          <span class="pill">ANEEL Homologado</span>
+          <span class="pill">App SigenStor</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>Feito por Domani Consultoria</footer>
+
+</body>
+</html>

@@ -101,7 +101,7 @@ h1 em{font-style:italic;color:var(--or);letter-spacing:-2px}
 .hero-sub{font-size:16px;line-height:1.8;color:var(--t2);max-width:440px;margin-bottom:44px;font-weight:400;letter-spacing:.1px}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
 .btn-primary{padding:14px 28px;background:var(--or);color:#fff;border-radius:9px;font-size:14px;font-weight:700;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.btn-primary:hover{background:var(--or-l);transform:translateY(-1px);box-shadow:0 8px 24px rgba(232,100,26,.25)}
+.btn-primary:hover{background:var(--or-l);transform:translateY(-2px);box-shadow:0 10px 32px rgba(201,82,9,.32)}
 .btn-secondary{padding:14px 28px;background:transparent;color:var(--t1);border:1.5px solid rgba(0,0,0,.18);border-radius:9px;font-size:14px;font-weight:600;text-decoration:none;transition:all .15s;white-space:nowrap}
 .btn-secondary:hover{border-color:var(--or);color:var(--or);background:var(--or-dim)}
 /* Hero feature cards */
@@ -194,11 +194,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 
 /* ── SOLUTIONS ── */
 .solutions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.sol-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:32px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04)}
-.sol-card:hover{border-color:rgba(232,100,26,.3);transform:translateY(-3px)}
+.sol-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:32px;position:relative;overflow:hidden;transition:border-color .28s cubic-bezier(.4,0,.2,1),transform .28s cubic-bezier(.4,0,.2,1),box-shadow .28s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 4px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);will-change:transform}
+.sol-card:hover{border-color:rgba(232,100,26,.42);transform:translateY(-6px);box-shadow:0 20px 56px rgba(0,0,0,.12),0 0 0 1px rgba(232,100,26,.14),0 8px 24px rgba(232,100,26,.07)}
 .sol-card.featured{border-color:rgba(232,100,26,.35);background:linear-gradient(135deg,var(--s1) 0%,rgba(232,100,26,.06) 100%)}
 .sol-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--b1)}
 .sol-card.featured::before{background:linear-gradient(90deg,transparent,var(--or),transparent)}
+.sol-card.featured:hover{box-shadow:0 20px 56px rgba(0,0,0,.12),0 0 0 1px rgba(232,100,26,.32),0 8px 24px rgba(232,100,26,.14)}
+.solutions-grid .sol-card:nth-child(2){transition-delay:.08s}
+.solutions-grid .sol-card:nth-child(3){transition-delay:.16s}
 .sol-icon{width:48px;height:48px;background:var(--or-dim);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;border:1px solid rgba(232,100,26,.2)}
 .sol-icon svg{width:24px;height:24px;color:var(--or)}
 .sol-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;margin-bottom:12px}
@@ -391,8 +394,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 
 /* ── GUARANTEES ── */
 .guar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
-.guar-item{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:28px;display:flex;gap:16px;align-items:flex-start;transition:border-color .15s,box-shadow .15s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.guar-item:hover{border-color:rgba(232,100,26,.2)}
+.guar-item{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:28px;display:flex;gap:16px;align-items:flex-start;transition:border-color .25s,box-shadow .25s,transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.guar-item:hover{border-color:rgba(232,100,26,.25);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.08)}
 .guar-ico{width:40px;height:40px;border-radius:8px;background:var(--or-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(232,100,26,.2)}
 .guar-ico svg{width:20px;height:20px;color:var(--or)}
 .guar-title{font-size:14px;font-weight:700;margin-bottom:6px}
@@ -453,8 +456,8 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
 
 /* ── POR QUE ESCOLHER ── */
 .pq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.pq-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:32px;display:flex;gap:20px;align-items:flex-start;transition:border-color .2s,box-shadow .2s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.pq-card:hover{border-color:rgba(232,100,26,.25);box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.pq-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:32px;display:flex;gap:20px;align-items:flex-start;transition:border-color .25s,box-shadow .25s,transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.pq-card:hover{border-color:rgba(232,100,26,.28);box-shadow:0 8px 32px rgba(0,0,0,.1);transform:translateY(-3px)}
 .pq-ico{width:44px;height:44px;border-radius:10px;background:var(--or-dim);border:1px solid rgba(232,100,26,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .pq-ico svg{width:22px;height:22px;color:var(--or)}
 .pq-title{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:8px}
@@ -463,14 +466,11 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
 /* ── SECTION TRANSITIONS ── */
 /* Dark sections get subtle gradient fade at borders */
 #projetos{position:relative}
-#projetos::before{content:'';position:absolute;top:0;left:0;right:0;height:80px;background:linear-gradient(to bottom,var(--s2) 0%,transparent 100%);z-index:1;pointer-events:none}
+#projetos::before{content:none}
 #como-funciona{position:relative}
-#como-funciona::before{content:'';position:absolute;top:0;left:0;right:0;height:80px;background:linear-gradient(to bottom,var(--s1) 0%,transparent 100%);z-index:1;pointer-events:none}
-#como-funciona::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,var(--s1) 0%,transparent 100%);z-index:1;pointer-events:none}
 .cta-sec{position:relative}
-.cta-sec::before{content:'';position:absolute;top:0;left:0;right:0;height:60px;background:linear-gradient(to bottom,var(--s1) 0%,transparent 100%);z-index:1;pointer-events:none}
 #hibrido-infografico{position:relative}
-#hibrido-infografico::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,var(--s1) 0%,transparent 100%);z-index:1;pointer-events:none}
+#hibrido-infografico::after{content:none}
 
 /* ── REVEAL ANIMATIONS ── */
 .reveal,.reveal-left,.reveal-right{opacity:0;transition:opacity .6s ease,transform .6s ease}
@@ -568,6 +568,69 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
 .outros-desc{font-size:14px;color:var(--t2);line-height:1.7}
 @media(max-width:900px){.outros-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.outros-grid{grid-template-columns:1fr}}
+/* ══════════════════════════════════════
+   DARK PREMIUM — Hero & Section Depth
+   ══════════════════════════════════════ */
+
+
+/* Seções escuras: gradiente em vez de preto fosco plano */
+.manifesto-sec{background:linear-gradient(155deg,#0B0B10 0%,#0F0D15 50%,#0C0C12 100%)}
+#projetos{background:linear-gradient(158deg,#0C0C12 0%,#0E0D15 50%,#0B0B10 100%)}
+#hibrido-infografico{background:linear-gradient(155deg,#0D0C13 0%,#100F16 100%)}
+#como-funciona{background:linear-gradient(158deg,#0B0B10 0%,#0F0E15 100%)}
+.cta-sec{background:linear-gradient(158deg,#0E0D13 0%,#12111A 60%,#0C0C12 100%)}
+footer{background:linear-gradient(#0C0C11,#0C0C11)}
+nav{background:rgba(12,12,18,.93);backdrop-filter:blur(18px)}
+
+/* Sol-photo-card: borda sutil para definition */
+.sol-photo-card{border:1px solid rgba(255,255,255,.05)}
+
+/* Mobile hero: manter bg escuro no overlay da foto */
+@media(max-width:768px){
+}
+
+/* ── MANIFESTO DARK SECTION ── */
+.manifesto-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.manifesto-bento{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.manifesto-bento-card{
+  background:linear-gradient(#0D0D14,#0D0D14) padding-box,
+             linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.02) 65%) border-box;
+  border:1px solid transparent;border-radius:16px;padding:28px 24px;transition:background .3s
+}
+.manifesto-bento-card:hover{
+  background:linear-gradient(#101018,#101018) padding-box,
+             linear-gradient(135deg,rgba(201,82,9,.5),rgba(201,82,9,.06) 75%) border-box
+}
+.manifesto-bento-card.accent{
+  background:linear-gradient(rgba(201,82,9,.1),rgba(201,82,9,.04)) padding-box,
+             linear-gradient(135deg,rgba(201,82,9,.55),rgba(201,82,9,.12) 75%) border-box
+}
+.manifesto-bento-num{font-family:'Montserrat',sans-serif;font-size:clamp(38px,3.5vw,52px);font-weight:900;color:var(--or);letter-spacing:-3px;line-height:1;text-shadow:0 0 60px rgba(201,82,9,.5),0 0 20px rgba(201,82,9,.2)}
+.manifesto-bento-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:rgba(241,241,245,.38);margin-top:10px;line-height:1.5}
+
+/* ── COMO FUNCIONA CARDS ── */
+.cf-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cf-card{
+  background:linear-gradient(#0D0D12,#0D0D12) padding-box,
+            linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.015) 65%) border-box;
+  border:1px solid transparent;border-radius:16px;padding:32px 24px;
+  transition:background .3s,transform .28s cubic-bezier(.4,0,.2,1)
+}
+.cf-card:hover{
+  background:linear-gradient(#101018,#101018) padding-box,
+             linear-gradient(145deg,rgba(201,82,9,.5),rgba(201,82,9,.04) 75%) border-box;
+  transform:translateY(-5px)
+}
+.cf-num{font-family:'Montserrat',sans-serif;font-size:72px;font-weight:900;color:rgba(201,82,9,.14);line-height:.85;letter-spacing:-4px;margin-bottom:20px;transition:color .3s,text-shadow .3s;text-shadow:0 0 40px rgba(201,82,9,.1)}
+.cf-card:hover .cf-num{color:rgba(201,82,9,.3);text-shadow:0 0 80px rgba(201,82,9,.55),0 0 24px rgba(201,82,9,.28)}
+.cf-title{font-size:14px;font-weight:700;color:#F4F4F5;margin-bottom:10px;border-top:1px solid rgba(201,82,9,.3);padding-top:14px;line-height:1.35}
+.cf-desc{font-size:12px;color:rgba(241,241,245,.4);line-height:1.65}
+@media(max-width:900px){
+  .manifesto-grid{grid-template-columns:1fr;gap:40px}
+  .cf-cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){.cf-cards{grid-template-columns:1fr}}
+
 /* ── LIGHTBOX ── */
 @keyframes lbIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 #lightbox{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
@@ -581,9 +644,64 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
 #lightbox-caption{position:fixed;bottom:0;left:0;right:0;padding:18px 24px 24px;background:linear-gradient(transparent,rgba(0,0,0,.85));text-align:center}
 #lightbox-title{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:#FAFAFA}
 #lightbox-sub{font-size:13px;color:rgba(250,250,250,.55);margin-top:4px}
+
+/* ── SOLUTION PHOTO CARDS (estilo HomeTree) ── */
+.sol-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sol-photo-card{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:3/4;cursor:pointer;background:#111}
+.sol-photo-card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.sol-photo-card:hover .sol-photo-card-img{transform:scale(1.06)}
+.sol-photo-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.35) 48%,rgba(0,0,0,.05) 72%);display:flex;flex-direction:column;justify-content:flex-end;padding:28px}
+.sol-photo-cat{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--or);margin-bottom:10px}
+.sol-photo-title{font-family:'Montserrat',sans-serif;font-size:clamp(24px,2.2vw,32px);font-weight:900;color:#fff;line-height:1.05;margin-bottom:8px;letter-spacing:-.5px}
+.sol-photo-desc{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:20px;max-height:0;overflow:hidden;opacity:0;transition:max-height .35s ease,opacity .35s ease}
+.sol-photo-card:hover .sol-photo-desc{max-height:80px;opacity:1}
+.sol-photo-cta{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:10px 18px;background:var(--or);color:#fff;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;transform:translateY(10px);opacity:0;transition:transform .32s ease,opacity .32s ease,background .15s}
+.sol-photo-card:hover .sol-photo-cta{transform:translateY(0);opacity:1}
+.sol-photo-cta:hover{background:var(--or-l)}
+.sol-plus{position:absolute;bottom:22px;right:22px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.88);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:300;color:var(--ink);line-height:1;transition:transform .25s,background .25s,color .25s;pointer-events:none;user-select:none}
+.sol-photo-card:hover .sol-plus{transform:rotate(45deg);background:var(--or);color:#fff}
+
+/* ── PROJ GRID (galeria moderna) ── */
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:48px}
+.proj-card{position:relative;border-radius:14px;overflow:hidden;background:linear-gradient(#181820,#141419);cursor:pointer;border:1px solid rgba(255,255,255,.06)}
+.proj-card-inner{width:100%;aspect-ratio:4/3;overflow:hidden;position:relative}
+.proj-card.proj-wide{grid-column:span 2}
+.proj-card.proj-wide .proj-card-inner{aspect-ratio:16/9}
+.proj-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s ease}
+.proj-card:hover .proj-img{transform:scale(1.07)}
+.proj-type-tag{position:absolute;top:12px;left:12px;z-index:2;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(9,9,12,.65);backdrop-filter:blur(6px);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.1)}
+.proj-type-tag.tag-hibrido{background:rgba(201,82,9,.8);border-color:rgba(201,82,9,.4)}
+.proj-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(9,9,12,.9) 0%,transparent 55%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:18px}
+.proj-card:hover .proj-overlay{opacity:1}
+.proj-info-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:#fff;line-height:1.2}
+.proj-info-sub{font-size:11px;color:var(--or);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+
+@media(max-width:768px){
+  .sol-photo-grid{grid-template-columns:1fr;gap:12px}
+  .sol-photo-card{aspect-ratio:4/3}
+  .sol-photo-desc{max-height:60px;opacity:.75}
+  .sol-photo-cta{transform:translateY(0);opacity:1}
+  .proj-grid{grid-template-columns:repeat(2,1fr)}
+  .proj-card.proj-wide{grid-column:span 2}
+}
+@media(max-width:480px){
+  .proj-grid{grid-template-columns:1fr}
+  .proj-card.proj-wide,.proj-card.proj-wide .proj-card-inner{grid-column:span 1;aspect-ratio:4/3}
+}
 </style>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NC2ZVM48');</script>
+<!-- End Google Tag Manager -->
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC2ZVM48"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- NAV -->
 <nav id="mainNav">
@@ -639,7 +757,7 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
     <a href="#projetos">Projetos</a>
     <a href="#outros-servicos">Serviços</a>
     <a href="#faq">FAQ</a>
-    <a href="#contato" class="nav-cta">Solicitar Proposta</a>
+    <a href="orcamento.html" class="nav-cta">Solicitar Proposta</a>
   </div>
   <button class="nav-menu" id="navMenuBtn" aria-label="Menu">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -651,7 +769,7 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
   <a href="#projetos" onclick="closeMobMenu()">Projetos</a>
   <a href="#como-funciona" onclick="closeMobMenu()">Como Funciona</a>
   <a href="#faq" onclick="closeMobMenu()">FAQ</a>
-  <a href="#contato" onclick="closeMobMenu()" style="color:var(--or)">Solicitar Proposta</a>
+  <a href="orcamento.html" onclick="closeMobMenu()" style="color:var(--or)">Solicitar Proposta</a>
 </div>
 
 <!-- HERO -->
@@ -827,63 +945,85 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
   </div>
 </section>
 
+<!-- MANIFESTO + STATS DARK -->
+<section class="manifesto-sec" style="padding:100px 6vw;position:relative;overflow:hidden;border-top:1px solid rgba(255,255,255,.05)">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 75% 50%,rgba(201,82,9,.05),transparent);pointer-events:none"></div>
+  <div class="sec-inner">
+    <div class="manifesto-grid">
+
+      <!-- Texto manifesto -->
+      <div class="reveal-left">
+        <div style="width:36px;height:2px;background:var(--or);margin-bottom:28px;opacity:.9"></div>
+        <h2 style="font-family:'Montserrat',sans-serif;font-size:clamp(30px,4vw,58px);font-weight:900;letter-spacing:-2.5px;line-height:1.02;color:#F4F4F5;margin-bottom:0">
+          Não trabalhamos<br>com soluções genéricas.<br><em style="font-style:normal;color:var(--or)">Construímos o sistema</em><br>que cuida da sua casa.
+        </h2>
+        <p style="font-size:15px;color:rgba(241,241,245,.48);line-height:1.75;margin-top:28px;max-width:460px">Cada projeto começa com uma análise do seu consumo, do imóvel e das suas prioridades. O resultado é uma solução que funciona agora e acompanha você pelos próximos anos.</p>
+        <a href="orcamento.html" class="btn-primary" style="margin-top:32px;display:inline-flex">Solicitar análise gratuita</a>
+      </div>
+
+      <!-- Bento grid de stats -->
+      <div class="manifesto-bento reveal-right">
+        <div class="manifesto-bento-card">
+          <div class="manifesto-bento-num">25</div>
+          <div class="manifesto-bento-lbl">anos de vida útil dos painéis</div>
+        </div>
+        <div class="manifesto-bento-card accent">
+          <div class="manifesto-bento-num">0ms</div>
+          <div class="manifesto-bento-lbl">de interrupção no sistema híbrido</div>
+        </div>
+        <div class="manifesto-bento-card">
+          <div class="manifesto-bento-num">85<span style="font-size:55%;letter-spacing:-1px">%</span></div>
+          <div class="manifesto-bento-lbl">de redução na conta de energia</div>
+        </div>
+        <div class="manifesto-bento-card">
+          <div class="manifesto-bento-num">20d</div>
+          <div class="manifesto-bento-lbl">prazo médio de instalação</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- SOLUÇÕES -->
 <section id="solucoes" style="background:#fff;border-top:1px solid var(--b1);border-bottom:1px solid var(--b1)">
   <div class="sec-inner">
     <div class="sec-tag reveal">Nossas Soluções</div>
     <h2 class="reveal">Energia inteligente para diferentes necessidades.</h2>
     <p class="sec-sub reveal">Não trabalhamos com uma solução única para todos. Analisamos seu consumo, o imóvel e suas prioridades para recomendar a configuração mais adequada.</p>
-    <div class="solutions-grid">
+    <div class="sol-photo-grid">
 
-      <div class="sol-card reveal-left">
-        <div class="sol-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <div class="sol-photo-card reveal-left" onclick="openSolModal('ongrid')">
+        <img class="sol-photo-card-img" src="imagens/PROJETOS/instalacao-solar-ceu-azul.jpeg" alt="Sistema On-Grid — instalação solar" loading="lazy">
+        <div class="sol-photo-overlay">
+          <div class="sol-photo-cat">Sistema Solar</div>
+          <div class="sol-photo-title">On-Grid</div>
+          <div class="sol-photo-desc">Reduz os gastos com energia. O excedente é compensado pela concessionária — com homologação e suporte inclusos.</div>
+          <a href="orcamento.html" class="sol-photo-cta" onclick="event.stopPropagation()">Solicitar análise →</a>
         </div>
-        <div class="sol-title">Sistema On-Grid</div>
-        <div class="sol-tagline">Para reduzir os gastos com energia.</div>
-        <p class="sol-desc">O sistema produz energia durante o dia e utiliza a rede da concessionária para compensar o excedente, conforme as regras vigentes.</p>
-        <ul class="sol-list">
-          <li>Dimensionamento conforme o consumo</li>
-          <li>Compensação de energia pela concessionária</li>
-          <li>Monitoramento pelo aplicativo</li>
-          <li>Homologação e suporte técnico</li>
-          <li>Retorno calculado para o seu projeto</li>
-        </ul>
-        <a href="#contato" class="sol-cta">Solicitar análise On-Grid →</a>
+        <div class="sol-plus">+</div>
       </div>
 
-      <div class="sol-card featured reveal">
-        <div class="sol-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+      <div class="sol-photo-card reveal" onclick="openSolModal('hibrido')">
+        <img class="sol-photo-card-img" src="imagens/PROJETOS/sistema-hibrido-premium.png" alt="Sistema Híbrido com baterias" loading="lazy">
+        <div class="sol-photo-overlay">
+          <div class="sol-photo-cat">Mais Completo · Recomendado</div>
+          <div class="sol-photo-title">Híbrido</div>
+          <div class="sol-photo-desc">Solar + baterias. Funciona durante apagões. Atende residências, empresas e apartamentos.</div>
+          <a href="orcamento.html" class="sol-photo-cta" onclick="event.stopPropagation()">Solicitar análise →</a>
         </div>
-        <div class="sol-title">Sistema Híbrido</div>
-        <div class="sol-tagline">Economia solar com armazenamento e proteção durante quedas de energia.</div>
-        <p class="sol-desc">O sistema utiliza inversor híbrido e baterias, podendo ou não incluir painéis solares — inclusive apartamentos podem adotar a solução apenas para armazenamento. As cargas atendidas e o tempo de autonomia são definidos de acordo com a necessidade de cada cliente.</p>
-        <ul class="sol-list">
-          <li>Armazenamento de energia em baterias</li>
-          <li>Atendimento de cargas configuradas durante apagões</li>
-          <li>Monitoramento do sistema</li>
-          <li>Possibilidade de expansão</li>
-          <li>Projetos para residências, empresas e condomínios</li>
-        </ul>
-        <a href="#contato" class="sol-cta sol-cta-hi">Solicitar análise do sistema híbrido →</a>
+        <div class="sol-plus">+</div>
       </div>
 
-      <div class="sol-card reveal-right">
-        <div class="sol-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h2v5H7zM15 8l-2 2.5h3L14 13"/></svg>
+      <div class="sol-photo-card reveal-right" onclick="openSolModal('wallbox')">
+        <img class="sol-photo-card-img" src="imagens/TECNOLOGIA/wallbox-solar-premium.png" alt="Wallbox para veículo elétrico" loading="lazy">
+        <div class="sol-photo-overlay">
+          <div class="sol-photo-cat">Carregadores EV</div>
+          <div class="sol-photo-title">Wallbox</div>
+          <div class="sol-photo-desc">Carregue seu veículo com inteligência — instalação projetada e integrada ao sistema solar.</div>
+          <a href="orcamento.html" class="sol-photo-cta" onclick="event.stopPropagation()">Solicitar análise →</a>
         </div>
-        <div class="sol-title">Wallbox — EV</div>
-        <div class="sol-tagline">Carregue seu veículo com mais praticidade e inteligência.</div>
-        <p class="sol-desc">Projetamos a instalação do carregador de acordo com o veículo, a estrutura elétrica do imóvel e a possibilidade de integração com energia solar.</p>
-        <ul class="sol-list">
-          <li>Análise da instalação elétrica</li>
-          <li>Modelos com diferentes potências</li>
-          <li>Integração com sistema solar</li>
-          <li>Gestão de carga, conforme o equipamento</li>
-          <li>Soluções para residências, empresas e condomínios</li>
-        </ul>
-        <a href="#contato" class="sol-cta">Solicitar análise para Wallbox →</a>
+        <div class="sol-plus">+</div>
       </div>
 
     </div>
@@ -1074,97 +1214,65 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
     <div class="sec-tag reveal">Portfólio</div>
     <h2 class="reveal">Projetos desenvolvidos para diferentes necessidades.</h2>
     <p class="sec-sub reveal">Conheça algumas instalações realizadas pela equipe.</p>
-    <div class="gallery-grid" id="galleryGrid">
+    <div class="proj-grid" id="galleryGrid">
 
-      <div class="gallery-item reveal" data-title="Residencial" data-sub="Sistema On-Grid" data-full="FOTOS%20PARA%20SITE/casa3.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="FOTOS%20PARA%20SITE/casa3.webp" alt="Sistema solar residencial" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Residencial</div><div class="gi-sub">Sistema On-Grid</div></div></div>
+      <!-- Linha 1: destaque (wide) + card normal -->
+      <div class="proj-card proj-wide reveal" onclick="lbOpen(this)" data-title="Residencial" data-sub="Sistema On-Grid" data-full="FOTOS%20PARA%20SITE/casa3.webp" data-before="1200" data-after="95">
+        <div class="proj-card-inner">
+          <img class="proj-img" src="FOTOS%20PARA%20SITE/casa3.webp" alt="Sistema solar residencial" loading="lazy">
         </div>
+        <div class="proj-type-tag">On-Grid</div>
+        <div class="proj-overlay"><div><div class="proj-info-title">Residencial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
-      <div class="gallery-item reveal" data-title="Residencial" data-sub="Sistema On-Grid" data-full="FOTOS%20PARA%20SITE/casa4.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="FOTOS%20PARA%20SITE/casa4.webp" alt="Sistema solar residencial" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Residencial</div><div class="gi-sub">Sistema On-Grid</div></div></div>
+      <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Sistema Híbrido Residencial" data-sub="Inversor híbrido + bateria" data-full="FOTOS%20PARA%20SITE/hibrido-residencial.webp" data-type="hibrido" data-before="1800" data-after="120">
+        <div class="proj-card-inner">
+          <img class="proj-img" src="FOTOS%20PARA%20SITE/hibrido-residencial.webp" alt="Sistema híbrido residencial" loading="lazy" style="object-position:center top">
         </div>
+        <div class="proj-type-tag tag-hibrido">Híbrido</div>
+        <div class="proj-overlay"><div><div class="proj-info-title">Sistema Híbrido Residencial</div><div class="proj-info-sub">Inversor híbrido + bateria</div></div></div>
       </div>
 
-      <div class="gallery-item reveal" data-title="Industrial" data-sub="Sistema On-Grid" data-full="FOTOS%20PARA%20SITE/industrial.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="FOTOS%20PARA%20SITE/industrial.webp" alt="Sistema solar industrial" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Industrial</div><div class="gi-sub">Sistema On-Grid</div></div></div>
+      <!-- Linha 2: card normal + destaque (wide) -->
+      <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Industrial" data-sub="Sistema On-Grid" data-full="FOTOS%20PARA%20SITE/industrial.webp" data-before="4200" data-after="320">
+        <div class="proj-card-inner">
+          <img class="proj-img" src="FOTOS%20PARA%20SITE/industrial.webp" alt="Sistema solar industrial" loading="lazy">
         </div>
+        <div class="proj-type-tag">On-Grid</div>
+        <div class="proj-overlay"><div><div class="proj-info-title">Industrial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
-      <div class="gallery-item reveal" data-title="Sistema Híbrido Residencial" data-sub="Inversor híbrido e bateria" data-full="FOTOS%20PARA%20SITE/hibrido-residencial.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="FOTOS%20PARA%20SITE/hibrido-residencial.webp" alt="Sistema híbrido residencial" loading="lazy" width="800" height="533" style="object-position:center top">
-          <div class="gi-overlay"><div><div class="gi-info">Sistema Híbrido Residencial</div><div class="gi-sub">Inversor híbrido e bateria</div></div></div>
+      <div class="proj-card proj-wide reveal" onclick="lbOpen(this)" data-title="Sistema Híbrido Comercial" data-sub="Inversor híbrido + baterias" data-full="FOTOS%20PARA%20SITE/hibrido-comercial.webp" data-type="hibrido" data-before="2800" data-after="180">
+        <div class="proj-card-inner">
+          <img class="proj-img" src="FOTOS%20PARA%20SITE/hibrido-comercial.webp" alt="Sistema híbrido comercial" loading="lazy">
         </div>
+        <div class="proj-type-tag tag-hibrido">Híbrido</div>
+        <div class="proj-overlay"><div><div class="proj-info-title">Sistema Híbrido Comercial</div><div class="proj-info-sub">Inversor híbrido + baterias</div></div></div>
       </div>
 
-      <div class="gallery-item reveal" data-title="Condomínio" data-sub="Sistema On-Grid — áreas comuns" data-full="FOTOS%20PARA%20SITE/condominio.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="FOTOS%20PARA%20SITE/condominio.webp" alt="Sistema solar em condomínio" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Condomínio</div><div class="gi-sub">Sistema On-Grid — áreas comuns</div></div></div>
+      <!-- Linha 3: 3 cards iguais -->
+      <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Residencial" data-sub="Sistema On-Grid" data-full="FOTOS%20PARA%20SITE/casa4.webp" data-before="950" data-after="75">
+        <div class="proj-card-inner">
+          <img class="proj-img" src="FOTOS%20PARA%20SITE/casa4.webp" alt="Sistema solar residencial" loading="lazy">
         </div>
+        <div class="proj-type-tag">On-Grid</div>
+        <div class="proj-overlay"><div><div class="proj-info-title">Residencial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
-      <div class="gallery-item reveal" data-title="Sistema Híbrido Comercial" data-sub="Inversor híbrido e baterias" data-full="FOTOS%20PARA%20SITE/hibrido-comercial.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="FOTOS%20PARA%20SITE/hibrido-comercial.webp" alt="Sistema híbrido comercial" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Sistema Híbrido Comercial</div><div class="gi-sub">Inversor híbrido e baterias</div></div></div>
+      <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Condomínio" data-sub="On-Grid — áreas comuns" data-full="FOTOS%20PARA%20SITE/condominio.webp" data-before="3500" data-after="280">
+        <div class="proj-card-inner">
+          <img class="proj-img" src="FOTOS%20PARA%20SITE/condominio.webp" alt="Sistema solar em condomínio" loading="lazy">
         </div>
+        <div class="proj-type-tag">On-Grid</div>
+        <div class="proj-overlay"><div><div class="proj-info-title">Condomínio</div><div class="proj-info-sub">On-Grid — áreas comuns</div></div></div>
       </div>
 
-      <div class="gallery-item reveal" data-title="Rural" data-sub="Sistema On-Grid" data-full="FOTOS%20PARA%20SITE/residencial-campo.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="FOTOS%20PARA%20SITE/residencial-campo.webp" alt="Sistema solar rural" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Rural</div><div class="gi-sub">Sistema On-Grid</div></div></div>
+      <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Vista Aérea — Residencial" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-drone-residencial.webp" data-before="1100" data-after="85">
+        <div class="proj-card-inner">
+          <img class="proj-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-drone-residencial.webp" alt="Instalação drone residencial" loading="lazy">
         </div>
-      </div>
-
-      <div class="gallery-item reveal" data-title="Residencial" data-sub="Sistema On-Grid" data-full="FOTOS%20PARA%20SITE/residencial-sp.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="FOTOS%20PARA%20SITE/residencial-sp.webp" alt="Sistema solar residencial SP" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Residencial</div><div class="gi-sub">Sistema On-Grid</div></div></div>
-        </div>
-      </div>
-
-      <div class="gallery-item reveal" data-title="Residencial — Vista Aérea" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-drone-residencial.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-drone-residencial.webp" alt="Instalação solar residencial vista aérea" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Residencial — Vista Aérea</div><div class="gi-sub">Sistema On-Grid</div></div></div>
-        </div>
-      </div>
-
-      <div class="gallery-item reveal" data-title="Residencial" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-telhado-campo.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-telhado-campo.webp" alt="Instalação solar em telhado cerâmico" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Residencial</div><div class="gi-sub">Sistema On-Grid</div></div></div>
-        </div>
-      </div>
-
-      <div class="gallery-item reveal" data-title="Residencial" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-erila.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-erila.webp" alt="Instalação solar residencial" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Residencial</div><div class="gi-sub">Sistema On-Grid</div></div></div>
-        </div>
-      </div>
-
-      <div class="gallery-item reveal" data-title="Residencial" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-erik.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-erik.webp" alt="Instalação solar residencial" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Residencial</div><div class="gi-sub">Sistema On-Grid</div></div></div>
-        </div>
-      </div>
-
-      <div class="gallery-item reveal" data-title="Comercial" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-solange.webp" onclick="lbOpen(this)">
-        <div class="gi-inner">
-          <img class="gi-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-solange.webp" alt="Instalação solar comercial" loading="lazy" width="800" height="533">
-          <div class="gi-overlay"><div><div class="gi-info">Comercial</div><div class="gi-sub">Sistema On-Grid</div></div></div>
-        </div>
+        <div class="proj-type-tag">On-Grid</div>
+        <div class="proj-overlay"><div><div class="proj-info-title">Vista Aérea — Residencial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
     </div>
@@ -1172,7 +1280,7 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
 </section>
 
 <!-- INFOGRÁFICO SISTEMA HÍBRIDO -->
-<section id="hibrido-infografico" style="background:var(--ink);padding:80px 6vw">
+<section id="hibrido-infografico" style="padding:80px 6vw">
   <div class="sec-inner">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
       <div>
@@ -1199,10 +1307,46 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
         </div>
       </div>
       <div class="reveal-right">
-        <img src="imagens/Infogr%C3%A1fico%20de%20funcionamento%20SIstema%20H%C3%ADbrido%20-%20lumen.png"
+        <img src="imagens/TECNOLOGIA/infografico-sistema-hibrido.png"
              alt="Como funciona o sistema híbrido LumenGrid"
              style="width:100%;border-radius:16px;display:block;box-shadow:0 24px 64px rgba(0,0,0,.5)">
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona" style="padding:96px 6vw">
+  <div class="sec-inner">
+    <div class="sec-tag reveal" style="color:rgba(242,101,34,.9)">Como Funciona</div>
+    <h2 class="reveal" style="color:#F4F4F5;margin-bottom:0">O sistema que responde<br>a cada momento do dia.</h2>
+    <p class="reveal" style="font-size:14px;color:rgba(241,241,245,.38);margin-top:12px;margin-bottom:52px;max-width:480px">4 cenários, uma resposta automática — seu sistema gerencia tudo sem você precisar intervir.</p>
+    <div class="cf-cards reveal">
+      <div class="cf-card">
+        <div class="cf-num">01</div>
+        <div class="cf-title">Quando falta energia</div>
+        <div class="cf-desc">O inversor híbrido comuta para as baterias em milissegundos. Você nem percebe a interrupção — a casa continua funcionando normalmente.</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-num">02</div>
+        <div class="cf-title">Quando há geração solar</div>
+        <div class="cf-desc">Os painéis atendem o consumo, carregam as baterias e enviam o excedente para a rede como crédito de energia.</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-num">03</div>
+        <div class="cf-title">Quando a tarifa pesa</div>
+        <div class="cf-desc">À noite, a energia armazenada nas baterias entra em ação — sem depender da rede nos horários de pico tarifário.</div>
+      </div>
+      <div class="cf-card">
+        <div class="cf-num">04</div>
+        <div class="cf-title">Quando há mobilidade elétrica</div>
+        <div class="cf-desc">O Wallbox integrado ao sistema solar carrega seu veículo com energia limpa — sem custo adicional de rede elétrica.</div>
+      </div>
+    </div>
+    <div class="reveal" style="margin-top:52px;text-align:center">
+      <a href="orcamento.html" class="btn-primary">Quero meu sistema
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
     </div>
   </div>
 </section>
@@ -1467,7 +1611,7 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
       <a href="#projetos">Projetos</a>
       <a href="#como-funciona">Como Funciona</a>
       <a href="#contato">Contato</a>
-      <a href="#">Política de Privacidade</a>
+      <a href="politica-de-privacidade.html">Política de Privacidade</a>
       <a href="#">Termos de Uso</a>
     </div>
     <div class="footer-copy">lumengridbrasil.com.br</div>
@@ -1475,15 +1619,11 @@ footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:va
 </footer>
 
 <!-- Floating Solicitar Orçamento (oculto no mobile) -->
-<a class="float-orcamento" href="#contato" aria-label="Solicitar Orçamento" style="display:none">
+<a class="float-orcamento" href="orcamento.html" aria-label="Solicitar Orçamento">
   <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
   Solicitar Orçamento
 </a>
 
-<!-- Floating WhatsApp -->
-<a class="float-whats" href="https://wa.me/5511945560188?text=Ol%C3%A1%21%20Gostaria%20de%20entender%20qual%20solu%C3%A7%C3%A3o%20LumenGrid%20%C3%A9%20mais%20adequada%20para%20minha%20necessidade%3A%20energia%20solar%2C%20sistema%20com%20baterias%20ou%20carregador%20para%20ve%C3%ADculo%20el%C3%A9trico." target="_blank" rel="noopener" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.824L.057 23.882l6.234-1.635A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.369l-.36-.214-3.706.972.988-3.608-.234-.371A9.818 9.818 0 0112 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
-</a>
 
 <!-- MODAL -->
 <div class="modal-backdrop" id="modal" onclick="closeModal(event)">
@@ -1709,7 +1849,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 /* ─── LIGHTBOX ─── */
 (function(){
   var items,cur=0;
-  function init(){items=Array.from(document.querySelectorAll('.gallery-item[data-full]'));}
+  function init(){items=Array.from(document.querySelectorAll('.proj-card[data-full]'));}
   function lbShow(i){
     if(!items)init();
     cur=((i%items.length)+items.length)%items.length;
@@ -1744,6 +1884,177 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 })();
 </script>
+<!-- ═══ MODAIS DE SOLUÇÃO ═══ -->
+<style>
+.sol-modal-backdrop{
+  display:none;position:fixed;inset:0;z-index:600;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:24px;
+}
+.sol-modal-backdrop.open{display:flex}
+.sol-modal{
+  background:#fff;border-radius:24px;
+  max-width:860px;width:100%;max-height:90vh;
+  overflow-y:auto;position:relative;
+  display:grid;grid-template-columns:1fr 1fr;
+  box-shadow:0 32px 80px rgba(0,0,0,.35);
+  animation:modalIn .28s cubic-bezier(.34,1.2,.64,1) both;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(16px)}to{opacity:1;transform:none}}
+.sol-modal-img{
+  position:relative;min-height:480px;border-radius:24px 0 0 24px;overflow:hidden;background:#111;
+}
+.sol-modal-img img{width:100%;height:100%;object-fit:cover;display:block}
+.sol-modal-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 60%);
+}
+.sol-modal-img-tag{
+  position:absolute;top:20px;left:20px;
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;
+  padding:5px 12px;border-radius:4px;
+  background:rgba(201,82,9,.85);color:#fff;
+}
+.sol-modal-body{padding:48px 40px;display:flex;flex-direction:column;justify-content:center}
+.sol-modal-eyebrow{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--or);margin-bottom:12px;opacity:.85}
+.sol-modal-title{font-family:'Montserrat',sans-serif;font-size:clamp(26px,2.8vw,36px);font-weight:900;letter-spacing:-1px;line-height:1.05;color:var(--ink);margin-bottom:16px}
+.sol-modal-hook{font-size:15px;font-weight:600;color:var(--t1);line-height:1.55;margin-bottom:16px;font-style:italic;border-left:3px solid var(--or);padding-left:16px}
+.sol-modal-desc{font-size:14px;color:var(--t2);line-height:1.75;margin-bottom:28px}
+.sol-modal-benefits{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.sol-modal-benefit{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--t1)}
+.sol-modal-benefit::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--or);flex-shrink:0;margin-top:6px}
+.sol-modal-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 24px;background:var(--or);color:#fff;
+  border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;
+  transition:background .15s,transform .15s;align-self:flex-start;
+}
+.sol-modal-cta:hover{background:var(--or-l);transform:translateY(-1px)}
+.sol-modal-close{
+  position:absolute;top:16px;right:16px;z-index:10;
+  width:36px;height:36px;border-radius:50%;background:rgba(9,9,12,.55);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;line-height:1;transition:background .15s;
+}
+.sol-modal-close:hover{background:rgba(9,9,12,.8)}
+@media(max-width:700px){
+  .sol-modal{grid-template-columns:1fr}
+  .sol-modal-img{min-height:220px;border-radius:24px 24px 0 0}
+  .sol-modal-body{padding:28px 24px}
+}
+</style>
+
+<!-- Modal On-Grid -->
+<div class="sol-modal-backdrop" id="modal-ongrid" onclick="closeSolModal(event,this)">
+  <div class="sol-modal">
+    <button class="sol-modal-close" onclick="closeSolModalById('modal-ongrid')">✕</button>
+    <div class="sol-modal-img">
+      <img src="imagens/PROJETOS/instalacao-solar-ceu-azul.jpeg" alt="Sistema On-Grid">
+      <div class="sol-modal-img-overlay"></div>
+      <div class="sol-modal-img-tag">Sistema Solar</div>
+    </div>
+    <div class="sol-modal-body">
+      <div class="sol-modal-eyebrow">Energia Solar · On-Grid</div>
+      <div class="sol-modal-title">O melhor investimento da sua casa pode estar em cima dela.</div>
+      <div class="sol-modal-hook">"A energia que você produz no telhado paga a conta — e ainda sobra."</div>
+      <p class="sol-modal-desc">Os painéis produzem energia durante o dia para atender o consumo do imóvel. Quando sobra, o excedente é enviado à rede e vira crédito que desconta nas próximas faturas. O resultado: uma conta que encolhe mês a mês, com retorno do investimento em anos — e o sistema funcionando por décadas. A LumenGrid cuida de tudo: dimensionamento, instalação, homologação junto à concessionária e suporte pós-obra.</p>
+      <div class="sol-modal-benefits">
+        <div class="sol-modal-benefit">Redução de até 95% na conta de energia</div>
+        <div class="sol-modal-benefit">Monitoramento em tempo real pelo aplicativo</div>
+        <div class="sol-modal-benefit">Homologação completa junto à concessionária</div>
+        <div class="sol-modal-benefit">Garantia de até 25 anos de performance nos painéis</div>
+        <div class="sol-modal-benefit">Retorno médio do investimento em 4 a 6 anos</div>
+        <div class="sol-modal-benefit">Funciona para residências, empresas e condomínios</div>
+      </div>
+      <a href="orcamento.html" class="sol-modal-cta">
+        Quero minha análise gratuita
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Híbrido -->
+<div class="sol-modal-backdrop" id="modal-hibrido" onclick="closeSolModal(event,this)">
+  <div class="sol-modal">
+    <button class="sol-modal-close" onclick="closeSolModalById('modal-hibrido')">✕</button>
+    <div class="sol-modal-img">
+      <img src="imagens/PROJETOS/sistema-hibrido-premium.png" alt="Sistema Híbrido">
+      <div class="sol-modal-img-overlay"></div>
+      <div class="sol-modal-img-tag">Recomendado</div>
+    </div>
+    <div class="sol-modal-body">
+      <div class="sol-modal-eyebrow">Sistema Híbrido · Solar + Baterias</div>
+      <div class="sol-modal-title">Quando a rua fica sem energia, sua casa não precisa ficar.</div>
+      <div class="sol-modal-hook">"Baterias de lítio armazenam a energia quando o sol aparece — e entregam quando a concessionária falha."</div>
+      <p class="sol-modal-desc">O sistema híbrido combina geração solar com armazenamento em baterias de lítio. Durante o dia os painéis atendem o consumo e carregam as baterias; à noite ou durante um apagão, as baterias entram em ação — sem interrupção. É possível inclusive instalar apenas as baterias (sem painéis), carregando pela rede no horário de tarifa mais barata. Ideal para residências, empresas, clínicas, condomínios e qualquer ambiente que não pode parar.</p>
+      <div class="sol-modal-benefits">
+        <div class="sol-modal-benefit">Funciona durante apagões sem interrupção</div>
+        <div class="sol-modal-benefit">Baterias de lítio de alta durabilidade</div>
+        <div class="sol-modal-benefit">Possível instalar em apartamentos (só baterias)</div>
+        <div class="sol-modal-benefit">Cargas prioritárias configuradas conforme o projeto</div>
+        <div class="sol-modal-benefit">Capacidade expansível conforme a necessidade</div>
+        <div class="sol-modal-benefit">Projetos para residências, empresas e condomínios</div>
+      </div>
+      <a href="orcamento.html" class="sol-modal-cta">
+        Quero minha análise gratuita
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Wallbox -->
+<div class="sol-modal-backdrop" id="modal-wallbox" onclick="closeSolModal(event,this)">
+  <div class="sol-modal">
+    <button class="sol-modal-close" onclick="closeSolModalById('modal-wallbox')">✕</button>
+    <div class="sol-modal-img">
+      <img src="imagens/TECNOLOGIA/wallbox-solar-premium.png" alt="Wallbox EV">
+      <div class="sol-modal-img-overlay"></div>
+      <div class="sol-modal-img-tag">Carregadores EV</div>
+    </div>
+    <div class="sol-modal-body">
+      <div class="sol-modal-eyebrow">Wallbox · Carregadores para EV</div>
+      <div class="sol-modal-title">Imagine dirigir usando a energia produzida no seu próprio telhado.</div>
+      <div class="sol-modal-hook">"O combustível do seu carro é o mesmo sol que ilumina a sua casa."</div>
+      <p class="sol-modal-desc">A integração entre o carregador e o sistema solar transforma cada km rodado em economia real. Projetamos a instalação do seu Wallbox levando em conta o veículo, a infraestrutura elétrica do imóvel e a possibilidade de integração com energia solar já existente ou futura. O resultado é um carregamento inteligente — mais rápido, mais barato e com gestão de carga para otimizar o consumo nos horários certos.</p>
+      <div class="sol-modal-benefits">
+        <div class="sol-modal-benefit">Instalação projetada para o seu veículo e imóvel</div>
+        <div class="sol-modal-benefit">Integração com sistema solar existente ou futuro</div>
+        <div class="sol-modal-benefit">Gestão inteligente de carga conforme o equipamento</div>
+        <div class="sol-modal-benefit">Modelos com diferentes potências (7kW, 11kW, 22kW)</div>
+        <div class="sol-modal-benefit">Soluções para residências, empresas e frotas</div>
+        <div class="sol-modal-benefit">Compatível com os principais modelos de EV do mercado</div>
+      </div>
+      <a href="orcamento.html" class="sol-modal-cta">
+        Quero minha análise gratuita
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+function openSolModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeSolModalById(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeSolModal(e,el){
+  if(e.target===el){el.classList.remove('open');document.body.style.overflow='';}
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    document.querySelectorAll('.sol-modal-backdrop.open').forEach(function(m){
+      m.classList.remove('open');document.body.style.overflow='';
+    });
+  }
+});
+</script>
+
 <div id="lightbox" role="dialog" aria-modal="true">
   <button id="lightbox-close" aria-label="Fechar">✕</button>
   <button id="lightbox-prev" aria-label="Anterior">‹</button>

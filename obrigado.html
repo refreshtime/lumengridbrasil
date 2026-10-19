@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Solicitação Recebida | LumenGrid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NC2ZVM48');</script>
+<!-- End Google Tag Manager -->
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#C95209;--or-l:#D85E10;
+  --or-dim:rgba(201,82,9,.07);--or-glow:rgba(201,82,9,.12);
+  --ink:#09090C;
+  --s1:#FFFFFF;--s2:#F8F8F6;
+  --b1:rgba(0,0,0,.07);
+  --t1:#0D0D10;--t2:#52525B;--t3:#A1A1AA;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#fff;color:var(--t1);overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 6vw;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-icon{height:36px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(242,101,34,.75)) drop-shadow(0 0 5px rgba(242,101,34,.45)) drop-shadow(0 2px 8px rgba(0,0,0,.9))}
+.nav-wordmark{display:flex;flex-direction:column;gap:1px;line-height:1}
+.nav-wname{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-0.3px;line-height:1}
+.nw-l{color:#F26522}
+.nw-g{color:#FAFAFA}
+.nav-wtag{font-family:'DM Sans',sans-serif;font-weight:600;font-size:7px;text-transform:uppercase;letter-spacing:.32em;color:rgba(242,101,34,.88);display:block;margin-top:2px}
+
+/* ── MAIN ── */
+main{
+  flex:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:100px 6vw 80px;
+  background:var(--ink);
+  position:relative;overflow:hidden;
+}
+main::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(201,82,9,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+.ty-card{
+  position:relative;z-index:1;
+  max-width:560px;width:100%;
+  text-align:center;
+}
+
+.ty-check{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(21,128,61,.12);border:2px solid rgba(21,128,61,.25);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 32px;
+  animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.ty-check svg{width:32px;height:32px;color:#22c55e;stroke-width:2.5}
+@keyframes popIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+.ty-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:rgba(201,82,9,.85);margin-bottom:20px}
+.ty-title{font-family:'Montserrat',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:900;line-height:1.05;letter-spacing:-1.5px;color:#F4F4F5;margin-bottom:18px}
+.ty-title em{font-style:italic;color:var(--or)}
+.ty-sub{font-size:15px;color:rgba(241,241,245,.55);line-height:1.7;margin-bottom:48px;max-width:420px;margin-left:auto;margin-right:auto}
+
+/* ── CTA BOX ── */
+.ty-cta-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:20px;
+  padding:36px;
+  margin-bottom:40px;
+}
+.ty-cta-q{
+  font-size:17px;font-weight:700;color:#F4F4F5;
+  line-height:1.4;margin-bottom:8px;
+}
+.ty-cta-hint{
+  font-size:13px;color:rgba(241,241,245,.45);
+  margin-bottom:28px;line-height:1.6;
+}
+.btn-whats{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:16px 32px;background:#25D366;color:#fff;
+  border-radius:12px;font-size:15px;font-weight:700;
+  text-decoration:none;
+  transition:background .18s,transform .18s,box-shadow .18s;
+  width:100%;justify-content:center;
+}
+.btn-whats:hover{background:#1fb855;transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,211,102,.35)}
+.btn-whats svg{width:22px;height:22px;fill:#fff;flex-shrink:0}
+.ty-skip{font-size:12px;color:rgba(241,241,245,.3);margin-top:16px;line-height:1.6}
+.ty-skip a{color:rgba(241,241,245,.5);text-decoration:none;border-bottom:1px solid rgba(241,241,245,.2);transition:color .15s}
+.ty-skip a:hover{color:rgba(241,241,245,.8)}
+
+/* ── NEXT STEPS ── */
+.ty-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:left}
+.ty-step{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:20px;
+}
+.ty-step-num{
+  font-family:'Montserrat',sans-serif;font-size:28px;font-weight:900;
+  color:rgba(201,82,9,.2);line-height:1;margin-bottom:10px;
+}
+.ty-step-title{font-size:13px;font-weight:700;color:rgba(241,241,245,.75);margin-bottom:4px}
+.ty-step-desc{font-size:11px;color:rgba(241,241,245,.3);line-height:1.6}
+
+/* ── FOOTER ── */
+footer{padding:28px 6vw;border-top:1px solid rgba(255,255,255,.06);background:var(--ink)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-copy{font-size:11px;color:rgba(161,161,170,.5)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:rgba(161,161,170,.55);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:rgba(241,241,245,.8)}
+
+@media(max-width:640px){
+  .ty-steps{grid-template-columns:1fr}
+  .ty-cta-box{padding:24px}
+  main{padding:80px 5vw 60px}
+}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC2ZVM48"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- NAV (sem CTA para não quebrar o funil) -->
+<nav>
+  <a class="nav-brand" href="index.html">
+    <img class="nav-icon" src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="nav-wordmark">
+      <div class="nav-wname"><span class="nw-l">LUMEN</span><span class="nw-g">GRID</span></div>
+      <span class="nav-wtag">Energia Inteligente</span>
+    </div>
+  </a>
+</nav>
+
+<main>
+  <div class="ty-card">
+
+    <div class="ty-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+
+    <div class="ty-tag">Solicitação confirmada</div>
+    <h1 class="ty-title">Recebemos sua<br><em>solicitação!</em></h1>
+    <p class="ty-sub">Nossa equipe está analisando as informações e entrará em contato em até 24 horas com sua proposta personalizada.</p>
+
+    <div class="ty-cta-box">
+      <div class="ty-cta-q">Quer pular a fila e receber o atendimento imediatamente?</div>
+      <div class="ty-cta-hint">Fale agora com um de nossos especialistas pelo WhatsApp e tire todas as suas dúvidas em tempo real.</div>
+      <a class="btn-whats" href="https://wa.me/5511945560188?text=Ol%C3%A1%21%20Acabei%20de%20preencher%20o%20formul%C3%A1rio%20de%20or%C3%A7amento%20no%20site%20da%20LumenGrid%20e%20gostaria%20de%20agilizar%20o%20atendimento." target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.824L.057 23.882l6.234-1.635A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.369l-.36-.214-3.706.972.988-3.608-.234-.371A9.818 9.818 0 0112 2.182c5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
+        Falar agora pelo WhatsApp
+      </a>
+      <div class="ty-skip">Prefere aguardar? Tudo bem — entraremos em contato em até 24h. Enquanto isso, você pode <a href="index.html">conhecer mais sobre a LumenGrid</a>.</div>
+    </div>
+
+    <div class="ty-steps">
+      <div class="ty-step">
+        <div class="ty-step-num">01</div>
+        <div class="ty-step-title">Análise técnica</div>
+        <div class="ty-step-desc">Nossa equipe dimensiona o sistema ideal para o seu perfil de consumo.</div>
+      </div>
+      <div class="ty-step">
+        <div class="ty-step-num">02</div>
+        <div class="ty-step-title">Proposta personalizada</div>
+        <div class="ty-step-desc">Você recebe uma proposta detalhada com ROI, payback e opções de financiamento.</div>
+      </div>
+      <div class="ty-step">
+        <div class="ty-step-num">03</div>
+        <div class="ty-step-title">Instalação em 20 dias</div>
+        <div class="ty-step-desc">Aprovado o projeto, cuidamos de tudo — homologação, instalação e ativação.</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2026 Lumen Grid Energia Inteligente · CNPJ 36.028.241/0001-96</div>
+    <div class="footer-links">
+      <a href="index.html">Início</a>
+      <a href="politica-de-privacidade.html">Política de Privacidade</a>
+    </div>
+    <div class="footer-copy">Feito por Domani Consultoria</div>
+  </div>
+</footer>
+
+<script>
+/* Dispara evento de conversão para GTM */
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({ event: 'conversion_orcamento' });
+</script>
+</body>
+</html>

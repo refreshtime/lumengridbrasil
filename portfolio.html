@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Portfólio de serviços LumenGrid — manutenção, monitoramento, diagnóstico e suporte para sistemas de energia solar."/>
+<title>Portfólio de Serviços | LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#E8641A;--or-l:#F07030;--or-d:#C95209;
+  --or-dim:rgba(232,100,26,.08);
+  --bg:#0A0A0C;--s1:#111115;
+  --b1:rgba(255,255,255,.07);
+  --t1:#F4F4F5;--t2:#A1A1AA;--t3:#52525B;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(10,10,12,.95);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--b1);
+  padding:0 6vw;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-icon{height:36px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(242,101,34,.75)) drop-shadow(0 0 5px rgba(242,101,34,.45)) drop-shadow(0 2px 8px rgba(0,0,0,.9))}
+.nav-wordmark{display:flex;flex-direction:column;gap:1px;line-height:1}
+.nav-wname{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-0.3px;line-height:1}
+.nw-l{color:#F26522}.nw-g{color:#FAFAFA}
+.nav-wtag{font-family:'DM Sans',sans-serif;font-weight:600;font-size:7px;text-transform:uppercase;letter-spacing:.32em;color:rgba(242,101,34,.88);display:block;margin-top:2px}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-size:13px;font-weight:500;color:rgba(255,255,255,.65);text-decoration:none;transition:color .15s}
+.nav-link:hover{color:#fff}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 18px;background:var(--or);color:#fff;
+  border-radius:8px;font-size:13px;font-weight:700;
+  text-decoration:none;transition:background .15s;white-space:nowrap;
+}
+.nav-cta:hover{background:var(--or-l)}
+.nav-cta svg{width:14px;height:14px}
+
+/* ── HERO PHOTO ── */
+.hero-photo{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  text-align:center;overflow:hidden;padding:120px 6vw 80px;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('FOTOS PARA SITE/CASA 4.png') center/cover no-repeat;
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.18) 0%,
+    rgba(0,0,0,.52) 48%,
+    rgba(0,0,0,.82) 100%
+  );
+}
+.hero-content{position:relative;z-index:1;max-width:860px;}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:2.5px;text-transform:uppercase;color:var(--or);
+  margin-bottom:20px;text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:28px;height:1px;background:var(--or);opacity:.8}
+.hero-photo h1{
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(30px,4.5vw,58px);font-weight:900;line-height:1.1;letter-spacing:-2px;
+  color:#fff;margin-bottom:16px;text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.hero-photo h1 em{font-style:normal;color:var(--or)}
+.hero-bar{width:44px;height:2px;background:var(--or);margin:0 auto 20px;border-radius:2px}
+.hero-sub{
+  font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.75;
+  color:rgba(255,255,255,.82);max-width:540px;margin:0 auto 28px;
+  text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:36px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 16px;border:1px solid rgba(255,255,255,.25);border-radius:100px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+  color:rgba(255,255,255,.88);background:rgba(0,0,0,.30);
+  text-shadow:0 1px 4px rgba(0,0,0,.8);backdrop-filter:blur(4px);
+}
+.hero-badge svg{width:13px;height:13px;color:var(--or);flex-shrink:0}
+.hero-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;background:var(--or);color:#fff;
+  border-radius:10px;font-size:15px;font-weight:700;
+  text-decoration:none;transition:background .15s;
+  box-shadow:0 4px 24px rgba(232,100,26,.40);
+}
+.hero-btn:hover{background:var(--or-l)}
+.hero-btn svg{width:18px;height:18px}
+
+/* ── ALERT PHOTO ── */
+.alert-photo{position:relative;overflow:hidden;padding:80px 6vw;}
+.alert-photo-bg{
+  position:absolute;inset:0;
+  background:url('imagens/PROJETOS/instalacao-solar-ceu-azul.jpeg') center/cover no-repeat;
+}
+.alert-photo-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.38) 0%,rgba(0,0,0,.88) 100%);
+}
+.alert-inner{position:relative;z-index:1;max-width:860px;margin:0 auto;}
+.alert-label{
+  font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;color:var(--or);
+  margin-bottom:12px;text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.alert-title{
+  font-family:'Montserrat',sans-serif;font-size:clamp(22px,3vw,36px);font-weight:800;
+  color:#fff;margin-bottom:16px;line-height:1.2;letter-spacing:-.5px;
+  text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.alert-body{
+  font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.75;
+  color:rgba(255,255,255,.78);margin-bottom:36px;max-width:640px;
+  text-shadow:0 2px 8px rgba(0,0,0,.90);
+}
+.alert-stats{display:flex;gap:44px;flex-wrap:wrap;}
+.alert-stat-value{
+  font-family:'Montserrat',sans-serif;font-size:36px;font-weight:900;
+  color:var(--or);letter-spacing:-1px;text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.alert-stat-label{
+  font-family:'DM Sans',sans-serif;font-size:12px;
+  color:rgba(255,255,255,.70);margin-top:4px;line-height:1.4;
+  text-shadow:0 2px 8px rgba(0,0,0,.90);
+}
+
+/* ── SHARED SECTION ── */
+section{padding:80px 6vw}
+.sec-label{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--or);margin-bottom:12px}
+.sec-title{
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(24px,3.2vw,40px);font-weight:900;letter-spacing:-1px;
+  color:var(--t1);margin-bottom:16px;line-height:1.15;
+}
+.sec-sub{font-size:15px;line-height:1.75;color:var(--t2);max-width:580px}
+.sec-head{margin-bottom:52px}
+
+/* ── INSTAGRAM CARDS ── */
+.svc-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  max-width:1120px;margin:0 auto;
+}
+.insta-card{
+  position:relative;overflow:hidden;border-radius:16px;
+  min-height:420px;display:flex;flex-direction:column;
+  cursor:default;
+}
+.insta-card:hover .insta-photo{transform:scale(1.04)}
+.insta-photo{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform .4s ease;
+}
+.insta-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.06) 0%,
+    rgba(0,0,0,.28) 32%,
+    rgba(0,0,0,.80) 68%,
+    rgba(0,0,0,.96) 100%
+  );
+}
+.insta-body{
+  position:relative;z-index:1;
+  margin-top:auto;padding:22px 20px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.insta-eyebrow{
+  font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;color:var(--or);
+  text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.insta-title{
+  font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;
+  color:#fff;line-height:1.2;text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.insta-bar{width:44px;height:2px;background:var(--or);border-radius:2px;flex-shrink:0}
+.insta-desc{
+  font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.6;
+  color:rgba(255,255,255,.78);text-shadow:0 2px 16px rgba(0,0,0,.90);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.insta-price{
+  font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;
+  color:#fff;letter-spacing:-.5px;text-shadow:0 2px 16px rgba(0,0,0,.90);
+}
+.insta-price span{font-size:13px;font-weight:500;opacity:.80}
+.insta-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.insta-tag{
+  padding:3px 10px;border-radius:100px;
+  background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.20);
+  font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.80);
+  backdrop-filter:blur(4px);
+}
+.btn-expand{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;width:fit-content;
+  border:1px solid rgba(232,100,26,.50);border-radius:8px;
+  background:rgba(232,100,26,.15);color:var(--or);
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .15s;backdrop-filter:blur(4px);
+}
+.btn-expand:hover{background:rgba(232,100,26,.30);border-color:var(--or)}
+.btn-expand svg{width:12px;height:12px;flex-shrink:0}
+
+/* ── PRICING TABLE ── */
+.pricing-section{background:var(--bg)}
+.price-note{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 18px;border:1px solid var(--b1);border-radius:8px;
+  font-size:12px;color:var(--t2);background:rgba(255,255,255,.02);
+  margin-bottom:32px;
+}
+.price-note svg{width:14px;height:14px;color:var(--or);flex-shrink:0}
+.price-table-wrap{
+  overflow-x:auto;border-radius:14px;
+  border:1px solid var(--b1);max-width:760px;
+}
+.price-table{width:100%;border-collapse:collapse;min-width:480px}
+.price-table th{
+  padding:14px 22px;text-align:left;
+  font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--t3);background:rgba(255,255,255,.03);border-bottom:1px solid var(--b1);
+}
+.price-table td{
+  padding:14px 22px;font-size:14px;color:var(--t2);
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.price-table td:first-child{font-weight:700;color:var(--t1)}
+.price-table tr:last-child td{border-bottom:none}
+.price-table tr:hover td{background:rgba(255,255,255,.02)}
+.td-total{color:var(--or)!important;font-weight:700!important}
+
+/* Mobile price cards */
+.price-mobile{display:none}
+.pmob-card{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:20px 22px;margin-bottom:10px}
+.pmob-header{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:var(--t1);margin-bottom:14px}
+.pmob-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.pmob-row:last-child{border-bottom:none}
+.pmob-label{color:var(--t2)}
+.pmob-val{font-weight:600;color:var(--t1)}
+.pmob-val.total{color:var(--or);font-weight:800}
+
+/* ── JORNADA PHOTO ── */
+.jornada-photo{position:relative;overflow:hidden;padding:80px 6vw;}
+.jornada-photo-bg{
+  position:absolute;inset:0;
+  background:url('FOTOS PARA SITE/Hibrido residencial.png') center/cover no-repeat;
+}
+.jornada-photo-overlay{position:absolute;inset:0;background:rgba(0,0,0,.85);}
+.jornada-inner{position:relative;z-index:1;max-width:1000px;margin:0 auto;}
+.jornada-head{text-align:center;margin-bottom:52px;}
+.jornada-head .sec-title{color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.9)}
+.jornada-head .sec-sub{color:rgba(255,255,255,.65);margin:0 auto;text-shadow:0 1px 8px rgba(0,0,0,.9)}
+.jornada-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+.jornada-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.jornada-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:16px 18px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  backdrop-filter:blur(4px);
+}
+.jornada-icon{
+  width:34px;height:34px;border-radius:8px;flex-shrink:0;
+  background:rgba(232,100,26,.20);border:1px solid rgba(232,100,26,.30);
+  display:flex;align-items:center;justify-content:center;
+}
+.jornada-icon svg{width:15px;height:15px;color:var(--or)}
+.jornada-text{font-size:13px;color:rgba(255,255,255,.90);line-height:1.5;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.jornada-arrow{font-size:12px;color:var(--or);font-weight:700;margin-top:4px;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.jornada-cta-title{
+  font-family:'Montserrat',sans-serif;font-size:clamp(22px,2.8vw,32px);font-weight:900;
+  color:#fff;margin-bottom:16px;letter-spacing:-.5px;line-height:1.2;
+  text-shadow:0 2px 16px rgba(0,0,0,.9);
+}
+.jornada-cta-sub{font-size:14px;color:rgba(255,255,255,.70);line-height:1.75;margin-bottom:32px;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+.btn-wpp{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:15px 28px;background:#25D366;color:#fff;
+  border-radius:10px;font-size:15px;font-weight:700;
+  text-decoration:none;transition:background .15s;
+}
+.btn-wpp:hover{background:#1DA851}
+.btn-wpp svg{width:20px;height:20px}
+.jornada-or{margin-top:16px;display:block;font-size:12px;color:rgba(255,255,255,.40)}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--s1);border-top:1px solid var(--b1);
+  padding:36px 6vw;text-align:center;
+}
+.footer-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:12px;justify-content:center}
+.footer-icon{height:28px;width:auto;filter:drop-shadow(0 0 8px rgba(242,101,34,.6))}
+.footer-wname{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase}
+.footer-copy{font-size:12px;color:var(--t3);margin-top:4px}
+.footer-domani{font-size:11px;color:var(--t3);margin-top:20px;opacity:.6}
+
+/* ── OVERLAY EXPANDIR ── */
+.svc-overlay{
+  position:fixed;inset:0;z-index:1000;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;opacity:0;visibility:hidden;
+  transition:opacity .22s,visibility .22s;
+}
+.svc-overlay.open{opacity:1;visibility:visible}
+.ov-photo-bg{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+}
+.ov-photo-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.28) 0%,
+    rgba(0,0,0,.88) 48%,
+    rgba(0,0,0,.97) 100%
+  );
+}
+.ov-box{
+  position:relative;z-index:1;max-width:480px;width:100%;
+  max-height:90vh;overflow-y:auto;
+  padding:36px 36px 32px;
+}
+.ov-close{
+  position:fixed;top:20px;right:20px;z-index:2;
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.20);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;transition:all .15s;backdrop-filter:blur(4px);
+}
+.ov-close:hover{background:rgba(255,255,255,.22)}
+.ov-close svg{width:16px;height:16px}
+.ov-logo{
+  display:flex;align-items:center;gap:10px;margin-bottom:24px;
+  padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.15);
+}
+.ov-logo img{height:28px;filter:drop-shadow(0 0 10px rgba(242,101,34,.8))}
+.ov-logo-wname{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase}
+.ov-logo-tag{font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:.32em;text-transform:uppercase;color:rgba(242,101,34,.85);display:block;margin-top:2px}
+.ov-eyebrow{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--or);margin-bottom:10px;text-shadow:0 2px 8px rgba(0,0,0,.9)}
+.ov-title{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.2;text-shadow:0 2px 16px rgba(0,0,0,.9)}
+.ov-bar{width:44px;height:2px;background:var(--or);border-radius:2px;margin-bottom:16px}
+.ov-desc{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.75;color:rgba(255,255,255,.80);margin-bottom:20px;text-shadow:0 1px 8px rgba(0,0,0,.9)}
+.ov-price{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:4px;text-shadow:0 2px 16px rgba(0,0,0,.9)}
+.ov-price span{font-size:15px;font-weight:500;opacity:.80}
+.ov-price-tag{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.50);margin-bottom:18px;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.ov-tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+.ov-tag{padding:4px 11px;border-radius:100px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.80)}
+.ov-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 22px;background:#25D366;color:#fff;
+  border-radius:9px;font-size:14px;font-weight:700;
+  text-decoration:none;transition:background .15s;
+}
+.ov-cta:hover{background:#1DA851}
+.ov-cta svg{width:16px;height:16px}
+.ov-hint{margin-top:14px;font-size:11px;color:rgba(255,255,255,.30);text-align:center}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .svc-grid{grid-template-columns:1fr 1fr}
+  .jornada-grid{grid-template-columns:1fr;gap:40px}
+}
+@media(max-width:640px){
+  section{padding:60px 20px}
+  .alert-photo,.jornada-photo{padding:60px 20px}
+  .hero-photo{padding:100px 20px 60px}
+  footer{padding:28px 20px}
+  .svc-grid{grid-template-columns:1fr}
+  .insta-card{min-height:360px}
+  nav{padding:0 20px}
+  .nav-link{display:none}
+  .price-table-wrap{display:none}
+  .price-mobile{display:block}
+  .alert-stats{gap:28px}
+  .ov-box{padding:28px 20px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="site.html">
+    <img class="nav-icon" src="imagens/LOGOS/logo-icone.png" alt="LumenGrid"/>
+    <div class="nav-wordmark">
+      <div class="nav-wname"><span class="nw-l">LUMEN</span><span class="nw-g">GRID</span></div>
+      <span class="nav-wtag">Energia Inteligente</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="#servicos">Serviços</a>
+    <a class="nav-link" href="#precos">Preços</a>
+    <a class="nav-link" href="#jornada">Contato</a>
+    <a class="nav-cta" href="https://wa.me/5511999999999?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20os%20serviços%20da%20LumenGrid." target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-photo" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Portfólio de Serviços</div>
+    <h1>Seu sistema solar já está instalado.<br><em>Agora, cuide do investimento.</em></h1>
+    <div class="hero-bar"></div>
+    <p class="hero-sub">A LumenGrid oferece suporte técnico completo pós-instalação: manutenção, monitoramento, diagnóstico e regularização para qualquer sistema solar, de qualquer marca ou instalador.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Qualquer marca de inversor
+      </span>
+      <span class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Qualquer instalador anterior
+      </span>
+      <span class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Residencial e comercial
+      </span>
+      <span class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Atendimento em São Paulo
+      </span>
+    </div>
+    <a class="hero-btn" href="#servicos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Ver serviços disponíveis
+    </a>
+  </div>
+</div>
+
+<!-- ALERTA -->
+<div class="alert-photo" id="alerta">
+  <div class="alert-photo-bg"></div>
+  <div class="alert-photo-overlay"></div>
+  <div class="alert-inner">
+    <div class="alert-label">Atenção</div>
+    <div class="alert-title">Sujidade pode estar destruindo sua geração de energia</div>
+    <p class="alert-body">
+      Poeira, poluição, fezes de pássaros e materiais orgânicos acumulados nas placas reduzem significativamente a capacidade de geração do seu sistema. O problema é invisível no dia a dia, mas impacta direto na sua conta de luz.
+    </p>
+    <div class="alert-stats">
+      <div class="alert-stat">
+        <div class="alert-stat-value">4–7%</div>
+        <div class="alert-stat-label">Perda média global<br>por sujidade nas placas</div>
+      </div>
+      <div class="alert-stat">
+        <div class="alert-stat-value">16–56%</div>
+        <div class="alert-stat-label">Perda registrada<br>no Brasil (regiões críticas)</div>
+      </div>
+      <div class="alert-stat">
+        <div class="alert-stat-value">R$80</div>
+        <div class="alert-stat-label">por placa para<br>limpeza preventiva</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="sec-head">
+    <div class="sec-label">Nossos Serviços</div>
+    <h2 class="sec-title">O que a LumenGrid faz pelo seu sistema</h2>
+    <p class="sec-sub">Soluções especializadas para manter, monitorar e recuperar o desempenho do seu sistema solar.</p>
+  </div>
+
+  <div class="svc-grid">
+
+    <!-- 1. Check-up Solar -->
+    <div class="insta-card" data-photo="FOTOS PARA SITE/CASA 3.png" data-pricetag="Limpeza · Preventiva escalonada · Ver tabela abaixo">
+      <div class="insta-photo" style="background-image:url('FOTOS PARA SITE/CASA 3.png')"></div>
+      <div class="insta-overlay"></div>
+      <div class="insta-body">
+        <div class="insta-eyebrow">Manutenção Preventiva</div>
+        <div class="insta-title">Check-up Solar</div>
+        <div class="insta-bar"></div>
+        <div class="insta-desc">Inspeção técnica completa do sistema + limpeza profissional das placas + verificação dos cabos, conectores e string box. Ideal para manutenção preventiva anual ou quando a geração caiu.</div>
+        <div class="insta-price">R$80<span>/placa</span></div>
+        <div class="insta-tags">
+          <span class="insta-tag">Limpeza</span>
+          <span class="insta-tag">Preventiva</span>
+          <span class="insta-tag">Elétrico</span>
+        </div>
+        <button class="btn-expand" onclick="expandCard(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Expandir
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. LumenCare -->
+    <div class="insta-card" data-photo="imagens/TECNOLOGIA/casa-inteligente.png" data-pricetag="Padrão · R$1.500/mês com gateway incluso">
+      <div class="insta-photo" style="background-image:url('imagens/TECNOLOGIA/casa-inteligente.png')"></div>
+      <div class="insta-overlay"></div>
+      <div class="insta-body">
+        <div class="insta-eyebrow">Monitoramento Contínuo</div>
+        <div class="insta-title">LumenCare</div>
+        <div class="insta-bar"></div>
+        <div class="insta-desc">Plano de monitoramento remoto da geração com alertas de falhas e relatório mensal de desempenho. Com gateway, acesso em tempo real ao painel online.</div>
+        <div class="insta-price">R$700<span>/mês</span></div>
+        <div class="insta-tags">
+          <span class="insta-tag">Monitoramento</span>
+          <span class="insta-tag">Alertas</span>
+          <span class="insta-tag">Relatório mensal</span>
+        </div>
+        <button class="btn-expand" onclick="expandCard(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Expandir
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Gestão de Rateio -->
+    <div class="insta-card" data-photo="FOTOS PARA SITE/condominio.png" data-pricetag="Por processo de regularização junto à distribuidora">
+      <div class="insta-photo" style="background-image:url('FOTOS PARA SITE/condominio.png')"></div>
+      <div class="insta-overlay"></div>
+      <div class="insta-body">
+        <div class="insta-eyebrow">Regularização</div>
+        <div class="insta-title">Gestão de Rateio</div>
+        <div class="insta-bar"></div>
+        <div class="insta-desc">Regularização e gestão do rateio de créditos de energia entre múltiplas unidades consumidoras. Ideal para clientes com geração compartilhada que precisam adequar a distribuição à distribuidora.</div>
+        <div class="insta-price">R$700<span>/processo</span></div>
+        <div class="insta-tags">
+          <span class="insta-tag">Rateio</span>
+          <span class="insta-tag">Distribuidora</span>
+          <span class="insta-tag">Multi-unidade</span>
+        </div>
+        <button class="btn-expand" onclick="expandCard(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Expandir
+        </button>
+      </div>
+    </div>
+
+    <!-- 4. Diagnóstico Solar -->
+    <div class="insta-card" data-photo="imagens/PROJETOS/instalador-telhado.jpeg" data-pricetag="Valor conforme porte e complexidade do sistema">
+      <div class="insta-photo" style="background-image:url('imagens/PROJETOS/instalador-telhado.jpeg')"></div>
+      <div class="insta-overlay"></div>
+      <div class="insta-body">
+        <div class="insta-eyebrow">Perícia Técnica</div>
+        <div class="insta-title">Diagnóstico Solar</div>
+        <div class="insta-bar"></div>
+        <div class="insta-desc">Perícia técnica completa para identificar falhas ocultas, perdas de desempenho e problemas elétricos com termografia, medição de strings e análise de curvas IV.</div>
+        <div class="insta-price">Sob consulta</div>
+        <div class="insta-tags">
+          <span class="insta-tag">Termografia</span>
+          <span class="insta-tag">Laudo técnico</span>
+          <span class="insta-tag">Orçamento</span>
+        </div>
+        <button class="btn-expand" onclick="expandCard(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Expandir
+        </button>
+      </div>
+    </div>
+
+    <!-- 5. Correções & Garantias -->
+    <div class="insta-card" data-photo="imagens/TECNOLOGIA/inversor-bateria-goodwe.png" data-pricetag="Orçamento após diagnóstico ou avaliação prévia">
+      <div class="insta-photo" style="background-image:url('imagens/TECNOLOGIA/inversor-bateria-goodwe.png')"></div>
+      <div class="insta-overlay"></div>
+      <div class="insta-body">
+        <div class="insta-eyebrow">Suporte Técnico</div>
+        <div class="insta-title">Correções &amp; Garantias</div>
+        <div class="insta-bar"></div>
+        <div class="insta-desc">Execução de correções técnicas pós-diagnóstico e acionamento de garantias junto a fabricantes de inversores e módulos. Suporte completo no processo de RMA e substituição.</div>
+        <div class="insta-price">Sob consulta</div>
+        <div class="insta-tags">
+          <span class="insta-tag">Correção técnica</span>
+          <span class="insta-tag">RMA</span>
+          <span class="insta-tag">Fabricantes</span>
+        </div>
+        <button class="btn-expand" onclick="expandCard(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Expandir
+        </button>
+      </div>
+    </div>
+
+    <!-- 6. Clientes Órfãos -->
+    <div class="insta-card" data-photo="imagens/PESSOAS/handshake.png" data-pricetag="Avaliação gratuita da situação atual do sistema">
+      <div class="insta-photo" style="background-image:url('imagens/PESSOAS/handshake.png')"></div>
+      <div class="insta-overlay"></div>
+      <div class="insta-body">
+        <div class="insta-eyebrow">Suporte &amp; Gestão</div>
+        <div class="insta-title">Clientes Órfãos</div>
+        <div class="insta-bar"></div>
+        <div class="insta-desc">Assumimos a gestão técnica e de garantia de sistemas instalados por empresas que fecharam ou se tornaram inacessíveis. Onboarding completo — passamos a ser o integrador responsável.</div>
+        <div class="insta-price">Sob consulta</div>
+        <div class="insta-tags">
+          <span class="insta-tag">Suporte técnico</span>
+          <span class="insta-tag">Gestão de garantia</span>
+          <span class="insta-tag">Onboarding</span>
+        </div>
+        <button class="btn-expand" onclick="expandCard(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Expandir
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TABELA DE PREÇOS -->
+<section class="pricing-section" id="precos">
+  <div class="sec-head">
+    <div class="sec-label">Tabela de Preços</div>
+    <h2 class="sec-title">Check-up Solar por número de placas</h2>
+    <p class="sec-sub">Valores de referência por faixa. Limpeza a R$80 por placa. Preventiva com valor escalonado conforme o sistema.</p>
+  </div>
+
+  <div class="price-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Preços válidos para sistemas em São Paulo e região. Deslocamento sob consulta para outras localidades.
+  </div>
+
+  <!-- Desktop -->
+  <div class="price-table-wrap">
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>Placas</th>
+          <th>Limpeza</th>
+          <th>Preventiva</th>
+          <th>Total (Limpeza + Preventiva)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>4 placas</td><td>R$320</td><td>R$200</td><td class="td-total">R$520</td></tr>
+        <tr><td>8 placas</td><td>R$640</td><td>R$320</td><td class="td-total">R$960</td></tr>
+        <tr><td>12 placas</td><td>R$960</td><td>R$440</td><td class="td-total">R$1.400</td></tr>
+        <tr><td>16 placas</td><td>R$1.280</td><td>R$540</td><td class="td-total">R$1.820</td></tr>
+        <tr><td>20 placas</td><td>R$1.600</td><td>R$640</td><td class="td-total">R$2.240</td></tr>
+        <tr><td>25 placas</td><td>R$2.000</td><td>R$760</td><td class="td-total">R$2.760</td></tr>
+        <tr><td>30 placas</td><td>R$2.400</td><td>R$880</td><td class="td-total">R$3.280</td></tr>
+        <tr><td>40 placas</td><td>R$3.200</td><td>R$1.080</td><td class="td-total">R$4.280</td></tr>
+        <tr><td>50 placas</td><td>R$4.000</td><td>R$1.280</td><td class="td-total">R$5.280</td></tr>
+        <tr><td>100 placas</td><td>R$8.000</td><td>R$2.280</td><td class="td-total">R$10.280</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile -->
+  <div class="price-mobile">
+    <div class="pmob-card">
+      <div class="pmob-header">4 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$320</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$200</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$520</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">8 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$640</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$320</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$960</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">12 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$960</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$440</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$1.400</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">16 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$1.280</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$540</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$1.820</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">20 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$1.600</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$640</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$2.240</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">25 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$2.000</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$760</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$2.760</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">30 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$2.400</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$880</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$3.280</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">40 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$3.200</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$1.080</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$4.280</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">50 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$4.000</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$1.280</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$5.280</span></div>
+    </div>
+    <div class="pmob-card">
+      <div class="pmob-header">100 placas</div>
+      <div class="pmob-row"><span class="pmob-label">Limpeza</span><span class="pmob-val">R$8.000</span></div>
+      <div class="pmob-row"><span class="pmob-label">Preventiva</span><span class="pmob-val">R$2.280</span></div>
+      <div class="pmob-row"><span class="pmob-label">Total</span><span class="pmob-val total">R$10.280</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- JORNADA -->
+<div class="jornada-photo" id="jornada">
+  <div class="jornada-photo-bg"></div>
+  <div class="jornada-photo-overlay"></div>
+  <div class="jornada-inner">
+    <div class="jornada-head">
+      <div class="sec-label">Jornada do Cliente</div>
+      <h2 class="sec-title">Qual é a sua situação?</h2>
+      <p class="sec-sub">Identifique o que está acontecendo com seu sistema e descubra qual serviço resolve.</p>
+    </div>
+    <div class="jornada-grid">
+      <ul class="jornada-list">
+        <li class="jornada-item">
+          <div class="jornada-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div>
+            <div class="jornada-text">Minha geração caiu ou está abaixo do esperado</div>
+            <div class="jornada-arrow">→ Check-up Solar / Diagnóstico Solar</div>
+          </div>
+        </li>
+        <li class="jornada-item">
+          <div class="jornada-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div>
+            <div class="jornada-text">Não sei se meu sistema está funcionando corretamente</div>
+            <div class="jornada-arrow">→ LumenCare / Diagnóstico Solar</div>
+          </div>
+        </li>
+        <li class="jornada-item">
+          <div class="jornada-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="9" y1="6" x2="21" y2="6"/></svg>
+          </div>
+          <div>
+            <div class="jornada-text">Tenho rateio entre unidades e preciso ajustar</div>
+            <div class="jornada-arrow">→ Gestão de Rateio</div>
+          </div>
+        </li>
+        <li class="jornada-item">
+          <div class="jornada-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="jornada-text">Tenho equipamento com defeito ou fora da garantia</div>
+            <div class="jornada-arrow">→ Correções &amp; Garantias</div>
+          </div>
+        </li>
+        <li class="jornada-item">
+          <div class="jornada-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="jornada-text">Meu instalador sumiu / fechou a empresa</div>
+            <div class="jornada-arrow">→ Clientes Órfãos</div>
+          </div>
+        </li>
+        <li class="jornada-item">
+          <div class="jornada-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div>
+            <div class="jornada-text">Minhas placas estão sujas e não sei quando limpar</div>
+            <div class="jornada-arrow">→ Check-up Solar</div>
+          </div>
+        </li>
+      </ul>
+
+      <div>
+        <h3 class="jornada-cta-title">Fale com um especialista LumenGrid</h3>
+        <p class="jornada-cta-sub">
+          Não sabe exatamente qual serviço precisa? Conta a situação do seu sistema pelo WhatsApp e orientamos sem compromisso. Atendemos qualquer marca, qualquer instalador.
+        </p>
+        <a class="btn-wpp" href="https://wa.me/5511999999999?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20os%20serviços%20de%20manutenção%20da%20LumenGrid%20para%20meu%20sistema%20solar." target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Falar no WhatsApp
+        </a>
+        <span class="jornada-or">Ou acesse <a href="site.html" style="color:var(--or);text-decoration:none">lumengridbrasil.com.br</a> para mais informações</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <img class="footer-icon" src="imagens/LOGOS/logo-icone.png" alt="LumenGrid"/>
+    <div>
+      <div class="footer-wname"><span style="color:#F26522">LUMEN</span><span style="color:#FAFAFA">GRID</span></div>
+      <div class="footer-copy" style="font-size:7px;letter-spacing:.32em;text-transform:uppercase;color:rgba(242,101,34,.8);margin-top:2px">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="footer-copy">Serviços de manutenção, monitoramento e diagnóstico para sistemas de energia solar.</div>
+  <div class="footer-domani">Feito por Domani Consultoria</div>
+</footer>
+
+<!-- OVERLAY EXPANDIR -->
+<div class="svc-overlay" id="svc-overlay">
+  <div class="ov-photo-bg" id="ov-photo-bg"></div>
+  <div class="ov-photo-grad"></div>
+  <button class="ov-close" id="ov-close" aria-label="Fechar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div class="ov-box" id="ov-box">
+    <div class="ov-logo">
+      <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid"/>
+      <div>
+        <div class="ov-logo-wname"><span style="color:#F26522">LUMEN</span><span style="color:#FAFAFA">GRID</span></div>
+        <span class="ov-logo-tag">Energia Inteligente</span>
+      </div>
+    </div>
+    <div id="ov-content"></div>
+    <div class="ov-hint">Tire um screenshot para compartilhar este serviço</div>
+  </div>
+</div>
+
+<script>
+const WPP_URL = 'https://wa.me/5511999999999?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20os%20serviços%20da%20LumenGrid.';
+
+function expandCard(btn) {
+  const card = btn.closest('.insta-card');
+  const photo    = card.dataset.photo;
+  const pricetag = card.dataset.pricetag || '';
+  const eyebrow  = card.querySelector('.insta-eyebrow').textContent;
+  const title    = card.querySelector('.insta-title').innerHTML;
+  const desc     = card.querySelector('.insta-desc').textContent;
+  const price    = card.querySelector('.insta-price').innerHTML;
+  const tags     = [...card.querySelectorAll('.insta-tag')]
+                     .map(t => `<span class="ov-tag">${t.textContent}</span>`).join('');
+
+  document.getElementById('ov-photo-bg').style.backgroundImage = `url('${photo}')`;
+
+  document.getElementById('ov-content').innerHTML = `
+    <div class="ov-eyebrow">${eyebrow}</div>
+    <div class="ov-title">${title}</div>
+    <div class="ov-bar"></div>
+    <div class="ov-desc">${desc}</div>
+    <div class="ov-price">${price}</div>
+    ${pricetag ? `<div class="ov-price-tag">${pricetag}</div>` : ''}
+    <div class="ov-tags">${tags}</div>
+    <a class="ov-cta" href="${WPP_URL}" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Falar no WhatsApp
+    </a>
+  `;
+
+  document.getElementById('svc-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeOverlay() {
+  document.getElementById('svc-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('ov-close').addEventListener('click', closeOverlay);
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeOverlay();
+});
+
+// Close when clicking outside the box (on photo bg or gradient)
+document.getElementById('svc-overlay').addEventListener('click', function(e) {
+  if (!e.target.closest('#ov-box') && !e.target.closest('#ov-close')) {
+    closeOverlay();
+  }
+});
+</script>
+
+</body>
+</html>

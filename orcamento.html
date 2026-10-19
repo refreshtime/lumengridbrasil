@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Solicite um orçamento gratuito para energia solar, sistema híbrido ou wallbox. Resposta em até 24h."/>
+<title>Orçamento Gratuito | LumenGrid Energia Solar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NC2ZVM48');</script>
+<!-- End Google Tag Manager -->
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#C95209;--or-l:#D85E10;--or-d:#A84007;
+  --or-dim:rgba(201,82,9,.07);--or-glow:rgba(201,82,9,.12);
+  --ink:#09090C;
+  --s1:#FFFFFF;--s2:#F8F8F6;--warm:#F8F4EE;
+  --b1:rgba(0,0,0,.07);--b2:rgba(0,0,0,.04);
+  --t1:#0D0D10;--t2:#52525B;--t3:#A1A1AA;
+  --green:#15803D;--green-dim:rgba(21,128,61,.09);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#fff;color:var(--t1);overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 6vw;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:border-color .3s;
+}
+.nav-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-icon{height:36px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(242,101,34,.75)) drop-shadow(0 0 5px rgba(242,101,34,.45)) drop-shadow(0 2px 8px rgba(0,0,0,.9))}
+.nav-wordmark{display:flex;flex-direction:column;gap:1px;line-height:1}
+.nav-wname{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-0.3px;line-height:1}
+.nw-l{color:#F26522}
+.nw-g{color:#FAFAFA}
+.nav-wtag{font-family:'DM Sans',sans-serif;font-weight:600;font-size:7px;text-transform:uppercase;letter-spacing:.32em;color:rgba(242,101,34,.88);display:block;margin-top:2px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,.70);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:#fff}
+.nav-cta{padding:9px 20px;background:var(--or);color:#fff!important;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;transition:background .15s}
+.nav-cta:hover{background:var(--or-l)!important}
+.nav-menu{display:none;cursor:pointer;color:rgba(255,255,255,.7);background:none;border:none}
+.mob-menu{display:none;position:fixed;inset:0;top:64px;background:rgba(9,9,11,.97);backdrop-filter:blur(12px);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:20px;font-weight:600;color:#FFFFFF;text-decoration:none}
+
+/* ── HERO SHORT ── */
+.hero-short{
+  padding:120px 6vw 72px;
+  background:var(--ink);
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero-short::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 70% at 50% 30%,rgba(201,82,9,.09) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-short-inner{position:relative;max-width:680px;margin:0 auto}
+.hs-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(201,82,9,.12);border:1px solid rgba(201,82,9,.25);border-radius:24px;padding:6px 18px;font-size:11px;font-weight:700;color:var(--or);letter-spacing:.4px;text-transform:uppercase;margin-bottom:24px}
+.hs-tag svg{flex-shrink:0}
+.hero-short h1{font-family:'Montserrat',sans-serif;font-size:clamp(32px,4.5vw,56px);font-weight:900;line-height:1.05;letter-spacing:-2px;color:#F4F4F5;margin-bottom:20px}
+.hero-short h1 em{font-style:italic;color:var(--or)}
+.hero-short p{font-size:16px;color:rgba(241,241,245,.6);line-height:1.7;max-width:500px;margin:0 auto 36px}
+.hs-trust{display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap}
+.hs-trust-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:rgba(241,241,245,.55)}
+.hs-trust-item svg{color:var(--or);flex-shrink:0}
+
+/* ── FORM SECTION ── */
+.form-section{padding:80px 6vw 100px;background:var(--s2)}
+.form-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 400px;gap:64px;align-items:start}
+.form-left h2{font-family:'Montserrat',sans-serif;font-size:clamp(24px,2.8vw,36px);font-weight:900;letter-spacing:-1px;line-height:1.1;margin-bottom:16px}
+.form-left p{font-size:14px;color:var(--t2);line-height:1.75;margin-bottom:32px}
+.form-left-benefits{display:flex;flex-direction:column;gap:14px}
+.flb-item{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;background:var(--s1);border:1px solid var(--b1);border-radius:10px;border-left:3px solid var(--or)}
+.flb-ico{width:32px;height:32px;border-radius:7px;background:var(--or-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.flb-ico svg{width:15px;height:15px;color:var(--or)}
+.flb-title{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.flb-desc{font-size:12px;color:var(--t2);line-height:1.5}
+
+/* ── FORM CARD ── */
+.form-card{background:var(--s1);border:1px solid var(--b1);border-radius:20px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,.08),0 1px 4px rgba(0,0,0,.04)}
+.form-card-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;margin-bottom:6px;letter-spacing:-.3px}
+.form-card-sub{font-size:13px;color:var(--t2);margin-bottom:28px;line-height:1.5}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t2);margin-bottom:6px}
+.form-input,.form-select{
+  width:100%;padding:11px 14px;
+  border:1.5px solid var(--b1);border-radius:8px;
+  font-family:'Inter',sans-serif;font-size:14px;color:var(--t1);
+  background:var(--s1);outline:none;
+  transition:border-color .15s,box-shadow .15s;
+  appearance:none;-webkit-appearance:none;
+}
+.form-input:focus,.form-select:focus{border-color:var(--or);box-shadow:0 0 0 3px var(--or-glow)}
+.form-input::placeholder{color:var(--t3)}
+.form-select-wrap{position:relative}
+.form-select-wrap::after{
+  content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  border:5px solid transparent;border-top:6px solid var(--t3);pointer-events:none;
+}
+.faixa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.faixa-option{position:relative}
+.faixa-option input[type="radio"]{position:absolute;opacity:0;width:0;height:0}
+.faixa-label{
+  display:block;padding:10px 12px;text-align:center;
+  border:1.5px solid var(--b1);border-radius:8px;
+  font-size:12px;font-weight:600;color:var(--t2);
+  cursor:pointer;transition:all .15s;line-height:1.3;
+}
+.faixa-option input:checked + .faixa-label{
+  border-color:var(--or);background:var(--or-dim);color:var(--or);
+}
+.faixa-label:hover{border-color:rgba(201,82,9,.3);color:var(--t1)}
+
+.lgpd-row{display:flex;align-items:flex-start;gap:10px;margin:20px 0}
+.lgpd-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--or);flex-shrink:0;margin-top:2px;cursor:pointer}
+.lgpd-text{font-size:12px;color:var(--t2);line-height:1.6}
+.lgpd-text a{color:var(--or);text-decoration:none}
+.lgpd-text a:hover{text-decoration:underline}
+
+.btn-submit{
+  width:100%;padding:15px 24px;background:var(--or);color:#fff;
+  border:none;border-radius:10px;font-family:'Inter',sans-serif;
+  font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.2px;
+  transition:background .18s,transform .18s,box-shadow .18s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit:hover{background:var(--or-l);transform:translateY(-2px);box-shadow:0 10px 32px rgba(201,82,9,.32)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.form-secure{text-align:center;font-size:11px;color:var(--t3);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.form-secure svg{width:12px;height:12px;color:var(--t3)}
+
+/* ── FAQ ── */
+.faq-section{padding:96px 6vw;background:var(--warm)}
+.sec-inner{max-width:1200px;margin:0 auto}
+.sec-tag{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:var(--or);margin-bottom:14px;opacity:.85}
+h2.faq-h2{font-family:'Montserrat',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:900;letter-spacing:-1.5px;line-height:1.06;margin-bottom:16px}
+.sec-sub{font-size:15px;color:var(--t2);line-height:1.75;max-width:520px;margin-bottom:52px;font-weight:400}
+.faq-tabs{display:flex;gap:0;border-bottom:1px solid var(--b1);margin-bottom:40px}
+.faq-tab-btn{padding:14px 32px;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;border:none;border-bottom:1.5px solid transparent;margin-bottom:-1px;background:none;font-family:inherit;transition:all .15s;letter-spacing:2px;text-transform:uppercase}
+.faq-tab-btn.active{color:var(--t1);border-bottom-color:var(--t1)}
+.faq-tab-btn:hover:not(.active){color:var(--t2)}
+.faq-panel{display:none}
+.faq-panel.active{display:block}
+.faq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px 32px;margin-top:8px}
+.faq-item{border-bottom:1px solid var(--b1);padding:20px 0}
+.faq-q{font-size:14px;font-weight:600;color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;user-select:none}
+.faq-q::after{content:'+';font-size:20px;color:var(--or);flex-shrink:0;font-weight:300;transition:transform .2s}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{font-size:13px;color:var(--t2);line-height:1.7;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+.faq-item.open .faq-a{max-height:400px;padding-top:12px}
+.faq-diff-banner{background:linear-gradient(135deg,var(--or-dim),rgba(232,100,26,.04));border:1px solid rgba(232,100,26,.2);border-radius:12px;padding:20px 24px;margin-bottom:32px;display:flex;gap:16px;align-items:flex-start}
+.faq-diff-banner svg{flex-shrink:0;color:var(--or);margin-top:2px}
+.faq-diff-banner p{font-size:13px;color:var(--t2);line-height:1.65;margin:0}
+.faq-diff-banner strong{color:var(--t1)}
+
+/* ── FOOTER ── */
+footer{padding:40px 6vw;border-top:1px solid rgba(255,255,255,.07);background:var(--ink)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-brand{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:900;letter-spacing:3px;color:var(--or)}
+.footer-copy{font-size:11px;color:rgba(161,161,170,.7)}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:rgba(161,161,170,.75);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:rgba(241,241,245,.9)}
+
+/* Floating WhatsApp */
+.float-whats{position:fixed;bottom:24px;right:24px;z-index:300;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);transition:transform .2s,box-shadow .2s;text-decoration:none}
+.float-whats:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(37,211,102,.55)}
+.float-whats svg{width:28px;height:28px;fill:#fff}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .form-inner{grid-template-columns:1fr;gap:40px}
+  .form-row{grid-template-columns:1fr}
+  .faq-grid{grid-template-columns:1fr}
+  .hs-trust{gap:18px}
+  .faq-tabs{overflow-x:auto}
+  .faq-tab-btn{padding:12px 18px;white-space:nowrap}
+  .nav-links{display:none}
+  .nav-menu{display:block}
+}
+@media(max-width:480px){
+  .faixa-grid{grid-template-columns:1fr 1fr}
+  .form-card{padding:28px 22px}
+  .hero-short{padding:100px 5vw 56px}
+}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC2ZVM48"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-brand" href="index.html">
+    <img class="nav-icon" src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="nav-wordmark">
+      <div class="nav-wname"><span class="nw-l">LUMEN</span><span class="nw-g">GRID</span></div>
+      <span class="nav-wtag">Energia Inteligente</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#sobre">Sobre</a>
+    <a href="index.html#solucoes">Soluções</a>
+    <a href="index.html#projetos">Projetos</a>
+    <a href="index.html#faq">FAQ</a>
+    <a href="orcamento.html" class="nav-cta">Solicitar Orçamento</a>
+  </div>
+  <button class="nav-menu" id="navMenuBtn" aria-label="Menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="index.html#sobre" onclick="closeMobMenu()">Sobre</a>
+  <a href="index.html#solucoes" onclick="closeMobMenu()">Soluções</a>
+  <a href="index.html#projetos" onclick="closeMobMenu()">Projetos</a>
+  <a href="index.html#faq" onclick="closeMobMenu()">FAQ</a>
+  <a href="orcamento.html" onclick="closeMobMenu()" style="color:var(--or)">Solicitar Orçamento</a>
+</div>
+
+<!-- HERO SHORT -->
+<section class="hero-short">
+  <div class="hero-short-inner">
+    <div class="hs-tag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
+      Resposta em até 24 horas
+    </div>
+    <h1>Solicite seu orçamento<br><em>gratuito</em></h1>
+    <p>Preencha o formulário e nossa equipe preparará uma proposta personalizada para a sua necessidade.</p>
+    <div class="hs-trust">
+      <div class="hs-trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Projeto personalizado
+      </div>
+      <div class="hs-trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Instalação em até 20 dias úteis
+      </div>
+      <div class="hs-trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+        Sem compromisso
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM SECTION -->
+<section class="form-section" id="formulario">
+  <div class="form-inner">
+
+    <!-- LEFT: benefits -->
+    <div class="form-left">
+      <h2>Por que solicitar<br>agora?</h2>
+      <p>Com os dados do seu consumo, nossa equipe dimensiona o sistema ideal, apresenta o ROI do investimento e cuida de toda a burocracia — da homologação ao monitoramento.</p>
+      <div class="form-left-benefits">
+        <div class="flb-item">
+          <div class="flb-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div>
+            <div class="flb-title">Análise técnica personalizada</div>
+            <div class="flb-desc">Dimensionamento baseado no seu consumo real, tarifa e perfil de uso.</div>
+          </div>
+        </div>
+        <div class="flb-item">
+          <div class="flb-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+          </div>
+          <div>
+            <div class="flb-title">Opções com e sem bateria</div>
+            <div class="flb-desc">Comparamos sistema On-Grid e Híbrido para você tomar a melhor decisão.</div>
+          </div>
+        </div>
+        <div class="flb-item">
+          <div class="flb-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="flb-title">Suporte do início ao fim</div>
+            <div class="flb-desc">Cuidamos da homologação, instalação e pós-venda com total transparência.</div>
+          </div>
+        </div>
+        <div class="flb-item">
+          <div class="flb-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div>
+            <div class="flb-title">Financiamento disponível</div>
+            <div class="flb-desc">Trabalhamos com as melhores linhas de crédito para energia solar do mercado.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: form -->
+    <div class="form-card">
+      <div class="form-card-title">Solicite seu orçamento</div>
+      <div class="form-card-sub">Preencha os campos abaixo — leva menos de 2 minutos.</div>
+
+      <form id="leadForm" novalidate>
+        <!-- Hidden UTM fields -->
+        <input type="hidden" name="utm_source" id="utm_source">
+        <input type="hidden" name="utm_medium" id="utm_medium">
+        <input type="hidden" name="utm_campaign" id="utm_campaign">
+        <input type="hidden" name="click_id" id="click_id">
+
+        <div class="form-row">
+          <div>
+            <label class="form-label" for="nome">Nome *</label>
+            <input class="form-input" type="text" id="nome" name="nome" placeholder="João" required autocomplete="given-name">
+          </div>
+          <div>
+            <label class="form-label" for="sobrenome">Sobrenome *</label>
+            <input class="form-input" type="text" id="sobrenome" name="sobrenome" placeholder="Silva" required autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">E-mail *</label>
+          <input class="form-input" type="email" id="email" name="email" placeholder="joao@email.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="telefone">WhatsApp *</label>
+          <input class="form-input" type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" required autocomplete="tel">
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label class="form-label" for="estado">Estado *</label>
+            <div class="form-select-wrap">
+              <select class="form-select" id="estado" name="estado" required>
+                <option value="" disabled selected>Selecione</option>
+                <option value="SP">São Paulo</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="Outros">Outros</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="form-label" for="cidade">Cidade *</label>
+            <input class="form-input" type="text" id="cidade" name="cidade" placeholder="São Paulo" required autocomplete="address-level2">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="faixa_conta">Valor médio da conta de luz *</label>
+          <div class="form-select-wrap">
+            <select class="form-select" id="faixa_conta" name="faixa_conta" required>
+              <option value="" disabled selected>Selecione o valor aproximado</option>
+              <option value="Até R$ 100">Até R$ 100</option>
+              <option value="Entre R$ 101 e R$ 200">Entre R$ 101 e R$ 200</option>
+              <option value="Entre R$ 201 e R$ 300">Entre R$ 201 e R$ 300</option>
+              <option value="Entre R$ 301 e R$ 400">Entre R$ 301 e R$ 400</option>
+              <option value="Entre R$ 401 e R$ 500">Entre R$ 401 e R$ 500</option>
+              <option value="Entre R$ 501 e R$ 600">Entre R$ 501 e R$ 600</option>
+              <option value="Entre R$ 601 e R$ 700">Entre R$ 601 e R$ 700</option>
+              <option value="Entre R$ 701 e R$ 800">Entre R$ 701 e R$ 800</option>
+              <option value="Entre R$ 801 e R$ 900">Entre R$ 801 e R$ 900</option>
+              <option value="Entre R$ 901 e R$ 1.000">Entre R$ 901 e R$ 1.000</option>
+              <option value="Entre R$ 1.001 e R$ 5.000">Entre R$ 1.001 e R$ 5.000</option>
+              <option value="Entre R$ 5.001 e R$ 10.000">Entre R$ 5.001 e R$ 10.000</option>
+              <option value="Acima de R$ 10.000">Acima de R$ 10.000</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="lgpd-row">
+          <input type="checkbox" id="lgpd" name="lgpd" required>
+          <label class="lgpd-text" for="lgpd">
+            Li e concordo com a <a href="politica-de-privacidade.html" target="_blank">Política de Privacidade</a>.
+            Autorizo o uso dos meus dados para contato comercial.
+          </label>
+        </div>
+
+        <button class="btn-submit" type="submit" id="submitBtn">
+          Solicitar Orçamento
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+
+        <div class="form-secure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Seus dados estão protegidos. Nunca compartilhamos com terceiros.
+        </div>
+      </form>
+
+      <!-- Error/loading states handled via JS -->
+      <div id="formMsg" style="display:none;margin-top:16px;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:600"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="sec-inner">
+    <div class="sec-tag">Perguntas Frequentes</div>
+    <h2 class="faq-h2">Dúvidas antes de pedir<br>seu <em style="font-style:italic;color:var(--or)">orçamento?</em></h2>
+
+    <div class="faq-tabs" style="margin-top:40px">
+      <button class="faq-tab-btn active" data-panel="faq-ongrid">Sistema On-Grid</button>
+      <button class="faq-tab-btn" data-panel="faq-hibrido">Sistema Híbrido</button>
+    </div>
+
+    <div class="faq-panel active" id="faq-ongrid">
+      <div class="faq-grid">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Como funciona um sistema de energia solar On-Grid?</div>
+          <div class="faq-a">Os painéis produzem energia para atender o consumo do imóvel. Quando existe excedente, ele pode ser enviado para a rede e compensado nas faturas seguintes, conforme a legislação vigente.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Quanto posso economizar com energia solar?</div>
+          <div class="faq-a">A economia depende do consumo, da tarifa, da concessionária e do dimensionamento do sistema. A LumenGrid apresenta uma estimativa personalizada após analisar as informações do cliente.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Em quanto tempo ocorre o retorno do investimento?</div>
+          <div class="faq-a">O prazo de retorno varia conforme o valor do projeto, o consumo, a tarifa de energia e o dimensionamento do sistema. Na proposta, apresentamos uma projeção personalizada de economia e payback.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">O sistema On-Grid funciona durante apagões?</div>
+          <div class="faq-a">Não. Por exigência de segurança da concessionária, o sistema On-Grid desliga automaticamente durante quedas na rede elétrica. Para ter energia mesmo em apagões, o sistema híbrido com baterias é a solução ideal.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">A LumenGrid realiza a homologação junto à concessionária?</div>
+          <div class="faq-a">Sim. Cuidamos de todo o processo burocrático: protocolo junto à concessionária (Enel, CPFL, etc.), troca do medidor por um bidirecional e acompanhamento até a ativação completa do sistema.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">É possível acompanhar a geração pelo celular?</div>
+          <div class="faq-a">Sim. Todos os nossos sistemas incluem monitoramento em tempo real via aplicativo. Você acompanha a geração, o consumo e a performance geral do sistema diretamente pelo smartphone.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-panel" id="faq-hibrido">
+      <div class="faq-diff-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p><strong>On-Grid vs Híbrido:</strong> O sistema On-Grid reduz os gastos com energia e depende da rede elétrica. O híbrido acrescenta baterias para <strong>atender cargas definidas durante interrupções da rede</strong>.</p>
+      </div>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">O sistema híbrido funciona durante quedas de energia?</div>
+          <div class="faq-a">O inversor híbrido pode acionar automaticamente as baterias quando ocorre uma interrupção da rede. O tempo de comutação e as cargas atendidas dependem dos equipamentos e da configuração definida no projeto.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">O sistema híbrido pode atender condomínios?</div>
+          <div class="faq-a">Sim. O sistema pode ser dimensionado para atender cargas definidas das áreas comuns. Elevadores, bombas e equipamentos de maior potência precisam de análise técnica específica.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Qual é o retorno de um sistema híbrido?</div>
+          <div class="faq-a">A análise considera economia, armazenamento e continuidade das cargas durante apagões. Por isso, o retorno depende da configuração, da capacidade das baterias e das prioridades do cliente.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Onde a bateria é instalada?</div>
+          <div class="faq-a">O local é definido após análise técnica e deve respeitar as especificações do fabricante, as condições de ventilação, proteção e segurança do projeto.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Posso instalar bateria sem ter painéis solares?</div>
+          <div class="faq-a">Sim, é possível. As baterias podem ser carregadas pela rede elétrica nos horários de menor tarifa. Porém, a combinação com painéis solares é o que traz máxima eficiência, economia real e autonomia energética plena.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Qual o prazo mínimo de garantia dos equipamentos?</div>
+          <div class="faq-a">Os inversores têm garantia mínima de 5 anos e os painéis solares de 10 anos de produto e 25 anos de performance. As baterias variam conforme o fabricante — apresentamos as especificações detalhadas na proposta.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:9px">
+          <img src="imagens/LOGOS/logo-icone.png" alt="" style="height:30px;width:auto;filter:drop-shadow(0 0 10px rgba(242,101,34,.6))">
+          <div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:-0.3px;line-height:1"><span style="color:#F26522">LUMEN</span><span style="color:rgba(241,241,245,.75)">GRID</span></div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:7px;font-weight:600;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.8);margin-top:2px">Energia Inteligente</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copy" style="margin-top:4px">comercial@lumengridbrasil.com.br</div>
+      <div class="footer-copy" style="margin-top:2px">(11) 94556-0188</div>
+      <div class="footer-copy" style="margin-top:2px">CNPJ 36.028.241/0001-96</div>
+      <div class="footer-copy" style="margin-top:6px">© 2026 Lumen Grid Energia Inteligente. Todos os direitos reservados.</div>
+    </div>
+    <div class="footer-links">
+      <a href="index.html#solucoes">Soluções</a>
+      <a href="index.html#projetos">Projetos</a>
+      <a href="index.html#como-funciona">Como Funciona</a>
+      <a href="politica-de-privacidade.html">Política de Privacidade</a>
+    </div>
+    <div class="footer-copy">lumengridbrasil.com.br<br><span style="opacity:.5;font-size:10px">Feito por Domani Consultoria</span></div>
+  </div>
+</footer>
+
+
+<script>
+/* ── NAV mobile ── */
+const navBtn = document.getElementById('navMenuBtn');
+const mobMenu = document.getElementById('mobMenu');
+navBtn.addEventListener('click', () => mobMenu.classList.toggle('open'));
+function closeMobMenu() { mobMenu.classList.remove('open'); }
+
+/* Nav scroll effect */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').style.borderBottomColor =
+    window.scrollY > 20 ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.07)';
+});
+
+/* ── UTM CAPTURE ── */
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const set = (id, key) => {
+    const el = document.getElementById(id);
+    if (el) el.value = params.get(key) || '';
+  };
+  set('utm_source', 'utm_source');
+  set('utm_medium', 'utm_medium');
+  set('utm_campaign', 'utm_campaign');
+  // click_id: suporta gclid (Google), fbclid (Facebook) e click_id genérico
+  const clickId = params.get('gclid') || params.get('fbclid') || params.get('click_id') || '';
+  document.getElementById('click_id').value = clickId;
+})();
+
+/* ── PHONE MASK ── */
+document.getElementById('telefone').addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 10) {
+    v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+  } else if (v.length > 6) {
+    v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+  } else if (v.length > 2) {
+    v = v.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+  } else {
+    v = v.replace(/^(\d*)$/, '($1');
+  }
+  e.target.value = v;
+});
+
+/* ── FORM SUBMIT ── */
+const GAS_URL = 'URL_DO_WEB_APP_AQUI'; // ← Hingrid: colar aqui a URL do Web App do Google Apps Script
+
+document.getElementById('leadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const btn = document.getElementById('submitBtn');
+  const msg = document.getElementById('formMsg');
+
+  // Validação básica
+  const required = ['nome', 'sobrenome', 'email', 'telefone', 'estado', 'cidade', 'faixa_conta'];
+  let valid = true;
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) { el.style.borderColor = '#ef4444'; valid = false; }
+    else el.style.borderColor = '';
+  });
+
+  if (!document.getElementById('lgpd').checked) {
+    valid = false;
+    msg.style.display = 'block';
+    msg.style.background = '#fef2f2';
+    msg.style.color = '#dc2626';
+    msg.textContent = 'Por favor, aceite a Política de Privacidade para continuar.';
+    return;
+  }
+
+  if (!valid) {
+    msg.style.display = 'block';
+    msg.style.background = '#fef2f2';
+    msg.style.color = '#dc2626';
+    msg.textContent = 'Preencha todos os campos obrigatórios.';
+    return;
+  }
+
+  // Coleta dados
+  const data = Object.fromEntries(new FormData(form));
+
+  // Disable button
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  msg.style.display = 'none';
+
+  // Push GTM event
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'form_submit_orcamento',
+    form_nome: data.nome,
+    form_estado: data.estado,
+    form_faixa: data.faixa_conta,
+    utm_source: data.utm_source,
+    utm_medium: data.utm_medium,
+    utm_campaign: data.utm_campaign
+  });
+
+  try {
+    // no-cors porque GAS web app não suporta preflight CORS
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch(err) {
+    console.warn('Fetch error (esperado com no-cors):', err);
+  }
+
+  // Sempre redirecionar para obrigado.html
+  window.location.href = 'obrigado.html';
+});
+
+/* ── FAQ ── */
+document.querySelectorAll('.faq-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.faq-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.faq-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.panel).classList.add('active');
+  });
+});
+
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

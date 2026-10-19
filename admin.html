@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     CONFIGURAÇÃO SUPABASE
+     1. Crie seu projeto em supabase.com (grátis)
+     2. Vá em Settings → API e copie os valores abaixo
+     3. Use a ANON key (pública) — o RLS protege os dados
+     ══════════════════════════════════════════════════════════════════════════ -->
+<script>
+  window.LG_SUPABASE_URL  = 'https://SEU-PROJETO.supabase.co';
+  window.LG_SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6...SUA_ANON_KEY';
+  window.LG_ADMIN_PASS    = 'lumengrid2026'; // senha local simples — troque
+</script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#E8641A;--or-d:rgba(232,100,26,.12);--or-b:rgba(232,100,26,.25);
+  --bg:#0A0A0C;--s1:#111115;--s2:#18181D;--s3:#1E1E24;
+  --b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.04);
+  --t1:#F4F4F5;--t2:#A1A1AA;--t3:#52525B;--t4:#3F3F46;
+  --green:#4ADE80;--green-d:rgba(74,222,128,.12);
+  --blue:#60A5FA;--blue-d:rgba(96,165,250,.12);
+  --yellow:#FBBF24;--yellow-d:rgba(251,191,36,.12);
+  --red:#F87171;--red-d:rgba(248,113,113,.12);
+  --purple:#C084FC;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+
+/* ── GLOW DE FUNDO ── */
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 50% 35% at 50% 0%,rgba(232,100,26,.06) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+/* ── HEADER ── */
+.hdr{background:var(--s1);border-bottom:1px solid var(--b1);padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-logo{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:900;letter-spacing:3px}
+.brand-logo span{color:var(--or)}
+.brand-badge{background:var(--or-d);border:1px solid var(--or-b);color:var(--or);font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:4px;text-transform:uppercase}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.btn-sm{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid var(--b1);border-radius:6px;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;background:transparent;font-family:'Inter',sans-serif;transition:all .15s;text-decoration:none}
+.btn-sm:hover{color:var(--t2);border-color:rgba(255,255,255,.12)}
+.btn-sm svg{width:12px;height:12px}
+.btn-primary{background:var(--or);border-color:var(--or);color:#fff}
+.btn-primary:hover{background:#d4561a;border-color:#d4561a;color:#fff}
+
+/* ── NAV TABS ── */
+.nav{background:var(--s1);border-bottom:1px solid var(--b1);padding:0 24px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:transparent;border:none;color:var(--t3);padding:11px 14px;cursor:pointer;font-size:11px;font-weight:700;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;transition:all .15s;font-family:'Inter',sans-serif}
+.nav-btn:hover{color:var(--t2)}
+.nav-btn.active{color:var(--or);border-bottom-color:var(--or)}
+
+/* ── CONTENT ── */
+.content{flex:1;padding:24px;max-width:1200px;width:100%;margin:0 auto;position:relative;z-index:1}
+.pane{display:none}
+.pane.active{display:block}
+
+/* ── BUSCADOR ── */
+.search-wrap{position:relative;margin-bottom:20px}
+.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--t3);pointer-events:none}
+#searchInput{width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px 14px 12px 42px;color:var(--t1);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
+#searchInput:focus{border-color:var(--or)}
+#searchInput::placeholder{color:var(--t3)}
+
+/* ── FILTROS ── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.filter-chip{background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .15s;letter-spacing:.3px}
+.filter-chip:hover{color:var(--t2);border-color:rgba(255,255,255,.12)}
+.filter-chip.active{background:var(--or-d);border-color:var(--or-b);color:var(--or)}
+
+/* ── RESULTADOS ── */
+.results-header{font-size:11px;color:var(--t3);margin-bottom:16px;letter-spacing:.3px}
+.results-header b{color:var(--t2)}
+.result-group{margin-bottom:24px}
+.group-label{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.group-label .dot{width:6px;height:6px;border-radius:50%}
+.dot-lead{background:var(--blue)}
+.dot-contrato{background:var(--green)}
+.dot-fin{background:var(--yellow)}
+.dot-parceiro{background:var(--purple)}
+.dot-checklist{background:var(--or)}
+
+.result-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:16px 18px;margin-bottom:8px;transition:border-color .15s}
+.result-card:hover{border-color:rgba(255,255,255,.12)}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.rc-name{font-size:14px;font-weight:600;color:var(--t1)}
+.rc-stage{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.stage-novo{background:var(--blue-d);color:var(--blue)}
+.stage-em_andamento{background:var(--yellow-d);color:var(--yellow)}
+.stage-concluido{background:var(--green-d);color:var(--green)}
+.stage-cancelado{background:var(--red-d);color:var(--red)}
+.stage-default{background:var(--b2);color:var(--t3)}
+
+.rc-meta{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--t2);margin-bottom:12px}
+.rc-meta span{display:flex;align-items:center;gap:4px}
+.rc-meta svg{width:11px;height:11px;color:var(--t3)}
+
+.rc-links{display:flex;gap:8px;flex-wrap:wrap}
+.rc-link{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid var(--b1);border-radius:5px;font-size:10px;font-weight:700;color:var(--t3);text-decoration:none;transition:all .15s;cursor:pointer;background:transparent;font-family:'Inter',sans-serif}
+.rc-link:hover{color:var(--or);border-color:var(--or-b)}
+.rc-link svg{width:11px;height:11px}
+.rc-link.primary{background:var(--or-d);border-color:var(--or-b);color:var(--or)}
+.rc-link.primary:hover{background:rgba(232,100,26,.2)}
+
+/* ── ESTADO VAZIO / LOADING ── */
+.empty{text-align:center;padding:60px 20px;color:var(--t3)}
+.empty svg{width:48px;height:48px;margin:0 auto 16px;display:block;opacity:.3}
+.empty h3{font-size:14px;font-weight:600;color:var(--t2);margin-bottom:6px}
+.empty p{font-size:12px;line-height:1.6}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--b1);border-top-color:var(--or);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── KITS TABLE ── */
+.section-title{font-size:11px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.kit-toolbar{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--b1)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--s2);color:var(--t3);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--b1);white-space:nowrap}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--b1);vertical-align:middle;color:var(--t2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--b2)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'Courier New',monospace;color:var(--t1)}
+td.em{color:var(--or);font-weight:700;text-align:right;font-family:'Courier New',monospace}
+td.center{text-align:center}
+.badge-on{background:var(--green-d);color:var(--green);padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase}
+.badge-off{background:var(--red-d);color:var(--red);padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase}
+.btn-icon{background:transparent;border:1px solid var(--b1);border-radius:5px;padding:4px 7px;color:var(--t3);cursor:pointer;font-size:10px;font-family:'Inter',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:3px}
+.btn-icon:hover{color:var(--or);border-color:var(--or-b)}
+.btn-icon.danger:hover{color:var(--red);border-color:rgba(248,113,113,.3)}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.open{display:flex}
+.modal{background:var(--s2);border:1px solid var(--b1);border-radius:14px;width:100%;max-width:480px;padding:24px;position:relative}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:20px;font-family:'Montserrat',sans-serif}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:18px;line-height:1}
+.modal-close:hover{color:var(--t1)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid.full{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.field input,.field select{background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:8px 10px;color:var(--t1);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus{border-color:var(--or)}
+.field select option{background:var(--s1);color:var(--t1)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+
+/* ── CONFIG BANNER ── */
+.config-banner{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:14px 16px;margin-bottom:24px;font-size:12px;color:var(--yellow);display:none;line-height:1.6}
+.config-banner b{display:block;margin-bottom:4px;font-size:13px}
+.config-banner code{background:rgba(251,191,36,.15);padding:1px 5px;border-radius:3px;font-size:11px}
+
+/* ── FOOTER ── */
+footer{background:var(--s1);border-top:1px solid var(--b1);text-align:center;padding:14px;font-size:11px;color:var(--t3);margin-top:auto}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b1);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.12)}
+
+/* ── LOCK SCREEN ── */
+.lock{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:20px}
+.lock-box{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:32px;width:100%;max-width:340px;text-align:center}
+.lock-logo{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;letter-spacing:3px;margin-bottom:4px}
+.lock-logo span{color:var(--or)}
+.lock-sub{font-size:11px;color:var(--t3);margin-bottom:24px}
+.lock-box input{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:10px 14px;color:var(--t1);font-size:14px;font-family:'Inter',sans-serif;outline:none;text-align:center;letter-spacing:2px;margin-bottom:12px;transition:border-color .15s}
+.lock-box input:focus{border-color:var(--or)}
+.lock-error{font-size:11px;color:var(--red);margin-top:-6px;margin-bottom:10px;min-height:16px}
+.lock-box .btn-primary{width:100%;padding:10px;justify-content:center;font-size:13px}
+
+@media(max-width:700px){
+  .content{padding:16px}
+  .hdr{padding:0 16px}
+  .nav{padding:0 16px}
+  .form-grid{grid-template-columns:1fr}
+  .rc-top{flex-direction:column;gap:6px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOCK SCREEN ══════════════════════════════════════════════════════════ -->
+<div class="lock" id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-logo">LUMEN<span>GRID</span></div>
+    <div class="lock-sub">Painel Administrativo</div>
+    <input type="password" id="passInput" placeholder="••••••••••••" autocomplete="off"/>
+    <div class="lock-error" id="passError"></div>
+    <button class="btn-sm btn-primary" onclick="checkPass()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Entrar
+    </button>
+  </div>
+</div>
+
+<!-- ══ APP ══════════════════════════════════════════════════════════════════ -->
+<div id="app" style="display:none;flex-direction:column;min-height:100vh;display:none">
+
+<div class="hdr">
+  <div class="brand">
+    <div class="brand-logo">LUMEN<span>GRID</span></div>
+    <div class="brand-badge">Admin</div>
+  </div>
+  <div class="hdr-right">
+    <a href="portal.html" class="btn-sm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Portal
+    </a>
+    <button class="btn-sm" id="syncStatus" title="Status da conexão com Supabase">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span id="syncLabel">Conectando…</span>
+    </button>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPane('busca',this)">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Busca Universal
+  </button>
+  <button class="nav-btn" onclick="showPane('kits',this)">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+    Kits / Precificação
+  </button>
+  <button class="nav-btn" onclick="showPane('status',this)">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Status do Banco
+  </button>
+</div>
+
+<div class="content">
+
+  <!-- ── BANNER CONFIG ── -->
+  <div class="config-banner" id="configBanner">
+    <b>⚙️ Configuração necessária</b>
+    Supabase não configurado. Edite as variáveis no topo do <code>admin.html</code>:
+    <code>LG_SUPABASE_URL</code> e <code>LG_SUPABASE_KEY</code>.
+    Após criar o projeto em <b>supabase.com</b>, execute o <code>schema.sql</code> no SQL Editor do Supabase.
+  </div>
+
+  <!-- ══ PAINEL: BUSCA ══════════════════════════════════════════════════════ -->
+  <div class="pane active" id="pane-busca">
+
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar por nome de cliente, parceiro, número de contrato…" autocomplete="off"/>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter-chip active" data-filter="all">Todos</button>
+      <button class="filter-chip" data-filter="lead">Leads (CRM)</button>
+      <button class="filter-chip" data-filter="contract">Contratos</button>
+      <button class="filter-chip" data-filter="financial">Financeiro</button>
+      <button class="filter-chip" data-filter="partner">Parceiros</button>
+      <button class="filter-chip" data-filter="checklist">Checklists</button>
+    </div>
+
+    <div id="resultsArea">
+      <div class="empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <h3>Digite para buscar</h3>
+        <p>Pesquise por nome de cliente, número de contrato, parceiro ou cidade.<br>Os resultados aparecem em tempo real.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ PAINEL: KITS ══════════════════════════════════════════════════════ -->
+  <div class="pane" id="pane-kits">
+
+    <!-- On-Grid -->
+    <div style="margin-bottom:32px">
+      <div class="kit-toolbar">
+        <div class="section-title" style="margin-bottom:0">Kits On-Grid</div>
+        <button class="btn-sm btn-primary" onclick="openKitModal('ongrid')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Kit
+        </button>
+      </div>
+      <div class="tbl-wrap">
+        <table id="tblOngrid">
+          <thead>
+            <tr>
+              <th>Placas</th><th>Inversor</th><th>Módulo</th>
+              <th>Equip (R$)</th><th>Promo (R$)</th><th>Status</th><th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyOngrid">
+            <tr><td colspan="7" style="text-align:center;padding:20px;color:var(--t3)">
+              <span class="spinner"></span>Carregando…
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Híbrido -->
+    <div>
+      <div class="kit-toolbar">
+        <div class="section-title" style="margin-bottom:0">Kits Híbridos</div>
+        <button class="btn-sm btn-primary" onclick="openKitModal('hybrid')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Kit
+        </button>
+      </div>
+      <div class="tbl-wrap">
+        <table id="tblHybrid">
+          <thead>
+            <tr>
+              <th>Placas</th><th>Inversor</th><th>Módulo</th><th>Bats</th>
+              <th>Bat Modelo</th><th>Equip (R$)</th><th>Status</th><th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyHybrid">
+            <tr><td colspan="8" style="text-align:center;padding:20px;color:var(--t3)">
+              <span class="spinner"></span>Carregando…
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ PAINEL: STATUS ══════════════════════════════════════════════════ -->
+  <div class="pane" id="pane-status">
+    <div class="section-title">Status do Banco de Dados</div>
+    <div id="statusCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+      <!-- preenchido via JS -->
+    </div>
+    <div style="margin-top:24px">
+      <div class="section-title">Próximos Passos</div>
+      <div style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:20px;font-size:12px;color:var(--t2);line-height:2">
+        <b style="color:var(--t1);display:block;margin-bottom:8px">Fase 1 — Migração de Dados</b>
+        Para migrar os dados existentes das Google Sheets para este banco:<br>
+        <code style="background:var(--s2);padding:2px 6px;border-radius:3px;color:var(--or);font-size:11px">cd migration && npm install && cp .env.example .env</code><br>
+        Edite o <code style="background:var(--s2);padding:2px 6px;border-radius:3px;color:var(--or);font-size:11px">.env</code> com suas credenciais, depois:<br>
+        <code style="background:var(--s2);padding:2px 6px;border-radius:3px;color:var(--or);font-size:11px">node import-sheets.js</code><br>
+        <code style="background:var(--s2);padding:2px 6px;border-radius:3px;color:var(--or);font-size:11px">node validate.js</code><br>
+        <br>
+        <b style="color:var(--t1);display:block;margin-bottom:8px">Fase 3 — Cadeia Automática</b>
+        Após validar os dados, cada ferramenta do portal será conectada ao banco com fallback para os .gs existentes.
+        As Sheets continuam funcionando normalmente durante toda a transição.
+      </div>
+    </div>
+  </div>
+
+</div><!-- .content -->
+
+<footer>Feito por Domani Consultoria</footer>
+
+</div><!-- #app -->
+
+<!-- ══ MODAL KIT ═════════════════════════════════════════════════════════════ -->
+<div class="overlay" id="kitOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('kitOverlay')">✕</button>
+    <div class="modal-title" id="modalKitTitle">Novo Kit</div>
+    <input type="hidden" id="modalKitId"/>
+    <input type="hidden" id="modalKitType"/>
+
+    <div class="form-grid" id="kitFormOngrid" style="display:none">
+      <div class="field"><label>Placas</label><input type="number" id="kf_placas_og" min="1" placeholder="8"/></div>
+      <div class="field"><label>Equip (R$)</label><input type="number" id="kf_equip_og" step="0.01" placeholder="18000"/></div>
+      <div class="field"><label>Inversor</label><input type="text" id="kf_inv_og" placeholder="Deye 5kW"/></div>
+      <div class="field"><label>Módulo</label><input type="text" id="kf_mod_og" placeholder="JA Solar 575W"/></div>
+      <div class="field"><label>Promo (R$) — opcional</label><input type="number" id="kf_promo_og" step="0.01" placeholder="deixe vazio = calculado"/></div>
+      <div class="field"><label>Status</label>
+        <select id="kf_ativo_og"><option value="true">Ativo</option><option value="false">Inativo</option></select>
+      </div>
+    </div>
+
+    <div class="form-grid" id="kitFormHybrid" style="display:none">
+      <div class="field"><label>Placas</label><input type="number" id="kf_placas_hy" min="1" placeholder="8"/></div>
+      <div class="field"><label>Equip (R$)</label><input type="number" id="kf_equip_hy" step="0.01" placeholder="28000"/></div>
+      <div class="field"><label>Inversor</label><input type="text" id="kf_inv_hy" placeholder="Sigen 5kW"/></div>
+      <div class="field"><label>Módulo</label><input type="text" id="kf_mod_hy" placeholder="JA Solar 575W"/></div>
+      <div class="field"><label>Baterias (qtd)</label><input type="number" id="kf_bats_hy" min="0" placeholder="2"/></div>
+      <div class="field"><label>Modelo Bateria</label><input type="text" id="kf_batmod_hy" placeholder="SigenStor 5kWh"/></div>
+      <div class="field"><label>Status Kit</label><input type="text" id="kf_status_hy" placeholder="disponivel"/></div>
+      <div class="field"><label>Ativo</label>
+        <select id="kf_ativo_hy"><option value="true">Sim</option><option value="false">Não</option></select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('kitOverlay')">Cancelar</button>
+      <button class="btn-sm btn-primary" onclick="saveKit()">Salvar Kit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUPABASE JS CLIENT ════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+//  LUMENGRID — Admin Panel
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── Auth simples ─────────────────────────────────────────────────────────────
+const SESSION_KEY = 'lg_admin_session';
+
+function checkPass() {
+  const val = document.getElementById('passInput').value;
+  if (val === window.LG_ADMIN_PASS) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    showApp();
+  } else {
+    document.getElementById('passError').textContent = 'Senha incorreta.';
+    document.getElementById('passInput').value = '';
+  }
+}
+
+document.getElementById('passInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPass();
+});
+
+function showApp() {
+  document.getElementById('lockScreen').style.display = 'none';
+  const app = document.getElementById('app');
+  app.style.display = 'flex';
+  app.style.flexDirection = 'column';
+  initApp();
+}
+
+if (sessionStorage.getItem(SESSION_KEY)) showApp();
+
+// ── Supabase ─────────────────────────────────────────────────────────────────
+let supabase = null;
+let SUPABASE_OK = false;
+
+function initSupabase() {
+  const url = window.LG_SUPABASE_URL;
+  const key = window.LG_SUPABASE_KEY;
+  if (!url || url.includes('SEU-PROJETO') || !key || key.length < 20) {
+    document.getElementById('configBanner').style.display = 'block';
+    document.getElementById('syncLabel').textContent = 'Não configurado';
+    return false;
+  }
+  try {
+    supabase = window.supabase.createClient(url, key);
+    return true;
+  } catch(e) {
+    console.error('Supabase init error:', e);
+    return false;
+  }
+}
+
+async function pingSupabase() {
+  if (!supabase) return;
+  try {
+    const { error } = await supabase.from('kit_pricing_ongrid').select('id', { count: 'exact', head: true });
+    SUPABASE_OK = !error;
+    document.getElementById('syncLabel').textContent = SUPABASE_OK ? 'Banco conectado' : 'Erro de conexão';
+    document.getElementById('syncStatus').style.color = SUPABASE_OK ? 'var(--green)' : 'var(--red)';
+  } catch {
+    SUPABASE_OK = false;
+    document.getElementById('syncLabel').textContent = 'Offline';
+    document.getElementById('syncStatus').style.color = 'var(--red)';
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+function initApp() {
+  initSupabase();
+  pingSupabase();
+  loadKits();
+  loadStatusCards();
+  setupSearch();
+  setupFilters();
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+function showPane(id, btn) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ════════════════════════════════════════════════════════════════════════════
+//  BUSCA UNIVERSAL
+// ════════════════════════════════════════════════════════════════════════════
+
+let searchTimer = null;
+let activeFilter = 'all';
+
+function setupSearch() {
+  document.getElementById('searchInput').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    const q = e.target.value.trim();
+    if (q.length < 2) {
+      document.getElementById('resultsArea').innerHTML = emptyState(
+        'Digite para buscar',
+        'Pesquise por nome de cliente, número de contrato, parceiro ou cidade.'
+      );
+      return;
+    }
+    document.getElementById('resultsArea').innerHTML =
+      `<div style="color:var(--t3);font-size:12px;padding:20px 0"><span class="spinner"></span>Buscando…</div>`;
+    searchTimer = setTimeout(() => search(q), 300);
+  });
+}
+
+function setupFilters() {
+  document.querySelectorAll('#filters .filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#filters .filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter;
+      const q = document.getElementById('searchInput').value.trim();
+      if (q.length >= 2) search(q);
+    });
+  });
+}
+
+async function search(q) {
+  if (!supabase) {
+    document.getElementById('resultsArea').innerHTML = noSupabaseMsg();
+    return;
+  }
+
+  const pattern = `%${q}%`;
+  const prom = [];
+
+  if (activeFilter === 'all' || activeFilter === 'lead')
+    prom.push(supabase.from('leads').select('id,nome,telefone,email,cidade,stage,kwp,valor_projeto,parceiro,responsavel,docs_folder,created_at').ilike('nome', pattern).limit(10));
+  else prom.push(Promise.resolve({ data: [] }));
+
+  if (activeFilter === 'all' || activeFilter === 'contract')
+    prom.push(supabase.from('contracts').select('id,num_contrato,cliente,kvp,valor_total,status,data_emissao,consultor,pasta_drive').ilike('cliente', pattern).limit(10));
+  else prom.push(Promise.resolve({ data: [] }));
+
+  if (activeFilter === 'all' || activeFilter === 'financial')
+    prom.push(supabase.from('financial_entries').select('id,tipo,situacao,descricao,cliente_fornecedor,valor_previsto,data_competencia,num_contrato').ilike('cliente_fornecedor', pattern).limit(10));
+  else prom.push(Promise.resolve({ data: [] }));
+
+  if (activeFilter === 'all' || activeFilter === 'partner')
+    prom.push(supabase.from('partner_referrals').select('id,nome,status,kwp,valor_projeto,comissao_estimada,comissao_paga,data_indicacao,partner_id').ilike('nome', pattern).limit(10));
+  else prom.push(Promise.resolve({ data: [] }));
+
+  if (activeFilter === 'all' || activeFilter === 'checklist')
+    prom.push(supabase.from('visit_checklists').select('id,cliente,data_visita,instalador,cidade_uf,parecer_geral,pasta_fotos').ilike('cliente', pattern).limit(10));
+  else prom.push(Promise.resolve({ data: [] }));
+
+  const [leads, contracts, fin, referrals, checklists] = await Promise.all(prom);
+
+  const total = (leads.data?.length||0) + (contracts.data?.length||0) +
+                (fin.data?.length||0) + (referrals.data?.length||0) + (checklists.data?.length||0);
+
+  if (total === 0) {
+    document.getElementById('resultsArea').innerHTML = emptyState(
+      `Nenhum resultado para "${q}"`,
+      'Tente um nome diferente, número de contrato ou verifique se os dados já foram migrados para o banco.'
+    );
+    return;
+  }
+
+  let html = `<div class="results-header">Encontrado <b>${total} resultado${total!==1?'s':''}</b> para "<b>${escHtml(q)}</b>"</div>`;
+
+  if (leads.data?.length) {
+    html += groupHtml('lead', 'dot-lead', `Leads / CRM (${leads.data.length})`);
+    leads.data.forEach(r => { html += leadCard(r); });
+  }
+  if (contracts.data?.length) {
+    html += groupHtml('contract', 'dot-contrato', `Contratos (${contracts.data.length})`);
+    contracts.data.forEach(r => { html += contractCard(r); });
+  }
+  if (fin.data?.length) {
+    html += groupHtml('financial', 'dot-fin', `Financeiro (${fin.data.length})`);
+    fin.data.forEach(r => { html += finCard(r); });
+  }
+  if (referrals.data?.length) {
+    html += groupHtml('partner', 'dot-parceiro', `Indicações Parceiros (${referrals.data.length})`);
+    referrals.data.forEach(r => { html += referralCard(r); });
+  }
+  if (checklists.data?.length) {
+    html += groupHtml('checklist', 'dot-checklist', `Checklists de Visita (${checklists.data.length})`);
+    checklists.data.forEach(r => { html += checklistCard(r); });
+  }
+
+  document.getElementById('resultsArea').innerHTML = html;
+}
+
+// ── Render helpers ────────────────────────────────────────────────────────────
+
+function groupHtml(type, dotClass, label) {
+  return `<div class="result-group" data-type="${type}">
+    <div class="group-label"><div class="dot ${dotClass}"></div>${label}</div>`;
+}
+
+function stageBadge(s) {
+  const t = (s||'').toLowerCase();
+  const cls = t.includes('novo') ? 'stage-novo' :
+              t.includes('andamento')||t.includes('proposta')||t.includes('negoci') ? 'stage-em_andamento' :
+              t.includes('conclu')||t.includes('fechad')||t.includes('instalad') ? 'stage-concluido' :
+              t.includes('cancel')||t.includes('descar') ? 'stage-cancelado' : 'stage-default';
+  return `<span class="rc-stage ${cls}">${escHtml(s||'—')}</span>`;
+}
+
+function fmtMoney(v) {
+  if (v == null) return '—';
+  return 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('pt-BR');
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function metaSpan(icon, text) {
+  return `<span>${icon} ${escHtml(text||'—')}</span>`;
+}
+
+function leadCard(r) {
+  return `<div class="result-card">
+    <div class="rc-top">
+      <div class="rc-name">${escHtml(r.nome)}</div>
+      ${stageBadge(r.stage)}
+    </div>
+    <div class="rc-meta">
+      ${r.kwp ? metaSpan('⚡', r.kwp + ' kWp') : ''}
+      ${r.valor_projeto ? metaSpan('💰', fmtMoney(r.valor_projeto)) : ''}
+      ${r.cidade ? metaSpan('📍', r.cidade) : ''}
+      ${r.responsavel ? metaSpan('👤', r.responsavel) : ''}
+      ${r.parceiro ? metaSpan('🤝', r.parceiro) : ''}
+      ${r.telefone ? metaSpan('📱', r.telefone) : ''}
+    </div>
+    <div class="rc-links">
+      <a class="rc-link primary" href="CRM_LumenGrid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Abrir no CRM
+      </a>
+      ${r.docs_folder ? `<a class="rc-link" href="${escHtml(r.docs_folder)}" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Pasta Drive
+      </a>` : ''}
+    </div>
+  </div>`;
+}
+
+function contractCard(r) {
+  return `<div class="result-card">
+    <div class="rc-top">
+      <div>
+        <div class="rc-name">${escHtml(r.cliente)}</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px">${escHtml(r.num_contrato||'Sem número')}</div>
+      </div>
+      ${stageBadge(r.status)}
+    </div>
+    <div class="rc-meta">
+      ${r.kvp ? metaSpan('⚡', r.kvp + ' kWp') : ''}
+      ${metaSpan('💰', fmtMoney(r.valor_total))}
+      ${metaSpan('📅', fmtDate(r.data_emissao))}
+      ${r.consultor ? metaSpan('👤', r.consultor) : ''}
+    </div>
+    <div class="rc-links">
+      <a class="rc-link primary" href="contrato.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        Abrir Contrato
+      </a>
+      ${r.pasta_drive ? `<a class="rc-link" href="${escHtml(r.pasta_drive)}" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Pasta Drive
+      </a>` : ''}
+      <a class="rc-link" href="dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Dashboard Fin
+      </a>
+    </div>
+  </div>`;
+}
+
+function finCard(r) {
+  const tipo = r.tipo === 'receita' ? '📈 Receita' :
+               r.tipo === 'despesa' ? '📉 Despesa' : '📋 Previsão';
+  return `<div class="result-card">
+    <div class="rc-top">
+      <div>
+        <div class="rc-name">${escHtml(r.descricao)}</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px">${tipo}</div>
+      </div>
+      ${stageBadge(r.situacao)}
+    </div>
+    <div class="rc-meta">
+      ${metaSpan('💰', fmtMoney(r.valor_previsto))}
+      ${r.data_competencia ? metaSpan('📅', fmtDate(r.data_competencia)) : ''}
+      ${r.cliente_fornecedor ? metaSpan('👤', r.cliente_fornecedor) : ''}
+      ${r.num_contrato ? metaSpan('📋', r.num_contrato) : ''}
+    </div>
+    <div class="rc-links">
+      <a class="rc-link primary" href="dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Dashboard Financeiro
+      </a>
+    </div>
+  </div>`;
+}
+
+function referralCard(r) {
+  const pendente = (r.comissao_estimada||0) - (r.comissao_paga||0);
+  return `<div class="result-card">
+    <div class="rc-top">
+      <div class="rc-name">${escHtml(r.nome)}</div>
+      ${stageBadge(r.status)}
+    </div>
+    <div class="rc-meta">
+      ${r.kwp ? metaSpan('⚡', r.kwp + ' kWp') : ''}
+      ${r.valor_projeto ? metaSpan('💰', fmtMoney(r.valor_projeto)) : ''}
+      ${r.comissao_estimada ? metaSpan('🤝', 'Comissão: ' + fmtMoney(r.comissao_estimada)) : ''}
+      ${pendente > 0 ? metaSpan('⏳', 'Pendente: ' + fmtMoney(pendente)) : ''}
+      ${r.data_indicacao ? metaSpan('📅', fmtDate(r.data_indicacao)) : ''}
+    </div>
+    <div class="rc-links">
+      <a class="rc-link primary" href="CRM_LumenGrid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Ver no CRM
+      </a>
+    </div>
+  </div>`;
+}
+
+function checklistCard(r) {
+  return `<div class="result-card">
+    <div class="rc-top">
+      <div class="rc-name">${escHtml(r.cliente)}</div>
+      ${stageBadge(r.parecer_geral)}
+    </div>
+    <div class="rc-meta">
+      ${r.data_visita ? metaSpan('📅', fmtDate(r.data_visita)) : ''}
+      ${r.instalador ? metaSpan('🔧', r.instalador) : ''}
+      ${r.cidade_uf ? metaSpan('📍', r.cidade_uf) : ''}
+    </div>
+    <div class="rc-links">
+      <a class="rc-link primary" href="RELATORIOS/checklist_visita.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Abrir Checklist
+      </a>
+      ${r.pasta_fotos ? `<a class="rc-link" href="${escHtml(r.pasta_fotos)}" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Fotos Drive
+      </a>` : ''}
+    </div>
+  </div>`;
+}
+
+function emptyState(title, msg) {
+  return `<div class="empty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <h3>${escHtml(title)}</h3><p>${escHtml(msg)}</p></div>`;
+}
+
+function noSupabaseMsg() {
+  return `<div class="empty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <h3>Supabase não configurado</h3>
+    <p>Configure LG_SUPABASE_URL e LG_SUPABASE_KEY no topo do admin.html,<br>depois execute o schema.sql no Supabase Dashboard.</p>
+  </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  KITS
+// ════════════════════════════════════════════════════════════════════════════
+
+async function loadKits() {
+  if (!supabase) {
+    document.getElementById('tbodyOngrid').innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:16px">Supabase não configurado</td></tr>`;
+    document.getElementById('tbodyHybrid').innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:16px">Supabase não configurado</td></tr>`;
+    return;
+  }
+
+  // On-Grid
+  const { data: og, error: ogErr } = await supabase
+    .from('kit_pricing_ongrid')
+    .select('*')
+    .order('placas');
+
+  if (ogErr || !og?.length) {
+    document.getElementById('tbodyOngrid').innerHTML =
+      `<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:16px">${ogErr ? 'Erro: '+ogErr.message : 'Nenhum kit cadastrado. Importe via migration/import-sheets.js ou adicione manualmente.'}</td></tr>`;
+  } else {
+    document.getElementById('tbodyOngrid').innerHTML = og.map(k => `
+      <tr>
+        <td class="num">${k.placas}</td>
+        <td>${escHtml(k.inversor||'—')}</td>
+        <td>${escHtml(k.modulo||'—')}</td>
+        <td class="num">${fmtMoney(k.equip)}</td>
+        <td class="em">${k.promo ? fmtMoney(k.promo) : '<span style="color:var(--t3)">calculado</span>'}</td>
+        <td class="center"><span class="${k.ativo?'badge-on':'badge-off'}">${k.ativo?'Ativo':'Inativo'}</span></td>
+        <td class="center">
+          <button class="btn-icon" onclick="openKitModal('ongrid','${k.id}')">✏️ Editar</button>
+          <button class="btn-icon danger" onclick="toggleKit('ongrid','${k.id}',${!k.ativo})">${k.ativo?'Desativar':'Ativar'}</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  // Híbrido
+  const { data: hy, error: hyErr } = await supabase
+    .from('kit_pricing_hybrid')
+    .select('*')
+    .order('placas');
+
+  if (hyErr || !hy?.length) {
+    document.getElementById('tbodyHybrid').innerHTML =
+      `<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:16px">${hyErr ? 'Erro: '+hyErr.message : 'Nenhum kit híbrido cadastrado.'}</td></tr>`;
+  } else {
+    document.getElementById('tbodyHybrid').innerHTML = hy.map(k => `
+      <tr>
+        <td class="num">${k.placas}</td>
+        <td>${escHtml(k.inversor||'—')}</td>
+        <td>${escHtml(k.modulo||'—')}</td>
+        <td class="num">${k.bats||0}</td>
+        <td>${escHtml(k.bat_modelo||'—')}</td>
+        <td class="em">${fmtMoney(k.equip)}</td>
+        <td>${escHtml(k.status||'—')}</td>
+        <td class="center">
+          <button class="btn-icon" onclick="openKitModal('hybrid','${k.id}')">✏️ Editar</button>
+          <button class="btn-icon danger" onclick="toggleKit('hybrid','${k.id}',${!k.ativo})">${k.ativo?'Desativar':'Ativar'}</button>
+        </td>
+      </tr>`).join('');
+  }
+}
+
+function openKitModal(type, id) {
+  document.getElementById('kitOverlay').classList.add('open');
+  document.getElementById('modalKitType').value = type;
+  document.getElementById('modalKitId').value = id || '';
+  document.getElementById('modalKitTitle').textContent = id ? 'Editar Kit' : `Novo Kit ${type === 'ongrid' ? 'On-Grid' : 'Híbrido'}`;
+
+  document.getElementById('kitFormOngrid').style.display = type === 'ongrid' ? 'grid' : 'none';
+  document.getElementById('kitFormHybrid').style.display = type === 'hybrid' ? 'grid' : 'none';
+
+  if (id && supabase) {
+    const table = type === 'ongrid' ? 'kit_pricing_ongrid' : 'kit_pricing_hybrid';
+    supabase.from(table).select('*').eq('id', id).single().then(({ data }) => {
+      if (!data) return;
+      if (type === 'ongrid') {
+        document.getElementById('kf_placas_og').value = data.placas||'';
+        document.getElementById('kf_equip_og').value  = data.equip||'';
+        document.getElementById('kf_inv_og').value    = data.inversor||'';
+        document.getElementById('kf_mod_og').value    = data.modulo||'';
+        document.getElementById('kf_promo_og').value  = data.promo||'';
+        document.getElementById('kf_ativo_og').value  = String(data.ativo);
+      } else {
+        document.getElementById('kf_placas_hy').value  = data.placas||'';
+        document.getElementById('kf_equip_hy').value   = data.equip||'';
+        document.getElementById('kf_inv_hy').value     = data.inversor||'';
+        document.getElementById('kf_mod_hy').value     = data.modulo||'';
+        document.getElementById('kf_bats_hy').value    = data.bats||'';
+        document.getElementById('kf_batmod_hy').value  = data.bat_modelo||'';
+        document.getElementById('kf_status_hy').value  = data.status||'';
+        document.getElementById('kf_ativo_hy').value   = String(data.ativo);
+      }
+    });
+  } else {
+    // limpa campos
+    ['kf_placas_og','kf_equip_og','kf_inv_og','kf_mod_og','kf_promo_og',
+     'kf_placas_hy','kf_equip_hy','kf_inv_hy','kf_mod_hy','kf_bats_hy','kf_batmod_hy','kf_status_hy']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  }
+}
+
+async function saveKit() {
+  if (!supabase) { alert('Supabase não configurado.'); return; }
+  const type  = document.getElementById('modalKitType').value;
+  const id    = document.getElementById('modalKitId').value;
+  const table = type === 'ongrid' ? 'kit_pricing_ongrid' : 'kit_pricing_hybrid';
+
+  let row;
+  if (type === 'ongrid') {
+    row = {
+      placas:  parseInt(document.getElementById('kf_placas_og').value),
+      equip:   parseFloat(document.getElementById('kf_equip_og').value)||null,
+      inversor:document.getElementById('kf_inv_og').value||null,
+      modulo:  document.getElementById('kf_mod_og').value||null,
+      promo:   parseFloat(document.getElementById('kf_promo_og').value)||null,
+      ativo:   document.getElementById('kf_ativo_og').value === 'true',
+    };
+  } else {
+    row = {
+      placas:    parseInt(document.getElementById('kf_placas_hy').value),
+      equip:     parseFloat(document.getElementById('kf_equip_hy').value)||null,
+      inversor:  document.getElementById('kf_inv_hy').value||null,
+      modulo:    document.getElementById('kf_mod_hy').value||null,
+      bats:      parseInt(document.getElementById('kf_bats_hy').value)||0,
+      bat_modelo:document.getElementById('kf_batmod_hy').value||null,
+      status:    document.getElementById('kf_status_hy').value||'disponivel',
+      ativo:     document.getElementById('kf_ativo_hy').value === 'true',
+    };
+  }
+
+  if (!row.placas || row.placas < 1) { alert('Informe o número de placas.'); return; }
+
+  let error;
+  if (id) {
+    ({ error } = await supabase.from(table).update(row).eq('id', id));
+  } else {
+    ({ error } = await supabase.from(table).insert(row));
+  }
+
+  if (error) { alert('Erro ao salvar: ' + error.message); return; }
+
+  closeModal('kitOverlay');
+  loadKits();
+}
+
+async function toggleKit(type, id, ativo) {
+  if (!supabase) return;
+  const table = type === 'ongrid' ? 'kit_pricing_ongrid' : 'kit_pricing_hybrid';
+  await supabase.from(table).update({ ativo }).eq('id', id);
+  loadKits();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  STATUS DO BANCO
+// ════════════════════════════════════════════════════════════════════════════
+
+async function loadStatusCards() {
+  if (!supabase) {
+    document.getElementById('statusCards').innerHTML =
+      `<div style="grid-column:1/-1;color:var(--t3);font-size:12px">Supabase não configurado.</div>`;
+    return;
+  }
+
+  const tables = [
+    { table: 'leads',              label: 'Leads', icon: '👥', color: 'var(--blue)' },
+    { table: 'contracts',          label: 'Contratos', icon: '📄', color: 'var(--green)' },
+    { table: 'financial_entries',  label: 'Lançamentos', icon: '💰', color: 'var(--yellow)' },
+    { table: 'partner_referrals',  label: 'Indicações', icon: '🤝', color: 'var(--purple)' },
+    { table: 'visit_checklists',   label: 'Checklists', icon: '✅', color: 'var(--or)' },
+    { table: 'kit_pricing_ongrid', label: 'Kits On-Grid', icon: '☀️', color: 'var(--or)' },
+    { table: 'kit_pricing_hybrid', label: 'Kits Híbridos', icon: '🔋', color: 'var(--or)' },
+    { table: 'partners',           label: 'Parceiros', icon: '🏢', color: 'var(--purple)' },
+  ];
+
+  const counts = await Promise.all(
+    tables.map(t => supabase.from(t.table).select('*', { count: 'exact', head: true }))
+  );
+
+  document.getElementById('statusCards').innerHTML = tables.map((t, i) => `
+    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:16px 18px">
+      <div style="font-size:20px;margin-bottom:8px">${t.icon}</div>
+      <div style="font-size:24px;font-weight:800;color:${t.color};font-family:'Montserrat',sans-serif;margin-bottom:4px">
+        ${counts[i].error ? '—' : (counts[i].count||0).toLocaleString('pt-BR')}
+      </div>
+      <div style="font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.5px">${t.label}</div>
+      ${counts[i].error ? `<div style="font-size:10px;color:var(--red);margin-top:4px">${counts[i].error.message}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Etiqueta Inversor 138×70mm</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+@page { size:138mm 70mm; margin:0; }
+
+body {
+  background:#06060a;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  font-family:'DM Sans',sans-serif;
+  padding:48px 24px 64px;
+  gap:0;
+}
+
+.hint {
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.22);
+  margin-bottom:20px;
+}
+
+.section-label {
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:rgba(242,101,34,.40);
+  margin:40px 0 16px;
+}
+
+@media print {
+  body { background:none; padding:0; margin:0; min-height:unset; display:block; }
+  .hint, .section-label, .mockup-section, .footer-domani { display:none; }
+  .etiqueta { box-shadow:none; border-radius:0; }
+}
+
+/* ================================================================
+   ETIQUETA — 130 × 70mm
+   ================================================================ */
+.etiqueta {
+  width:138mm;
+  height:70mm;
+  position:relative;
+  border-radius:2px;
+  overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(242,101,34,.18),
+    0 20px 60px rgba(0,0,0,.95),
+    0 0 80px rgba(242,101,34,.06);
+}
+
+/* Fundo — exato do Instagram: quase preto com glow laranja sutil */
+.bg {
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 50% 90% at 18% 50%, rgba(242,101,34,.10) 0%, rgba(242,101,34,.03) 45%, transparent 65%),
+    radial-gradient(ellipse 30% 60% at 82% 50%, rgba(242,101,34,.04) 0%, transparent 55%),
+    linear-gradient(135deg,#0c0c11 0%,#09090e 60%,#0c0c11 100%);
+}
+
+/* Linha accent topo */
+.accent-top {
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1.5px;
+  background:linear-gradient(90deg,transparent 0%,#F26522 20%,#ff9040 50%,#F26522 80%,transparent 100%);
+  opacity:.95;
+  z-index:2;
+}
+
+/* Layout 3 colunas */
+.layout {
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:stretch;
+  z-index:1;
+}
+
+/* Separador vertical — igual ao estilo do Instagram */
+.sep-v {
+  width:1px;
+  margin:7mm 0;
+  background:linear-gradient(to bottom,
+    transparent 0%,
+    rgba(242,101,34,.30) 25%,
+    rgba(242,101,34,.35) 50%,
+    rgba(242,101,34,.30) 75%,
+    transparent 100%);
+  flex-shrink:0;
+}
+
+/* ---- COLUNA 1 — Identidade (40mm) ---- */
+.bloco-marca {
+  width:40mm;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:5mm 4mm 5mm 4.5mm;
+  gap:0;
+}
+
+/* Glow spec exata do Instagram */
+.logo-icon {
+  height:12mm;
+  width:auto;
+  object-fit:contain;
+  margin-bottom:2mm;
+  filter:
+    drop-shadow(0 0 10px rgba(242,101,34,.80))
+    drop-shadow(0 0 4px rgba(242,101,34,.55))
+    drop-shadow(0 2px 8px rgba(0,0,0,.90));
+}
+
+.logo-nome {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:800;
+  font-size:5.8mm;
+  line-height:1;
+  letter-spacing:-.3px;
+  text-align:center;
+}
+.logo-nome .l { color:#F26522; }
+.logo-nome .g { color:#FAFAFA; }
+
+.logo-tag {
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  font-size:1.8mm;
+  text-transform:uppercase;
+  letter-spacing:.25em;
+  color:rgba(242,101,34,.90);
+  text-align:center;
+  margin-top:1.2mm;
+}
+
+/* Divisor orange — 44px × 3px do Instagram, adaptado */
+.marca-div {
+  width:16mm;
+  height:1px;
+  background:linear-gradient(to right,rgba(242,101,34,.60),transparent);
+  margin:3mm 0 2.5mm;
+  border-radius:1px;
+}
+
+.logo-url {
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;
+  font-size:1.6mm;
+  color:rgba(250,250,250,.38);
+  text-align:center;
+  letter-spacing:.04em;
+}
+
+/* ---- COLUNA 2 — Serviços (64mm) ---- */
+.bloco-servicos {
+  width:64mm;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:5mm 4mm 5mm 4.5mm;
+}
+
+/* ▶ eyebrow — exato do Instagram */
+.eyebrow {
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  font-size:1.7mm;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:#F26522;
+  opacity:.92;
+  margin-bottom:1.8mm;
+}
+
+/* Divisor laranja curto — replica o 44px×3px dos posts */
+.servicos-div {
+  width:9mm;
+  height:1.5px;
+  background:#F26522;
+  border-radius:1px;
+  margin-bottom:2.5mm;
+  opacity:.90;
+}
+
+/* Blocos com border-left — padrão exato dos features no post_goodwe_inversor */
+.servicos-lista {
+  display:flex;
+  flex-direction:column;
+  gap:1.6mm;
+}
+
+.servico-item {
+  padding-left:2.2mm;
+  border-left:1.5px solid rgba(242,101,34,.45);
+}
+
+.servico-nome {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:600;
+  font-size:2.0mm;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#FAFAFA;
+  line-height:1.2;
+}
+
+/* ---- COLUNA 3 — QR (32mm) ---- */
+.bloco-qr {
+  width:32mm;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:4mm 3.5mm;
+  gap:2mm;
+}
+
+/* Eyebrow QR */
+.qr-eyebrow {
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  font-size:1.5mm;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:rgba(242,101,34,.75);
+  text-align:center;
+}
+
+.qr-frame {
+  background:#FFFFFF;
+  padding:3px;
+  border-radius:2px;
+  line-height:0;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.08),
+    0 3px 14px rgba(0,0,0,.55),
+    0 0 20px rgba(242,101,34,.08);
+}
+
+.qr-handle {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700;
+  font-size:2.2mm;
+  color:#F26522;
+  text-align:center;
+  letter-spacing:.03em;
+  line-height:1;
+}
+
+.qr-url {
+  font-family:'DM Sans',sans-serif;
+  font-weight:400;
+  font-size:1.6mm;
+  color:rgba(250,250,250,.50);
+  text-align:center;
+  letter-spacing:.03em;
+}
+
+/* ================================================================
+   MOCKUP — Proporção no inversor (somente tela)
+   ================================================================ */
+.mockup-section {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:36px;
+  width:100%;
+}
+
+.mockup-pair {
+  display:flex;
+  gap:40px;
+  align-items:flex-start;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.mockup-item {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.mockup-caption {
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.20);
+}
+
+.mockup-wrap {
+  position:relative;
+  display:inline-block;
+  line-height:0;
+}
+
+.mockup-wrap img.inv-foto {
+  height:460px;
+  width:auto;
+  display:block;
+  border-radius:10px;
+  box-shadow:0 16px 50px rgba(0,0,0,.75);
+}
+
+/*
+  GoodWe 7.5kW front face ≈ 290mm W × 370mm H
+  Etiqueta: 130mm × 70mm
+  Proporção W: 130/290 = 44.8%
+  Proporção H: 70/370 = 18.9%
+  Posição: centrada horizontalmente, área branca superior (~38% do topo)
+*/
+.sticker-overlay {
+  position:absolute;
+  left:50%;
+  top:37%;
+  width:47.6%;
+  aspect-ratio:130/70;
+  transform:translateX(-50%);
+  border-radius:2px;
+  overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(242,101,34,.28),
+    0 4px 18px rgba(0,0,0,.60),
+    0 0 28px rgba(242,101,34,.14);
+}
+
+/* Versão para foto em ângulo — ajuste de perspectiva */
+.sticker-overlay.angled {
+  top:29%;
+  left:54%;
+  width:40%;
+  transform:translateX(-50%) perspective(700px) rotateY(-6deg) rotateX(2deg);
+}
+
+/* Mini conteúdo do sticker no mockup */
+.sticker-inner {
+  width:100%;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:
+    radial-gradient(ellipse 50% 90% at 18% 50%, rgba(242,101,34,.10) 0%, transparent 60%),
+    #09090e;
+}
+
+.sticker-inner::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1.5px;
+  background:linear-gradient(90deg,transparent,#F26522 30%,#ff9040 50%,#F26522 70%,transparent);
+}
+
+.si-marca {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:36%;
+  height:100%;
+  padding:4px;
+  gap:2px;
+}
+
+.si-marca img {
+  height:18%;
+  width:auto;
+  max-height:22px;
+  filter:drop-shadow(0 0 5px rgba(242,101,34,.80)) drop-shadow(0 0 2px rgba(242,101,34,.55));
+  margin-bottom:2px;
+}
+
+.si-nome {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:800;
+  font-size:8px;
+  line-height:1;
+}
+.si-nome .l { color:#F26522; }
+.si-nome .g { color:#FAFAFA; }
+
+.si-sep {
+  width:1px;
+  height:60%;
+  background:linear-gradient(to bottom,transparent,rgba(242,101,34,.35) 30%,rgba(242,101,34,.35) 70%,transparent);
+  flex-shrink:0;
+}
+
+.si-servicos {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:2px;
+  padding:0 4px;
+  flex:1;
+}
+
+.si-sv {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:600;
+  font-size:4.5px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:rgba(250,250,250,.80);
+  border-left:1px solid rgba(242,101,34,.45);
+  padding-left:3px;
+  line-height:1.3;
+}
+
+.si-sep2 {
+  width:1px;
+  height:60%;
+  background:linear-gradient(to bottom,transparent,rgba(242,101,34,.35) 30%,rgba(242,101,34,.35) 70%,transparent);
+  flex-shrink:0;
+}
+
+.si-qr {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:30%;
+  height:100%;
+  padding:4px;
+  gap:2px;
+}
+
+.si-qr-frame {
+  background:#fff;
+  padding:2px;
+  border-radius:1px;
+  line-height:0;
+}
+
+.si-qr-frame img {
+  width:28px;
+  height:28px;
+  display:block;
+}
+
+.si-handle {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700;
+  font-size:4px;
+  color:#F26522;
+  text-align:center;
+}
+
+/* Indicador de tamanho */
+.size-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;
+  color:rgba(242,101,34,.55);
+  letter-spacing:.08em;
+}
+.size-badge::before,.size-badge::after {
+  content:'';
+  display:block;
+  width:24px;
+  height:1px;
+  background:rgba(242,101,34,.30);
+}
+
+/* Rodapé */
+.footer-domani {
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.14);
+  margin-top:52px;
+}
+</style>
+</head>
+<body>
+
+<p class="hint">Ctrl+P → Gráficos de plano de fundo → 138×70mm</p>
+
+<!-- ======================== ETIQUETA PARA IMPRESSÃO ======================== -->
+<div class="etiqueta">
+  <div class="bg"></div>
+  <div class="accent-top"></div>
+
+  <div class="layout">
+
+    <!-- Coluna 1: Marca -->
+    <div class="bloco-marca">
+      <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid" class="logo-icon">
+      <div class="logo-nome"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+      <div class="logo-tag">Energia Inteligente</div>
+      <div class="marca-div"></div>
+      <div class="logo-url">lumengridbrasil.com.br</div>
+    </div>
+
+    <div class="sep-v"></div>
+
+    <!-- Coluna 2: Serviços -->
+    <div class="bloco-servicos">
+      <div class="eyebrow">▶ Soluções Integradas</div>
+      <div class="servicos-div"></div>
+      <div class="servicos-lista">
+        <div class="servico-item"><span class="servico-nome">Energia Solar</span></div>
+        <div class="servico-item"><span class="servico-nome">Sistemas Híbridos com Bateria</span></div>
+        <div class="servico-item"><span class="servico-nome">Carregadores Veiculares</span></div>
+        <div class="servico-item"><span class="servico-nome">Manutenção Preventiva</span></div>
+        <div class="servico-item"><span class="servico-nome">Financiamento de Carros Elétricos</span></div>
+      </div>
+    </div>
+
+    <div class="sep-v"></div>
+
+    <!-- Coluna 3: QR -->
+    <div class="bloco-qr">
+      <div class="qr-eyebrow">▶ WhatsApp</div>
+      <div class="qr-frame"><div id="qrcode"></div></div>
+      <div class="qr-handle">Fale Conosco</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================== MOCKUP NOS INVERSORES ======================== -->
+<p class="section-label">Referência proporcional — GoodWe 7,5kW</p>
+
+<div class="mockup-section">
+  <div class="mockup-pair">
+
+    <!-- Mockup 1: inversor frente -->
+    <div class="mockup-item">
+      <div class="mockup-wrap">
+        <img class="inv-foto" src="imagens/TECNOLOGIA/inversor.jpg" alt="GoodWe 7,5kW">
+        <div class="sticker-overlay">
+          <div class="sticker-inner">
+            <div class="si-marca">
+              <img src="imagens/LOGOS/logo-icone.png" alt="">
+              <div class="si-nome"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            </div>
+            <div class="si-sep"></div>
+            <div class="si-servicos">
+              <div class="si-sv">Energia Solar</div>
+              <div class="si-sv">Sist. Híbridos</div>
+              <div class="si-sv">Carregadores EV</div>
+              <div class="si-sv">Manutenção</div>
+              <div class="si-sv">Financiamento</div>
+            </div>
+            <div class="si-sep2"></div>
+            <div class="si-qr">
+              <div class="si-qr-frame"><div id="qr-mini"></div></div>
+              <div class="si-handle">@lumen.grid</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="size-badge">138 × 70 mm</div>
+      <div class="mockup-caption">Vista frontal</div>
+    </div>
+
+    <!-- Mockup 2: inversor + bateria (ângulo) -->
+    <div class="mockup-item">
+      <div class="mockup-wrap">
+        <img class="inv-foto" src="imagens/TECNOLOGIA/inversor-bateria-goodwe.png" alt="GoodWe + Bateria">
+        <div class="sticker-overlay angled">
+          <div class="sticker-inner">
+            <div class="si-marca">
+              <img src="imagens/LOGOS/logo-icone.png" alt="">
+              <div class="si-nome"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            </div>
+            <div class="si-sep"></div>
+            <div class="si-servicos">
+              <div class="si-sv">Energia Solar</div>
+              <div class="si-sv">Sist. Híbridos</div>
+              <div class="si-sv">Carregadores EV</div>
+              <div class="si-sv">Manutenção</div>
+              <div class="si-sv">Financiamento</div>
+            </div>
+            <div class="si-sep2"></div>
+            <div class="si-qr">
+              <div class="si-qr-frame"><div id="qr-mini2"></div></div>
+              <div class="si-handle">@lumen.grid</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="size-badge">138 × 70 mm</div>
+      <div class="mockup-caption">Com bateria — perspectiva</div>
+    </div>
+
+  </div>
+</div>
+
+<p class="footer-domani">Feito por Domani Consultoria</p>
+
+<script>
+  const qrConfig = {
+    width: 90, height: 90,
+    colorDark: "#09090e",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  };
+  new QRCode(document.getElementById("qrcode"), { ...qrConfig, text: "https://wa.me/5511998179824" });
+
+  // Mini QRs no mockup
+  const mini = { width:28, height:28, colorDark:"#09090e", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.L };
+  new QRCode(document.getElementById("qr-mini"),  { ...mini, text:"https://wa.me/5511998179824" });
+  new QRCode(document.getElementById("qr-mini2"), { ...mini, text:"https://wa.me/5511998179824" });
+</script>
+
+</body>
+</html>
