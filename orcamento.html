@@ -700,12 +700,12 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   const btn = document.getElementById('submitBtn');
   const msg = document.getElementById('formMsg');
 
-  // Validação básica
+  let valid = true;
+
   // Validação: objetivo e tipo_imovel são radio buttons
   const objetivo = document.querySelector('input[name="objetivo"]:checked');
   const tipo_imovel = document.querySelector('input[name="tipo_imovel"]:checked');
   if (!objetivo) {
-    valid = false;
     msg.style.display = 'block';
     msg.style.background = '#fef2f2';
     msg.style.color = '#dc2626';
@@ -713,7 +713,6 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
     return;
   }
   if (!tipo_imovel) {
-    valid = false;
     msg.style.display = 'block';
     msg.style.background = '#fef2f2';
     msg.style.color = '#dc2626';
@@ -721,7 +720,6 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
     return;
   }
   const required = ['nome', 'sobrenome', 'email', 'telefone', 'estado', 'cidade', 'faixa_conta'];
-  let valid = true;
   required.forEach(id => {
     const el = document.getElementById(id);
     if (!el.value.trim()) { el.style.borderColor = '#ef4444'; valid = false; }
@@ -767,16 +765,18 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
     utm_campaign: data.utm_campaign
   });
 
-  try {
-    // no-cors porque GAS web app não suporta preflight CORS
-    await fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-  } catch(err) {
-    console.warn('Fetch error (esperado com no-cors):', err);
+  // Envia para GAS somente se a URL foi configurada
+  if (GAS_URL && GAS_URL !== 'URL_DO_WEB_APP_AQUI') {
+    try {
+      await fetch(GAS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch(err) {
+      console.warn('Fetch error:', err);
+    }
   }
 
   // Sempre redirecionar para obrigado.html
