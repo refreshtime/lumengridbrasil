@@ -1379,9 +1379,11 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <div class="inv-title" id="inv-plan-title">Autonomia Máxima</div>
       <div class="inv-subtitle" id="inv-plan-subtitle">Máximo armazenamento disponível</div>
       <table class="inv-table" id="inv-plan-table">
+        <tr id="inv-plan-placas-row" style="display:none"><td>Painéis</td><td id="inv-plan-placas-val">—</td></tr>
+        <tr id="inv-plan-geracao-row" style="display:none"><td>Geração estimada</td><td id="inv-plan-geracao-val">—</td></tr>
         <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
-        <tr><td>Bateria</td><td>6× SigenStor LFP 9 kWh</td></tr>
-        <tr><td>Energia útil</td><td class="highlight">54 kWh (100% DoD)</td></tr>
+        <tr><td>Bateria</td><td id="inv-plan-bat-val">6× SigenStor LFP 9 kWh</td></tr>
+        <tr><td>Energia útil</td><td class="highlight" id="inv-plan-energy-val">54 kWh (100% DoD)</td></tr>
         <tr><td>Garantia inversor</td><td>10 anos</td></tr>
         <tr><td>Garantia bateria</td><td>10 anos</td></tr>
       </table>
@@ -1775,6 +1777,36 @@ if (PLAN) {
       if (el2) el2.textContent = planNota;
     }
 
+    // Parâmetros de configuração do sistema: plan_bats, plan_placas, plan_modulo, plan_geracao
+    var planBats = parseInt(P.get('plan_bats') || '6');
+    if (!isNaN(planBats) && planBats > 0) {
+      var batEl = document.getElementById('inv-plan-bat-val');
+      var engEl = document.getElementById('inv-plan-energy-val');
+      if (batEl) batEl.textContent = planBats + '× SigenStor LFP 9 kWh';
+      if (engEl) engEl.textContent = (planBats * 9) + ' kWh (100% DoD)';
+    }
+    var planPlacas = P.get('plan_placas');
+    var planModulo = P.get('plan_modulo');
+    if (planPlacas) {
+      var rowP = document.getElementById('inv-plan-placas-row');
+      var valP = document.getElementById('inv-plan-placas-val');
+      if (rowP) rowP.style.display = '';
+      if (valP) valP.textContent = planPlacas + (planModulo ? ' × ' + planModulo : ' painéis');
+    }
+    var planGeracao = P.get('plan_geracao');
+    if (planGeracao) {
+      var rowG = document.getElementById('inv-plan-geracao-row');
+      var valG = document.getElementById('inv-plan-geracao-val');
+      if (rowG) rowG.style.display = '';
+      if (valG) valG.textContent = planGeracao + ' kWh/mês';
+    }
+
+    // Só exibe cards de 6 baterias nas cargas quando plan_bats=6 (ou padrão sem param)
+    if (planBats === 6) {
+      document.querySelectorAll('.carga-sum-6bat').forEach(function(el){ el.style.display = ''; });
+      document.querySelectorAll('.carga-sum').forEach(function(el){ el.style.gridTemplateColumns = 'repeat(4,1fr)'; });
+    }
+
     // Remover badge "Recomendado" do card 2 e mover destaque
     var badge2 = document.getElementById('inv-badge-2');
     if (badge2) badge2.style.display = 'none';
@@ -1792,9 +1824,6 @@ if (PLAN) {
       if (btnPlan) btnPlan.href = 'https://wa.me/' + C.wpp + '?text=' + msgPlan;
     }
 
-    // Mostrar cards de 6 baterias na seção de cargas e ajustar grid para 4 colunas
-    document.querySelectorAll('.carga-sum-6bat').forEach(function(el){ el.style.display = ''; });
-    document.querySelectorAll('.carga-sum').forEach(function(el){ el.style.gridTemplateColumns = 'repeat(4,1fr)'; });
   }
 }
 
