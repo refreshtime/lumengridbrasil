@@ -137,7 +137,9 @@ nav{
   font-size:13px;font-weight:600;color:var(--t2);
   cursor:pointer;transition:all .18s;line-height:1.3;min-height:88px;
 }
-.objetivo-label .obj-ico{font-size:26px;line-height:1}
+.objetivo-label .obj-ico{display:flex;align-items:center;justify-content:center}
+.objetivo-label .obj-ico svg{width:26px;height:26px;stroke:var(--t2);transition:stroke .18s}
+.objetivo-option input:checked + .objetivo-label .obj-ico svg{stroke:var(--or)}
 .objetivo-label .obj-title{font-size:13px;font-weight:700;color:var(--t1)}
 .objetivo-label .obj-sub{font-size:10px;color:var(--t3);font-weight:400}
 .objetivo-option input:checked + .objetivo-label{border-color:var(--or);background:var(--or-dim)}
@@ -168,7 +170,9 @@ nav{
   font-size:11px;font-weight:600;color:var(--t2);
   cursor:pointer;transition:all .15s;line-height:1.3;
 }
-.tipo-label .tipo-ico{font-size:20px;line-height:1}
+.tipo-label .tipo-ico{display:flex;align-items:center;justify-content:center}
+.tipo-label .tipo-ico svg{width:20px;height:20px;stroke:var(--t2);transition:stroke .15s}
+.tipo-option input:checked + .tipo-label .tipo-ico svg{stroke:var(--or)}
 .tipo-option input:checked + .tipo-label{border-color:var(--or);background:var(--or-dim);color:var(--or)}
 .tipo-label:hover{border-color:rgba(201,82,9,.3)}
 /* ── PARCERIA ── */
@@ -371,7 +375,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- RIGHT: form -->
     <div class="form-card">
       <div class="form-card-title">Solicite seu orçamento</div>
-      <div class="form-card-sub">Preencha os campos abaixo — leva menos de 2 minutos.</div>
+      <div class="form-card-sub">Preencha os campos abaixo.</div>
 
       <form id="leadForm" novalidate>
         <!-- Hidden UTM fields -->
@@ -387,7 +391,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="objetivo-option">
               <input type="radio" name="objetivo" id="obj_economia" value="Economia (On-Grid)" required>
               <label class="objetivo-label" for="obj_economia">
-                <span class="obj-ico">&#9728;&#65039;</span>
+                <span class="obj-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
                 <span class="obj-title">Quero economizar</span>
                 <span class="obj-sub">Reduzi minha conta de luz</span>
               </label>
@@ -395,7 +399,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="objetivo-option">
               <input type="radio" name="objetivo" id="obj_hibrido" value="Anti-apagão (Híbrido)">
               <label class="objetivo-label" for="obj_hibrido">
-                <span class="obj-ico">&#128267;</span>
+                <span class="obj-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
                 <span class="obj-title">Quero anti-apagão</span>
                 <span class="obj-sub">Proteção contra queda de energia</span>
               </label>
@@ -408,7 +412,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </a>
           <!-- Balão: já tem solar? -->
           <div class="solar-balloon" id="solarBalloon">
-            <div class="solar-balloon-title">&#128161; Você já tem energia solar instalada?</div>
+            <div class="solar-balloon-title" style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="1.8" stroke-linecap="round" width="16" height="16"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 00-4 12.74V17h8v-2.26A7 7 0 0012 2z"/></svg>Você já tem energia solar instalada?</div>
             <div class="balloon-opts">
               <div class="balloon-opt">
                 <input type="radio" name="ja_tem_solar" id="solar_sim" value="Sim">
@@ -429,25 +433,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="tipo-option">
               <input type="radio" name="tipo_imovel" id="tipo_casa" value="Casa" required>
               <label class="tipo-label" for="tipo_casa">
-                <span class="tipo-ico">&#127968;</span>Casa
+                <span class="tipo-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Casa
               </label>
             </div>
             <div class="tipo-option">
               <input type="radio" name="tipo_imovel" id="tipo_apto" value="Apartamento">
               <label class="tipo-label" for="tipo_apto">
-                <span class="tipo-ico">&#127970;</span>Apartamento
+                <span class="tipo-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="1"/><line x1="9" y1="7" x2="9.01" y2="7" stroke-width="2.5"/><line x1="15" y1="7" x2="15.01" y2="7" stroke-width="2.5"/><line x1="9" y1="12" x2="9.01" y2="12" stroke-width="2.5"/><line x1="15" y1="12" x2="15.01" y2="12" stroke-width="2.5"/><path d="M9 17h6v5H9z"/></svg></span>Apartamento
               </label>
             </div>
             <div class="tipo-option">
               <input type="radio" name="tipo_imovel" id="tipo_comercial" value="Comercial">
               <label class="tipo-label" for="tipo_comercial">
-                <span class="tipo-ico">&#127970;</span>Comercial
+                <span class="tipo-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l1-6h16l1 6"/><path d="M3 9a2 2 0 004 0 2 2 0 004 0 2 2 0 004 0 2 2 0 004 0"/><path d="M5 9v12h14V9"/><rect x="9" y="14" width="6" height="7"/></svg></span>Comercial
               </label>
             </div>
             <div class="tipo-option">
               <input type="radio" name="tipo_imovel" id="tipo_residencial" value="Residencial/Cond.">
               <label class="tipo-label" for="tipo_residencial">
-                <span class="tipo-ico">&#127963;</span>Residencial
+                <span class="tipo-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="7" width="7" height="14"/><rect x="15" y="3" width="7" height="18"/><path d="M9 7h6v14H9z"/></svg></span>Residencial
               </label>
             </div>
           </div>
