@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<title>LumenGrid — Apresentação Institucional</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#C95209;
+  --or-hi:#E0621C;
+  --ink:#09090C;
+  --w:#FAFAFA;
+  --w75:rgba(250,250,250,.75);
+  --w50:rgba(250,250,250,.50);
+  --w30:rgba(250,250,250,.30);
+  --w12:rgba(250,250,250,.12);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--w);
+  font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+.deck{width:100vw;height:100vh;position:relative;overflow:hidden}
+
+/* ── SLIDES ── */
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .40s ease,visibility .40s}
+.slide.active{opacity:1;visibility:visible}
+
+/* per-element entrance */
+.slide.active .a1{animation:up .85s ease both}
+.slide.active .a2{animation:up .85s .10s ease both}
+.slide.active .a3{animation:up .85s .20s ease both}
+.slide.active .a4{animation:up .85s .30s ease both}
+.slide.active .a5{animation:up .85s .40s ease both}
+.slide.active .a6{animation:up .85s .50s ease both}
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* ── UI ── */
+#progress{position:fixed;top:0;left:0;height:1.5px;background:var(--or);z-index:3000;transition:width .6s ease}
+#dots{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:3000}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(250,250,250,.22);cursor:pointer;border:none;padding:6px;box-sizing:content-box;transition:all .3s}
+.dot.a{background:var(--or);transform:scale(1.35)}
+#ctr{position:fixed;bottom:28px;right:44px;font-size:10px;font-weight:500;letter-spacing:3px;color:var(--w30);z-index:3000;font-family:'DM Sans',sans-serif}
+
+/* ── LOGO ── */
+.lg{display:flex;align-items:center;gap:9px}
+.lg img{height:38px;width:auto;object-fit:contain;
+  filter:drop-shadow(0 0 12px rgba(224,98,28,.78)) drop-shadow(0 0 4px rgba(224,98,28,.44)) drop-shadow(0 2px 6px rgba(0,0,0,.96))}
+.lg-t{display:flex;flex-direction:column;gap:2px;line-height:1}
+.lg-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:-.3px}
+.lg-name .lo{color:var(--or-hi)}.lg-name .gr{color:var(--w)}
+.lg-tag{font-family:'DM Sans',sans-serif;font-weight:600;font-size:6px;text-transform:uppercase;letter-spacing:.35em;color:rgba(224,98,28,.88)}
+.lg-corner{position:absolute;top:48px;left:72px;z-index:50}
+
+/* ── FOOTER ── */
+.foot{position:absolute;bottom:0;left:0;right:0;height:52px;z-index:10;border-top:1px solid rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
+.foot span{font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(250,250,250,.16)}
+
+/* ── SHARED ── */
+.eyebrow{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:rgba(201,82,9,.88)}
+.bar2{width:40px;height:2px;background:var(--or);border-radius:1px}
+
+/* ================================================================
+   S01 — CAPA
+   ================================================================ */
+#s1{background:var(--ink)}
+#s1 .glow{position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 68% 68% at 50% 112%,rgba(201,82,9,.20) 0%,transparent 54%),
+             radial-gradient(ellipse 38% 38% at 50% 50%,rgba(201,82,9,.03) 0%,transparent 70%)}
+#s1 .grid{position:absolute;inset:0;z-index:1;
+  background-image:linear-gradient(rgba(201,82,9,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,82,9,.03) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 72% 60% at 50% 50%,black 12%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 72% 60% at 50% 50%,black 12%,transparent 70%)}
+#s1 .horizon{position:absolute;bottom:18%;left:10%;right:10%;height:1px;z-index:2;
+  background:linear-gradient(to right,transparent,rgba(201,82,9,.20) 28%,rgba(201,82,9,.20) 72%,transparent)}
+#s1 .inner{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 220px}
+#s1 .logo-c{margin-bottom:60px}
+#s1 .pre{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:6px;text-transform:uppercase;color:var(--w50);margin-bottom:28px}
+#s1 .hl{font-family:'Montserrat',sans-serif;font-size:clamp(60px,7.2vw,106px);font-weight:900;line-height:1.0;letter-spacing:-.04em;color:var(--w);margin-bottom:44px}
+#s1 .hl em{color:var(--or-hi);font-style:italic}
+#s1 .bar2c{margin:0 auto 36px}
+#s1 .sub{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:300;color:var(--w50);line-height:2.1;max-width:640px}
+#s1 .sub strong{color:var(--w75);font-weight:400}
+
+/* ================================================================
+   S02 — QUEM SOMOS
+   ================================================================ */
+#s2{background:var(--ink)}
+#s2 .photo{position:absolute;right:0;top:0;bottom:0;width:50%;z-index:0;
+  background:url('imagens/PROJETOS/casa-solar-aerea.png') center 40%/cover no-repeat}
+#s2 .photo::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,var(--ink) 0%,rgba(9,9,12,.55) 50%,rgba(9,9,12,.0) 100%)}
+#s2 .inner{position:absolute;left:0;top:0;bottom:52px;width:54%;z-index:10;display:flex;flex-direction:column;justify-content:center;padding:140px 80px 60px 96px}
+#s2 .hl{font-family:'Montserrat',sans-serif;font-size:clamp(34px,3.8vw,56px);font-weight:900;line-height:1.05;letter-spacing:-.03em;color:var(--w);margin:24px 0 28px}
+#s2 .hl em{color:var(--or-hi);font-style:normal}
+#s2 .body{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:var(--w75);line-height:1.82;max-width:420px}
+#s2 .stats{display:flex;gap:0;margin-top:52px;padding-top:40px;border-top:1px solid rgba(255,255,255,.07)}
+#s2 .stat{flex:1;padding-right:36px}
+#s2 .stat+.stat{padding-left:36px;border-left:1px solid rgba(255,255,255,.07)}
+#s2 .stat-n{font-family:'Montserrat',sans-serif;font-size:38px;font-weight:900;color:var(--or-hi);line-height:1;letter-spacing:-.03em}
+#s2 .stat-l{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--w50);margin-top:8px;line-height:1.55}
+
+/* ================================================================
+   S03 — O PROBLEMA (tipografico)
+   ================================================================ */
+#s3{background:#0d0d10}
+#s3 .inner{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;padding:80px 160px 80px 120px;max-width:80%}
+#s3 .q{font-family:'Montserrat',sans-serif;font-size:clamp(42px,5.5vw,78px);font-weight:900;line-height:1.05;letter-spacing:-.04em;color:var(--w);margin:28px 0 52px}
+#s3 .q em{color:var(--or-hi);font-style:normal}
+#s3 .list{display:flex;flex-direction:column;gap:0}
+#s3 .li{display:flex;align-items:baseline;gap:28px;padding:24px 0;border-bottom:1px solid rgba(255,255,255,.055)}
+#s3 .li:last-child{border-bottom:none}
+#s3 .li-n{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:rgba(201,82,9,.65);letter-spacing:2px;flex-shrink:0;padding-top:2px}
+#s3 .li-body{}
+#s3 .li-t{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:var(--w);margin-bottom:5px}
+#s3 .li-d{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;color:var(--w50);line-height:1.72}
+
+/* ================================================================
+   S04 — ON-GRID  (foto full bleed)
+   ================================================================ */
+#s4{background:var(--ink)}
+#s4 .photo-bg{position:absolute;inset:0;z-index:0;background:url('imagens/PROJETOS/instalacao-solar-ceu-azul.jpeg') center 35%/cover no-repeat}
+#s4 .ov1{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(9,9,12,.97) 0%,rgba(9,9,12,.65) 35%,rgba(9,9,12,.15) 60%,transparent 78%)}
+#s4 .ov2{position:absolute;inset:0;z-index:2;background:linear-gradient(to right,rgba(9,9,12,.75) 0%,rgba(9,9,12,.20) 42%,transparent 62%)}
+#s4 .inner{position:absolute;left:0;bottom:52px;z-index:10;padding:0 0 72px 96px;max-width:680px}
+#s4 .big{font-family:'Montserrat',sans-serif;font-size:clamp(88px,11vw,148px);font-weight:900;line-height:1;letter-spacing:-.05em;color:var(--or-hi)}
+#s4 .big-l{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:4px;color:var(--w50);margin-bottom:24px;margin-top:4px}
+#s4 .hl{font-family:'Montserrat',sans-serif;font-size:clamp(30px,3.6vw,52px);font-weight:900;line-height:1.04;letter-spacing:-.03em;color:var(--w);margin-bottom:18px}
+#s4 .body{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:var(--w75);line-height:1.80;max-width:460px}
+
+/* ================================================================
+   S05 — HÍBRIDO  (foto + texto direita)
+   ================================================================ */
+#s5{background:var(--ink)}
+#s5 .photo-bg{position:absolute;inset:0;z-index:0;background:url('imagens/TECNOLOGIA/casa-solar-carro-eletrico-noite.jpeg') center 50%/cover no-repeat}
+#s5 .ov1{position:absolute;inset:0;z-index:1;background:linear-gradient(to left,rgba(9,9,12,.97) 0%,rgba(9,9,12,.72) 35%,rgba(9,9,12,.15) 60%,transparent 72%)}
+#s5 .ov2{position:absolute;inset:0;z-index:2;background:linear-gradient(to bottom,rgba(9,9,12,.40) 0%,transparent 30%)}
+#s5 .inner{position:absolute;right:0;top:0;bottom:52px;z-index:10;width:50%;display:flex;flex-direction:column;justify-content:center;padding:140px 96px 80px 52px}
+#s5 .hl{font-family:'Montserrat',sans-serif;font-size:clamp(36px,4vw,58px);font-weight:900;line-height:1.04;letter-spacing:-.03em;color:var(--w);margin:24px 0 36px}
+#s5 .hl em{color:var(--or-hi);font-style:normal}
+#s5 .list{display:flex;flex-direction:column;gap:0}
+#s5 .li{display:flex;align-items:flex-start;gap:14px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+#s5 .li:last-child{border-bottom:none}
+#s5 .li-dot{width:5px;height:5px;border-radius:50%;background:var(--or);flex-shrink:0;margin-top:8px}
+#s5 .li-t{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:var(--w75);line-height:1.65}
+#s5 .li-t strong{color:var(--w);font-weight:600}
+
+/* ================================================================
+   S06 — WALLBOX  (foto, texto inferior esquerdo)
+   ================================================================ */
+#s6{background:var(--ink)}
+#s6 .photo-bg{position:absolute;inset:0;z-index:0;background:url('imagens/TECNOLOGIA/wallbox-carro-eletrico-residencial.jpeg') center 65%/cover no-repeat}
+#s6 .ov1{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(9,9,12,.20) 0%,transparent 25%,transparent 50%,rgba(9,9,12,.75) 72%,rgba(9,9,12,.96) 100%)}
+#s6 .ov2{position:absolute;inset:0;z-index:2;background:linear-gradient(to right,rgba(9,9,12,.82) 0%,rgba(9,9,12,.28) 45%,transparent 65%)}
+#s6 .inner{position:absolute;left:0;bottom:52px;z-index:10;padding:0 0 72px 96px;max-width:660px}
+#s6 .hl{font-family:'Montserrat',sans-serif;font-size:clamp(36px,4.2vw,62px);font-weight:900;line-height:1.04;letter-spacing:-.03em;color:var(--w);margin:24px 0 22px}
+#s6 .hl em{color:var(--or-hi);font-style:normal}
+#s6 .body{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:var(--w75);line-height:1.80;max-width:480px}
+
+/* ================================================================
+   S07 — BATERIA  (texto esquerda, foto direita)
+   ================================================================ */
+#s7{background:var(--ink)}
+#s7 .photo-bg{position:absolute;inset:0;z-index:0;background:url('imagens/TECNOLOGIA/bateria-residencial.png') center 40%/cover no-repeat}
+#s7 .ov1{position:absolute;inset:0;z-index:1;background:linear-gradient(to right,rgba(9,9,12,.96) 0%,rgba(9,9,12,.88) 42%,rgba(9,9,12,.30) 65%,transparent 80%)}
+#s7 .inner{position:absolute;left:0;top:0;bottom:52px;z-index:10;width:52%;display:flex;flex-direction:column;justify-content:center;padding:140px 60px 80px 96px}
+#s7 .hl{font-family:'Montserrat',sans-serif;font-size:clamp(36px,4vw,56px);font-weight:900;line-height:1.04;letter-spacing:-.03em;color:var(--w);margin:24px 0 28px}
+#s7 .hl em{color:var(--or-hi);font-style:normal}
+#s7 .body{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:var(--w75);line-height:1.82;max-width:400px;margin-bottom:40px}
+#s7 .specs{display:flex;flex-direction:column;gap:12px;padding-top:32px;border-top:1px solid rgba(255,255,255,.08)}
+#s7 .sr{display:flex;align-items:baseline;gap:12px}
+#s7 .sk{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:rgba(201,82,9,.78);min-width:140px}
+#s7 .sv{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;color:var(--w75)}
+
+/* ================================================================
+   S08 — TECNOLOGIA / GOODWE
+   ================================================================ */
+#s8{background:var(--ink)}
+#s8 .photo{position:absolute;left:0;top:0;bottom:0;width:46%;z-index:0;background:url('imagens/TECNOLOGIA/inversor-bateria-goodwe.png') center/contain no-repeat,var(--ink)}
+#s8 .ov{position:absolute;inset:0;z-index:1;background:linear-gradient(to right,transparent 18%,rgba(9,9,12,.55) 40%,var(--ink) 62%,var(--ink) 100%)}
+#s8 .inner{position:absolute;right:0;top:0;bottom:52px;width:55%;z-index:10;display:flex;flex-direction:column;justify-content:center;padding:80px 96px 80px 44px}
+#s8 .partner-sub{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--w30);margin-bottom:8px}
+#s8 .partner{font-family:'Montserrat',sans-serif;font-size:52px;font-weight:900;letter-spacing:-.03em;color:var(--w);margin-bottom:6px;line-height:1}
+#s8 .partner-desc{font-family:'Montserrat',sans-serif;font-size:clamp(20px,2.5vw,30px);font-weight:700;letter-spacing:-.02em;color:var(--w50);margin-bottom:36px;line-height:1.1}
+#s8 .creds{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px}
+#s8 .cred{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--or-hi);padding:8px 14px;border:1px solid rgba(201,82,9,.28);border-radius:2px}
+#s8 .feats{display:flex;flex-direction:column;gap:18px}
+#s8 .ft{padding-left:18px;border-left:2px solid rgba(201,82,9,.38)}
+#s8 .ft.hi{border-color:var(--or)}
+#s8 .ft-t{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--or-hi);margin-bottom:5px}
+#s8 .ft-d{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;color:var(--w75);line-height:1.60}
+
+/* ================================================================
+   S09 — PROCESSO  (foto topo, timeline base)
+   ================================================================ */
+#s9{background:var(--ink)}
+#s9 .photo-bg{position:absolute;inset:0;z-index:0;background:url('imagens/PROJETOS/instalador-telhado.jpeg') center 20%/cover no-repeat}
+#s9 .ov{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(9,9,12,.25) 0%,rgba(9,9,12,.05) 22%,rgba(9,9,12,.72) 55%,rgba(9,9,12,.98) 78%,rgba(9,9,12,1) 100%)}
+#s9 .inner{position:absolute;left:0;right:0;bottom:52px;z-index:10;padding:0 80px 60px}
+#s9 .hd{margin-bottom:44px}
+#s9 .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid rgba(255,255,255,.09)}
+#s9 .step{padding:28px 32px 0 0;border-right:1px solid rgba(255,255,255,.07)}
+#s9 .step:last-child{border-right:none;padding-right:0}
+#s9 .sn{font-family:'Montserrat',sans-serif;font-size:60px;font-weight:900;line-height:1;letter-spacing:-.04em;color:rgba(201,82,9,.14);display:block;margin-bottom:10px}
+#s9 .step.hi .sn{color:rgba(201,82,9,.28)}
+#s9 .st{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:var(--w);margin-bottom:7px;padding-top:10px;border-top:1px solid rgba(201,82,9,.32)}
+#s9 .step.hi .st{border-color:var(--or)}
+#s9 .sd{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:rgba(250,250,250,.38);line-height:1.65}
+
+/* ================================================================
+   S10 — NÚMEROS (tipografico)
+   ================================================================ */
+#s10{background:var(--ink)}
+#s10 .glow{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 60% 60% at 50% 55%,rgba(201,82,9,.06) 0%,transparent 65%)}
+#s10 .inner{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px}
+#s10 .nums{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(255,255,255,.07);border-radius:2px;overflow:hidden;width:100%;max-width:1440px;margin-top:52px}
+#s10 .nc{padding:56px 52px;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.07)}
+#s10 .nc:last-child{border-right:none}
+#s10 .nv{font-family:'Montserrat',sans-serif;font-size:clamp(52px,5.5vw,82px);font-weight:900;line-height:1;letter-spacing:-.04em;color:var(--or-hi)}
+#s10 .nl{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:var(--w50);margin-top:20px;line-height:1.55}
+#s10 .ns{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:var(--w30);margin-top:8px;line-height:1.55}
+
+/* ================================================================
+   S11 — SEGMENTOS
+   ================================================================ */
+#s11{background:var(--ink)}
+#s11 .photo-bg{position:absolute;inset:0;z-index:0;background:url('imagens/PROJETOS/galpao-solar.png') center 50%/cover no-repeat;filter:brightness(.42) saturate(.65)}
+#s11 .ov{position:absolute;inset:0;z-index:1;background:rgba(9,9,12,.40)}
+#s11 .inner{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px}
+#s11 .segs{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,.09);width:100%;max-width:1440px;margin-top:48px;border-radius:2px;overflow:hidden}
+#s11 .seg{background:rgba(9,9,12,.74);backdrop-filter:blur(14px);padding:44px 32px;display:flex;flex-direction:column;transition:background .25s}
+#s11 .seg:hover{background:rgba(9,9,12,.88)}
+#s11 .seg-ico{width:26px;height:26px;color:rgba(201,82,9,.82);margin-bottom:22px;flex-shrink:0}
+#s11 .seg-n{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:var(--w);margin-bottom:8px;letter-spacing:-.02em}
+#s11 .seg-d{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--w50);line-height:1.65}
+
+/* ================================================================
+   S12 — CTA FINAL
+   ================================================================ */
+#s12{background:var(--ink)}
+#s12 .glow{position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 65% 65% at 50% 118%,rgba(201,82,9,.26) 0%,rgba(201,82,9,.07) 36%,transparent 54%),
+             radial-gradient(ellipse 38% 38% at 50% 50%,rgba(201,82,9,.03) 0%,transparent 65%)}
+#s12 .grid{position:absolute;inset:0;z-index:1;
+  background-image:linear-gradient(rgba(201,82,9,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,82,9,.025) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 72% 60% at 50% 50%,black 10%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 72% 60% at 50% 50%,black 10%,transparent 70%)}
+#s12 .horizon{position:absolute;bottom:20%;left:10%;right:10%;height:1px;z-index:2;
+  background:linear-gradient(to right,transparent,rgba(201,82,9,.22) 28%,rgba(201,82,9,.22) 72%,transparent)}
+#s12 .inner{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 220px}
+#s12 .pre{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:var(--w50);margin-bottom:28px}
+#s12 .hl{font-family:'Montserrat',sans-serif;font-size:clamp(52px,6.5vw,94px);font-weight:900;line-height:1.01;letter-spacing:-.04em;color:var(--w);margin-bottom:44px}
+#s12 .hl em{color:var(--or-hi);font-style:italic}
+#s12 .contact{display:inline-flex;flex-direction:column;gap:8px;text-align:left;padding:32px 48px;border-left:2px solid var(--or);background:rgba(201,82,9,.04);margin-bottom:44px}
+#s12 .c-brand{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:900;letter-spacing:-.02em;color:var(--or-hi)}
+#s12 .c-info{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;color:var(--w50);line-height:2.1}
+#s12 .c-info strong{color:var(--w);font-weight:500}
+
+/* S01 — Service Navigation */
+.slide.active .a7{animation:up .85s .65s ease both}
+#s1 .services{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:44px}
+#s1 .svc{display:flex;flex-direction:column;gap:4px;padding:18px 24px;border:1px solid rgba(255,255,255,.09);border-radius:2px;cursor:pointer;transition:border-color .3s,background .3s;text-align:left;background:rgba(255,255,255,.02);flex:1 1 148px;max-width:220px}
+#s1 .svc:hover{border-color:rgba(201,82,9,.55);background:rgba(201,82,9,.06)}
+#s1 .svc-n{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:var(--w);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+#s1 .svc-d{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--w50);line-height:1.45}
+
+/* ── NAV ARROWS ── */
+.nav-btn{position:fixed;top:50%;transform:translateY(-50%);z-index:9000;
+  background:rgba(9,9,12,.65);border:1px solid rgba(255,255,255,.18);
+  border-radius:50%;width:56px;height:56px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;
+  transition:background .2s,border-color .2s,opacity .3s,transform .2s;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:.85}
+.nav-btn:hover{background:rgba(201,82,9,.22);border-color:rgba(201,82,9,.70);opacity:1;transform:translateY(-50%) scale(1.08)}
+.nav-btn.hidden{opacity:0;pointer-events:none}
+.nav-btn svg{width:22px;height:22px;stroke:rgba(250,250,250,.80);stroke-width:2.5;
+  fill:none;stroke-linecap:round;stroke-linejoin:round}
+.nav-btn:hover svg{stroke:#FAFAFA}
+#nav-prev{left:22px}
+#nav-next{right:22px}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button class="nav-btn hidden" id="nav-prev" onclick="prev()" aria-label="Anterior">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+</button>
+<button class="nav-btn" id="nav-next" onclick="next()" aria-label="Próximo">
+  <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+</button>
+<div id="dots"></div>
+<div id="ctr">01 / 12</div>
+
+<div class="deck" id="deck">
+
+<!-- ================================================================
+     S01 — CAPA / MANIFESTO
+     ================================================================ -->
+<div class="slide active" id="s1">
+  <div class="glow"></div>
+  <div class="grid"></div>
+  <div class="horizon"></div>
+  <div class="inner">
+    <div class="logo-c a1">
+      <div class="lg" style="justify-content:center">
+        <img src="imagens/LOGOS/logo-icone.png" alt="">
+        <div class="lg-t">
+          <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+          <span class="lg-tag">Energia Inteligente</span>
+        </div>
+      </div>
+    </div>
+    <p class="pre a2">Soluções de energia para residências e empresas</p>
+    <h1 class="hl a3">Projetamos<br><em>independência</em><br>energética.</h1>
+    <div class="bar2 bar2c a4"></div>
+    <p class="sub a5">A energia deixou de ser consumo.<br>Virou estratégia. Segurança. <strong>Patrimônio.</strong></p>
+    <div class="services a7">
+      <div class="svc" onclick="goTo(3)">
+        <span class="svc-n">On-Grid</span>
+        <span class="svc-d">Reduza até 85% na conta de luz</span>
+      </div>
+      <div class="svc" onclick="goTo(4)">
+        <span class="svc-n">Híbrido</span>
+        <span class="svc-d">Independência energética total</span>
+      </div>
+      <div class="svc" onclick="goTo(6)">
+        <span class="svc-n">Energia Contínua</span>
+        <span class="svc-d">Backup automático em apagões</span>
+      </div>
+      <div class="svc" onclick="goTo(6)">
+        <span class="svc-n">Time Shift</span>
+        <span class="svc-d">Armazene na fora de ponta, use na ponta</span>
+      </div>
+      <div class="svc" onclick="goTo(5)">
+        <span class="svc-n">EV — Carregador Veicular</span>
+        <span class="svc-d">Aproveite o sol e recarregue seu carro</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S02 — QUEM SOMOS
+     ================================================================ -->
+<div class="slide" id="s2">
+  <div class="photo"></div>
+  <div class="lg-corner lg a1">
+    <img src="imagens/LOGOS/logo-icone.png" alt="">
+    <div class="lg-t">
+      <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+      <span class="lg-tag">Energia Inteligente</span>
+    </div>
+  </div>
+  <div class="inner">
+    <p class="eyebrow a2">Quem somos</p>
+    <h2 class="hl a3">Energia inteligente<br>exige mais do que<br><em>painéis no telhado.</em></h2>
+    <p class="body a4">A LumenGrid é uma empresa de São Paulo especializada em projetos de energia solar, sistemas híbridos com baterias e mobilidade elétrica. Atuamos de forma consultiva — cada projeto é único, dimensionado para o seu consumo real e seus objetivos.</p>
+    <div class="stats a5">
+      <div class="stat">
+        <div class="stat-n">+200</div>
+        <div class="stat-l">Projetos<br>Instalados</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">8+ anos</div>
+        <div class="stat-l">Experiência<br>do Time</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">98%</div>
+        <div class="stat-l">Clientes<br>Satisfeitos</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S03 — O PROBLEMA
+     ================================================================ -->
+<div class="slide" id="s3">
+  <div class="inner">
+    <p class="eyebrow a1">O cenario atual</p>
+    <h2 class="q a2">Quanto da sua vida<br>ainda depende da<br><em>concessionária?</em></h2>
+    <div class="bar2 a3" style="margin-bottom:0"></div>
+    <div class="list a4">
+      <div class="li">
+        <div class="li-n">01</div>
+        <div class="li-body">
+          <div class="li-t">Tarifas crescendo acima da inflação</div>
+          <div class="li-d">A conta de luz sobe todo ano. Sem uma estratégia própria de geração, você paga cada vez mais por algo que não controla.</div>
+        </div>
+      </div>
+      <div class="li">
+        <div class="li-n">02</div>
+        <div class="li-body">
+          <div class="li-t">Apagoes e instabilidade na rede</div>
+          <div class="li-d">Oscilações afetam residências, empresas e equipamentos críticos — com prejuízo real, sem aviso e sem recurso.</div>
+        </div>
+      </div>
+      <div class="li">
+        <div class="li-n">03</div>
+        <div class="li-body">
+          <div class="li-t">Energia como custo — nao como ativo</div>
+          <div class="li-d">A maioria paga mas nao investe. Transformar energia em patrimônio e uma decisão estratégica, não só econômica.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S04 — ON-GRID
+     ================================================================ -->
+<div class="slide" id="s4">
+  <div class="photo-bg"></div>
+  <div class="ov1"></div>
+  <div class="ov2"></div>
+  <div class="lg-corner lg a1">
+    <img src="imagens/LOGOS/logo-icone.png" alt="">
+    <div class="lg-t">
+      <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+      <span class="lg-tag">Energia Inteligente</span>
+    </div>
+  </div>
+  <div class="inner">
+    <p class="eyebrow a2">Sistema On-Grid</p>
+    <div class="big a3">85%</div>
+    <p class="big-l a4">de redução estimada na conta de luz</p>
+    <h2 class="hl a5">A geração que paga<br>a si mesma.</h2>
+    <p class="body a6">O sistema On-Grid converte luz solar em eletricidade, usa o que precisa e injeta o excedente na rede — gerando créditos que compensam a conta à noite e nos dias nublados. O investimento se paga entre 3 e 6 anos. A vida útil do sistema supera 25 anos.</p>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S05 — HÍBRIDO
+     ================================================================ -->
+<div class="slide" id="s5">
+  <div class="photo-bg"></div>
+  <div class="ov1"></div>
+  <div class="ov2"></div>
+  <div class="lg-corner lg a1">
+    <img src="imagens/LOGOS/logo-icone.png" alt="">
+    <div class="lg-t">
+      <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+      <span class="lg-tag">Energia Inteligente</span>
+    </div>
+  </div>
+  <div class="inner">
+    <p class="eyebrow a2">Sistema Híbrido</p>
+    <h2 class="hl a3">Independência<br><em>energética total.</em></h2>
+    <div class="bar2 a4"></div>
+    <div class="list a5">
+      <div class="li">
+        <div class="li-dot"></div>
+        <div class="li-t"><strong>Energia à noite com bateria.</strong> Armazene o excedente do dia e use a noite sem depender da rede.</div>
+      </div>
+      <div class="li">
+        <div class="li-dot"></div>
+        <div class="li-t"><strong>Backup automático em apagões.</strong> Quando a rede cai, a bateria assume em milissegundos. Zero interrupcao.</div>
+      </div>
+      <div class="li">
+        <div class="li-dot"></div>
+        <div class="li-t"><strong>Monitoramento em tempo real.</strong> Geração, consumo e carga da bateria acompanhados via app GoodWe SEMS.</div>
+      </div>
+      <div class="li">
+        <div class="li-dot"></div>
+        <div class="li-t"><strong>Projeto sob medida.</strong> Dimensionado para o seu consumo real, sem desperdicio de investimento.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S06 — WALLBOX
+     ================================================================ -->
+<div class="slide" id="s6">
+  <div class="photo-bg"></div>
+  <div class="ov1"></div>
+  <div class="ov2"></div>
+  <div class="lg-corner lg a1">
+    <img src="imagens/LOGOS/logo-icone.png" alt="">
+    <div class="lg-t">
+      <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+      <span class="lg-tag">Energia Inteligente</span>
+    </div>
+  </div>
+  <div class="inner">
+    <p class="eyebrow a2">Mobilidade Eletrica</p>
+    <h2 class="hl a3">Carregue seu carro<br>com a energia que<br><em>você mesmo gera.</em></h2>
+    <div class="bar2 a4" style="margin-bottom:20px"></div>
+    <p class="body a5">Integre o Wallbox ao sistema solar. O veiculo passa a ser carregado com energia limpa produzida no próprio telhado — sem custo adicional de combustível e sem depender da rede elétrica. O ecossistema se fecha: você gera, armazena, usa e transporta.</p>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S07 — BATERIA RESIDENCIAL
+     ================================================================ -->
+<div class="slide" id="s7">
+  <div class="photo-bg"></div>
+  <div class="ov1"></div>
+  <div class="lg-corner lg a1">
+    <img src="imagens/LOGOS/logo-icone.png" alt="">
+    <div class="lg-t">
+      <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+      <span class="lg-tag">Energia Inteligente</span>
+    </div>
+  </div>
+  <div class="inner">
+    <p class="eyebrow a2">Armazenamento Inteligente</p>
+    <h2 class="hl a3">A energia que você<br>gera, guardada para<br><em>quando precisar.</em></h2>
+    <p class="body a4">As baterias de litio integradas ao sistema híbrido armazenam o excedente solar para uso noturno e garantem autonomia real em apagões. Sem ruido, sem combustível, sem manutenção — só segurança.</p>
+
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S08 — TECNOLOGIA / GOODWE
+     ================================================================ -->
+<div class="slide" id="s8">
+  <div class="photo"></div>
+  <div class="ov"></div>
+  <div class="inner">
+    <p class="partner-sub a1">Parceiros Tecnológicos</p>
+    <p class="partner a2">GoodWe</p>
+    <p class="partner-desc a3">Tecnologia que lidera o mundo.</p>
+    <div class="creds a4">
+      <div class="cred">Top 3 Global — Wood Mackenzie</div>
+      <div class="cred">+100 países</div>
+      <div class="cred">+100 GW instalados</div>
+    </div>
+    <div class="feats a5">
+      <div class="ft">
+        <div class="ft-t">Referência em Inversores</div>
+        <div class="ft-d">Top 3 global (Wood Mackenzie, desde 2021). +100 GW instalados em +100 países. App SEMS Portal.</div>
+      </div>
+    </div>
+    <div style="height:1px;background:rgba(255,255,255,.07);margin:22px 0"></div>
+    <p class="partner-sub" style="margin-bottom:6px">Nova Geração</p>
+    <p class="partner" style="font-size:34px;margin-bottom:6px;line-height:1">Sigenergy</p>
+    <div class="creds" style="margin-bottom:14px">
+      <div class="cred">All-in-One Storage</div>
+      <div class="cred">Modular</div>
+      <div class="cred">Escalável</div>
+    </div>
+    <div class="feats">
+      <div class="ft">
+        <div class="ft-t">Nova Geração em Armazenamento</div>
+        <div class="ft-d">Sistema residencial e comercial integrado. Gestão inteligente, expansível e zero compromisso com uma única marca.</div>
+      </div>
+      <div class="ft hi" style="margin-top:14px">
+        <div class="ft-t">Suporte LumenGrid</div>
+        <div class="ft-d">Diagnóstico técnico e substituição em até 24 horas para ambas as plataformas.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S09 — PROCESSO
+     ================================================================ -->
+<div class="slide" id="s9">
+  <div class="photo-bg"></div>
+  <div class="ov"></div>
+  <div class="lg-corner lg a1">
+    <img src="imagens/LOGOS/logo-icone.png" alt="">
+    <div class="lg-t">
+      <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+      <span class="lg-tag">Energia Inteligente</span>
+    </div>
+  </div>
+  <div class="inner">
+    <div class="hd a2">
+      <p class="eyebrow" style="margin-bottom:14px">Como trabalhamos</p>
+      <h2 style="font-family:'Montserrat',sans-serif;font-size:clamp(28px,3.2vw,44px);font-weight:900;letter-spacing:-.03em;color:var(--w);line-height:1.04">Cada projeto começa muito antes<br>da instalação.</h2>
+    </div>
+    <div class="steps a3">
+      <div class="step hi">
+        <span class="sn">01</span>
+        <div class="st">Diagnóstico</div>
+        <div class="sd">Analisamos consumo, objetivos e expectativas de cada cliente.</div>
+      </div>
+      <div class="step">
+        <span class="sn">02</span>
+        <div class="st">Projeto Personalizado</div>
+        <div class="sd">Dimensionamos o sistema sem solução pronta. Cada numero é calculado para você.</div>
+      </div>
+      <div class="step">
+        <span class="sn">03</span>
+        <div class="st">Engenharia e Homologação</div>
+        <div class="sd">Projeto eletrico, diagramas e toda documentação para a concessionária.</div>
+      </div>
+      <div class="step">
+        <span class="sn">04</span>
+        <div class="st">Instalação</div>
+        <div class="sd">Execução técnica com padrões rigorosos de segurança, organização e acabamento.</div>
+      </div>
+      <div class="step">
+        <span class="sn">05</span>
+        <div class="st">Monitoramento e Suporte</div>
+        <div class="sd">Acompanhamos o desempenho do sistema após a entrega. A relação não termina na instalação.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S10 — NÚMEROS
+     ================================================================ -->
+<div class="slide" id="s10">
+  <div class="glow"></div>
+  <div class="inner">
+    <p class="eyebrow a1">Resultados</p>
+    <h2 class="a2" style="font-family:'Montserrat',sans-serif;font-size:clamp(28px,3.2vw,46px);font-weight:900;letter-spacing:-.03em;color:var(--w);text-align:center">Números que falam<br>por si mesmos.</h2>
+    <div class="nums a3">
+      <div class="nc">
+        <div class="nv">+200</div>
+        <div class="nl">Projetos<br>Instalados</div>
+        <div class="ns">Residenciais, comerciais e industriais em São Paulo e interior</div>
+      </div>
+      <div class="nc">
+        <div class="nv">98%</div>
+        <div class="nl">Taxa de<br>Satisfação</div>
+        <div class="ns">Clientes que indicariam a LumenGrid a amigos e familiares</div>
+      </div>
+      <div class="nc">
+        <div class="nv">+1.200</div>
+        <div class="nl">MWh Gerados<br>por Ano</div>
+        <div class="ns">Energia limpa impactando o planeta e o bolso dos nossos clientes</div>
+      </div>
+      <div class="nc">
+        <div class="nv">até 95%</div>
+        <div class="nl">Redução na<br>Conta de Luz</div>
+        <div class="ns">Nos projetos com sistema híbrido completo dimensionado adequadamente</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S11 — SEGMENTOS
+     ================================================================ -->
+<div class="slide" id="s11">
+  <div class="photo-bg"></div>
+  <div class="ov"></div>
+  <div class="lg-corner lg a1">
+    <img src="imagens/LOGOS/logo-icone.png" alt="">
+    <div class="lg-t">
+      <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+      <span class="lg-tag">Energia Inteligente</span>
+    </div>
+  </div>
+  <div class="inner">
+    <p class="eyebrow a2" style="margin-bottom:14px">Para quem trabalhamos</p>
+    <h2 class="a3" style="font-family:'Montserrat',sans-serif;font-size:clamp(28px,3.2vw,46px);font-weight:900;letter-spacing:-.03em;color:var(--w);text-align:center">Soluções para cada<br>tipo de demanda.</h2>
+    <div class="segs a4">
+      <div class="seg">
+        <!-- house icon -->
+        <svg class="seg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+        <div class="seg-n">Residências</div>
+        <div class="seg-d">Famílias que querem economizar, ter segurança e independência da concessionária.</div>
+      </div>
+      <div class="seg">
+        <!-- building icon -->
+        <svg class="seg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+        <div class="seg-n">Empresas</div>
+        <div class="seg-d">Redução de custos operacionais e continuidade em falhas críticas da rede elétrica.</div>
+      </div>
+      <div class="seg">
+        <!-- fuel icon -->
+        <svg class="seg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V6a2 2 0 012-2h8a2 2 0 012 2v16M3 22h14M13 8h2a2 2 0 012 2v3a1 1 0 001 1h0a1 1 0 001-1v-6"/><path d="M7 10h4M7 14h4"/></svg>
+        <div class="seg-n">Postos</div>
+        <div class="seg-d">Alta demanda eletrica compensada com geração própria e backup para operação contínua.</div>
+      </div>
+      <div class="seg">
+        <!-- leaf icon -->
+        <svg class="seg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12M12 12C12 7 7 3 3 3c0 5 3 9 9 9z"/><path d="M12 12c0-5 5-9 9-9-1 5-4 9-9 9z"/></svg>
+        <div class="seg-n">Agronegócio</div>
+        <div class="seg-d">Propriedades rurais com grande consumo e exposição solar privilegiada para geração.</div>
+      </div>
+      <div class="seg">
+        <!-- buildings icon -->
+        <svg class="seg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="10" height="18"/><rect x="13" y="1" width="10" height="22"/><path d="M5 5V3M9 9h0M5 9h0M9 13h0M5 13h0M9 17h0M5 17h0M17 5h0M21 5h0M17 9h0M21 9h0M17 13h0M21 13h0"/></svg>
+        <div class="seg-n">Condomínios</div>
+        <div class="seg-d">Geração compartilhada com rateio de créditos automático entre unidades.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+<!-- ================================================================
+     S12 — CTA FINAL
+     ================================================================ -->
+<div class="slide" id="s12">
+  <div class="glow"></div>
+  <div class="grid"></div>
+  <div class="horizon"></div>
+  <div class="inner">
+    <p class="pre a1">O futuro não está só em gerar energia.</p>
+    <h2 class="hl a2">Está em saber<br><em>usá-la.</em></h2>
+    <div class="contact a3">
+      <div class="c-brand">Fale com a LumenGrid.</div>
+      <div class="c-info">
+        São Paulo, SP<br>
+        <strong>lumengridbrasil.com.br</strong>
+      </div>
+    </div>
+    <div class="lg a4" style="justify-content:center">
+      <img src="imagens/LOGOS/logo-icone.png" alt="" style="height:36px">
+      <div class="lg-t">
+        <div class="lg-name"><span class="lo">LUMEN</span><span class="gr">GRID</span></div>
+        <span class="lg-tag">Energia Inteligente</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Feito por Domani Consultoria</span></div>
+</div>
+
+</div><!-- /deck -->
+
+<script>
+const TOTAL = 12;
+let cur = 0;
+
+// dots
+const dotsEl = document.getElementById('dots');
+for (let i = 0; i < TOTAL; i++) {
+  const b = document.createElement('button');
+  b.className = 'dot' + (i === 0 ? ' a' : '');
+  b.setAttribute('aria-label', 'Slide ' + (i + 1));
+  b.onclick = () => goTo(i);
+  dotsEl.appendChild(b);
+}
+
+function goTo(n) {
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.querySelectorAll('.dot');
+  slides[cur].classList.remove('active');
+  dots[cur].classList.remove('a');
+  cur = n;
+  slides[cur].classList.add('active');
+  dots[cur].classList.add('a');
+  document.getElementById('ctr').textContent =
+    String(cur + 1).padStart(2,'0') + ' / ' + String(TOTAL).padStart(2,'0');
+  document.getElementById('progress').style.width =
+    ((cur + 1) / TOTAL * 100) + '%';
+  // show/hide arrows
+  document.getElementById('nav-prev').classList.toggle('hidden', cur === 0);
+  document.getElementById('nav-next').classList.toggle('hidden', cur === TOTAL - 1);
+}
+function next() { if (cur < TOTAL - 1) goTo(cur + 1); }
+function prev() { if (cur > 0) goTo(cur - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); prev(); }
+});
+
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+}, { passive: true });
+
+document.getElementById('progress').style.width = (1 / TOTAL * 100) + '%';
+</script>
+</body>
+</html>
