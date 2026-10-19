@@ -283,6 +283,125 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var
 .nav-btn:hover svg{stroke:#FAFAFA}
 #nav-prev{left:22px}
 #nav-next{right:22px}
+
+/* ================================================================
+   MOBILE — max-width: 768px
+   ================================================================ */
+@media(max-width:768px){
+
+  /* UI */
+  .lg-corner{top:24px;left:20px}
+  .lg img{height:30px}
+  .lg-name{font-size:13px}
+  #dots{bottom:18px;gap:6px}
+  .dot{width:6px;height:6px;padding:5px}
+  #ctr{bottom:18px;right:20px;font-size:9px}
+  .foot{height:40px}
+  .foot span{font-size:7px;letter-spacing:2px}
+  .nav-btn{width:40px;height:40px}
+  .nav-btn svg{width:16px;height:16px}
+  #nav-prev{left:8px}
+  #nav-next{right:8px}
+
+  /* ── S01 CAPA ── */
+  #s1 .inner{padding:0 24px}
+  #s1 .logo-c{margin-bottom:28px}
+  #s1 .pre{font-size:10px;letter-spacing:4px;margin-bottom:16px}
+  #s1 .hl{font-size:clamp(42px,10vw,68px);margin-bottom:24px}
+  #s1 .sub{font-size:14px;line-height:1.85}
+  #s1 .services{margin-top:28px;gap:8px}
+  #s1 .svc{flex:1 1 calc(50% - 8px);max-width:none;padding:14px 16px}
+
+  /* ── S02 QUEM SOMOS ── */
+  #s2 .photo{width:100%;opacity:.18}
+  #s2 .photo::before{background:linear-gradient(to bottom,var(--ink) 0%,rgba(9,9,12,.85) 100%)}
+  #s2 .inner{width:100%;padding:88px 24px 180px}
+  #s2 .hl{font-size:clamp(28px,7.5vw,44px);margin:16px 0 20px}
+  #s2 .body{font-size:13px;line-height:1.78;max-width:none}
+  #s2 .tags{position:absolute;bottom:48px;left:20px;right:20px;top:auto;
+    transform:none;width:auto;flex-direction:row;gap:10px}
+  #s2 .tag{flex:1;padding:14px 14px}
+  #s2 .tag-v{font-size:22px}
+  #s2 .tag-l{font-size:8px;letter-spacing:1px;margin-top:6px}
+
+  /* ── S03 O PROBLEMA ── */
+  #s3 .inner{padding:72px 24px 60px;max-width:100%}
+  #s3 .q{font-size:clamp(28px,8vw,44px);margin:16px 0 28px}
+  #s3 .li{gap:18px;padding:18px 0}
+  #s3 .li-t{font-size:14px}
+  #s3 .li-d{font-size:12px}
+
+  /* ── S04 ON-GRID ── */
+  #s4 .inner{padding:0 0 48px 24px;max-width:100%}
+  #s4 .hl{font-size:clamp(26px,7vw,40px)}
+  #s4 .body{font-size:13px;max-width:none;padding-right:24px}
+
+  /* ── S05 HÍBRIDO ── */
+  #s5 .ov1{background:linear-gradient(to bottom,rgba(9,9,12,.55) 0%,rgba(9,9,12,.80) 50%,rgba(9,9,12,.97) 100%)}
+  #s5 .inner{width:100%;left:0;right:0;padding:0 24px 60px;justify-content:flex-end}
+  #s5 .hl{font-size:clamp(28px,7.5vw,44px);margin:16px 0 24px}
+  #s5 .li-t{font-size:13px}
+
+  /* ── S06 WALLBOX ── */
+  #s6 .inner{padding:0 0 48px 24px;max-width:100%}
+  #s6 .hl{font-size:clamp(28px,7.5vw,44px)}
+  #s6 .body{font-size:13px;max-width:none;padding-right:24px}
+
+  /* ── S07 BATERIA ── */
+  #s7 .ov1{background:linear-gradient(to bottom,rgba(9,9,12,.55) 0%,rgba(9,9,12,.88) 50%,rgba(9,9,12,.97) 100%)}
+  #s7 .inner{width:100%;padding:88px 24px 60px}
+  #s7 .hl{font-size:clamp(28px,7.5vw,44px)}
+  #s7 .body{font-size:13px;max-width:none}
+
+  /* ── S08 TECNOLOGIA ── */
+  #s8 .photo{width:100%;opacity:.12;background-position:center top}
+  #s8 .ov{background:linear-gradient(to bottom,rgba(9,9,12,.50) 0%,var(--ink) 50%)}
+  #s8 .inner{width:100%;right:0;left:0;padding:80px 24px 60px}
+  #s8 .partner{font-size:36px}
+  #s8 .partner-desc{font-size:clamp(16px,4.5vw,22px);margin-bottom:24px}
+  #s8 .feats{gap:14px}
+  #s8 .ft-d{font-size:13px}
+
+  /* ── S09 PROCESSO ── */
+  #s9 .inner{padding:0 20px 48px}
+  #s9 .hd{margin-bottom:28px}
+  #s9 .steps{grid-template-columns:repeat(2,1fr)}
+  #s9 .step{padding:18px 16px 18px 0;border-right:none;border-bottom:1px solid rgba(255,255,255,.07)}
+  #s9 .step:nth-child(odd){border-right:1px solid rgba(255,255,255,.07)}
+  #s9 .step:last-child{border-bottom:none}
+  #s9 .sn{font-size:40px}
+  #s9 .st{font-size:12px}
+  #s9 .sd{font-size:11px}
+
+  /* ── S11 SEGMENTOS ── */
+  #s11 .inner{padding:60px 16px 52px}
+  #s11 .segs{grid-template-columns:repeat(2,1fr);margin-top:28px}
+  #s11 .seg{padding:28px 20px}
+  #s11 .seg-ico{width:22px;height:22px;margin-bottom:14px}
+  #s11 .seg-n{font-size:13px}
+  #s11 .seg-d{font-size:11px}
+
+  /* ── S12 CTA ── */
+  #s12 .inner{padding:0 28px}
+  #s12 .hl{font-size:clamp(36px,9vw,60px);margin-bottom:28px}
+  #s12 .pre{font-size:10px;margin-bottom:16px}
+  #s12 .contact{padding:22px 28px;margin-bottom:28px}
+  #s12 .c-brand{font-size:18px}
+  #s12 .c-info{font-size:13px}
+}
+
+/* ── PHONE pequeno ≤ 430px ── */
+@media(max-width:430px){
+  #s1 .hl{font-size:clamp(36px,11vw,52px)}
+  #s1 .svc{flex:1 1 100%}
+  #s2 .tag-v{font-size:20px}
+  #s2 .tag-l{font-size:7px}
+  #s3 .q{font-size:clamp(26px,9vw,38px)}
+  #s8 .partner{font-size:30px}
+  #s9 .steps{grid-template-columns:1fr}
+  #s9 .step:nth-child(odd){border-right:none}
+  #s11 .segs{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
