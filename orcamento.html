@@ -126,6 +126,55 @@ nav{
 }
 .faixa-label:hover{border-color:rgba(201,82,9,.3);color:var(--t1)}
 
+/* ── OBJETIVO ── */
+.objetivo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.objetivo-option{position:relative}
+.objetivo-option input[type="radio"]{position:absolute;opacity:0;width:0;height:0}
+.objetivo-label{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:16px 10px;text-align:center;
+  border:1.5px solid var(--b1);border-radius:12px;
+  font-size:13px;font-weight:600;color:var(--t2);
+  cursor:pointer;transition:all .18s;line-height:1.3;min-height:88px;
+}
+.objetivo-label .obj-ico{font-size:26px;line-height:1}
+.objetivo-label .obj-title{font-size:13px;font-weight:700;color:var(--t1)}
+.objetivo-label .obj-sub{font-size:10px;color:var(--t3);font-weight:400}
+.objetivo-option input:checked + .objetivo-label{border-color:var(--or);background:var(--or-dim)}
+.objetivo-option input:checked + .objetivo-label .obj-title{color:var(--or)}
+.objetivo-label:hover{border-color:rgba(201,82,9,.3)}
+/* ── BALLOON JÁ TEM SOLAR ── */
+.solar-balloon{
+  display:none;margin-top:10px;padding:14px 16px;
+  background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:10px;
+}
+.solar-balloon-title{font-size:13px;font-weight:700;color:#1D4ED8;margin-bottom:8px}
+.balloon-opts{display:flex;gap:8px}
+.balloon-opt{position:relative}
+.balloon-opt input[type="radio"]{position:absolute;opacity:0;width:0;height:0}
+.balloon-opt-label{
+  display:block;padding:8px 16px;border:1.5px solid #BFDBFE;border-radius:7px;
+  font-size:12px;font-weight:600;color:#1D4ED8;cursor:pointer;transition:all .15s;background:#fff;
+}
+.balloon-opt input:checked + .balloon-opt-label{border-color:#2563EB;background:#DBEAFE}
+/* ── TIPO IMOVEL ── */
+.tipo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tipo-option{position:relative}
+.tipo-option input[type="radio"]{position:absolute;opacity:0;width:0;height:0}
+.tipo-label{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:12px 6px;text-align:center;
+  border:1.5px solid var(--b1);border-radius:10px;
+  font-size:11px;font-weight:600;color:var(--t2);
+  cursor:pointer;transition:all .15s;line-height:1.3;
+}
+.tipo-label .tipo-ico{font-size:20px;line-height:1}
+.tipo-option input:checked + .tipo-label{border-color:var(--or);background:var(--or-dim);color:var(--or)}
+.tipo-label:hover{border-color:rgba(201,82,9,.3)}
+@media(max-width:480px){
+  .tipo-grid{grid-template-columns:repeat(2,1fr)}
+  .objetivo-label{min-height:76px;padding:12px 8px}
+}
 .lgpd-row{display:flex;align-items:flex-start;gap:10px;margin:20px 0}
 .lgpd-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--or);flex-shrink:0;margin-top:2px;cursor:pointer}
 .lgpd-text{font-size:12px;color:var(--t2);line-height:1.6}
@@ -320,6 +369,74 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <input type="hidden" name="utm_campaign" id="utm_campaign">
         <input type="hidden" name="click_id" id="click_id">
 
+        <!-- OBJETIVO -->
+        <div class="form-group">
+          <label class="form-label">O que você precisa? *</label>
+          <div class="objetivo-grid">
+            <div class="objetivo-option">
+              <input type="radio" name="objetivo" id="obj_economia" value="Economia (On-Grid)" required>
+              <label class="objetivo-label" for="obj_economia">
+                <span class="obj-ico">&#9728;&#65039;</span>
+                <span class="obj-title">Quero economizar</span>
+                <span class="obj-sub">Reduzi minha conta de luz</span>
+              </label>
+            </div>
+            <div class="objetivo-option">
+              <input type="radio" name="objetivo" id="obj_hibrido" value="Anti-apagão (Híbrido)">
+              <label class="objetivo-label" for="obj_hibrido">
+                <span class="obj-ico">&#128267;</span>
+                <span class="obj-title">Quero anti-apagão</span>
+                <span class="obj-sub">Proteção contra queda de energia</span>
+              </label>
+            </div>
+          </div>
+          <!-- Balão: já tem solar? -->
+          <div class="solar-balloon" id="solarBalloon">
+            <div class="solar-balloon-title">&#128161; Você já tem energia solar instalada?</div>
+            <div class="balloon-opts">
+              <div class="balloon-opt">
+                <input type="radio" name="ja_tem_solar" id="solar_sim" value="Sim">
+                <label class="balloon-opt-label" for="solar_sim">Sim, já tenho</label>
+              </div>
+              <div class="balloon-opt">
+                <input type="radio" name="ja_tem_solar" id="solar_nao" value="Não">
+                <label class="balloon-opt-label" for="solar_nao">Não, é o primeiro sistema</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIPO DE IMÓVEL -->
+        <div class="form-group">
+          <label class="form-label">Tipo de imóvel *</label>
+          <div class="tipo-grid">
+            <div class="tipo-option">
+              <input type="radio" name="tipo_imovel" id="tipo_casa" value="Casa" required>
+              <label class="tipo-label" for="tipo_casa">
+                <span class="tipo-ico">&#127968;</span>Casa
+              </label>
+            </div>
+            <div class="tipo-option">
+              <input type="radio" name="tipo_imovel" id="tipo_apto" value="Apartamento">
+              <label class="tipo-label" for="tipo_apto">
+                <span class="tipo-ico">&#127970;</span>Apartamento
+              </label>
+            </div>
+            <div class="tipo-option">
+              <input type="radio" name="tipo_imovel" id="tipo_comercial" value="Comercial">
+              <label class="tipo-label" for="tipo_comercial">
+                <span class="tipo-ico">&#127970;</span>Comercial
+              </label>
+            </div>
+            <div class="tipo-option">
+              <input type="radio" name="tipo_imovel" id="tipo_residencial" value="Residencial/Cond.">
+              <label class="tipo-label" for="tipo_residencial">
+                <span class="tipo-ico">&#127963;</span>Residencial
+              </label>
+            </div>
+          </div>
+        </div>
+
         <div class="form-row">
           <div>
             <label class="form-label" for="nome">Nome *</label>
@@ -365,18 +482,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="form-select-wrap">
             <select class="form-select" id="faixa_conta" name="faixa_conta" required>
               <option value="" disabled selected>Selecione o valor aproximado</option>
-              <option value="Até R$ 100">Até R$ 100</option>
-              <option value="Entre R$ 101 e R$ 200">Entre R$ 101 e R$ 200</option>
-              <option value="Entre R$ 201 e R$ 300">Entre R$ 201 e R$ 300</option>
-              <option value="Entre R$ 301 e R$ 400">Entre R$ 301 e R$ 400</option>
-              <option value="Entre R$ 401 e R$ 500">Entre R$ 401 e R$ 500</option>
-              <option value="Entre R$ 501 e R$ 600">Entre R$ 501 e R$ 600</option>
-              <option value="Entre R$ 601 e R$ 700">Entre R$ 601 e R$ 700</option>
-              <option value="Entre R$ 701 e R$ 800">Entre R$ 701 e R$ 800</option>
-              <option value="Entre R$ 801 e R$ 900">Entre R$ 801 e R$ 900</option>
-              <option value="Entre R$ 901 e R$ 1.000">Entre R$ 901 e R$ 1.000</option>
-              <option value="Entre R$ 1.001 e R$ 5.000">Entre R$ 1.001 e R$ 5.000</option>
-              <option value="Entre R$ 5.001 e R$ 10.000">Entre R$ 5.001 e R$ 10.000</option>
+              <option value="R$ 500 – R$ 600">R$ 500 – R$ 600</option>
+              <option value="R$ 600 – R$ 700">R$ 600 – R$ 700</option>
+              <option value="R$ 700 – R$ 800">R$ 700 – R$ 800</option>
+              <option value="R$ 800 – R$ 900">R$ 800 – R$ 900</option>
+              <option value="R$ 900 – R$ 1.000">R$ 900 – R$ 1.000</option>
+              <option value="R$ 1.000 – R$ 1.500">R$ 1.000 – R$ 1.500</option>
+              <option value="R$ 1.500 – R$ 2.000">R$ 1.500 – R$ 2.000</option>
+              <option value="R$ 2.000 – R$ 3.000">R$ 2.000 – R$ 3.000</option>
+              <option value="R$ 3.000 – R$ 5.000">R$ 3.000 – R$ 5.000</option>
+              <option value="R$ 5.000 – R$ 10.000">R$ 5.000 – R$ 10.000</option>
               <option value="Acima de R$ 10.000">Acima de R$ 10.000</option>
             </select>
           </div>
@@ -498,7 +613,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
       <div class="footer-copy" style="margin-top:4px">comercial@lumengridbrasil.com.br</div>
-      <div class="footer-copy" style="margin-top:2px">(11) 94556-0188</div>
       <div class="footer-copy" style="margin-top:2px">CNPJ 36.028.241/0001-96</div>
       <div class="footer-copy" style="margin-top:6px">© 2026 Lumen Grid Energia Inteligente. Todos os direitos reservados.</div>
     </div>
@@ -567,6 +681,25 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   const msg = document.getElementById('formMsg');
 
   // Validação básica
+  // Validação: objetivo e tipo_imovel são radio buttons
+  const objetivo = document.querySelector('input[name="objetivo"]:checked');
+  const tipo_imovel = document.querySelector('input[name="tipo_imovel"]:checked');
+  if (!objetivo) {
+    valid = false;
+    msg.style.display = 'block';
+    msg.style.background = '#fef2f2';
+    msg.style.color = '#dc2626';
+    msg.textContent = 'Selecione o que você precisa (economizar ou anti-apagão).';
+    return;
+  }
+  if (!tipo_imovel) {
+    valid = false;
+    msg.style.display = 'block';
+    msg.style.background = '#fef2f2';
+    msg.style.color = '#dc2626';
+    msg.textContent = 'Selecione o tipo de imóvel.';
+    return;
+  }
   const required = ['nome', 'sobrenome', 'email', 'telefone', 'estado', 'cidade', 'faixa_conta'];
   let valid = true;
   required.forEach(id => {
@@ -594,6 +727,8 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
 
   // Coleta dados
   const data = Object.fromEntries(new FormData(form));
+  data.objetivo = objetivo ? objetivo.value : '';
+  data.tipo_imovel = tipo_imovel ? tipo_imovel.value : '';
 
   // Disable button
   btn.disabled = true;
@@ -635,6 +770,14 @@ document.querySelectorAll('.faq-tab-btn').forEach(btn => {
     document.querySelectorAll('.faq-panel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById(btn.dataset.panel).classList.add('active');
+  });
+});
+
+/* ── BALLOON ANTI-APAGÃO ── */
+document.querySelectorAll('input[name="objetivo"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const balloon = document.getElementById('solarBalloon');
+    balloon.style.display = radio.value.includes('Híbrido') ? 'block' : 'none';
   });
 });
 
