@@ -1415,97 +1415,6 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
   </div>
 </div>
 
-<!-- ── LAUDO DE VISITA TÉCNICA (visível apenas com ?plan=) ── -->
-<section class="sec sec-mid" id="relatorio-visita" style="display:none">
-  <div class="sec-c rv">
-    <div class="eye">Documento Técnico</div>
-    <h2 class="sh2">Laudo de <span class="grad">Visita Técnica</span></h2>
-    <div class="rule"></div>
-    <p class="sdesc">Análise de viabilidade e aprovação de instalação em shaft — elaborada após vistoria presencial no imóvel.</p>
-
-    <div class="laudo-header">
-      <div class="laudo-badge-aprovado">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Local avaliado e aprovado para instalação
-      </div>
-    </div>
-
-    <!-- Equipamento + especificações -->
-    <div class="laudo-split rv">
-      <div class="laudo-img-wrap">
-        <img src="SIGENERGY/Gateway Sig.png" alt="Sigenergy Gateway TPLV C30-2" loading="lazy">
-      </div>
-      <div>
-        <div class="laudo-specs-title">Sigenergy Gateway · TPLV C30-2</div>
-        <table class="laudo-specs-table">
-          <tr><td>Dimensões (c/ suporte)</td><td>522 × 803 × 179 mm</td></tr>
-          <tr><td>Dimensões (corpo)</td><td>510 × 750 × 143 mm</td></tr>
-          <tr><td>Grau de proteção</td><td>IP54</td></tr>
-          <tr><td>Temperatura operação</td><td>−30°C a +55°C</td></tr>
-          <tr><td>Umidade relativa</td><td>0 – 95% (sem condensação)</td></tr>
-          <tr><td>Tipo de instalação</td><td>Parede — indoor</td></tr>
-          <tr><td>Folga superior</td><td>≥ 300 mm</td></tr>
-          <tr><td>Folga lateral (cada)</td><td>≥ 500 mm</td></tr>
-          <tr><td>Folga frontal</td><td>≥ 1.000 mm</td></tr>
-          <tr><td>Folga inferior</td><td>≥ 650 mm</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- Dimensões mínimas do shaft -->
-    <div class="laudo-shaft-title rv">Dimensões mínimas do shaft verificadas</div>
-    <div class="laudo-shaft-grid rv">
-      <div class="laudo-shaft-item">
-        <div class="laudo-shaft-val">≥ 800 mm</div>
-        <div class="laudo-shaft-lbl">Largura útil<br>exigida</div>
-      </div>
-      <div class="laudo-shaft-item">
-        <div class="laudo-shaft-val">≥ 2.000 mm</div>
-        <div class="laudo-shaft-lbl">Altura de trabalho<br>disponível</div>
-      </div>
-      <div class="laudo-shaft-item">
-        <div class="laudo-shaft-val">≥ 400 mm</div>
-        <div class="laudo-shaft-lbl">Profundidade<br>de fixação</div>
-      </div>
-      <div class="laudo-shaft-item">
-        <div class="laudo-shaft-val">≥ 1.000 mm</div>
-        <div class="laudo-shaft-lbl">Acesso frontal<br>livre para manutenção</div>
-      </div>
-      <div class="laudo-shaft-item">
-        <div class="laudo-shaft-val">≥ 650 mm</div>
-        <div class="laudo-shaft-lbl">Folga inferior<br>ventilação natural</div>
-      </div>
-      <div class="laudo-shaft-item">
-        <div class="laudo-shaft-val">≤ 3°C</div>
-        <div class="laudo-shaft-lbl">Elevação máx. de temp.<br>em operação</div>
-      </div>
-    </div>
-
-    <!-- Ventilação -->
-    <div class="laudo-vent rv">
-      <div class="laudo-vent-ico">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
-      </div>
-      <div class="laudo-vent-body">
-        <div class="laudo-vent-t">Ventilação obrigatória do shaft</div>
-        <div class="laudo-vent-d">O shaft deve possuir abertura de ventilação natural ou mecânica suficiente para garantir que o aumento de temperatura interna não exceda 3°C durante operação contínua do Gateway (conforme especificação Sigenergy). O local vistoriado possui abertura nas dimensões adequadas, atendendo esta exigência.</div>
-      </div>
-    </div>
-
-    <!-- Conclusão -->
-    <div class="laudo-conclusao rv">
-      <div class="laudo-conclusao-ico">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div class="laudo-conclusao-body">
-        <div class="laudo-conclusao-t">Parecer Técnico: APROVADO</div>
-        <div class="laudo-conclusao-d">O shaft inspecionado atende todas as exigências de espaço, acesso e ventilação conforme datasheet oficial do Sigenergy Gateway TPLV C30-2. A instalação está tecnicamente aprovada pela equipe LumenGrid.</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
 <!-- ── 15. GARANTIAS ── -->
 <section class="sec sec-mid" id="garantias">
   <div class="sec-c rv">
@@ -1882,10 +1791,6 @@ if (PLAN) {
       var btnPlan = document.getElementById('inv-plan-wpp');
       if (btnPlan) btnPlan.href = 'https://wa.me/' + C.wpp + '?text=' + msgPlan;
     }
-
-    // Mostrar laudo de visita técnica
-    var laudoSec = document.getElementById('relatorio-visita');
-    if (laudoSec) laudoSec.style.display = '';
 
     // Mostrar cards de 6 baterias na seção de cargas e ajustar grid para 4 colunas
     document.querySelectorAll('.carga-sum-6bat').forEach(function(el){ el.style.display = ''; });
