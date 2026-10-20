@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gerador de Proposta — Sigenergy · LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#F26522;--or-l:#FF8040;
+  --bg:#070B14;--bg2:#0D1525;--bg3:#111827;
+  --card:rgba(255,255,255,.04);--card-h:rgba(255,255,255,.07);
+  --text:#F0F4F8;--muted:rgba(240,244,248,.55);--dim:rgba(240,244,248,.28);
+  --border:rgba(255,255,255,.08);--bor:rgba(242,101,34,.25);
+  --sig:#00B4D8;
+  --green:#22c55e;
+}
+html{font-size:14px}
+body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+
+/* NAV */
+nav{background:rgba(7,11,20,.95);border-bottom:1px solid var(--border);padding:16px 40px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:800}
+.nav-logo .l{color:var(--or)}.nav-logo .g{color:#FAFAFA}
+.nav-sub{font-size:8px;color:rgba(242,101,34,.7);letter-spacing:.3em;text-transform:uppercase;margin-top:2px}
+.nav-badge{background:rgba(0,180,216,.12);border:1px solid rgba(0,180,216,.25);color:var(--sig);font-size:10px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.05em}
+
+/* LAYOUT */
+.wrap{max-width:960px;margin:0 auto;padding:40px 24px}
+.page-title{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:900;margin-bottom:6px}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:36px}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px}
+.card-title{font-size:10px;font-weight:800;letter-spacing:.15em;color:var(--or);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.card-title svg{color:var(--or)}
+
+/* FORM ELEMENTS */
+.field{margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.04em}
+input[type=text],input[type=number],select,textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;padding:10px 12px;transition:border .2s;-webkit-appearance:none}
+input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 2px rgba(242,101,34,.12)}
+select{cursor:pointer}
+textarea{resize:vertical;min-height:64px;line-height:1.5}
+input::placeholder,textarea::placeholder{color:var(--dim)}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.toggle-row:last-child{margin-bottom:0}
+.toggle-lbl{font-size:12px;font-weight:600;color:var(--text)}
+.toggle-lbl small{display:block;font-size:10px;color:var(--muted);font-weight:400}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:22px;cursor:pointer;transition:background .2s}
+.toggle input:checked + .toggle-track{background:var(--or)}
+.toggle-track::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle input:checked + .toggle-track::after{transform:translateX(18px)}
+
+/* COLLAPSIBLE */
+.collapse{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.collapse.open{display:block}
+
+/* RESULTADO */
+.result-card{background:var(--bg2);border:1.5px solid var(--bor);border-radius:16px;padding:24px;margin-top:20px;position:sticky;bottom:20px}
+.result-label{font-size:10px;font-weight:800;letter-spacing:.15em;color:var(--or);text-transform:uppercase;margin-bottom:12px}
+.result-url{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:11px;color:var(--sig);word-break:break-all;line-height:1.7;min-height:56px;font-family:monospace}
+.result-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:11px 22px;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;cursor:pointer;border:none;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+.btn-copy{background:var(--or);color:#fff}
+.btn-copy:hover{background:var(--or-l)}
+.btn-open{background:rgba(0,180,216,.12);border:1px solid rgba(0,180,216,.25);color:var(--sig)}
+.btn-open:hover{background:rgba(0,180,216,.22)}
+.btn-reset{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted)}
+.btn-reset:hover{background:rgba(255,255,255,.09)}
+.copy-ok{display:none;font-size:11px;color:var(--green);font-weight:700;align-items:center;gap:6px}
+.copy-ok.show{display:flex}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--muted)}
+.chip:hover{border-color:var(--or);color:var(--or)}
+.chip.sel{background:rgba(242,101,34,.12);border-color:var(--or);color:var(--or)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div>
+    <div class="nav-logo"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+    <div class="nav-sub">Energia Inteligente</div>
+  </div>
+  <div class="nav-badge">Gerador de Proposta Sigenergy</div>
+</nav>
+
+<div class="wrap">
+  <div class="page-title">Gerador de Link</div>
+  <p class="page-sub">Preencha as informações abaixo e o link da proposta será gerado automaticamente.</p>
+
+  <div class="grid">
+
+    <!-- Col 1 -->
+    <div>
+      <!-- Informações básicas -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Informações Básicas
+        </div>
+        <div class="field">
+          <label>Consultor</label>
+          <select id="consultor" onchange="gerar()">
+            <option value="hingrid">Hingrid Dias</option>
+            <option value="lucas">Lucas Vieira</option>
+            <option value="ana">Ana</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nome do cliente</label>
+          <input type="text" id="cliente" placeholder="Ex: João Silva" oninput="gerar()">
+        </div>
+      </div>
+
+      <!-- Opção personalizada -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Proposta Exclusiva
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-lbl">Ativar card exclusivo
+            <small>Mostra uma 4ª opção personalizada</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="tog-plan" onchange="toggleSection('plan-sec');gerar()"><span class="toggle-track"></span></label>
+        </div>
+        <div class="collapse" id="plan-sec">
+          <div class="field">
+            <label>Valor (R$)</label>
+            <input type="number" id="plan-val" placeholder="Ex: 143000" oninput="gerar()">
+          </div>
+          <div class="field">
+            <label>Título do card</label>
+            <input type="text" id="plan-titulo" placeholder="Ex: Autonomia Máxima" oninput="gerar()">
+          </div>
+          <div class="field">
+            <label>Subtítulo</label>
+            <input type="text" id="plan-subtitulo" placeholder="Ex: 36 painéis + 1 bateria" oninput="gerar()">
+          </div>
+          <div class="field">
+            <label>Nº de baterias</label>
+            <div class="chips" id="chips-bat">
+              <div class="chip sel" data-val="1" onclick="selChip('chips-bat',this)">1 bat</div>
+              <div class="chip" data-val="2" onclick="selChip('chips-bat',this)">2 bat</div>
+              <div class="chip" data-val="4" onclick="selChip('chips-bat',this)">4 bat</div>
+              <div class="chip" data-val="6" onclick="selChip('chips-bat',this)">6 bat</div>
+            </div>
+          </div>
+          <div class="toggle-row" style="margin-top:14px">
+            <div class="toggle-lbl">Incluir painéis
+              <small>Mostra qtd e modelo no card</small>
+            </div>
+            <label class="toggle"><input type="checkbox" id="tog-placas" onchange="toggleSection('placas-sec');gerar()"><span class="toggle-track"></span></label>
+          </div>
+          <div class="collapse" id="placas-sec">
+            <div class="field">
+              <label>Geração mensal (kWh/mês)</label>
+              <input type="number" id="plan-geracao" placeholder="Ex: 2340" oninput="gerar()">
+              <small style="font-size:10px;color:var(--dim);margin-top:4px;display:block">Quantidade de painéis calculada automaticamente (÷ 65 kWh/placa)</small>
+            </div>
+            <div class="field">
+              <label>Modelo do painel</label>
+              <input type="text" id="plan-modulo" placeholder="Ex: Ronma N-Type 620W" oninput="gerar()">
+            </div>
+          </div>
+          <div class="toggle-row" style="margin-top:14px">
+            <div class="toggle-lbl">Incluir microinversor
+              <small>Exibe linha de microinversor</small>
+            </div>
+            <label class="toggle"><input type="checkbox" id="tog-micro" onchange="toggleSection('micro-sec');gerar()"><span class="toggle-track"></span></label>
+          </div>
+          <div class="collapse" id="micro-sec">
+            <div class="field">
+              <label>Quantidade de microinversores</label>
+              <input type="number" id="plan-micro" placeholder="Ex: 4" oninput="gerar()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de cargas -->
+      <div class="card">
+        <div class="card-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Extras
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-lbl">Seção de cargas personalizadas
+            <small>Aba com consumo detalhado do cliente</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="tog-cargas" onchange="gerar()"><span class="toggle-track"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-lbl">Ocultar painéis das opções padrão
+            <small>Para propostas só de bateria</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="tog-sem-placas" onchange="gerar()"><span class="toggle-track"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 2 -->
+    <div>
+      <!-- Desconto exclusivo -->
+      <div class="card">
+        <div class="card-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          Desconto Exclusivo
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-lbl">Ativar desconto
+            <small>Exibe banner com oferta especial</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="tog-desc" onchange="toggleSection('desc-sec');gerar()"><span class="toggle-track"></span></label>
+        </div>
+        <div class="collapse" id="desc-sec">
+          <div class="field">
+            <label>Valor do desconto (R$)</label>
+            <input type="number" id="desc-val" placeholder="Ex: 5000" oninput="gerar()">
+          </div>
+          <div class="field">
+            <label>Título do desconto</label>
+            <input type="text" id="desc-titulo" placeholder="Ex: Condição Black Friday" oninput="gerar()">
+          </div>
+          <div class="field">
+            <label>Descrição</label>
+            <textarea id="desc-desc" placeholder="Ex: Desconto exclusivo para contratos fechados em outubro." oninput="gerar()"></textarea>
+          </div>
+          <div class="field">
+            <label>Válido até</label>
+            <input type="text" id="desc-validade" placeholder="Ex: 31/10/2026" oninput="gerar()">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resultado -->
+  <div class="result-card">
+    <div class="result-label">Link gerado</div>
+    <div class="result-url" id="result-url">Preencha o nome do cliente para gerar o link.</div>
+    <div class="result-actions">
+      <button class="btn btn-copy" onclick="copiar()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar link
+      </button>
+      <a class="btn btn-open" id="btn-open" href="#" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Abrir proposta
+      </a>
+      <button class="btn btn-reset" onclick="resetar()">Limpar</button>
+      <div class="copy-ok" id="copy-ok">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Link copiado!
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var BASE = 'https://lumengridbrasil.com.br/sigenergy-proposta.html';
+
+function v(id){ return document.getElementById(id); }
+
+function toggleSection(id) {
+  var el = document.getElementById(id);
+  var tog = document.getElementById('tog-' + id.replace('-sec',''));
+  if (el) el.classList.toggle('open', tog && tog.checked);
+}
+
+function selChip(groupId, chip) {
+  document.querySelectorAll('#' + groupId + ' .chip').forEach(function(c){ c.classList.remove('sel'); });
+  chip.classList.add('sel');
+  gerar();
+}
+
+function getChip(groupId) {
+  var sel = document.querySelector('#' + groupId + ' .chip.sel');
+  return sel ? sel.dataset.val : null;
+}
+
+function enc(s){ return encodeURIComponent(s); }
+
+function gerar() {
+  var params = [];
+
+  var consultor = v('consultor').value;
+  if (consultor) params.push('consultor=' + consultor);
+
+  var cliente = v('cliente').value.trim();
+  if (cliente) params.push('cliente=' + enc(cliente));
+
+  if (v('tog-cargas').checked) params.push('cargas=1');
+  if (v('tog-sem-placas').checked) params.push('placas=0');
+
+  if (v('tog-plan').checked) {
+    var planVal = v('plan-val').value.trim();
+    if (planVal) params.push('plan=' + planVal);
+
+    var planBats = getChip('chips-bat');
+    if (planBats) params.push('plan_bats=' + planBats);
+
+    var planTitulo = v('plan-titulo').value.trim();
+    if (planTitulo) params.push('plan_titulo=' + enc(planTitulo));
+
+    var planSubtitulo = v('plan-subtitulo').value.trim();
+    if (planSubtitulo) params.push('plan_subtitulo=' + enc(planSubtitulo));
+
+    if (v('tog-placas').checked) {
+      var geracao = v('plan-geracao').value.trim();
+      if (geracao) params.push('plan_geracao=' + enc(geracao));
+      var modulo = v('plan-modulo').value.trim();
+      if (modulo) params.push('plan_modulo=' + enc(modulo));
+    }
+
+    if (v('tog-micro').checked) {
+      var micro = v('plan-micro').value.trim();
+      if (micro) params.push('plan_micro=' + micro);
+    }
+  }
+
+  if (v('tog-desc').checked) {
+    var descVal = v('desc-val').value.trim();
+    if (descVal) params.push('desconto=' + descVal);
+    var descTitulo = v('desc-titulo').value.trim();
+    if (descTitulo) params.push('desconto_titulo=' + enc(descTitulo));
+    var descDesc = v('desc-desc').value.trim();
+    if (descDesc) params.push('desconto_desc=' + enc(descDesc));
+    var descValidade = v('desc-validade').value.trim();
+    if (descValidade) params.push('desconto_validade=' + enc(descValidade));
+  }
+
+  var url = params.length ? BASE + '?' + params.join('&') : BASE;
+
+  if (!cliente) {
+    v('result-url').textContent = 'Preencha o nome do cliente para gerar o link.';
+    v('btn-open').href = '#';
+    return;
+  }
+
+  v('result-url').textContent = url;
+  v('btn-open').href = url;
+}
+
+function copiar() {
+  var url = v('result-url').textContent;
+  if (!url || url.includes('Preencha')) return;
+  navigator.clipboard.writeText(url).then(function(){
+    var ok = v('copy-ok');
+    ok.classList.add('show');
+    setTimeout(function(){ ok.classList.remove('show'); }, 2500);
+  });
+}
+
+function resetar() {
+  v('cliente').value = '';
+  v('consultor').value = 'hingrid';
+  ['tog-plan','tog-cargas','tog-sem-placas','tog-desc','tog-placas','tog-micro'].forEach(function(id){
+    v(id).checked = false;
+  });
+  ['plan-sec','desc-sec','placas-sec','micro-sec'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('open');
+  });
+  v('plan-val').value = '';
+  v('plan-titulo').value = '';
+  v('plan-subtitulo').value = '';
+  v('plan-geracao').value = '';
+  v('plan-modulo').value = '';
+  v('plan-micro').value = '';
+  v('desc-val').value = '';
+  v('desc-titulo').value = '';
+  v('desc-desc').value = '';
+  v('desc-validade').value = '';
+  document.querySelectorAll('#chips-bat .chip').forEach(function(c,i){ c.classList.toggle('sel', i===0); });
+  gerar();
+}
+
+gerar();
+</script>
+<!-- Feito por Domani Consultoria -->
+</body>
+</html>
