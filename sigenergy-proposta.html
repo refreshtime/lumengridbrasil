@@ -275,6 +275,7 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);-webkit-backdr
 .inv-notes{max-width:900px;margin:32px auto 0;text-align:center}
 .inv-note{font-size:11px;color:var(--dim);line-height:1.65;margin-bottom:4px;display:flex;align-items:flex-start;gap:8px;justify-content:center}
 .inv-note svg{flex-shrink:0;margin-top:1px}
+.inv-card-note{font-size:10px;color:var(--dim);line-height:1.5;margin:10px 0 14px;text-align:center}
 
 /* ── V2X SECTION ── */
 .v2x-sec{background:linear-gradient(135deg,#070B14 0%,#0a1020 60%,#0d1428 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:64px 56px}
@@ -1361,6 +1362,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         <div class="inv-price-v"><span>R$</span> 63.000</div>
         <div class="inv-price-l">Instalação inclusa · Preço fixo</div>
       </div>
+      <p class="inv-card-note">* Capacidade máxima de 6 baterias por inversor</p>
       <a class="btn-inv" id="inv-wpp1" href="#cta">Quero este sistema →</a>
     </div>
 
@@ -1384,11 +1386,32 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         <div class="inv-price-v"><span>R$</span> 79.000</div>
         <div class="inv-price-l">Instalação inclusa · Preço fixo</div>
       </div>
+      <p class="inv-card-note">* Capacidade máxima de 6 baterias por inversor</p>
       <a class="btn-inv" id="inv-wpp2" href="#cta">Quero este sistema →</a>
     </div>
 
+    <div class="inv-card rv" data-d="3">
+      <div class="inv-name">Opção 3</div>
+      <div class="inv-title">Reserva Ampliada</div>
+      <div class="inv-subtitle">Alta capacidade de armazenamento</div>
+      <table class="inv-table">
+        <tr><td>Painéis</td><td>3 painéis inclusos</td></tr>
+        <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
+        <tr><td>Bateria</td><td>4× SigenStor LFP 9 kWh</td></tr>
+        <tr><td>Energia útil</td><td class="highlight">36 kWh (100% DoD)</td></tr>
+        <tr><td>Garantia inversor</td><td>10 anos</td></tr>
+        <tr><td>Garantia bateria</td><td>10 anos</td></tr>
+      </table>
+      <div class="inv-price">
+        <div class="inv-price-v"><span>R$</span> 114.000</div>
+        <div class="inv-price-l">Instalação inclusa · Preço fixo</div>
+      </div>
+      <p class="inv-card-note">* Capacidade máxima de 6 baterias por inversor</p>
+      <a class="btn-inv" id="inv-wpp3" href="#cta">Quero este sistema →</a>
+    </div>
+
     <!-- Opção personalizada via ?plan=VALOR -->
-    <div class="inv-card destaque rv" id="inv-card-plan" style="display:none" data-d="3">
+    <div class="inv-card destaque rv" id="inv-card-plan" style="display:none" data-d="4">
       <div class="inv-badge">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         Proposta Exclusiva
@@ -1400,7 +1423,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         <tr id="inv-plan-placas-row" style="display:none"><td>Painéis</td><td id="inv-plan-placas-val">—</td></tr>
         <tr id="inv-plan-geracao-row" style="display:none"><td>Geração estimada</td><td id="inv-plan-geracao-val">—</td></tr>
         <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
-        <tr><td>Microinversor</td><td>4× FoxESS Micro</td></tr>
+        <tr id="inv-plan-micro-row" style="display:none"><td>Microinversor</td><td id="inv-plan-micro-val">—</td></tr>
         <tr><td>Bateria</td><td id="inv-plan-bat-val">6× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight" id="inv-plan-energy-val">54 kWh (100% DoD)</td></tr>
         <tr><td>Garantia inversor</td><td>10 anos</td></tr>
@@ -1410,6 +1433,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         <div class="inv-price-v"><span>R$</span> <span id="inv-plan-val">—</span></div>
         <div class="inv-price-l" id="inv-plan-note">Instalação inclusa · Condições exclusivas</div>
       </div>
+      <p class="inv-card-note">* Para adicionar mais baterias será necessário um novo inversor</p>
       <a class="btn-inv" id="inv-plan-wpp" href="#cta">Quero este sistema →</a>
     </div>
   </div>
@@ -1883,6 +1907,15 @@ if (PLAN) {
       var valG = document.getElementById('inv-plan-geracao-val');
       if (rowG) rowG.style.display = '';
       if (valG) valG.textContent = planGeracao + ' kWh/mês';
+    }
+
+    // Parâmetro opcional: plan_micro → exibe linha de microinversor
+    var planMicro = P.get('plan_micro');
+    if (planMicro) {
+      var rowM = document.getElementById('inv-plan-micro-row');
+      var valM = document.getElementById('inv-plan-micro-val');
+      if (rowM) rowM.style.display = '';
+      if (valM) valM.textContent = planMicro + '× FoxESS Micro';
     }
 
     // Só exibe cards de 6 baterias nas cargas quando plan_bats=6 (ou padrão sem param)
