@@ -1225,22 +1225,27 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
           <div class="carga-sum-d">consumo total</div>
         </div>
         <div class="carga-sum-card">
-          <div class="carga-sum-v">~7,5h</div>
+          <div class="carga-sum-v">~15h</div>
           <div class="carga-sum-l">1 bateria</div>
           <div class="carga-sum-d">9 kWh úteis</div>
         </div>
         <div class="carga-sum-card">
-          <div class="carga-sum-v">~15h</div>
+          <div class="carga-sum-v">~1d 6h</div>
           <div class="carga-sum-l">2 baterias</div>
           <div class="carga-sum-d">18 kWh úteis</div>
         </div>
+        <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:rgba(242,101,34,.35);background:rgba(242,101,34,.05)">
+          <div class="carga-sum-v" style="color:var(--or)">~2d 12h</div>
+          <div class="carga-sum-l">4 baterias</div>
+          <div class="carga-sum-d">36 kWh úteis</div>
+        </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
-          <div class="carga-sum-v" style="color:var(--sig)">~1d 21h</div>
+          <div class="carga-sum-v" style="color:var(--sig)">~3d 18h</div>
           <div class="carga-sum-l">6 baterias</div>
           <div class="carga-sum-d">54 kWh úteis</div>
         </div>
       </div>
-      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Todos os equipamentos em uso simultâneo. Autonomia calculada com 100% DoD.</p>
+      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Uso não simultâneo dos equipamentos (fator 2×). Autonomia calculada com 100% DoD.</p>
     </div>
 
     <!-- PAINEL USO BÁSICO — BATERIA -->
@@ -1283,22 +1288,27 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
           <div class="carga-sum-d">consumo básico</div>
         </div>
         <div class="carga-sum-card">
-          <div class="carga-sum-v">~1d 4h</div>
+          <div class="carga-sum-v">~2d 8h</div>
           <div class="carga-sum-l">1 bateria</div>
           <div class="carga-sum-d">9 kWh úteis</div>
         </div>
         <div class="carga-sum-card">
-          <div class="carga-sum-v">~2d 8h</div>
+          <div class="carga-sum-v">~4d 17h</div>
           <div class="carga-sum-l">2 baterias</div>
           <div class="carga-sum-d">18 kWh úteis</div>
         </div>
+        <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:rgba(242,101,34,.35);background:rgba(242,101,34,.05)">
+          <div class="carga-sum-v" style="color:var(--or)">~9d 10h</div>
+          <div class="carga-sum-l">4 baterias</div>
+          <div class="carga-sum-d">36 kWh úteis</div>
+        </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
-          <div class="carga-sum-v" style="color:var(--sig)">~7d</div>
+          <div class="carga-sum-v" style="color:var(--sig)">~14d</div>
           <div class="carga-sum-l">6 baterias</div>
           <div class="carga-sum-d">54 kWh úteis</div>
         </div>
       </div>
-      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Somente essenciais — sem climatização, fogão de indução ou eletrodomésticos de alta potência. Autonomia com 100% DoD.</p>
+      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Somente essenciais, uso não simultâneo (fator 2×). Autonomia com 100% DoD.</p>
     </div>
 
     <!-- PAINEL USO PAINEL SOLAR -->
@@ -1349,17 +1359,22 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
           <div class="carga-sum-d">4,4 kWh gerados / dia</div>
         </div>
         <div class="carga-sum-card">
-          <div class="carga-sum-v">~3,2d</div>
+          <div class="carga-sum-v">~6,5d</div>
           <div class="carga-sum-l">1 bat + painel</div>
           <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
         </div>
         <div class="carga-sum-card">
-          <div class="carga-sum-v">~6,5d</div>
+          <div class="carga-sum-v">~13d</div>
           <div class="carga-sum-l">2 bat + painel</div>
           <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
         </div>
+        <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:rgba(242,101,34,.35);background:rgba(242,101,34,.05)">
+          <div class="carga-sum-v" style="color:var(--or)">~26d</div>
+          <div class="carga-sum-l">4 bat + painel</div>
+          <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
+        </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
-          <div class="carga-sum-v" style="color:var(--sig)">~19d</div>
+          <div class="carga-sum-v" style="color:var(--sig)">~39d</div>
           <div class="carga-sum-l">6 bat + painel</div>
           <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
         </div>
@@ -2015,7 +2030,7 @@ if (PLAN) {
     // Só exibe cards de 6 baterias nas cargas quando plan_bats=6 (ou padrão sem param)
     if (planBats === 6) {
       document.querySelectorAll('.carga-sum-6bat').forEach(function(el){ el.style.display = ''; });
-      document.querySelectorAll('.carga-sum').forEach(function(el){ el.style.gridTemplateColumns = 'repeat(4,1fr)'; });
+      document.querySelectorAll('.carga-sum').forEach(function(el){ el.style.gridTemplateColumns = 'repeat(5,1fr)'; });
     }
 
     // Remover badge "Recomendado" do card 2 e mover destaque
