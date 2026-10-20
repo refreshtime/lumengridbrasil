@@ -1869,7 +1869,7 @@ if (PLAN) {
     // Calcula painéis pela geração (65 kWh/placa/mês) se disponível — ignora valor manual do URL
     var planPlacasReal = planPlacas;
     if (planGeracao) {
-      var geracaoNum = parseFloat(planGeracao.replace(',', '.'));
+      var geracaoNum = parseFloat(planGeracao.replace(/\./g, '').replace(',', '.'));
       if (!isNaN(geracaoNum)) planPlacasReal = String(Math.round(geracaoNum / 65));
     }
     if (planPlacas || planGeracao) {
