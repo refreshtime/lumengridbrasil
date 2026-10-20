@@ -412,7 +412,9 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
 .carga-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
 .carga-sum-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 16px;text-align:center}
 .carga-sum-card.hi{border-color:var(--bor);background:rgba(242,101,34,.05)}
-.carga-sum-v{font-size:26px;font-weight:900;color:var(--or);line-height:1;letter-spacing:-.8px;margin-bottom:5px}
+.carga-sum-v{font-size:26px;font-weight:900;color:var(--or);line-height:1;letter-spacing:-.8px;margin-bottom:3px}
+.carga-sum-v2{font-size:10px;color:var(--dim);margin-bottom:7px;line-height:1.3}
+.carga-sum-v2 strong{color:var(--muted);font-weight:700}
 .carga-sum-l{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text);text-transform:uppercase;margin-bottom:3px}
 .carga-sum-d{font-size:10px;color:var(--muted)}
 .carga-gen-bar{margin-top:20px;background:rgba(0,180,216,.06);border:1px solid rgba(0,180,216,.18);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -1226,26 +1228,30 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         </div>
         <div class="carga-sum-card">
           <div class="carga-sum-v">~15h</div>
+          <div class="carga-sum-v2"><strong>~7,5h</strong> uso simultâneo</div>
           <div class="carga-sum-l">1 bateria</div>
           <div class="carga-sum-d">9 kWh úteis</div>
         </div>
         <div class="carga-sum-card">
           <div class="carga-sum-v">~1d 6h</div>
+          <div class="carga-sum-v2"><strong>~15h</strong> uso simultâneo</div>
           <div class="carga-sum-l">2 baterias</div>
           <div class="carga-sum-d">18 kWh úteis</div>
         </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:rgba(242,101,34,.35);background:rgba(242,101,34,.05)">
           <div class="carga-sum-v" style="color:var(--or)">~2d 12h</div>
+          <div class="carga-sum-v2"><strong>~1d 6h</strong> uso simultâneo</div>
           <div class="carga-sum-l">4 baterias</div>
           <div class="carga-sum-d">36 kWh úteis</div>
         </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
           <div class="carga-sum-v" style="color:var(--sig)">~3d 18h</div>
+          <div class="carga-sum-v2"><strong>~1d 21h</strong> uso simultâneo</div>
           <div class="carga-sum-l">6 baterias</div>
           <div class="carga-sum-d">54 kWh úteis</div>
         </div>
       </div>
-      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Uso não simultâneo dos equipamentos (fator 2×). Autonomia calculada com 100% DoD.</p>
+      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Valor principal: uso não simultâneo (mais realista). Entre parênteses: todos equipamentos ligados ao mesmo tempo. 100% DoD.</p>
     </div>
 
     <!-- PAINEL USO BÁSICO — BATERIA -->
@@ -1289,26 +1295,30 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         </div>
         <div class="carga-sum-card">
           <div class="carga-sum-v">~2d 8h</div>
+          <div class="carga-sum-v2"><strong>~1d 4h</strong> uso simultâneo</div>
           <div class="carga-sum-l">1 bateria</div>
           <div class="carga-sum-d">9 kWh úteis</div>
         </div>
         <div class="carga-sum-card">
           <div class="carga-sum-v">~4d 17h</div>
+          <div class="carga-sum-v2"><strong>~2d 8h</strong> uso simultâneo</div>
           <div class="carga-sum-l">2 baterias</div>
           <div class="carga-sum-d">18 kWh úteis</div>
         </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:rgba(242,101,34,.35);background:rgba(242,101,34,.05)">
           <div class="carga-sum-v" style="color:var(--or)">~9d 10h</div>
+          <div class="carga-sum-v2"><strong>~4d 17h</strong> uso simultâneo</div>
           <div class="carga-sum-l">4 baterias</div>
           <div class="carga-sum-d">36 kWh úteis</div>
         </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
           <div class="carga-sum-v" style="color:var(--sig)">~14d</div>
+          <div class="carga-sum-v2"><strong>~7d</strong> uso simultâneo</div>
           <div class="carga-sum-l">6 baterias</div>
           <div class="carga-sum-d">54 kWh úteis</div>
         </div>
       </div>
-      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Somente essenciais, uso não simultâneo (fator 2×). Autonomia com 100% DoD.</p>
+      <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">* Valor principal: uso não simultâneo (mais realista). Entre parênteses: todos equipamentos ligados ao mesmo tempo. 100% DoD.</p>
     </div>
 
     <!-- PAINEL USO PAINEL SOLAR -->
@@ -1360,21 +1370,25 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
         </div>
         <div class="carga-sum-card">
           <div class="carga-sum-v">~6,5d</div>
+          <div class="carga-sum-v2"><strong>~3,2d</strong> uso simultâneo</div>
           <div class="carga-sum-l">1 bat + painel</div>
           <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
         </div>
         <div class="carga-sum-card">
           <div class="carga-sum-v">~13d</div>
+          <div class="carga-sum-v2"><strong>~6,5d</strong> uso simultâneo</div>
           <div class="carga-sum-l">2 bat + painel</div>
           <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
         </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:rgba(242,101,34,.35);background:rgba(242,101,34,.05)">
           <div class="carga-sum-v" style="color:var(--or)">~26d</div>
+          <div class="carga-sum-v2"><strong>~13d</strong> uso simultâneo</div>
           <div class="carga-sum-l">4 bat + painel</div>
           <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
         </div>
         <div class="carga-sum-card carga-sum-6bat" style="display:none;border-color:var(--sig);background:rgba(0,180,216,.06)">
           <div class="carga-sum-v" style="color:var(--sig)">~39d</div>
+          <div class="carga-sum-v2"><strong>~19d</strong> uso simultâneo</div>
           <div class="carga-sum-l">6 bat + painel</div>
           <div class="carga-sum-d">déficit: 2,78 kWh/dia</div>
         </div>
