@@ -1351,7 +1351,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <div class="inv-title">Essencial</div>
       <div class="inv-subtitle">Autonomia para o essencial da casa</div>
       <table class="inv-table">
-        <tr><td>Painéis</td><td>3 painéis inclusos</td></tr>
+        <tr class="inv-placas-row"><td>Painéis</td><td>3 painéis inclusos</td></tr>
         <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
         <tr><td>Bateria</td><td>1× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight">9 kWh (100% DoD)</td></tr>
@@ -1375,7 +1375,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <div class="inv-title">Autonomia Total</div>
       <div class="inv-subtitle">Máxima independência energética</div>
       <table class="inv-table">
-        <tr><td>Painéis</td><td>3 painéis inclusos</td></tr>
+        <tr class="inv-placas-row"><td>Painéis</td><td>3 painéis inclusos</td></tr>
         <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
         <tr><td>Bateria</td><td>2× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight">18 kWh (100% DoD)</td></tr>
@@ -1395,7 +1395,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <div class="inv-title">Reserva Ampliada</div>
       <div class="inv-subtitle">Alta capacidade de armazenamento</div>
       <table class="inv-table">
-        <tr><td>Painéis</td><td>3 painéis inclusos</td></tr>
+        <tr class="inv-placas-row"><td>Painéis</td><td>3 painéis inclusos</td></tr>
         <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
         <tr><td>Bateria</td><td>4× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight">36 kWh (100% DoD)</td></tr>
@@ -1842,6 +1842,11 @@ document.querySelectorAll('.eq-hours-input').forEach(function (inp) {
 });
 
 calcAutonomia();
+
+// ── PARÂMETRO: placas=0 → oculta linha de painéis das opções padrão ──
+if (P.get('placas') === '0') {
+  document.querySelectorAll('.inv-placas-row').forEach(function(el){ el.style.display = 'none'; });
+}
 
 // ── PARÂMETRO: cargas=1 → exibe seção de cargas personalizadas ──
 if (P.get('cargas')) {
