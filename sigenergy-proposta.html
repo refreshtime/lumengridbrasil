@@ -1865,13 +1865,19 @@ if (PLAN) {
     }
     var planPlacas = P.get('plan_placas');
     var planModulo = P.get('plan_modulo');
-    if (planPlacas) {
+    var planGeracao = P.get('plan_geracao');
+    // Calcula painéis pela geração (65 kWh/placa/mês) se disponível — ignora valor manual do URL
+    var planPlacasReal = planPlacas;
+    if (planGeracao) {
+      var geracaoNum = parseFloat(planGeracao.replace(',', '.'));
+      if (!isNaN(geracaoNum)) planPlacasReal = String(Math.round(geracaoNum / 65));
+    }
+    if (planPlacas || planGeracao) {
       var rowP = document.getElementById('inv-plan-placas-row');
       var valP = document.getElementById('inv-plan-placas-val');
       if (rowP) rowP.style.display = '';
-      if (valP) valP.textContent = planPlacas + (planModulo ? ' × ' + planModulo : ' painéis');
+      if (valP) valP.textContent = planPlacasReal + (planModulo ? ' × ' + planModulo : ' painéis');
     }
-    var planGeracao = P.get('plan_geracao');
     if (planGeracao) {
       var rowG = document.getElementById('inv-plan-geracao-row');
       var valG = document.getElementById('inv-plan-geracao-val');
