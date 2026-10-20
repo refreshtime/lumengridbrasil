@@ -257,18 +257,26 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);-webkit-backdr
 .inv-card .btn-inv{margin-top:auto}
 
 /* ── DESCONTO EXCLUSIVO ── */
-.desconto-bar{display:none;background:linear-gradient(135deg,rgba(242,101,34,.12),rgba(242,101,34,.06));border:1.5px solid rgba(242,101,34,.35);border-radius:18px;padding:24px 32px;max-width:1100px;margin:0 auto 36px;position:relative;overflow:hidden}
+.desconto-bar{display:none;background:linear-gradient(135deg,rgba(242,101,34,.10),rgba(242,101,34,.04));border:1.5px solid rgba(242,101,34,.35);border-radius:18px;padding:22px 28px;max-width:1100px;margin:0 auto 36px;position:relative;overflow:hidden}
 .desconto-bar::before{content:'';position:absolute;top:0;right:0;width:180px;height:100%;background:radial-gradient(ellipse at right,rgba(242,101,34,.08),transparent 70%);pointer-events:none}
-.desconto-bar.ativo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.desconto-ico{width:48px;height:48px;background:rgba(242,101,34,.15);border:1px solid rgba(242,101,34,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--or);flex-shrink:0}
-.desconto-body{flex:1;min-width:180px}
-.desconto-titulo{font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px}
-.desconto-desc{font-size:12px;color:var(--muted);line-height:1.55}
-.desconto-right{text-align:right;flex-shrink:0}
-.desconto-valor{font-size:28px;font-weight:900;color:var(--or);letter-spacing:-1px;line-height:1}
-.desconto-valor span{font-size:14px;font-weight:600;color:var(--muted)}
-.desconto-validade{font-size:10px;color:var(--dim);margin-top:5px;display:flex;align-items:center;gap:5px;justify-content:flex-end}
+.desconto-bar.ativo{display:block}
+.desconto-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.desconto-ico{width:36px;height:36px;background:rgba(242,101,34,.15);border:1px solid rgba(242,101,34,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--or);flex-shrink:0}
+.desconto-header-t{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--or);text-transform:uppercase}
+.desconto-items{display:flex;flex-direction:column;gap:10px}
+.desconto-item{display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px 16px;flex-wrap:wrap}
+.desconto-item-body{flex:1;min-width:160px}
+.desconto-titulo{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.desconto-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.desconto-item-right{text-align:right;flex-shrink:0}
+.desconto-valor{font-size:22px;font-weight:900;color:var(--or);letter-spacing:-.8px;line-height:1}
+.desconto-valor span{font-size:12px;font-weight:600;color:var(--muted)}
+.desconto-validade{font-size:10px;color:var(--dim);margin-top:4px;display:flex;align-items:center;gap:4px;justify-content:flex-end}
 .desconto-validade svg{color:var(--or)}
+.desconto-total{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(242,101,34,.2);margin-top:12px;padding-top:12px}
+.desconto-total-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.desconto-total-val{font-size:26px;font-weight:900;color:var(--or);letter-spacing:-1px}
+.desconto-total-val span{font-size:13px;font-weight:600;color:var(--muted)}
 .inv-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--or),var(--or-l));color:#fff;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 18px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
 .inv-name{font-size:10px;font-weight:800;letter-spacing:2.5px;color:var(--or);text-transform:uppercase;margin-bottom:10px}
 .inv-title{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px;letter-spacing:-.3px}
@@ -1369,21 +1377,18 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
     <div class="rule"></div>
     <p class="ssub" id="inv-subtitle">Inversor SigenStor EC 7,5 kW · Instalação completa · Sem carregador veicular</p>
   </div>
-  <!-- Desconto exclusivo via ?desconto=VALOR -->
+  <!-- Descontos exclusivos via ?desconto=VALOR -->
   <div class="desconto-bar" id="desconto-bar">
-    <div class="desconto-ico">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-    </div>
-    <div class="desconto-body">
-      <div class="desconto-titulo" id="desconto-titulo">Condição Exclusiva</div>
-      <div class="desconto-desc" id="desconto-desc">Desconto especial para esta proposta.</div>
-    </div>
-    <div class="desconto-right">
-      <div class="desconto-valor"><span>−R$</span> <span id="desconto-val">—</span></div>
-      <div class="desconto-validade" id="desconto-validade-wrap">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Válido até <span id="desconto-validade">—</span>
+    <div class="desconto-header">
+      <div class="desconto-ico">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
       </div>
+      <div class="desconto-header-t">Condições Exclusivas desta Proposta</div>
+    </div>
+    <div class="desconto-items" id="desconto-items"></div>
+    <div class="desconto-total" id="desconto-total" style="display:none">
+      <div class="desconto-total-lbl">Total de economia</div>
+      <div class="desconto-total-val"><span>−R$</span> <span id="desconto-total-val">—</span></div>
     </div>
   </div>
 
@@ -1891,24 +1896,41 @@ document.querySelectorAll('.eq-hours-input').forEach(function (inp) {
 
 calcAutonomia();
 
-// ── PARÂMETRO: desconto=VALOR → exibe barra de desconto exclusivo ──
-var DESCONTO = P.get('desconto');
-if (DESCONTO) {
-  var descontoVal = parseInt(DESCONTO.replace(/\D/g, ''));
-  if (!isNaN(descontoVal) && descontoVal > 0) {
-    var db = document.getElementById('desconto-bar');
-    if (db) db.classList.add('ativo');
-    var dv = document.getElementById('desconto-val');
-    if (dv) dv.textContent = descontoVal.toLocaleString('pt-BR');
-    var dt = P.get('desconto_titulo');
-    if (dt) { var el = document.getElementById('desconto-titulo'); if (el) el.textContent = dt; }
-    var dd = P.get('desconto_desc');
-    if (dd) { var el = document.getElementById('desconto-desc'); if (el) el.textContent = dd; }
-    var dval = P.get('desconto_validade');
-    if (dval) { var el = document.getElementById('desconto-validade'); if (el) el.textContent = dval; }
-    else { var vw = document.getElementById('desconto-validade-wrap'); if (vw) vw.style.display = 'none'; }
+// ── PARÂMETROS: desconto / desconto2 → exibe barra de descontos exclusivos ──
+(function(){
+  function buildItem(val, titulo, desc, validade) {
+    var n = parseInt((val||'').replace(/\D/g,''));
+    if (isNaN(n) || n <= 0) return null;
+    var validadeHtml = validade
+      ? '<div class="desconto-validade"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Válido até ' + validade + '</div>'
+      : '';
+    var div = document.createElement('div');
+    div.className = 'desconto-item';
+    div.innerHTML = '<div class="desconto-item-body"><div class="desconto-titulo">'+(titulo||'Desconto Exclusivo')+'</div><div class="desconto-desc">'+(desc||'')+'</div></div>'
+      + '<div class="desconto-item-right"><div class="desconto-valor"><span>−R$</span> '+n.toLocaleString('pt-BR')+'</div>'+validadeHtml+'</div>';
+    return {el: div, val: n};
   }
-}
+
+  var items = [];
+  var d1 = buildItem(P.get('desconto'), P.get('desconto_titulo'), P.get('desconto_desc'), P.get('desconto_validade'));
+  var d2 = buildItem(P.get('desconto2'), P.get('desconto2_titulo'), P.get('desconto2_desc'), P.get('desconto2_validade'));
+  if (d1) items.push(d1);
+  if (d2) items.push(d2);
+
+  if (items.length > 0) {
+    var db = document.getElementById('desconto-bar');
+    var container = document.getElementById('desconto-items');
+    if (db) db.classList.add('ativo');
+    items.forEach(function(i){ if (container) container.appendChild(i.el); });
+    if (items.length > 1) {
+      var total = items.reduce(function(s,i){ return s + i.val; }, 0);
+      var totalEl = document.getElementById('desconto-total');
+      var totalVal = document.getElementById('desconto-total-val');
+      if (totalEl) totalEl.style.display = 'flex';
+      if (totalVal) totalVal.textContent = total.toLocaleString('pt-BR');
+    }
+  }
+})();
 
 // ── PARÂMETRO: placas=0 → oculta linha de painéis das opções padrão ──
 if (P.get('placas') === '0') {
