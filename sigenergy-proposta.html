@@ -248,11 +248,27 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);-webkit-backdr
 .cnote{font-size:10px;color:var(--dim);text-align:center;margin-top:20px;line-height:1.6}
 
 /* ── INVESTIMENTO ── */
-.inv-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto}
-.inv-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:36px 32px;position:relative;transition:all .35s}
-.inv-card:hover{transform:translateY(-6px);box-shadow:0 28px 56px rgba(0,0,0,.45)}
+.inv-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;margin:0 auto}
+.inv-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:32px 28px;position:relative;transition:all .35s;display:flex;flex-direction:column}
+.inv-card:hover{transform:translateY(-5px);box-shadow:0 24px 48px rgba(0,0,0,.4)}
 .inv-card.destaque{border-color:var(--bor);background:rgba(242,101,34,.05)}
-.inv-card.destaque:hover{box-shadow:0 28px 56px rgba(242,101,34,.15)}
+.inv-card.destaque:hover{box-shadow:0 24px 48px rgba(242,101,34,.12)}
+.inv-card .inv-table{flex:1}
+.inv-card .btn-inv{margin-top:auto}
+
+/* ── DESCONTO EXCLUSIVO ── */
+.desconto-bar{display:none;background:linear-gradient(135deg,rgba(242,101,34,.12),rgba(242,101,34,.06));border:1.5px solid rgba(242,101,34,.35);border-radius:18px;padding:24px 32px;max-width:1100px;margin:0 auto 36px;position:relative;overflow:hidden}
+.desconto-bar::before{content:'';position:absolute;top:0;right:0;width:180px;height:100%;background:radial-gradient(ellipse at right,rgba(242,101,34,.08),transparent 70%);pointer-events:none}
+.desconto-bar.ativo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.desconto-ico{width:48px;height:48px;background:rgba(242,101,34,.15);border:1px solid rgba(242,101,34,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--or);flex-shrink:0}
+.desconto-body{flex:1;min-width:180px}
+.desconto-titulo{font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px}
+.desconto-desc{font-size:12px;color:var(--muted);line-height:1.55}
+.desconto-right{text-align:right;flex-shrink:0}
+.desconto-valor{font-size:28px;font-weight:900;color:var(--or);letter-spacing:-1px;line-height:1}
+.desconto-valor span{font-size:14px;font-weight:600;color:var(--muted)}
+.desconto-validade{font-size:10px;color:var(--dim);margin-top:5px;display:flex;align-items:center;gap:5px;justify-content:flex-end}
+.desconto-validade svg{color:var(--or)}
 .inv-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--or),var(--or-l));color:#fff;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 18px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
 .inv-name{font-size:10px;font-weight:800;letter-spacing:2.5px;color:var(--or);text-transform:uppercase;margin-bottom:10px}
 .inv-title{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px;letter-spacing:-.3px}
@@ -435,8 +451,10 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
   .equip-grid{grid-template-columns:1fr}
   .nav-link{display:none}
   .calc-result-num{font-size:44px}
-  .inv-cards{gap:36px}
+  .inv-cards{grid-template-columns:1fr;gap:20px;max-width:480px}
   .inv-price-v{font-size:34px}
+  .desconto-bar.ativo{flex-direction:column;align-items:flex-start}
+  .desconto-right{text-align:left}
   .gstats-grid{grid-template-columns:repeat(2,1fr)}
   .flow-row{gap:6px}
   .fnode{min-width:100px;padding:14px 12px}
@@ -1345,6 +1363,24 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
     <div class="rule"></div>
     <p class="ssub" id="inv-subtitle">Inversor SigenStor EC 7,5 kW · Instalação completa · Sem carregador veicular</p>
   </div>
+  <!-- Desconto exclusivo via ?desconto=VALOR -->
+  <div class="desconto-bar" id="desconto-bar">
+    <div class="desconto-ico">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    </div>
+    <div class="desconto-body">
+      <div class="desconto-titulo" id="desconto-titulo">Condição Exclusiva</div>
+      <div class="desconto-desc" id="desconto-desc">Desconto especial para esta proposta.</div>
+    </div>
+    <div class="desconto-right">
+      <div class="desconto-valor"><span>−R$</span> <span id="desconto-val">—</span></div>
+      <div class="desconto-validade" id="desconto-validade-wrap">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Válido até <span id="desconto-validade">—</span>
+      </div>
+    </div>
+  </div>
+
   <div class="inv-cards">
     <div class="inv-card rv" data-d="1">
       <div class="inv-name">Opção 1</div>
@@ -1843,6 +1879,25 @@ document.querySelectorAll('.eq-hours-input').forEach(function (inp) {
 
 calcAutonomia();
 
+// ── PARÂMETRO: desconto=VALOR → exibe barra de desconto exclusivo ──
+var DESCONTO = P.get('desconto');
+if (DESCONTO) {
+  var descontoVal = parseInt(DESCONTO.replace(/\D/g, ''));
+  if (!isNaN(descontoVal) && descontoVal > 0) {
+    var db = document.getElementById('desconto-bar');
+    if (db) db.classList.add('ativo');
+    var dv = document.getElementById('desconto-val');
+    if (dv) dv.textContent = descontoVal.toLocaleString('pt-BR');
+    var dt = P.get('desconto_titulo');
+    if (dt) { var el = document.getElementById('desconto-titulo'); if (el) el.textContent = dt; }
+    var dd = P.get('desconto_desc');
+    if (dd) { var el = document.getElementById('desconto-desc'); if (el) el.textContent = dd; }
+    var dval = P.get('desconto_validade');
+    if (dval) { var el = document.getElementById('desconto-validade'); if (el) el.textContent = dval; }
+    else { var vw = document.getElementById('desconto-validade-wrap'); if (vw) vw.style.display = 'none'; }
+  }
+}
+
 // ── PARÂMETRO: placas=0 → oculta linha de painéis das opções padrão ──
 if (P.get('placas') === '0') {
   document.querySelectorAll('.inv-placas-row').forEach(function(el){ el.style.display = 'none'; });
@@ -1935,9 +1990,9 @@ if (PLAN) {
     var card2 = document.getElementById('inv-card-2');
     if (card2) card2.classList.remove('destaque');
 
-    // Grid 3 colunas em telas grandes
+    // Grid 4 colunas quando plan card está ativo
     var invCards = document.querySelector('.inv-cards');
-    if (invCards) invCards.style.gridTemplateColumns = 'repeat(auto-fit,minmax(260px,1fr))';
+    if (invCards) invCards.style.gridTemplateColumns = 'repeat(4,1fr)';
 
     // Botão WhatsApp do card personalizado
     if (C) {
