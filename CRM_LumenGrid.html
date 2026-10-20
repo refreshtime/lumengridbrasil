@@ -1414,8 +1414,8 @@ function getAllLeadsRaw() {
 function getLeads() {
   const all = getAllLeadsRaw();
   if (ADMINS.includes(currentUser)) return all;
-  if (currentUser === 'Kelly' || currentUser === 'Ana') {
-    // Kelly e Ana veem só os próprios leads
+  if (currentUser === 'Kelly' || currentUser === 'Ana' || currentUser === 'Bruno') {
+    // Kelly, Ana e Bruno veem só os próprios leads
     return all.filter(l => l.resp === currentUser);
   }
   // Lucas: próprios + pós-venda de todos + Visita Comercial de todos (sem pre-venda da Kelly)
