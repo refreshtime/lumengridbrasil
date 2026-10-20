@@ -292,6 +292,9 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);-webkit-backdr
 .inv-note{font-size:11px;color:var(--dim);line-height:1.65;margin-bottom:4px;display:flex;align-items:flex-start;gap:8px;justify-content:center}
 .inv-note svg{flex-shrink:0;margin-top:1px}
 .inv-card-note{font-size:10px;color:var(--dim);line-height:1.5;margin:10px 0 14px;text-align:center}
+.inv-swipe-hint{display:none;align-items:center;justify-content:center;gap:8px;margin-top:4px;font-size:11px;color:var(--dim);animation:swipe-fade 2.5s ease-in-out infinite}
+.inv-swipe-hint svg{color:var(--or)}
+@keyframes swipe-fade{0%,100%{opacity:.4}50%{opacity:1}}
 
 /* ── V2X SECTION ── */
 .v2x-sec{background:linear-gradient(135deg,#070B14 0%,#0a1020 60%,#0d1428 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:64px 56px}
@@ -451,7 +454,10 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
   .equip-grid{grid-template-columns:1fr}
   .nav-link{display:none}
   .calc-result-num{font-size:44px}
-  .inv-cards{grid-template-columns:1fr;gap:20px;max-width:480px}
+  .inv-cards{display:flex;flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:14px;max-width:100%;padding:4px 4px 16px;margin:0 -4px;scrollbar-width:none}
+  .inv-cards::-webkit-scrollbar{display:none}
+  .inv-cards .inv-card{min-width:78vw;max-width:320px;flex-shrink:0;scroll-snap-align:center}
+  .inv-swipe-hint{display:flex}
   .inv-price-v{font-size:34px}
   .desconto-bar.ativo{flex-direction:column;align-items:flex-start}
   .desconto-right{text-align:left}
@@ -1472,6 +1478,12 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <p class="inv-card-note">* Para adicionar mais baterias será necessário um novo inversor</p>
       <a class="btn-inv" id="inv-plan-wpp" href="#cta">Quero este sistema →</a>
     </div>
+  </div>
+
+  <div class="inv-swipe-hint">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    deslize para ver todas as opções
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
   </div>
 
   <p class="inv-note rv" style="max-width:900px;margin:20px auto 0;justify-content:center">
