@@ -378,11 +378,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="form-card-sub">Preencha os campos abaixo.</div>
 
       <form id="leadForm" novalidate>
-        <!-- Hidden UTM fields -->
+        <!-- Hidden tracking fields -->
         <input type="hidden" name="utm_source" id="utm_source">
         <input type="hidden" name="utm_medium" id="utm_medium">
         <input type="hidden" name="utm_campaign" id="utm_campaign">
-        <input type="hidden" name="click_id" id="click_id">
+        <input type="hidden" name="utm_term" id="utm_term">
+        <input type="hidden" name="utm_content" id="utm_content">
+        <input type="hidden" name="gclid" id="gclid">
+        <input type="hidden" name="gbraid" id="gbraid">
+        <input type="hidden" name="wbraid" id="wbraid">
+        <input type="hidden" name="fbclid" id="fbclid">
+        <input type="hidden" name="fbc" id="fbc">
+        <input type="hidden" name="fbp" id="fbp">
+        <input type="hidden" name="campaign_id" id="campaign_id">
+        <input type="hidden" name="adset_id" id="adset_id">
+        <input type="hidden" name="ad_id" id="ad_id">
+        <input type="hidden" name="placement" id="placement">
+        <input type="hidden" name="landing_page" id="landing_page">
+        <input type="hidden" name="referrer" id="referrer">
+        <input type="hidden" name="ga_client_id" id="ga_client_id">
 
         <!-- OBJETIVO -->
         <div class="form-group">
@@ -660,19 +674,62 @@ window.addEventListener('scroll', () => {
     window.scrollY > 20 ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.07)';
 });
 
-/* ── UTM CAPTURE ── */
+/* ── UTM + TRACKING CAPTURE ── */
 (function() {
   const params = new URLSearchParams(window.location.search);
   const set = (id, key) => {
     const el = document.getElementById(id);
     if (el) el.value = params.get(key) || '';
   };
-  set('utm_source', 'utm_source');
-  set('utm_medium', 'utm_medium');
+
+  // UTMs padrão
+  set('utm_source',   'utm_source');
+  set('utm_medium',   'utm_medium');
   set('utm_campaign', 'utm_campaign');
-  // click_id: suporta gclid (Google), fbclid (Facebook) e click_id genérico
-  const clickId = params.get('gclid') || params.get('fbclid') || params.get('click_id') || '';
-  document.getElementById('click_id').value = clickId;
+  set('utm_term',     'utm_term');
+  set('utm_content',  'utm_content');
+
+  // Google Ads
+  set('gclid',  'gclid');
+  set('gbraid', 'gbraid');
+  set('wbraid', 'wbraid');
+
+  // Meta Ads
+  set('fbclid', 'fbclid');
+
+  // IDs de campanha (Meta / Google)
+  set('campaign_id', 'campaign_id');
+  set('adset_id',    'adset_id');
+  set('ad_id',       'ad_id');
+  set('placement',   'placement');
+
+  // landing_page e referrer
+  const lpEl = document.getElementById('landing_page');
+  if (lpEl) lpEl.value = window.location.href;
+  const refEl = document.getElementById('referrer');
+  if (refEl) refEl.value = document.referrer || '';
+
+  // fbc e fbp via cookie (_fbc, _fbp)
+  const getCookie = name => {
+    const m = document.cookie.match('(?:^|;)\\s*' + name + '=([^;]*)');
+    return m ? decodeURIComponent(m[1]) : '';
+  };
+  const fbcEl = document.getElementById('fbc');
+  if (fbcEl) fbcEl.value = params.get('fbclid') ? '_fb.' + Date.now() + '.' + params.get('fbclid') : getCookie('_fbc');
+  const fbpEl = document.getElementById('fbp');
+  if (fbpEl) fbpEl.value = getCookie('_fbp');
+
+  // GA Client ID via gtag
+  const tryGaClientId = () => {
+    if (window.gtag) {
+      window.gtag('get', 'G-XXXXXXXXXX', 'client_id', (clientId) => {
+        const el = document.getElementById('ga_client_id');
+        if (el && clientId) el.value = clientId;
+      });
+    }
+  };
+  if (document.readyState === 'complete') tryGaClientId();
+  else window.addEventListener('load', tryGaClientId);
 })();
 
 /* ── PHONE MASK ── */
