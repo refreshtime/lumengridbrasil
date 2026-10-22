@@ -245,6 +245,20 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);border-bottom:
 .plan-item-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
 .plan-item-val{font-family:"Space Grotesk",sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.3px;line-height:1.2}
 .plan-item-sub{font-size:10px;color:var(--sig);font-weight:600}
+.plan-cards-ab{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto}
+.plan-card-gw{background:linear-gradient(135deg,rgba(0,165,80,.08),rgba(0,165,80,.02)) !important;border-color:rgba(0,165,80,.25) !important}
+.plan-card-gw::before{background:radial-gradient(circle,rgba(0,165,80,.12),transparent 70%) !important}
+.plan-card-gw .plan-card-eye{color:var(--gw) !important}
+.plan-card-gw .plan-card-eye::after{background:rgba(0,165,80,.2) !important}
+.plan-card-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:800;flex-shrink:0}
+.plan-card-badge-a{background:rgba(0,180,216,.2);color:var(--sig)}
+.plan-card-badge-b{background:rgba(0,165,80,.2);color:var(--gw)}
+.auto-ab-head{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
+.auto-ab-head-sig{color:var(--sig)}
+.auto-ab-head-gw{color:var(--gw)}
+.auto-scen-gw.ativo-scen{border-color:rgba(0,165,80,.4) !important;background:rgba(0,165,80,.06) !important}
+.auto-scen-gw .auto-scen-kwh{color:var(--gw)}
+@media(max-width:640px){.plan-cards-ab{grid-template-columns:1fr}}
 .plan-divider{width:1px;background:rgba(255,255,255,.08);margin:0 4px}
 /* Hours input in simulator */
 .sim-item-hours{display:none;padding:8px 16px 10px 44px;border-top:1px solid rgba(242,101,34,.12);background:rgba(242,101,34,.04);gap:10px;align-items:center;flex-wrap:wrap}
@@ -328,33 +342,68 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
 
 <!-- PLAN CARD -->
 <section class="sec" id="plan-section" style="display:none;padding-top:40px;padding-bottom:0">
-  <div class="plan-card">
-    <div class="plan-card-eye">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      Sistema configurado · <span id="plan-cliente-label">Off-Grid</span>
+  <div class="plan-cards-ab">
+
+    <!-- CARD A — Sigenergy -->
+    <div class="plan-card" id="plan-card-sig" style="display:none">
+      <div class="plan-card-eye">
+        <span class="plan-card-badge plan-card-badge-a">A</span>
+        Sigenergy · <span id="plan-cliente-label">Off-Grid</span>
+      </div>
+      <div class="plan-grid">
+        <div class="plan-item">
+          <div class="plan-item-lbl">Inversor</div>
+          <div class="plan-item-val">7,5 kW</div>
+          <div class="plan-item-sub">SigenStor EC bifásico</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-item-lbl">Baterias</div>
+          <div class="plan-item-val" id="plan-bat-count">—</div>
+          <div class="plan-item-sub" id="plan-bat-kwh">SigenStor LFP</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-item-lbl">Geração Solar</div>
+          <div class="plan-item-val">9,92 kWp</div>
+          <div class="plan-item-sub">Placas fotovoltaicas</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-item-lbl">DoD</div>
+          <div class="plan-item-val" style="color:var(--sig)">100%</div>
+          <div class="plan-item-sub">LFP totalmente utilizável</div>
+        </div>
+      </div>
     </div>
-    <div class="plan-grid">
-      <div class="plan-item">
-        <div class="plan-item-lbl">Inversor</div>
-        <div class="plan-item-val">7,5 kW</div>
-        <div class="plan-item-sub">SigenStor EC bifásico</div>
+
+    <!-- CARD B — GoodWe -->
+    <div class="plan-card plan-card-gw" id="plan-card-gw-config" style="display:none">
+      <div class="plan-card-eye">
+        <span class="plan-card-badge plan-card-badge-b">B</span>
+        GoodWe · <span id="plan-cliente-label-gw">Off-Grid</span>
       </div>
-      <div class="plan-item">
-        <div class="plan-item-lbl">Baterias</div>
-        <div class="plan-item-val" id="plan-bat-count">—</div>
-        <div class="plan-item-sub" id="plan-bat-kwh">SigenStor LFP</div>
-      </div>
-      <div class="plan-item">
-        <div class="plan-item-lbl">Geração Solar</div>
-        <div class="plan-item-val">9,92 kWp</div>
-        <div class="plan-item-sub">Placas fotovoltaicas</div>
-      </div>
-      <div class="plan-item">
-        <div class="plan-item-lbl">DoD</div>
-        <div class="plan-item-val" style="color:var(--sig)">100%</div>
-        <div class="plan-item-sub">Energia totalmente utilizável</div>
+      <div class="plan-grid">
+        <div class="plan-item">
+          <div class="plan-item-lbl">Inversor</div>
+          <div class="plan-item-val">7,5 kW</div>
+          <div class="plan-item-sub">GW7.5K-ES-LD-G10 bifásico</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-item-lbl">Baterias</div>
+          <div class="plan-item-val" id="plan-bat-count-gw">—</div>
+          <div class="plan-item-sub" id="plan-bat-kwh-gw">Lynx U G3 LFP</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-item-lbl">Geração Solar</div>
+          <div class="plan-item-val">9,92 kWp</div>
+          <div class="plan-item-sub">Placas fotovoltaicas</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-item-lbl">DoD</div>
+          <div class="plan-item-val" style="color:var(--gw)">90%</div>
+          <div class="plan-item-sub">Lynx U G3 LFP</div>
+        </div>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -618,19 +667,37 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
     <div class="auto-section" id="auto-section" style="display:none;margin-top:20px">
       <div class="auto-section-title">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
-        Autonomia estimada por cenário de bateria · Sigenergy LFP 100% DoD
+        Autonomia estimada · <strong id="auto-kwh-dia">—</strong> kWh/dia configurados
       </div>
-      <div class="auto-scenarios">
+
+      <!-- Sigenergy -->
+      <div class="auto-ab-head auto-ab-head-sig">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Opção A · Sigenergy · 9 kWh/bat · LFP 100% DoD
+      </div>
+      <div class="auto-scenarios" style="margin-bottom:20px">
         <div class="auto-scen" id="scen-1"><div class="auto-scen-bat">1 Bateria</div><div class="auto-scen-kwh">9 kWh úteis</div><div class="auto-scen-val" id="scen-1-val">—</div><div class="auto-scen-unit" id="scen-1-unit"></div></div>
         <div class="auto-scen" id="scen-2"><div class="auto-scen-bat">2 Baterias</div><div class="auto-scen-kwh">18 kWh úteis</div><div class="auto-scen-val" id="scen-2-val">—</div><div class="auto-scen-unit" id="scen-2-unit"></div></div>
         <div class="auto-scen" id="scen-3"><div class="auto-scen-bat">3 Baterias</div><div class="auto-scen-kwh">27 kWh úteis</div><div class="auto-scen-val" id="scen-3-val">—</div><div class="auto-scen-unit" id="scen-3-unit"></div></div>
         <div class="auto-scen" id="scen-4"><div class="auto-scen-bat">4 Baterias</div><div class="auto-scen-kwh">36 kWh úteis</div><div class="auto-scen-val" id="scen-4-val">—</div><div class="auto-scen-unit" id="scen-4-unit"></div></div>
       </div>
-      <div class="auto-total">
-        <span class="auto-total-lbl">Consumo diário configurado: <strong id="auto-kwh-dia">—</strong> kWh/dia</span>
-        <span class="auto-total-val" id="auto-total-note"></span>
+
+      <!-- GoodWe -->
+      <div class="auto-ab-head auto-ab-head-gw">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Opção B · GoodWe + Lynx U G3 · 4,5 kWh/bat úteis · LFP 90% DoD
       </div>
-      <p style="font-size:10px;color:var(--dim);margin-top:12px;line-height:1.6">* Baseado nas horas de uso definidas acima. Autonomia real pode variar. Sigenergy: 100% DoD.</p>
+      <div class="auto-scenarios">
+        <div class="auto-scen auto-scen-gw" id="scen-gw-1"><div class="auto-scen-bat">1 Bateria</div><div class="auto-scen-kwh">4,5 kWh úteis</div><div class="auto-scen-val" id="scen-gw-1-val">—</div><div class="auto-scen-unit" id="scen-gw-1-unit"></div></div>
+        <div class="auto-scen auto-scen-gw" id="scen-gw-2"><div class="auto-scen-bat">2 Baterias</div><div class="auto-scen-kwh">9 kWh úteis</div><div class="auto-scen-val" id="scen-gw-2-val">—</div><div class="auto-scen-unit" id="scen-gw-2-unit"></div></div>
+        <div class="auto-scen auto-scen-gw" id="scen-gw-3"><div class="auto-scen-bat">3 Baterias</div><div class="auto-scen-kwh">13,5 kWh úteis</div><div class="auto-scen-val" id="scen-gw-3-val">—</div><div class="auto-scen-unit" id="scen-gw-3-unit"></div></div>
+        <div class="auto-scen auto-scen-gw" id="scen-gw-4"><div class="auto-scen-bat">4 Baterias</div><div class="auto-scen-kwh">18 kWh úteis</div><div class="auto-scen-val" id="scen-gw-4-val">—</div><div class="auto-scen-unit" id="scen-gw-4-unit"></div></div>
+      </div>
+
+      <div class="auto-total" style="margin-top:16px">
+        <span class="auto-total-lbl">Proposta: <strong id="auto-total-note">—</strong></span>
+      </div>
+      <p style="font-size:10px;color:var(--dim);margin-top:12px;line-height:1.6">* Baseado nas horas de uso definidas acima. Autonomia real pode variar com irradiação solar, temperatura e modo de uso.</p>
     </div>
 
     <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.6">* Potência simultânea estimada. Na prática os equipamentos não ficam todos ligados ao mesmo tempo.</p>
@@ -1095,11 +1162,22 @@ if (C) {
 
 // Plan card
 var sigBatsGlobal = parseInt(P.get('baterias') || '0');
-if (sigBatsGlobal > 0) {
+var gwBatsGlobal = parseInt(P.get('baterias_gw') || '0') || (P.get('valor_gw') ? 4 : 0);
+if (sigBatsGlobal > 0 || gwBatsGlobal > 0) {
   document.getElementById('plan-section').style.display = 'block';
-  document.getElementById('plan-cliente-label').textContent = CLIENTE || 'Off-Grid';
-  document.getElementById('plan-bat-count').textContent = sigBatsGlobal + '×';
-  document.getElementById('plan-bat-kwh').textContent = (sigBatsGlobal * 9) + ' kWh total · LFP 100% DoD';
+  var clienteLabel = CLIENTE || 'Off-Grid';
+  if (sigBatsGlobal > 0) {
+    document.getElementById('plan-card-sig').style.display = 'block';
+    document.getElementById('plan-cliente-label').textContent = clienteLabel;
+    document.getElementById('plan-bat-count').textContent = sigBatsGlobal + '×';
+    document.getElementById('plan-bat-kwh').textContent = (sigBatsGlobal * 9) + ' kWh total · LFP 100% DoD';
+  }
+  if (gwBatsGlobal > 0) {
+    document.getElementById('plan-card-gw-config').style.display = 'block';
+    document.getElementById('plan-cliente-label-gw').textContent = clienteLabel;
+    document.getElementById('plan-bat-count-gw').textContent = gwBatsGlobal + '×';
+    document.getElementById('plan-bat-kwh-gw').textContent = (gwBatsGlobal * 4.5).toLocaleString('pt-BR') + ' kWh úteis · 90% DoD';
+  }
 }
 
 // Valor / Investimento
@@ -1203,18 +1281,30 @@ function updateMeter() {
   if (kwhDay > 0) {
     autoSection.style.display = 'block';
     document.getElementById('auto-kwh-dia').textContent = kwhDay.toFixed(2).replace('.', ',');
-    var configBats = parseInt(P.get('baterias') || '1');
+    var configBatsSig = parseInt(P.get('baterias') || '0');
+    var configBatsGwA = parseInt(P.get('baterias_gw') || '0') || (P.get('valor_gw') ? 4 : 0);
+    // Sigenergy: 9 kWh/bat, 100% DoD
     [1, 2, 3, 4].forEach(function(n) {
-      var kwh = n * 9; // 100% DoD
+      var kwh = n * 9;
       var days = kwh / kwhDay;
       var parts = fmtH(days * 24);
       document.getElementById('scen-' + n + '-val').textContent = parts[0];
       document.getElementById('scen-' + n + '-unit').textContent = parts[1];
-      var scen = document.getElementById('scen-' + n);
-      scen.classList.toggle('ativo-scen', n === configBats);
+      document.getElementById('scen-' + n).classList.toggle('ativo-scen', n === configBatsSig);
     });
-    var note = configBats > 0 ? 'Proposta: ' + configBats + ' baterias · ' + (configBats*9) + ' kWh' : '';
-    document.getElementById('auto-total-note').textContent = note;
+    // GoodWe: 4,5 kWh úteis/bat (5 kWh × 90% DoD)
+    [1, 2, 3, 4].forEach(function(n) {
+      var kwh = n * 4.5;
+      var days = kwh / kwhDay;
+      var parts = fmtH(days * 24);
+      document.getElementById('scen-gw-' + n + '-val').textContent = parts[0];
+      document.getElementById('scen-gw-' + n + '-unit').textContent = parts[1];
+      document.getElementById('scen-gw-' + n).classList.toggle('ativo-scen', n === configBatsGwA);
+    });
+    var noteParts = [];
+    if (configBatsSig > 0) noteParts.push('A: ' + configBatsSig + ' bat Sigenergy · ' + (configBatsSig*9) + ' kWh');
+    if (configBatsGwA > 0) noteParts.push('B: ' + configBatsGwA + ' bat GoodWe · ' + (configBatsGwA*4.5).toLocaleString('pt-BR') + ' kWh úteis');
+    document.getElementById('auto-total-note').textContent = noteParts.join(' | ');
   } else {
     autoSection.style.display = 'none';
   }
