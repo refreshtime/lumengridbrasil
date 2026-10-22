@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gerador de Propostas · LumenGrid</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap"></noscript>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070B14;--bg2:#0D1525;--bg3:#111827;
+  --card:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#F0F4F8;--muted:rgba(240,244,248,.55);--dim:rgba(240,244,248,.28);
+  --or:#F26522;--or-l:#FF8040;--bor:rgba(242,101,34,.25);
+  --sig:#00B4D8;--gw:#00A550;--green:#22c55e;
+}
+html{font-size:14px}
+body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+nav{background:rgba(7,11,20,.96);border-bottom:1px solid var(--border);padding:14px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;gap:10px}
+.nav-logo .l{color:var(--or)}.nav-logo .g{color:#FAFAFA}
+.nav-sub{font-size:7px;color:rgba(242,101,34,.7);letter-spacing:.3em;text-transform:uppercase;margin-top:1px}
+.nav-badge{background:rgba(242,101,34,.1);border:1px solid var(--bor);color:var(--or);font-size:10px;font-weight:700;padding:5px 14px;border-radius:20px}
+.wrap{max-width:860px;margin:0 auto;padding:40px 24px 100px}
+.page-eye{font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--or);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.page-eye::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--or);flex-shrink:0}
+.page-title{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:36px}
+.tabs{display:flex;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px;background:var(--bg2)}
+.tab-btn{flex:1;padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:none;border:none;color:var(--muted);cursor:pointer;transition:all .2s;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px}
+.tab-btn:last-child{border-right:none}
+.tab-btn.active{background:rgba(242,101,34,.08);color:var(--or)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.grid-2{grid-template-columns:1fr}.tabs{flex-direction:column}.tab-btn{border-right:none;border-bottom:1px solid var(--border)}.tab-btn:last-child{border-bottom:none}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px}
+.card-sig{border-color:rgba(0,180,216,.2)}.card-gw{border-color:rgba(0,165,80,.2)}
+.card-title{font-size:9px;font-weight:800;letter-spacing:.18em;color:var(--or);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.card-title-sig{color:var(--sig)}.card-title-gw{color:var(--gw)}
+.field{margin-bottom:14px}.field:last-child{margin-bottom:0}
+label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px}
+input[type=text],select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;padding:10px 12px;transition:border .2s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 2px rgba(242,101,34,.1)}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(240,244,248,.4)' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+input::placeholder{color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;user-select:none}
+.chip.sel{background:rgba(242,101,34,.12);border-color:var(--or);color:var(--or)}
+.chip.sel-sig{background:rgba(0,180,216,.1);border-color:rgba(0,180,216,.4);color:var(--sig)}
+.chip.sel-gw{background:rgba(0,165,80,.1);border-color:rgba(0,165,80,.4);color:var(--gw)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--border);cursor:pointer;user-select:none;gap:16px}
+.toggle-row:first-child{border-top:none;padding-top:0}
+.toggle-lbl{font-size:12px;font-weight:600;color:var(--muted)}
+.toggle-hint{font-size:10px;color:var(--dim);margin-top:2px}
+.toggle-sw{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle-sw input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{display:block;background:var(--bg3);border:1px solid var(--border);border-radius:20px;width:36px;height:20px;transition:all .2s;position:relative}
+.toggle-track::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:var(--muted);transition:all .2s}
+.toggle-sw input:checked + .toggle-track{background:rgba(242,101,34,.2);border-color:var(--or)}
+.toggle-sw input:checked + .toggle-track::after{transform:translateX(16px);background:var(--or)}
+.toggle-body{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.toggle-body.open{display:block}
+.offgrid-aviso{background:rgba(0,180,216,.06);border:1px solid rgba(0,180,216,.2);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--sig);margin-top:12px;line-height:1.5;display:none}
+.offgrid-aviso.show{display:block}
+.url-box{background:var(--bg2);border:1px solid rgba(242,101,34,.2);border-radius:16px;padding:20px 24px;margin-top:24px;position:sticky;bottom:24px}
+.url-label{font-size:9px;font-weight:800;letter-spacing:.18em;color:var(--or);text-transform:uppercase;margin-bottom:10px}
+.url-text{font-size:11px;color:var(--dim);word-break:break-all;line-height:1.7;margin-bottom:14px;min-height:32px}
+.url-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:12px;font-weight:700;padding:10px 20px;border-radius:10px;border:none;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--or);color:#fff}.btn-primary:hover{background:var(--or-l)}
+.btn-secondary{background:var(--bg3);border:1px solid var(--border);color:var(--muted)}.btn-secondary:hover{border-color:var(--or);color:var(--or)}
+.btn-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green);cursor:default}
+footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:10px">
+    <img src="imagens/LOGOS/logo-icone.png" height="40" alt="LumenGrid" style="filter:drop-shadow(0 0 10px rgba(242,101,34,.55))">
+    <div>
+      <div class="nav-logo"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+      <div class="nav-sub">Energia Inteligente</div>
+    </div>
+  </div>
+  <div class="nav-badge">Propostas</div>
+</nav>
+
+<div class="wrap">
+  <div class="page-eye">Ferramentas comerciais</div>
+  <h1 class="page-title">Gerador de Propostas</h1>
+  <p class="page-sub">Preencha os dados do cliente e copie o link personalizado da proposta.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('sig',this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+      Sigenergy Exclusivo
+    </button>
+    <button class="tab-btn" onclick="switchTab('ab',this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="5" width="10" height="14" rx="2"/><rect x="13" y="5" width="10" height="14" rx="2"/></svg>
+      A/B Híbrido / Off-Grid
+    </button>
+  </div>
+
+  <!-- TAB SIGENERGY -->
+  <div class="tab-panel active" id="tab-sig">
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Cliente & Consultor
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Consultor</label>
+          <select id="s-consultor" oninput="gerarSig()">
+            <option value="hingrid">Hingrid Dias</option>
+            <option value="lucas">Lucas Vieira</option>
+            <option value="ana">Ana</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nome do cliente</label>
+          <input type="text" id="s-cliente" placeholder="Ex: João da Silva" oninput="gerarSig()">
+        </div>
+        <div class="field">
+          <label>Validade da proposta</label>
+          <input type="text" id="s-validade" placeholder="Ex: 31/10/2026" oninput="gerarSig()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-sig">
+      <div class="card-title card-title-sig">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+        Sigenergy SigenStor EC
+      </div>
+      <div class="field">
+        <label>Número de baterias</label>
+        <div class="chips" id="s-chips-bat">
+          <div class="chip" data-val="1" onclick="selChip('s-chips-bat',this,'sig')">1 · 9 kWh</div>
+          <div class="chip" data-val="2" onclick="selChip('s-chips-bat',this,'sig')">2 · 18 kWh</div>
+          <div class="chip" data-val="3" onclick="selChip('s-chips-bat',this,'sig')">3 · 27 kWh</div>
+          <div class="chip" data-val="4" onclick="selChip('s-chips-bat',this,'sig')">4 · 36 kWh</div>
+          <div class="chip" data-val="5" onclick="selChip('s-chips-bat',this,'sig')">5 · 45 kWh</div>
+          <div class="chip" data-val="6" onclick="selChip('s-chips-bat',this,'sig')">6 · 54 kWh</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Valor do investimento (R$)</label>
+        <input type="text" id="s-plan" placeholder="Ex: 119700" oninput="gerarSig()">
+      </div>
+      <div class="toggle-row" onclick="tog('s-tog-sem-placas')">
+        <div><span class="toggle-lbl">Ocultar seção de placas solares</span></div>
+        <label class="toggle-sw" onclick="event.stopPropagation()"><input type="checkbox" id="s-tog-sem-placas" onchange="gerarSig()"><span class="toggle-track"></span></label>
+      </div>
+      <div class="toggle-row" onclick="tog('s-tog-cargas')">
+        <div><span class="toggle-lbl">Exibir aba de consumo do cliente</span></div>
+        <label class="toggle-sw" onclick="event.stopPropagation()"><input type="checkbox" id="s-tog-cargas" onchange="gerarSig()"><span class="toggle-track"></span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toggle-row" onclick="togSec('s-tog-desc1','s-body-desc1')" style="border-top:none;padding-top:0">
+        <div class="card-title" style="margin-bottom:0">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/></svg>
+          Desconto 1
+        </div>
+        <label class="toggle-sw" onclick="event.stopPropagation()"><input type="checkbox" id="s-tog-desc1" onchange="togBody('s-tog-desc1','s-body-desc1');gerarSig()"><span class="toggle-track"></span></label>
+      </div>
+      <div class="toggle-body" id="s-body-desc1">
+        <div class="grid-2">
+          <div class="field"><label>Valor (R$)</label><input type="text" id="s-d1-val" placeholder="2700" oninput="gerarSig()"></div>
+          <div class="field"><label>Título</label><input type="text" id="s-d1-tit" placeholder="Desconto de Placas" oninput="gerarSig()"></div>
+        </div>
+        <div class="field"><label>Descrição</label><input type="text" id="s-d1-desc" placeholder="Desconto especial aplicado nas placas desta proposta" oninput="gerarSig()"></div>
+        <div class="field"><label>Válido até</label><input type="text" id="s-d1-val2" placeholder="31/10/2026" oninput="gerarSig()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toggle-row" onclick="togSec('s-tog-desc2','s-body-desc2')" style="border-top:none;padding-top:0">
+        <div class="card-title" style="margin-bottom:0">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/></svg>
+          Desconto 2
+        </div>
+        <label class="toggle-sw" onclick="event.stopPropagation()"><input type="checkbox" id="s-tog-desc2" onchange="togBody('s-tog-desc2','s-body-desc2');gerarSig()"><span class="toggle-track"></span></label>
+      </div>
+      <div class="toggle-body" id="s-body-desc2">
+        <div class="grid-2">
+          <div class="field"><label>Valor (R$)</label><input type="text" id="s-d2-val" placeholder="2500" oninput="gerarSig()"></div>
+          <div class="field"><label>Título</label><input type="text" id="s-d2-tit" placeholder="Cupom Especial" oninput="gerarSig()"></div>
+        </div>
+        <div class="field"><label>Descrição</label><input type="text" id="s-d2-desc" placeholder="Desconto exclusivo para esta proposta" oninput="gerarSig()"></div>
+        <div class="field"><label>Válido até</label><input type="text" id="s-d2-val2" placeholder="31/10/2026" oninput="gerarSig()"></div>
+      </div>
+    </div>
+
+    <div class="url-box">
+      <div class="url-label">Link gerado — Sigenergy Exclusivo</div>
+      <div class="url-text" id="s-url">Preencha o nome do cliente para gerar o link.</div>
+      <div class="url-actions">
+        <button class="btn btn-primary" id="s-copy-btn" onclick="copiar('s-url','s-copy-btn')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar link
+        </button>
+        <button class="btn btn-secondary" onclick="abrir('s-url')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Abrir proposta
+        </button>
+        <button class="btn btn-secondary" onclick="resetarSig()">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB A/B -->
+  <div class="tab-panel" id="tab-ab">
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Cliente & Consultor
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Consultor</label>
+          <select id="ab-consultor" oninput="gerarAB()">
+            <option value="hingrid">Hingrid Dias</option>
+            <option value="lucas">Lucas Vieira</option>
+            <option value="ana">Ana</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nome do cliente</label>
+          <input type="text" id="ab-cliente" placeholder="Ex: Raphaela Santos" oninput="gerarAB()">
+        </div>
+        <div class="field">
+          <label>Validade da proposta</label>
+          <input type="text" id="ab-validade" placeholder="Ex: 31/10/2026" oninput="gerarAB()">
+        </div>
+        <div class="field">
+          <label>Link Google Maps (localização do imóvel)</label>
+          <input type="text" id="ab-loc" placeholder="https://maps.app.goo.gl/..." oninput="gerarAB()">
+        </div>
+      </div>
+      <div class="toggle-row" onclick="tog('ab-tog-offgrid')">
+        <div>
+          <span class="toggle-lbl">Sistema Off-Grid (exceção)</span>
+          <div class="toggle-hint">Ativa aviso: limite vale em qualquer momento, não só durante queda de energia</div>
+        </div>
+        <label class="toggle-sw" onclick="event.stopPropagation()"><input type="checkbox" id="ab-tog-offgrid" onchange="gerarAB();toggleOffgridAviso()"><span class="toggle-track"></span></label>
+      </div>
+      <div class="offgrid-aviso" id="ab-offgrid-aviso">
+        Modo Off-Grid ativo — o simulador exibirá aviso adaptado: neste sistema o inversor não conta com suporte da rede elétrica em nenhum momento.
+      </div>
+    </div>
+
+    <div class="card card-sig">
+      <div class="card-title card-title-sig">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+        Opção A · Sigenergy SigenStor EC
+      </div>
+      <div class="field">
+        <label>Número de baterias</label>
+        <div class="chips" id="ab-chips-sig">
+          <div class="chip" data-val="1" onclick="selChip('ab-chips-sig',this,'sig')">1 · 9 kWh</div>
+          <div class="chip" data-val="2" onclick="selChip('ab-chips-sig',this,'sig')">2 · 18 kWh</div>
+          <div class="chip" data-val="3" onclick="selChip('ab-chips-sig',this,'sig')">3 · 27 kWh</div>
+          <div class="chip" data-val="4" onclick="selChip('ab-chips-sig',this,'sig')">4 · 36 kWh</div>
+          <div class="chip" data-val="5" onclick="selChip('ab-chips-sig',this,'sig')">5 · 45 kWh</div>
+          <div class="chip" data-val="6" onclick="selChip('ab-chips-sig',this,'sig')">6 · 54 kWh</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Valor do investimento (R$)</label>
+        <input type="text" id="ab-val-sig" placeholder="Ex: 119700" oninput="gerarAB()">
+      </div>
+    </div>
+
+    <div class="card card-gw">
+      <div class="card-title card-title-gw">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+        Opção B · GoodWe + Lynx U G3
+      </div>
+      <div class="field">
+        <label>Número de baterias</label>
+        <div class="chips" id="ab-chips-gw">
+          <div class="chip" data-val="1" onclick="selChip('ab-chips-gw',this,'gw')">1 · 4,5 kWh</div>
+          <div class="chip" data-val="2" onclick="selChip('ab-chips-gw',this,'gw')">2 · 9 kWh</div>
+          <div class="chip" data-val="3" onclick="selChip('ab-chips-gw',this,'gw')">3 · 13,5 kWh</div>
+          <div class="chip" data-val="4" onclick="selChip('ab-chips-gw',this,'gw')">4 · 18 kWh</div>
+          <div class="chip" data-val="5" onclick="selChip('ab-chips-gw',this,'gw')">5 · 22,5 kWh</div>
+          <div class="chip" data-val="6" onclick="selChip('ab-chips-gw',this,'gw')">6 · 27 kWh</div>
+          <div class="chip" data-val="7" onclick="selChip('ab-chips-gw',this,'gw')">7 · 31,5 kWh</div>
+          <div class="chip" data-val="8" onclick="selChip('ab-chips-gw',this,'gw')">8 · 36 kWh</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Valor do investimento (R$)</label>
+        <input type="text" id="ab-val-gw" placeholder="Ex: 97400" oninput="gerarAB()">
+      </div>
+    </div>
+
+    <div class="url-box">
+      <div class="url-label">Link gerado — A/B Híbrido / Off-Grid</div>
+      <div class="url-text" id="ab-url">Preencha o nome do cliente para gerar o link.</div>
+      <div class="url-actions">
+        <button class="btn btn-primary" id="ab-copy-btn" onclick="copiar('ab-url','ab-copy-btn')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar link
+        </button>
+        <button class="btn btn-secondary" onclick="abrir('ab-url')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Abrir proposta
+        </button>
+        <button class="btn btn-secondary" onclick="resetarAB()">Limpar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Feito por Domani Consultoria</footer>
+
+<script>
+var BASE_SIG = 'https://lumengridbrasil.com.br/sigenergy-proposta.html';
+var BASE_AB  = 'https://lumengridbrasil.com.br/proposta-offgrid.html';
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+function selChip(groupId,chip,variant){
+  document.querySelectorAll('#'+groupId+' .chip').forEach(function(c){c.classList.remove('sel','sel-sig','sel-gw');});
+  chip.classList.add(variant==='sig'?'sel-sig':variant==='gw'?'sel-gw':'sel');
+  gerarSig(); gerarAB();
+}
+
+function getChip(groupId){
+  var s=document.querySelector('#'+groupId+' .chip.sel,#'+groupId+' .chip.sel-sig,#'+groupId+' .chip.sel-gw');
+  return s?s.dataset.val:'';
+}
+
+function tog(id){
+  var el=document.getElementById(id);
+  el.checked=!el.checked;
+  el.dispatchEvent(new Event('change'));
+}
+
+function togSec(togId,bodyId){
+  var tog=document.getElementById(togId);
+  tog.checked=!tog.checked;
+  document.getElementById(bodyId).classList.toggle('open',tog.checked);
+  tog.dispatchEvent(new Event('change'));
+}
+
+function togBody(togId,bodyId){
+  document.getElementById(bodyId).classList.toggle('open',document.getElementById(togId).checked);
+}
+
+function toggleOffgridAviso(){
+  var ch=document.getElementById('ab-tog-offgrid').checked;
+  document.getElementById('ab-offgrid-aviso').classList.toggle('show',ch);
+}
+
+function enc(s){return encodeURIComponent((s||'').trim());}
+function v(id){return document.getElementById(id);}
+function val(id){return (v(id)?v(id).value.trim():'')||'';}
+
+function gerarSig(){
+  var cliente=val('s-cliente');
+  if(!cliente){v('s-url').textContent='Preencha o nome do cliente para gerar o link.';return;}
+  var p=[];
+  p.push('consultor='+val('s-consultor'));
+  p.push('cliente='+enc(cliente));
+  var validade=val('s-validade'); if(validade) p.push('validade='+enc(validade));
+  var nbat=getChip('s-chips-bat'); if(nbat) p.push('plan_bats='+nbat);
+  var plan=val('s-plan').replace(/\D/g,''); if(plan) p.push('plan='+plan);
+  if(v('s-tog-sem-placas').checked) p.push('placas=0');
+  if(v('s-tog-cargas').checked) p.push('cargas=1');
+  if(v('s-tog-desc1').checked){
+    var d1v=val('s-d1-val').replace(/\D/g,''); if(d1v) p.push('desconto='+d1v);
+    var d1t=val('s-d1-tit'); if(d1t) p.push('desconto_titulo='+enc(d1t));
+    var d1d=val('s-d1-desc'); if(d1d) p.push('desconto_desc='+enc(d1d));
+    var d1vd=val('s-d1-val2'); if(d1vd) p.push('desconto_validade='+enc(d1vd));
+  }
+  if(v('s-tog-desc2').checked){
+    var d2v=val('s-d2-val').replace(/\D/g,''); if(d2v) p.push('desconto2='+d2v);
+    var d2t=val('s-d2-tit'); if(d2t) p.push('desconto2_titulo='+enc(d2t));
+    var d2d=val('s-d2-desc'); if(d2d) p.push('desconto2_desc='+enc(d2d));
+    var d2vd=val('s-d2-val2'); if(d2vd) p.push('desconto2_validade='+enc(d2vd));
+  }
+  v('s-url').textContent=BASE_SIG+'?'+p.join('&');
+}
+
+function gerarAB(){
+  var cliente=val('ab-cliente');
+  if(!cliente){v('ab-url').textContent='Preencha o nome do cliente para gerar o link.';return;}
+  var p=[];
+  p.push('consultor='+val('ab-consultor'));
+  p.push('cliente='+enc(cliente));
+  var validade=val('ab-validade'); if(validade) p.push('validade='+enc(validade));
+  var loc=val('ab-loc'); if(loc) p.push('loc='+enc(loc));
+  if(v('ab-tog-offgrid').checked) p.push('modo=offgrid');
+  var sigBat=getChip('ab-chips-sig'); if(sigBat) p.push('baterias='+sigBat);
+  var sigV=val('ab-val-sig').replace(/\D/g,''); if(sigV) p.push('valor='+sigV);
+  var gwBat=getChip('ab-chips-gw'); if(gwBat) p.push('baterias_gw='+gwBat);
+  var gwV=val('ab-val-gw').replace(/\D/g,''); if(gwV) p.push('valor_gw='+gwV);
+  v('ab-url').textContent=BASE_AB+'?'+p.join('&');
+}
+
+function copiar(urlId,btnId){
+  var url=document.getElementById(urlId).textContent;
+  if(!url||url.startsWith('Preencha')) return;
+  navigator.clipboard.writeText(url).then(function(){
+    var btn=document.getElementById(btnId);
+    var orig=btn.innerHTML;
+    btn.className='btn btn-ok';
+    btn.textContent='✓ Copiado!';
+    setTimeout(function(){btn.className='btn btn-primary';btn.innerHTML=orig;},2500);
+  });
+}
+
+function abrir(urlId){
+  var url=document.getElementById(urlId).textContent;
+  if(url&&!url.startsWith('Preencha')) window.open(url,'_blank');
+}
+
+function resetarSig(){
+  ['s-cliente','s-validade','s-plan','s-d1-val','s-d1-tit','s-d1-desc','s-d1-val2','s-d2-val','s-d2-tit','s-d2-desc','s-d2-val2'].forEach(function(id){if(v(id))v(id).value='';});
+  ['s-tog-sem-placas','s-tog-cargas','s-tog-desc1','s-tog-desc2'].forEach(function(id){if(v(id))v(id).checked=false;});
+  ['s-body-desc1','s-body-desc2'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove('open');});
+  document.querySelectorAll('#s-chips-bat .chip').forEach(function(c){c.classList.remove('sel','sel-sig','sel-gw');});
+  gerarSig();
+}
+
+function resetarAB(){
+  ['ab-cliente','ab-validade','ab-loc','ab-val-sig','ab-val-gw'].forEach(function(id){if(v(id))v(id).value='';});
+  if(v('ab-tog-offgrid')){v('ab-tog-offgrid').checked=false;}
+  document.getElementById('ab-offgrid-aviso').classList.remove('show');
+  document.querySelectorAll('#ab-chips-sig .chip,#ab-chips-gw .chip').forEach(function(c){c.classList.remove('sel','sel-sig','sel-gw');});
+  gerarAB();
+}
+</script>
+</body>
+</html>
