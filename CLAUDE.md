@@ -174,3 +174,39 @@ Preço de Venda (Cheio)          = 100%
 
 - Posts Instagram: consultar `INSTAGRAM LUMENGRID/GUIA_DESIGN_POSTS.md`
 - Logo: `logo-icone.png` com glow filter laranja + HTML "LUMEN"(#F26522) + "GRID"(#FAFAFA) + "Energia Inteligente" (8px laranja)
+
+## Performance Web — Aprendizados PageSpeed (Mobile, out/2026)
+
+Score inicial: **69 mobile** | FCP 3,2s | LCP **27s** | TBT 10ms | CLS 0
+
+### Regras obrigatórias para qualquer edição do site
+
+**Imagens:**
+- Nunca subir PNG acima de 200KB. Sempre redimensionar com `sips -Z <px> arquivo.png` antes do commit
+- Logo `logo-icone.png` exibida em 59px → manter em no máximo 120px (2x retina)
+- Fotos de cards (sol-photo-card): exibidas em ~630px → manter em no máximo 900px
+- Usar `.webp` sempre que possível (melhor compressão). `.jpg` para fotos, `.png` só para logos/ícones com transparência
+- Backups originais ficam como `arquivo.ORIG.png` — não commitar no git
+- Adicionar sempre `width` e `height` explícitos em `<img>` para evitar CLS
+
+**Google Fonts:**
+- NUNCA usar `<link rel="stylesheet" href="https://fonts.googleapis.com/...">` diretamente — bloqueia render
+- Usar sempre o padrão não-bloqueante:
+  ```html
+  <link rel="preload" as="style" href="URL_FONTS" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="URL_FONTS"></noscript>
+  ```
+
+**Imagem LCP (hero):**
+- A imagem acima da dobra deve ter `fetchpriority="high"` e `<link rel="preload" as="image">` no `<head>`
+- Arquivo atual: `imagens/PROJETOS/casa-noturna.webp` — já configurado
+
+**Cache (GitHub Pages não permite controle de headers):**
+- Para cache longo, migrar para CDN (Cloudflare) quando possível
+- Evitar atualizar imagens sem mudar nome de arquivo (cache busting manual se necessário)
+
+**Checklist antes de qualquer deploy do site:**
+1. `sips -g pixelWidth arquivo.png` — checar dimensões reais vs exibidas
+2. Imagens novas: redimensionar para max 900px antes de commitar
+3. Google Fonts: confirmar padrão non-blocking
+4. `<img>` sem `width`/`height`: adicionar para evitar CLS
