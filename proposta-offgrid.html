@@ -154,7 +154,13 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);border-bottom:
 
 
 /* INVESTIMENTO */
-.inv-section{max-width:720px;margin:0 auto;padding:0}
+.inv-section{max-width:960px;margin:0 auto;padding:0;display:grid;grid-template-columns:1fr;gap:20px}
+.inv-section.duo{grid-template-columns:1fr 1fr}
+.inv-card-gw{background:linear-gradient(135deg,rgba(0,165,80,.1) 0%,rgba(0,165,80,.04) 100%);border:1.5px solid rgba(0,165,80,.3);border-radius:20px;padding:36px 40px;text-align:center;position:relative;overflow:hidden}
+.inv-card-gw::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,165,80,.12) 0%,transparent 70%);pointer-events:none}
+.inv-tag-gw{background:rgba(0,165,80,.08);border:1px solid rgba(0,165,80,.2);color:var(--gw);font-size:10px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.04em}
+.inv-cur-gw{color:var(--gw) !important}
+@media(max-width:640px){.inv-section.duo{grid-template-columns:1fr}}
 .inv-card{background:linear-gradient(135deg,rgba(0,180,216,.1) 0%,rgba(0,180,216,.04) 100%);border:1.5px solid rgba(0,180,216,.3);border-radius:20px;padding:36px 40px;text-align:center;position:relative;overflow:hidden}
 .inv-card::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,180,216,.12) 0%,transparent 70%);pointer-events:none}
 .inv-eye{font-size:10px;font-weight:800;letter-spacing:.2em;color:var(--sig);text-transform:uppercase;margin-bottom:12px}
@@ -544,6 +550,17 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="inv-tag">Instalação incluída</div>
       </div>
     </div>
+    <div class="inv-card-gw" id="inv-card-gw" style="display:none">
+      <div class="inv-eye" style="color:var(--gw)">Sistema Off-Grid · GoodWe GW7.5K-ES-LD</div>
+      <div class="inv-title">Investimento total do projeto</div>
+      <div class="inv-val"><span class="inv-cur inv-cur-gw">R$</span><span id="inv-valor-gw">—</span></div>
+      <div class="inv-sub">Inclui equipamentos, instalação e homologação.<br>Condições de pagamento a combinar.</div>
+      <div class="inv-tags">
+        <div class="inv-tag-gw">9,92 kWp de geração solar</div>
+        <div class="inv-tag-gw">4× GoodWe Lynx U G3</div>
+        <div class="inv-tag-gw">Instalação incluída</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -603,11 +620,23 @@ if (C) {
 
 // Valor / Investimento
 var valor = P.get('valor');
+var valorGw = P.get('valor_gw');
+if (valor || valorGw) {
+  document.getElementById('investimento').style.display = 'block';
+}
 if (valor) {
   var num = parseFloat(valor.replace(/\./g,'').replace(',','.'));
   if (!isNaN(num)) {
-    document.getElementById('investimento').style.display = 'block';
     document.getElementById('inv-valor').textContent = num.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+}
+if (valorGw) {
+  var numGw = parseFloat(valorGw.replace(/\./g,'').replace(',','.'));
+  if (!isNaN(numGw)) {
+    var gwCard = document.getElementById('inv-card-gw');
+    gwCard.style.display = 'block';
+    document.getElementById('inv-valor-gw').textContent = numGw.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    document.querySelector('.inv-section').classList.add('duo');
   }
 }
 
