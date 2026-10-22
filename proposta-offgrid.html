@@ -22,6 +22,10 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+img{max-width:100%;height:auto}
+.global-stats-bg{height:auto !important}
+.fullbleed img{height:280px;object-fit:cover}
+.app-img-box img{max-height:340px;width:auto}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;transition:all .3s}
@@ -301,15 +305,16 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
   .sec{padding:48px 20px}
   .sim-grid{grid-template-columns:1fr}
   .sys-grid{grid-template-columns:1fr}
-  .comp-row{flex-direction:column}
-  .comp-sig,.comp-gw{border-left:none;border-top:1px solid var(--border)}
+  .comp-row{font-size:10px}
+  .comp-lbl{font-size:10px;padding:9px 10px;min-width:0}
+  .comp-sig,.comp-gw{font-size:11px;padding:9px 10px;min-width:0}
 }
 
 /* ── MOBILE OVERRIDES ── */
 @media(max-width:640px){
   .tab-hd-wrap{padding:24px 20px}
   .tab-hd-inner{grid-template-columns:1fr;gap:20px}
-  .tab-hd-inner>div:last-child img{max-height:160px}
+  .tab-hd-inner img{max-width:100%;height:auto !important;max-height:180px !important;width:auto !important;display:block;margin:0 auto}
   .tab-cd-wrap{padding:20px 16px}
   .plan-card{padding:24px 20px}
   .plan-item-val{font-size:16px}
@@ -319,9 +324,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
   footer{padding:20px}
   .aviso-box{flex-direction:column;padding:18px 20px;gap:12px}
   .global-stats-wrap{max-height:none}
-  .fullbleed img{max-height:280px}
+  .fullbleed img{height:220px !important;max-height:220px}
+  .app-img-box img{max-height:220px;width:auto;max-width:100%}
   .inv-card{padding:28px 20px}
   .sec{padding:40px 20px}
+  .fh3{font-size:22px}
+  .gstats-num{font-size:26px !important}
 }
 </style>
 </head>
