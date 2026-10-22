@@ -343,7 +343,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
       <div style="font-size:7px;color:rgba(242,101,34,.7);letter-spacing:.3em;text-transform:uppercase;margin-top:1px">Energia Inteligente</div>
     </div>
   </div>
-  <div class="nav-badge">Proposta Off-Grid</div>
+  <div class="nav-badge" id="nav-badge-mode">Proposta Híbrida</div>
 </nav>
 
 <!-- HERO -->
@@ -351,7 +351,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
   <div class="hero-inner">
     <div class="hero-eye">
       <div class="hero-eye-dot"></div>
-      Proposta Personalizada · Off-Grid
+      Proposta Personalizada · <span id="hero-mode-label">Híbrido</span>
     </div>
     <h1 class="hero-h">Energia independente<br>para <span class="or" id="hero-cliente">você</span>.</h1>
     <p class="hero-sub">Sistema de energia solar com armazenamento em bateria — elaborado especificamente para o seu perfil de consumo, com total independência da rede elétrica.</p>
@@ -446,8 +446,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     </div>
     <div>
-      <div class="aviso-title">Atenção — Dimensionamento Off-Grid</div>
-      <div class="aviso-text">Para dimensionamento off-grid é necessário confirmar o tempo médio de utilização de cada equipamento, especificações técnicas e conexão com a rede. <strong>Neste projeto foi considerado um inversor bifásico de 7.500 W</strong>, o que significa que os equipamentos conectados simultaneamente não podem ultrapassar essa potência. Use o simulador abaixo para verificar suas combinações de uso.</div>
+      <div class="aviso-title" id="aviso-title">Atenção — Dimensionamento Híbrido</div>
+      <div class="aviso-text" id="aviso-text">Em sistemas híbridos, confirme o tempo médio de utilização de cada equipamento. <strong>Este projeto utiliza um inversor bifásico de 7.500 W</strong> — durante uma queda de energia, os equipamentos ligados simultaneamente não podem ultrapassar essa potência. Use o simulador abaixo para verificar suas combinações de uso.</div>
     </div>
   </div>
 </section>
@@ -691,7 +691,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
       </div>
       <div>
         <div class="sim-warning-t">Limite do inversor excedido!</div>
-        <div class="sim-warning-d">A combinação selecionada ultrapassa os <strong>7.500 W</strong> do inversor bifásico. Desligue algum equipamento antes de ligar outro, ou considere um sistema com dois inversores.</div>
+        <div class="sim-warning-d" id="sim-warning-d">Durante uma queda de energia, a combinação selecionada ultrapassa os <strong>7.500 W</strong> do inversor bifásico. Desligue algum equipamento ou reduza a carga antes de acionar o backup.</div>
       </div>
     </div>
 
@@ -1150,6 +1150,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
 
 <script>
 var P = new URLSearchParams(window.location.search);
+var IS_OFFGRID = (P.get('modo') || 'hibrido') === 'offgrid';
 var LIMIT = 7500;
 
 // Consultores
@@ -1166,9 +1167,18 @@ var CLIENTE = P.get('cliente') || '';
 // Preencher meta
 if (CLIENTE) {
   document.getElementById('hero-cliente').textContent = CLIENTE;
-  document.title = 'Proposta Off-Grid · ' + CLIENTE + ' · LumenGrid';
+  document.title = (IS_OFFGRID ? 'Proposta Off-Grid' : 'Proposta Híbrida') + ' · ' + CLIENTE + ' · LumenGrid';
 }
 if (C) document.getElementById('meta-consultor').textContent = C.nome;
+
+// Modo: híbrido (padrão) ou off-grid (exceção via ?modo=offgrid)
+if (IS_OFFGRID) {
+  document.getElementById('nav-badge-mode').textContent = 'Proposta Off-Grid';
+  document.getElementById('hero-mode-label').textContent = 'Off-Grid';
+  document.getElementById('aviso-title').textContent = 'Atenção — Dimensionamento Off-Grid';
+  document.getElementById('aviso-text').innerHTML = 'Para dimensionamento off-grid confirme o tempo médio de utilização de cada equipamento. <strong>Este projeto utiliza um inversor bifásico de 7.500 W</strong> — em sistemas off-grid os equipamentos ligados simultaneamente nunca podem ultrapassar essa potência (não há rede elétrica como suporte). Use o simulador abaixo para verificar suas combinações de uso.';
+  document.getElementById('sim-warning-d').innerHTML = 'A combinação selecionada ultrapassa os <strong>7.500 W</strong> do inversor. Em um sistema off-grid não há rede elétrica como suporte — desligue algum equipamento antes de ligar outro.';
+}
 
 // Localização
 var loc = P.get('loc');
@@ -1193,7 +1203,7 @@ var sigBatsGlobal = parseInt(P.get('baterias') || '0');
 var gwBatsGlobal = parseInt(P.get('baterias_gw') || '0') || (P.get('valor_gw') ? 4 : 0);
 if (sigBatsGlobal > 0 || gwBatsGlobal > 0) {
   document.getElementById('plan-section').style.display = 'block';
-  var clienteLabel = CLIENTE || 'Off-Grid';
+  var clienteLabel = CLIENTE || (IS_OFFGRID ? 'Off-Grid' : 'Híbrido');
   if (sigBatsGlobal > 0) {
     document.getElementById('plan-card-sig').style.display = 'block';
     document.getElementById('plan-cliente-label').textContent = clienteLabel;
@@ -1284,7 +1294,7 @@ function updateMeter() {
   var statusEl = document.getElementById('sim-status');
   statusEl.style.color = color;
   if (over) {
-    statusEl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg> Limite excedido — ' + (total - LIMIT).toLocaleString('pt-BR') + ' W acima da capacidade';
+    statusEl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg> ' + (IS_OFFGRID ? 'Limite excedido' : 'Limite de backup excedido') + ' — ' + (IS_OFFGRID ? '' : 'durante apagões ') + (total - LIMIT).toLocaleString('pt-BR') + ' W acima da capacidade';
   } else if (near) {
     statusEl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Atenção — próximo do limite (' + Math.round(pct) + '%)';
   } else {
