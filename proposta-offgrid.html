@@ -500,15 +500,22 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <tr><td>Potência AC saída</td><td class="hl-sig">7.500 W bifásico</td></tr>
           <tr><td>Potência FV (placas)</td><td>9,92 kWp</td></tr>
           <tr><td>Modo off-grid</td><td>Nativo</td></tr>
-          <tr><td>Switching time</td><td class="hl-sig">0 ms</td></tr>
+          <tr><td>Comutação off-grid <span style="font-size:9px;color:var(--dim);font-weight:400">(tempo sem energia)</span></td><td class="hl-sig">0 ms</td></tr>
           <tr><td>MPPT</td><td class="hl-sig">4 entradas</td></tr>
           <tr><td>Grau de proteção</td><td>IP65</td></tr>
           <tr><td>Garantia</td><td>10 anos</td></tr>
         </table>
-        <a class="ds-link" href="SIGENERGY/DATASHEET GATEWAY.pdf" target="_blank" rel="noopener">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-          Datasheet Sigenergy Gateway
-        </a>
+        <img src="imagens/PROJETOS/sigenergy-bateria-wallbox.jpeg" alt="Sigenergy" style="width:100%;border-radius:10px;margin-top:16px;display:block;object-fit:cover;max-height:160px">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+          <a class="ds-link" href="SIGENERGY/DATASHEET_INVERSOR.pdf" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Datasheet Inversor
+          </a>
+          <a class="ds-link" href="SIGENERGY/DATASHEET_BATERIA.pdf" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+            Datasheet Bateria
+          </a>
+        </div>
       </div>
       <div class="sys-card">
         <div class="sys-card-eye sig-c">Bateria</div>
@@ -540,7 +547,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <tr><td>Potência AC saída</td><td class="hl-gw">7.500 W bifásico</td></tr>
           <tr><td>Potência FV (placas)</td><td>9,92 kWp</td></tr>
           <tr><td>Modo off-grid</td><td>EPS (backup)</td></tr>
-          <tr><td>Switching time</td><td>&lt; 30 ms</td></tr>
+          <tr><td>Comutação off-grid <span style="font-size:9px;color:var(--dim);font-weight:400">(tempo sem energia)</span></td><td>&lt; 30 ms</td></tr>
           <tr><td>MPPT</td><td>2 entradas</td></tr>
           <tr><td>Grau de proteção</td><td>IP65</td></tr>
           <tr><td>Garantia</td><td>10 anos</td></tr>
@@ -588,7 +595,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
     <div class="comp-row"><div class="comp-lbl">Ciclos de vida (bat.)</div><div class="comp-sig">&gt; 10.000</div><div class="comp-gw">&gt; 6.000</div></div>
     <div class="comp-row"><div class="comp-lbl">Off-grid nativo</div><div class="comp-sig">Sim</div><div class="comp-gw">Modo EPS</div></div>
     <div class="comp-row"><div class="comp-lbl">V2X bidirecional</div><div class="comp-sig">Sim (Out/26)</div><div class="comp-gw">Não</div></div>
-    <div class="comp-row"><div class="comp-lbl">Switching time</div><div class="comp-sig">0 ms*</div><div class="comp-gw">&lt; 30 ms</div></div>
+    <div class="comp-row"><div class="comp-lbl">Comutação off-grid</div><div class="comp-sig">0 ms*</div><div class="comp-gw">&lt; 30 ms</div></div>
     <div class="comp-row"><div class="comp-lbl">Ecossistema integrado</div><div class="comp-sig">Nativo</div><div class="comp-gw">Parcial</div></div>
     <div class="comp-row"><div class="comp-lbl">Assistência no Brasil</div><div class="comp-sig">Crescente</div><div class="comp-gw">Ampla</div></div>
   </div>
@@ -776,7 +783,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
       <div class="inv-tags" style="margin-top:14px">
         <div class="inv-tag">100% DoD</div>
         <div class="inv-tag">10.000 ciclos</div>
-        <div class="inv-tag">0 ms switching</div>
+        <div class="inv-tag">0 ms comutação</div>
       </div>
     </div>
     <div class="inv-card-gw" id="inv-card-gw" style="display:none">
@@ -904,8 +911,10 @@ function updateMeter() {
   var color = over ? 'var(--red)' : near ? 'var(--yellow)' : 'var(--green)';
   var barColor = over ? '#ef4444' : near ? '#f59e0b' : '#22c55e';
 
-  document.getElementById('sim-kw-display').style.color = color;
-  document.getElementById('sim-kw-display').innerHTML = total.toLocaleString('pt-BR') + '<span class="unit">W</span>';
+  var simKw = document.getElementById('sim-kw');
+  simKw.style.color = color;
+  simKw.querySelector('.val').textContent = (total / 1000).toFixed(2).replace('.', ',');
+
   document.getElementById('sim-bar').style.width = pct + '%';
   document.getElementById('sim-bar').style.background = barColor;
 
@@ -920,6 +929,27 @@ function updateMeter() {
   }
 
   document.getElementById('sim-warning').classList.toggle('show', over);
+
+  // Duração da bateria
+  var durEl = document.getElementById('sim-duracao');
+  if (total > 0) {
+    var kwLoad = total / 1000;
+    var sigBats = parseInt(P.get('baterias') || '1');
+    var sigKwh = sigBats * 9;
+    var gwKwh = 4 * 5 * 0.9; // 4× Lynx U G3 · 90% DoD = 18 kWh utilizável
+    function fmtH(h) {
+      if (h >= 48) return Math.round(h/24) + ' dias';
+      if (h >= 24) return (h/24).toFixed(1).replace('.',',') + ' dias';
+      if (h >= 1) return h.toFixed(1).replace('.',',') + 'h';
+      return Math.round(h * 60) + ' min';
+    }
+    document.getElementById('dur-sig-v').textContent = fmtH(sigKwh / kwLoad);
+    document.getElementById('dur-gw-v').textContent = fmtH(gwKwh / kwLoad);
+    document.getElementById('dur-sig-bat').textContent = sigBats + '× bat · ' + sigKwh + ' kWh';
+    durEl.classList.add('show');
+  } else {
+    durEl.classList.remove('show');
+  }
 }
 
 function toggleItem(el) {
