@@ -244,13 +244,12 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);border-bottom:
 .plan-item{display:flex;flex-direction:column;gap:3px}
 .plan-item-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
 .plan-item-val{font-family:"Space Grotesk",sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.3px;line-height:1.2}
-.plan-item-sub{font-size:10px;color:var(--sig);font-weight:600}
+.plan-item-sub{font-size:10px;color:var(--or);font-weight:600}.plan-item-sub.tech-sig{color:var(--sig)}.plan-item-sub.tech-gw{color:var(--gw)}
 .plan-cards-ab{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto}
 .plan-card-gw{background:linear-gradient(135deg,rgba(0,165,80,.08),rgba(0,165,80,.02)) !important;border-color:rgba(0,165,80,.25) !important}
 .plan-card-gw::before{background:radial-gradient(circle,rgba(0,165,80,.12),transparent 70%) !important}
 .plan-card-gw .plan-card-eye{color:var(--gw) !important}
 .plan-card-gw .plan-card-eye::after{background:rgba(0,165,80,.2) !important}
-.plan-card-gw .plan-item-sub{color:var(--gw)}
 .plan-card-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:800;flex-shrink:0}
 .plan-card-badge-a{background:rgba(0,180,216,.2);color:var(--sig)}
 .plan-card-badge-b{background:rgba(0,165,80,.2);color:var(--gw)}
@@ -355,12 +354,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="plan-item">
           <div class="plan-item-lbl">Inversor</div>
           <div class="plan-item-val">7,5 kW</div>
-          <div class="plan-item-sub">SigenStor EC bifásico</div>
+          <div class="plan-item-sub tech-sig">SigenStor EC bifásico</div>
         </div>
         <div class="plan-item">
           <div class="plan-item-lbl">Baterias</div>
           <div class="plan-item-val" id="plan-bat-count">—</div>
-          <div class="plan-item-sub" id="plan-bat-kwh">SigenStor LFP</div>
+          <div class="plan-item-sub tech-sig" id="plan-bat-kwh">SigenStor LFP</div>
         </div>
         <div class="plan-item">
           <div class="plan-item-lbl">Geração Solar</div>
@@ -385,12 +384,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="plan-item">
           <div class="plan-item-lbl">Inversor</div>
           <div class="plan-item-val">7,5 kW</div>
-          <div class="plan-item-sub">GW7.5K-ES-LD-G10 bifásico</div>
+          <div class="plan-item-sub tech-gw">GW7.5K-ES-LD-G10 bifásico</div>
         </div>
         <div class="plan-item">
           <div class="plan-item-lbl">Baterias</div>
           <div class="plan-item-val" id="plan-bat-count-gw">—</div>
-          <div class="plan-item-sub" id="plan-bat-kwh-gw">Lynx U G3 LFP</div>
+          <div class="plan-item-sub tech-gw" id="plan-bat-kwh-gw">Lynx U G3 LFP</div>
         </div>
         <div class="plan-item">
           <div class="plan-item-lbl">Geração Solar</div>
@@ -400,7 +399,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="plan-item">
           <div class="plan-item-lbl">DoD</div>
           <div class="plan-item-val" style="color:var(--gw)">90%</div>
-          <div class="plan-item-sub">Lynx U G3 LFP</div>
+          <div class="plan-item-sub tech-gw">Lynx U G3 LFP</div>
         </div>
       </div>
     </div>
