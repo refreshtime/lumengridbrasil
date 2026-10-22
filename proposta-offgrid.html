@@ -171,6 +171,69 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);border-bottom:
 .inv-tags{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 .inv-tag{background:rgba(0,180,216,.08);border:1px solid rgba(0,180,216,.2);color:var(--sig);font-size:10px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.04em}
 
+
+/* ── SIGENERGY PRESENTATION ── */
+.global-stats-wrap{position:relative;overflow:hidden;max-height:560px}
+.global-stats-wrap img.global-stats-bg{width:100%;display:block;object-fit:cover;filter:brightness(.4)}
+.global-stats-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:48px 72px;max-width:1100px;margin:0 auto}
+.gstats-eye{font-size:10px;font-weight:800;letter-spacing:.2em;color:var(--or);text-transform:uppercase;margin-bottom:14px}
+.gstats-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,3.5vw,44px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:36px}
+.gstats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:660px}
+.gstat-v{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1}
+.gstat-l{font-size:11px;color:rgba(255,255,255,.6);margin-top:4px;font-weight:600}
+.cincos{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;max-width:1000px;margin:40px auto 0}
+.cinco{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 20px;text-align:center}
+.cinco-ico{width:52px;height:52px;border-radius:14px;background:rgba(242,101,34,.12);border:1px solid rgba(242,101,34,.2);display:flex;align-items:center;justify-content:center;color:var(--or);margin:0 auto 16px}
+.cinco-t{font-size:12px;font-weight:800;color:var(--text);margin-bottom:6px}
+.cinco-d{font-size:11px;color:var(--muted);line-height:1.55}
+.fullbleed{position:relative;overflow:hidden}
+.fullbleed img{width:100%;display:block;max-height:520px;object-fit:cover}
+.fb-overlay-l{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,11,20,.88) 0%,rgba(7,11,20,.5) 55%,transparent 100%);display:flex;align-items:center;padding:0 72px}
+.fbadge{display:inline-flex;margin-bottom:16px}
+.fbadge span{display:inline-flex;align-items:center;gap:7px;background:rgba(242,101,34,.15);border:1px solid rgba(242,101,34,.3);color:var(--or);font-size:10px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.08em;text-transform:uppercase}
+.fh3{font-family:"Space Grotesk",sans-serif;font-size:clamp(28px,3.5vw,46px);font-weight:800;line-height:1.1;color:#fff;margin-bottom:16px;max-width:320px}
+.fp{font-size:13px;color:rgba(255,255,255,.7);line-height:1.7;max-width:380px;margin-bottom:20px}
+.fstat{display:inline-flex;flex-direction:column;gap:2px}
+.fstat-v{font-family:"Space Grotesk",sans-serif;font-size:36px;font-weight:900;color:var(--or);letter-spacing:-1px;line-height:1}
+.fstat-l{font-size:11px;color:rgba(255,255,255,.55)}
+.flist{display:flex;flex-direction:column;gap:8px}
+.fi{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--muted);line-height:1.5}
+.fi-dot{color:var(--or);font-weight:900;font-size:14px;flex-shrink:0;margin-top:1px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;max-width:1000px;margin:0 auto}
+.split-r{direction:rtl}.split-r>*{direction:ltr}
+.feat-img{position:relative}
+.feat-img img{width:100%;border-radius:18px;display:block;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.feat-img-ring{position:absolute;inset:-12px;border-radius:24px;border:1px solid rgba(242,101,34,.15);pointer-events:none}
+.app-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:64px;align-items:center;max-width:1000px;margin:0 auto}
+.app-img-box{position:relative;text-align:center}
+.app-img-box img{max-height:480px;width:auto;display:inline-block;filter:drop-shadow(0 30px 60px rgba(0,180,216,.2))}
+.app-glow{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:200px;height:100px;background:radial-gradient(ellipse,rgba(0,180,216,.25),transparent 70%);pointer-events:none}
+.app-feats{display:flex;flex-direction:column;gap:20px;margin-top:24px}
+.afeat{display:flex;align-items:flex-start;gap:14px}
+.afeat-ico{width:40px;height:40px;background:rgba(242,101,34,.1);border:1px solid rgba(242,101,34,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--or);flex-shrink:0}
+.afeat-t{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.afeat-d{font-size:12px;color:var(--muted);line-height:1.55}
+/* Equipamentos GoodWe */
+.gw-img-wrap{max-width:960px;margin:40px auto 0;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.gw-img-wrap img{width:100%;border-radius:16px;display:block;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+/* Duração da bateria no simulador */
+.sim-duracao{background:rgba(0,180,216,.07);border:1px solid rgba(0,180,216,.2);border-radius:12px;padding:16px 20px;margin-top:12px;display:none;align-items:center;gap:14px}
+.sim-duracao.show{display:flex}
+.sim-dur-ico{color:var(--sig);flex-shrink:0}
+.sim-dur-t{font-size:11px;color:var(--muted);margin-bottom:2px}
+.sim-dur-v{font-size:18px;font-weight:800;color:var(--sig);letter-spacing:-.3px}
+.sim-dur-v .unit{font-size:12px;font-weight:600;color:var(--muted);margin-left:2px}
+.sim-dur-sub{font-size:10px;color:var(--dim);margin-top:2px}
+@media(max-width:640px){
+  .global-stats-overlay{padding:32px 24px}
+  .gstats-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .cincos{grid-template-columns:repeat(2,1fr)}
+  .cincos .cinco:last-child{grid-column:1/-1}
+  .split,.app-wrap,.gw-img-wrap{grid-template-columns:1fr;gap:32px}
+  .fb-overlay-l{padding:0 24px}
+  .fh3{font-size:26px}
+}
+
 /* FOOTER */
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56px;text-align:center;font-size:10px;color:var(--dim)}
 
@@ -419,10 +482,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
 
     <div class="ab-tabs">
       <button class="ab-tab sig active" onclick="switchAB('sig', this)">
-        ⚡ Sigenergy <span style="font-size:9px;opacity:.7;display:block;font-weight:600;margin-top:1px">Recomendado</span>
+        <span style="display:flex;align-items:center;justify-content:center;gap:7px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Sigenergy</span><span style="font-size:9px;opacity:.7;display:block;font-weight:600;margin-top:2px">Recomendado</span>
       </button>
       <button class="ab-tab gw" onclick="switchAB('gw', this)">
-        🔋 GoodWe <span style="font-size:9px;opacity:.7;display:block;font-weight:600;margin-top:1px">Alternativa</span>
+        <span style="display:flex;align-items:center;justify-content:center;gap:7px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>GoodWe</span><span style="font-size:9px;opacity:.7;display:block;font-weight:600;margin-top:2px">Alternativa</span>
       </button>
     </div>
   </div>
@@ -528,6 +591,162 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
     <div class="comp-row"><div class="comp-lbl">Switching time</div><div class="comp-sig">0 ms*</div><div class="comp-gw">&lt; 30 ms</div></div>
     <div class="comp-row"><div class="comp-lbl">Ecossistema integrado</div><div class="comp-sig">Nativo</div><div class="comp-gw">Parcial</div></div>
     <div class="comp-row"><div class="comp-lbl">Assistência no Brasil</div><div class="comp-sig">Crescente</div><div class="comp-gw">Ampla</div></div>
+  </div>
+</section>
+
+<!-- ── SIGENERGY NO MUNDO ── -->
+<div class="global-stats-wrap">
+  <img class="global-stats-bg" src="SIGENERGY/sigenergy-global-stats.png" alt="Sigenergy presença global">
+  <div class="global-stats-overlay">
+    <div class="gstats-eye">Sigenergy no mundo</div>
+    <div class="gstats-title">Uma empresa global com<br><span class="grad-sig">tecnologia de ponta.</span></div>
+    <div class="gstats-grid">
+      <div class="gstat"><div class="gstat-v">2.550+</div><div class="gstat-l">Funcionários globais</div></div>
+      <div class="gstat"><div class="gstat-v">120+</div><div class="gstat-l">Países e regiões</div></div>
+      <div class="gstat"><div class="gstat-v">~35%</div><div class="gstat-l">Equipe de I&amp;D</div></div>
+      <div class="gstat"><div class="gstat-v">980+</div><div class="gstat-l">Patentes acumuladas</div></div>
+      <div class="gstat"><div class="gstat-v">170+</div><div class="gstat-l">Distribuidores</div></div>
+      <div class="gstat"><div class="gstat-v">29.000+</div><div class="gstat-l">Instaladores registrados</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PLATAFORMA 5 EM 1 ── -->
+<section class="sec sec-dark">
+  <div class="sec-c">
+    <div class="eye">Plataforma Integrada</div>
+    <h2 class="sh2">Um sistema. <span class="grad-sig">Cinco soluções.</span></h2>
+    <div class="rule" style="background:var(--sig)"></div>
+    <p class="ssub">Sigenergy foi a primeira empresa do mundo a unir inversor off-grid, bateria modular LFP, carregador EV, inteligência artificial e gestão energética em uma única plataforma integrada.</p>
+  </div>
+  <div class="cincos">
+    <div class="cinco">
+      <div class="cinco-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
+      <div class="cinco-t">Solar</div>
+      <div class="cinco-d">Geração fotovoltaica otimizada em tempo real pela IA do sistema.</div>
+    </div>
+    <div class="cinco">
+      <div class="cinco-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/><line x1="6" y1="11" x2="6" y2="13"/><line x1="10" y1="11" x2="10" y2="13"/><line x1="14" y1="11" x2="14" y2="13"/></svg></div>
+      <div class="cinco-t">Bateria LFP</div>
+      <div class="cinco-d">Módulos empilháveis de 9 kWh com 100% DoD — expanda conforme a necessidade.</div>
+    </div>
+    <div class="cinco">
+      <div class="cinco-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <div class="cinco-t">EV Charger</div>
+      <div class="cinco-d">Carregamento DC nativo: até 25 kW — 150 km por hora de carga.</div>
+    </div>
+    <div class="cinco">
+      <div class="cinco-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></div>
+      <div class="cinco-t">Inteligência Artificial</div>
+      <div class="cinco-d">IA aprende seu consumo e redistribui energia para máxima autonomia.</div>
+    </div>
+    <div class="cinco">
+      <div class="cinco-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></div>
+      <div class="cinco-t">Gestão Energética</div>
+      <div class="cinco-d">Monitoramento e controle total via app mySigen em tempo real.</div>
+    </div>
+  </div>
+  <div style="max-width:960px;margin:48px auto 0;padding:0 24px">
+    <img src="SIGENERGY/Detalhes sigenergy.png" alt="Detalhes Sigenergy" style="width:100%;border-radius:18px;display:block;box-shadow:0 30px 60px rgba(0,0,0,.5)">
+  </div>
+</section>
+
+<!-- ── SILÊNCIO ── -->
+<div class="fullbleed">
+  <img src="SIGENERGY/Silencioso.png" alt="Sigenergy silencioso 25 dB">
+  <div class="fb-overlay-l">
+    <div class="fb-text">
+      <div class="fbadge"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>Silêncio Total</span></div>
+      <h3 class="fh3">Mais silencioso<br>que um<br><span class="grad-sig">sussurro.</span></h3>
+      <p class="fp">Com apenas <strong style="color:#fff">25 dB</strong>, o inversor Sigenergy opera sem ventoinhas — zero ruído, zero vibração, zero desgaste mecânico. Pode ser instalado em qualquer cômodo.</p>
+      <div class="fstat"><span class="fstat-v">25 dB</span><span class="fstat-l">Menor que um sussurro humano</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP MYSIGEN ── -->
+<section class="sec sec-mid">
+  <div class="app-wrap">
+    <div class="app-img-box">
+      <img src="SIGENERGY/APLICATIVO SIGENERGY.png" alt="App mySigen">
+      <div class="app-glow"></div>
+    </div>
+    <div>
+      <div class="eye" style="text-align:left">App mySigen</div>
+      <h2 class="sh2" style="text-align:left;font-size:clamp(24px,3vw,36px)">Controle total<br><span class="grad-sig">na palma da mão.</span></h2>
+      <div class="rule" style="margin:18px 0;background:var(--sig)"></div>
+      <div class="app-feats">
+        <div class="afeat">
+          <div class="afeat-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></div>
+          <div><div class="afeat-t">Modo IA Sigen</div><div class="afeat-d">Aprende seu padrão de consumo e redistribui energia automaticamente para máxima autonomia.</div></div>
+        </div>
+        <div class="afeat">
+          <div class="afeat-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <div><div class="afeat-t">Sigen AI Insight</div><div class="afeat-d">Relatórios inteligentes com análise de geração e consumo em tempo real.</div></div>
+        </div>
+        <div class="afeat">
+          <div class="afeat-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+          <div><div class="afeat-t">Gestão do Veículo Elétrico</div><div class="afeat-d">Monitore e programe o carregamento conforme a geração solar disponível.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INTELIGÊNCIA ARTIFICIAL ── -->
+<section class="sec sec-dark">
+  <div class="split">
+    <div class="feat-img">
+      <img src="SIGENERGY/OTIMIZADO PARA IA.png" alt="Otimizado para IA">
+      <div class="feat-img-ring"></div>
+    </div>
+    <div>
+      <div class="fbadge"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>Inteligência Artificial</span></div>
+      <h3 class="fh3" style="margin-top:16px">O sistema que<br>aprende com<br><span class="grad-sig">você.</span></h3>
+      <p class="fp">A IA da Sigenergy analisa geração solar, hábitos de consumo e previsão do tempo para tomar decisões em tempo real — maximizando autonomia e eficiência.</p>
+      <div class="flist">
+        <div class="fi"><span class="fi-dot">→</span>Otimiza automaticamente quando usar bateria ou solar</div>
+        <div class="fi"><span class="fi-dot">→</span>Prevê geração com base na previsão meteorológica</div>
+        <div class="fi"><span class="fi-dot">→</span>Detecta anomalias e alerta antes de falhas</div>
+        <div class="fi"><span class="fi-dot">→</span>Melhora continuamente com o tempo de uso</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 5 CAMADAS DE SEGURANÇA ── -->
+<section class="sec sec-dark">
+  <div class="sec-c">
+    <div class="eye">Proteção</div>
+    <h2 class="sh2">5 camadas de <span class="grad-sig">segurança da bateria.</span></h2>
+    <div class="rule" style="background:var(--sig)"></div>
+    <p class="ssub">Detecção de temperatura total · Kit anti-incêndio interno · Isolamento aerogel · Resistência a altas temperaturas · Válvula de descompressão.</p>
+  </div>
+  <div style="max-width:960px;margin:40px auto 0;padding:0 24px">
+    <img src="SIGENERGY/5 CAMADAS DE SEGURANÇA.png" alt="5 Camadas de Segurança Sigenergy" style="width:100%;display:block;border-radius:18px;box-shadow:0 30px 60px rgba(0,0,0,.5)">
+  </div>
+</section>
+
+<!-- ── EQUIPAMENTOS GOODWE ── -->
+<section class="sec sec-mid">
+  <div class="sec-c">
+    <div class="eye" style="color:var(--gw)">GoodWe</div>
+    <h2 class="sh2">Equipamentos <span style="background:linear-gradient(90deg,var(--gw),var(--gw-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">GoodWe</span></h2>
+    <div class="rule" style="background:var(--gw)"></div>
+    <p class="ssub">Inversor híbrido GW7.5K-ES-LD com bateria de baixa tensão Lynx U G3 — solução consolidada com ampla rede de suporte técnico no Brasil.</p>
+  </div>
+  <div class="gw-img-wrap">
+    <img src="imagens/TECNOLOGIA/inversor-bateria-goodwe.jpg" alt="GoodWe Inversor e Bateria">
+    <div>
+      <div class="eye" style="color:var(--gw);text-align:left;margin-bottom:20px">Por que GoodWe?</div>
+      <div class="flist">
+        <div class="fi"><span class="fi-dot" style="color:var(--gw)">→</span>Marca com mais de 10 anos de presença no Brasil</div>
+        <div class="fi"><span class="fi-dot" style="color:var(--gw)">→</span>Maior rede de assistência técnica do país</div>
+        <div class="fi"><span class="fi-dot" style="color:var(--gw)">→</span>Bateria Lynx U G3 expansível até 150 kWh</div>
+        <div class="fi"><span class="fi-dot" style="color:var(--gw)">→</span>Custo-benefício competitivo para o projeto</div>
+        <div class="fi"><span class="fi-dot" style="color:var(--gw)">→</span>App GoodWe SEMS com monitoramento em tempo real</div>
+      </div>
+    </div>
   </div>
 </section>
 
