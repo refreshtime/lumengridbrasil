@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title id="page-title">Proposta Off-Grid · LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sig:#00B4D8;--sig-l:#48CAE4;
+  --or:#F26522;--or-l:#FF8040;
+  --gw:#00A550;--gw-l:#33BB74;
+  --bg:#070B14;--bg2:#0D1525;--bg3:#111827;
+  --card:rgba(255,255,255,.04);--card-h:rgba(255,255,255,.07);
+  --text:#F0F4F8;--muted:rgba(240,244,248,.55);--dim:rgba(240,244,248,.28);
+  --border:rgba(255,255,255,.08);--bor:rgba(242,101,34,.25);
+  --red:#ef4444;--yellow:#f59e0b;--green:#22c55e;
+  --limit:7500;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;transition:all .3s}
+nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:12px 48px}
+.nav-logo{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800}
+.nav-logo .l{color:var(--or)}.nav-logo .g{color:#FAFAFA}
+.nav-sub{font-size:7px;color:rgba(242,101,34,.8);letter-spacing:.3em;text-transform:uppercase;margin-top:2px}
+.nav-badge{background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.25);color:var(--sig);font-size:10px;font-weight:700;padding:6px 16px;border-radius:20px}
+
+/* HERO */
+.hero{min-height:52vh;display:flex;align-items:center;padding:120px 56px 64px;background:linear-gradient(160deg,#070B14 0%,#0a0f1c 50%,#0d1420 100%)}
+.hero-inner{max-width:900px;margin:0 auto;text-align:center;width:100%}
+.hero-eye{display:inline-flex;align-items:center;gap:8px;background:rgba(242,101,34,.1);border:1px solid rgba(242,101,34,.25);border-radius:40px;padding:7px 18px;font-size:11px;font-weight:700;color:var(--or);letter-spacing:.08em;text-transform:uppercase;margin-bottom:22px}
+.hero-eye-dot{width:6px;height:6px;border-radius:50%;background:var(--or);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero-h{font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:800;line-height:1.1;letter-spacing:-.5px;margin-bottom:16px}
+.hero-h .or{color:var(--or)}
+.hero-sub{font-size:14px;color:var(--muted);max-width:560px;margin:0 auto 32px;line-height:1.75}
+.hero-meta{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap}
+.hero-meta-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.hero-meta-item svg{color:var(--or)}
+.hero-meta-item a{color:var(--sig);text-decoration:none;font-weight:600}
+.hero-meta-item a:hover{text-decoration:underline}
+
+/* SECTIONS */
+.sec{padding:64px 56px}
+.sec-c{max-width:900px;margin:0 auto;text-align:center;margin-bottom:48px}
+.eye{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.18em;color:var(--or);text-transform:uppercase;margin-bottom:12px}
+.sh2{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;line-height:1.2;letter-spacing:-.3px;margin-bottom:12px}
+.grad{background:linear-gradient(90deg,var(--or),var(--or-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-sig{background:linear-gradient(90deg,var(--sig),var(--sig-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.rule{width:40px;height:3px;background:var(--or);border-radius:2px;margin:0 auto 16px}
+.ssub{font-size:13px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.75}
+.sec-dark{background:var(--bg2)}
+.sec-mid{background:var(--bg3)}
+
+/* AVISO OFF-GRID */
+.aviso-box{max-width:900px;margin:0 auto;background:rgba(245,158,11,.06);border:1.5px solid rgba(245,158,11,.3);border-radius:16px;padding:24px 28px;display:flex;gap:16px;align-items:flex-start}
+.aviso-ico{width:40px;height:40px;background:rgba(245,158,11,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#f59e0b;flex-shrink:0}
+.aviso-title{font-size:13px;font-weight:800;color:#f59e0b;margin-bottom:6px}
+.aviso-text{font-size:12px;color:var(--muted);line-height:1.65}
+.aviso-text strong{color:var(--text)}
+
+/* SIMULADOR */
+.sim-wrap{max-width:960px;margin:0 auto}
+.sim-meter{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:24px}
+.sim-meter-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.sim-kw{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:800;line-height:1;letter-spacing:-1px;transition:color .3s}
+.sim-kw .unit{font-size:18px;font-weight:600;color:var(--muted);margin-left:4px}
+.sim-limit{font-size:11px;color:var(--dim);text-align:right}
+.sim-limit strong{color:var(--muted)}
+.sim-bar-wrap{height:10px;background:rgba(255,255,255,.07);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.sim-bar{height:100%;border-radius:8px;transition:width .3s,background .3s;width:0%}
+.sim-status{font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;transition:color .3s}
+.sim-status svg{flex-shrink:0}
+.sim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.sim-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;user-select:none}
+.sim-item:hover{background:var(--card-h)}
+.sim-item.ativo{border-color:var(--or);background:rgba(242,101,34,.06)}
+.sim-item.ativo .sim-item-w{color:var(--or)}
+.sim-check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;color:#fff}
+.sim-item.ativo .sim-check{background:var(--or);border-color:var(--or)}
+.sim-item-info{flex:1;min-width:0}
+.sim-item-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sim-item-w{font-size:11px;color:var(--muted);font-weight:600;transition:color .2s}
+.sim-item-range{font-size:10px;color:var(--dim)}
+.sim-cooktop{display:flex;gap:6px;margin-top:6px}
+.sim-cooktop-btn{flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);font-size:10px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .2s}
+.sim-cooktop-btn.sel{background:rgba(242,101,34,.12);border-color:var(--or);color:var(--or)}
+.sim-warning{background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.3);border-radius:12px;padding:16px 20px;margin-top:16px;display:none;align-items:center;gap:12px}
+.sim-warning.show{display:flex}
+.sim-warning-ico{color:#ef4444;flex-shrink:0}
+.sim-warning-t{font-size:12px;font-weight:700;color:#ef4444;margin-bottom:3px}
+.sim-warning-d{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* TABS A/B */
+.ab-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;max-width:480px;margin:0 auto 40px}
+.ab-tab{flex:1;padding:14px 20px;text-align:center;cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.06em;transition:all .2s;border:none;background:transparent;color:var(--muted);font-family:inherit}
+.ab-tab.sig.active{background:rgba(0,180,216,.12);color:var(--sig)}
+.ab-tab.gw.active{background:rgba(0,165,80,.12);color:var(--gw)}
+.ab-tab:first-child{border-right:1px solid var(--border)}
+.ab-panel{display:none}.ab-panel.active{display:block}
+
+/* SISTEMA CARDS */
+.sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto 28px}
+.sys-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+.sys-card.hl-sig{border-color:rgba(0,180,216,.3);background:rgba(0,180,216,.04)}
+.sys-card.hl-gw{border-color:rgba(0,165,80,.3);background:rgba(0,165,80,.04)}
+.sys-card-eye{font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+.sig-c{color:var(--sig)}.gw-c{color:var(--gw)}
+.sys-card-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:14px}
+.sys-table{width:100%;border-collapse:collapse}
+.sys-table tr{border-bottom:1px solid var(--border)}
+.sys-table tr:last-child{border-bottom:none}
+.sys-table td{padding:8px 0;font-size:12px}
+.sys-table td:first-child{color:var(--muted);width:52%}
+.sys-table td:last-child{color:var(--text);font-weight:700;text-align:right}
+.sys-table td.hl{color:var(--or)}
+.sys-table td.hl-sig{color:var(--sig)}
+.sys-table td.hl-gw{color:var(--gw)}
+
+/* VANTAGENS */
+.vant-list{list-style:none;margin-top:16px}
+.vant-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5}
+.vant-list li:last-child{border-bottom:none}
+.vant-list li svg{flex-shrink:0;margin-top:2px}
+.vant-list li.pro svg{color:var(--green)}
+.vant-list li.con svg{color:var(--dim)}
+
+/* DATASHEET LINK */
+.ds-link{display:inline-flex;align-items:center;gap:8px;background:rgba(0,180,216,.08);border:1px solid rgba(0,180,216,.2);color:var(--sig);padding:10px 18px;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;transition:all .2s;margin-top:16px}
+.ds-link:hover{background:rgba(0,180,216,.15)}
+.ds-link-gw{background:rgba(0,165,80,.08);border-color:rgba(0,165,80,.2);color:var(--gw)}
+.ds-link-gw:hover{background:rgba(0,165,80,.15)}
+
+/* COMPARATIVO */
+.comp-row{display:flex;align-items:center;gap:0;max-width:900px;margin:0 auto 10px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.comp-lbl{flex:1.4;padding:11px 16px;font-size:11px;color:var(--muted);font-weight:600;background:var(--card)}
+.comp-sig{flex:1;padding:11px 16px;font-size:11px;font-weight:700;color:var(--sig);border-left:1px solid var(--border);text-align:center;background:rgba(0,180,216,.04)}
+.comp-gw{flex:1;padding:11px 16px;font-size:11px;font-weight:700;color:var(--gw);border-left:1px solid var(--border);text-align:center;background:rgba(0,165,80,.04)}
+.comp-row.header .comp-lbl,.comp-row.header .comp-sig,.comp-row.header .comp-gw{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px}
+.comp-row.header .comp-lbl{color:var(--dim)}
+
+/* CTA */
+.cta-box{background:linear-gradient(135deg,rgba(242,101,34,.12),rgba(242,101,34,.04));border:1.5px solid rgba(242,101,34,.25);border-radius:20px;padding:40px;text-align:center;max-width:680px;margin:0 auto}
+.cta-h{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;margin-bottom:10px}
+.cta-d{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.65}
+.btn-cta{display:inline-flex;align-items:center;gap:10px;background:var(--or);color:#fff;padding:16px 36px;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;text-decoration:none;transition:all .25s}
+.btn-cta:hover{background:var(--or-l);transform:translateY(-2px);box-shadow:0 12px 32px rgba(242,101,34,.3)}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56px;text-align:center;font-size:10px;color:var(--dim)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  nav{padding:14px 20px}
+  nav.solid{padding:12px 20px}
+  .hero{padding:100px 20px 48px}
+  .hero-h{font-size:30px}
+  .sec{padding:48px 20px}
+  .sim-grid{grid-template-columns:1fr}
+  .sys-grid{grid-template-columns:1fr}
+  .comp-row{flex-direction:column}
+  .comp-sig,.comp-gw{border-left:none;border-top:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div>
+    <div class="nav-logo"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+    <div style="font-size:7px;color:rgba(242,101,34,.7);letter-spacing:.3em;text-transform:uppercase;margin-top:2px">Energia Inteligente</div>
+  </div>
+  <div class="nav-badge">Proposta Off-Grid</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">
+      <div class="hero-eye-dot"></div>
+      Proposta Personalizada · Off-Grid
+    </div>
+    <h1 class="hero-h">Energia independente<br>para <span class="or" id="hero-cliente">você</span>.</h1>
+    <p class="hero-sub">Sistema de energia solar com armazenamento em bateria — elaborado especificamente para o seu perfil de consumo, com total independência da rede elétrica.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="meta-consultor">LumenGrid</span>
+      </div>
+      <div class="hero-meta-item" id="location-wrap" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <a href="" id="location-link" target="_blank" rel="noopener">Ver localização</a>
+      </div>
+      <div class="hero-meta-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span id="meta-validade">Válido por 7 dias</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AVISO OFF-GRID -->
+<section class="sec" style="padding-top:48px;padding-bottom:32px">
+  <div class="aviso-box">
+    <div class="aviso-ico">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div>
+      <div class="aviso-title">Atenção — Dimensionamento Off-Grid</div>
+      <div class="aviso-text">Para dimensionamento off-grid é necessário confirmar o tempo médio de utilização de cada equipamento, especificações técnicas e conexão com a rede. <strong>Neste projeto foi considerado um inversor bifásico de 7.500 W</strong>, o que significa que os equipamentos conectados simultaneamente não podem ultrapassar essa potência. Use o simulador abaixo para verificar suas combinações de uso.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SIMULADOR DE CARGAS -->
+<section class="sec sec-dark" id="simulador">
+  <div class="sec-c">
+    <div class="eye">Simulador Interativo</div>
+    <h2 class="sh2">Simule o consumo <span class="grad">simultâneo.</span></h2>
+    <div class="rule"></div>
+    <p class="ssub">Selecione os equipamentos que deseja usar ao mesmo tempo. O sistema avisa quando a potência ultrapassa o limite do inversor.</p>
+  </div>
+
+  <div class="sim-wrap">
+    <!-- Medidor -->
+    <div class="sim-meter">
+      <div class="sim-meter-top">
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Potência selecionada</div>
+          <div class="sim-kw" id="sim-kw-display">0<span class="unit">W</span></div>
+        </div>
+        <div class="sim-limit">
+          Limite do inversor<br><strong>7.500 W</strong>
+        </div>
+      </div>
+      <div class="sim-bar-wrap">
+        <div class="sim-bar" id="sim-bar"></div>
+      </div>
+      <div class="sim-status" id="sim-status" style="color:var(--green)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Dentro da capacidade do inversor
+      </div>
+    </div>
+
+    <!-- Lista de equipamentos -->
+    <div class="sim-grid" id="sim-grid">
+
+      <div class="sim-item" data-w="150" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Geladeira Inverter</div>
+          <div class="sim-item-w">150 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="200" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">TV (× 2)</div>
+          <div class="sim-item-w">200 W cada · 400 W total</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="65" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Notebook</div>
+          <div class="sim-item-w">65 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="750" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Ar-condicionado 8.000 BTU</div>
+          <div class="sim-item-w">750 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="1000" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Lavadora de Roupas</div>
+          <div class="sim-item-w">1.000 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="1300" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Micro-ondas</div>
+          <div class="sim-item-w">1.300 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="1500" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Air Fryer</div>
+          <div class="sim-item-w">1.500 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="1500" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Aquecedor Elétrico a Óleo</div>
+          <div class="sim-item-w">1.500 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="1800" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Secador de Cabelo</div>
+          <div class="sim-item-w">1.800 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="800" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Cafeteira</div>
+          <div class="sim-item-w">800 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="800" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Sanduicheira</div>
+          <div class="sim-item-w">800 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="500" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Liquidificador</div>
+          <div class="sim-item-w">500 W</div>
+        </div>
+      </div>
+
+      <div class="sim-item" data-w="800" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Aspirador de Pó</div>
+          <div class="sim-item-w">800 W</div>
+        </div>
+      </div>
+
+      <!-- Cooktop com seletor de potência -->
+      <div class="sim-item" id="cooktop-item" data-w="3500" onclick="toggleItem(this)">
+        <div class="sim-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="sim-item-info">
+          <div class="sim-item-name">Cooktop Elétrico</div>
+          <div class="sim-item-w" id="cooktop-w-lbl">3.500 W</div>
+          <div class="sim-item-range">3.500 – 6.000 W conforme uso</div>
+          <div class="sim-cooktop" onclick="event.stopPropagation()">
+            <div class="sim-cooktop-btn sel" onclick="setCooktop(3500, this)">3.500 W</div>
+            <div class="sim-cooktop-btn" onclick="setCooktop(4750, this)">4.750 W</div>
+            <div class="sim-cooktop-btn" onclick="setCooktop(6000, this)">6.000 W</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Aviso de limite excedido -->
+    <div class="sim-warning" id="sim-warning">
+      <div class="sim-warning-ico">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div>
+        <div class="sim-warning-t">Limite do inversor excedido!</div>
+        <div class="sim-warning-d">A combinação selecionada ultrapassa os <strong>7.500 W</strong> do inversor bifásico. Desligue algum equipamento antes de ligar outro, ou considere um sistema com dois inversores.</div>
+      </div>
+    </div>
+
+    <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.6">* Potência total instalada estimada: 14.665 a 17.165 W. O simulador mostra uso simultâneo — na prática os equipamentos não ficam todos ligados ao mesmo tempo.</p>
+  </div>
+</section>
+
+<!-- PROPOSTA A/B -->
+<section class="sec" id="proposta">
+  <div class="sec-c">
+    <div class="eye">Opções de Sistema</div>
+    <h2 class="sh2">Compare os <span class="grad-sig">equipamentos.</span></h2>
+    <div class="rule" style="background:var(--sig)"></div>
+    <p class="ssub" style="margin-bottom:32px">Apresentamos duas opções de sistema para seu projeto off-grid. Analise e escolha a que melhor se encaixa.</p>
+
+    <div class="ab-tabs">
+      <button class="ab-tab sig active" onclick="switchAB('sig', this)">
+        ⚡ Sigenergy <span style="font-size:9px;opacity:.7;display:block;font-weight:600;margin-top:1px">Recomendado</span>
+      </button>
+      <button class="ab-tab gw" onclick="switchAB('gw', this)">
+        🔋 GoodWe <span style="font-size:9px;opacity:.7;display:block;font-weight:600;margin-top:1px">Alternativa</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB A: SIGENERGY -->
+  <div class="ab-panel active" id="panel-sig">
+    <div class="sys-grid">
+      <div class="sys-card hl-sig">
+        <div class="sys-card-eye sig-c">Inversor Off-Grid</div>
+        <div class="sys-card-title">SigenStor EC 7,5 kW</div>
+        <table class="sys-table">
+          <tr><td>Potência AC saída</td><td class="hl-sig">7.500 W bifásico</td></tr>
+          <tr><td>Modo off-grid</td><td>Nativo</td></tr>
+          <tr><td>Switching time</td><td class="hl-sig">&lt; 20 ms</td></tr>
+          <tr><td>MPPT</td><td>2 entradas</td></tr>
+          <tr><td>Grau de proteção</td><td>IP65</td></tr>
+          <tr><td>Garantia</td><td>10 anos</td></tr>
+        </table>
+        <a class="ds-link" href="SIGENERGY/DATASHEET GATEWAY.pdf" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Datasheet Sigenergy Gateway
+        </a>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-eye sig-c">Bateria</div>
+        <div class="sys-card-title">SigenStor LFP 9 kWh</div>
+        <table class="sys-table">
+          <tr><td>Capacidade</td><td>9 kWh por módulo</td></tr>
+          <tr><td>DoD</td><td class="hl-sig">100% (único no mercado)</td></tr>
+          <tr><td>Ciclos de vida</td><td>&gt; 6.000 ciclos</td></tr>
+          <tr><td>Química</td><td>LiFePO4 (LFP)</td></tr>
+          <tr><td>Expansível</td><td>Até 6 módulos</td></tr>
+          <tr><td>Garantia</td><td>10 anos</td></tr>
+        </table>
+        <ul class="vant-list">
+          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Maior DoD do mercado: 100%</li>
+          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ecossistema integrado nativo</li>
+          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>V2X bidirecional (lançamento Out/26)</li>
+          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>App unificado inversor + bateria</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB B: GOODWE -->
+  <div class="ab-panel" id="panel-gw">
+    <div class="sys-grid">
+      <div class="sys-card hl-gw">
+        <div class="sys-card-eye gw-c">Inversor Híbrido/Off-Grid</div>
+        <div class="sys-card-title">GoodWe ET Plus 8 kW</div>
+        <table class="sys-table">
+          <tr><td>Potência AC saída</td><td class="hl-gw">8.000 W</td></tr>
+          <tr><td>Modo off-grid</td><td>EPS (backup)</td></tr>
+          <tr><td>Switching time</td><td>&lt; 30 ms</td></tr>
+          <tr><td>MPPT</td><td>2 entradas</td></tr>
+          <tr><td>Grau de proteção</td><td>IP65</td></tr>
+          <tr><td>Garantia</td><td>10 anos</td></tr>
+        </table>
+        <a class="ds-link ds-link-gw" href="https://www.goodwe.com/products/inverter/et-plus" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Site GoodWe ET Plus
+        </a>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-eye gw-c">Bateria Compatível</div>
+        <div class="sys-card-title">BYD Battery-Box HVM</div>
+        <table class="sys-table">
+          <tr><td>Capacidade</td><td>8,3 kWh por módulo</td></tr>
+          <tr><td>DoD</td><td class="hl-gw">90%</td></tr>
+          <tr><td>Ciclos de vida</td><td>&gt; 6.000 ciclos</td></tr>
+          <tr><td>Química</td><td>LiFePO4 (LFP)</td></tr>
+          <tr><td>Expansível</td><td>Até 5 módulos</td></tr>
+          <tr><td>Garantia</td><td>10 anos</td></tr>
+        </table>
+        <ul class="vant-list">
+          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Marca consolidada no Brasil</li>
+          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ampla rede de assistência técnica</li>
+          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Custo-benefício competitivo</li>
+          <li class="con"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>DoD 90% (menos energia utilizável)</li>
+          <li class="con"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sem V2X bidirecional</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparativo rápido -->
+  <div style="max-width:900px;margin:32px auto 0">
+    <p style="font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--or);text-transform:uppercase;margin-bottom:14px;text-align:center">Comparativo rápido</p>
+    <div class="comp-row header">
+      <div class="comp-lbl">Critério</div>
+      <div class="comp-sig">Sigenergy</div>
+      <div class="comp-gw">GoodWe + BYD</div>
+    </div>
+    <div class="comp-row"><div class="comp-lbl">DoD da bateria</div><div class="comp-sig">100%</div><div class="comp-gw">90%</div></div>
+    <div class="comp-row"><div class="comp-lbl">Off-grid nativo</div><div class="comp-sig">Sim</div><div class="comp-gw">Modo EPS</div></div>
+    <div class="comp-row"><div class="comp-lbl">V2X bidirecional</div><div class="comp-sig">Sim (Out/26)</div><div class="comp-gw">Não</div></div>
+    <div class="comp-row"><div class="comp-lbl">Switching time</div><div class="comp-sig">&lt; 20 ms</div><div class="comp-gw">&lt; 30 ms</div></div>
+    <div class="comp-row"><div class="comp-lbl">Ecossistema integrado</div><div class="comp-sig">Nativo</div><div class="comp-gw">Parcial</div></div>
+    <div class="comp-row"><div class="comp-lbl">Assistência no Brasil</div><div class="comp-sig">Crescente</div><div class="comp-gw">Ampla</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec sec-mid" id="cta">
+  <div class="cta-box">
+    <h2 class="cta-h">Pronto para dar o próximo passo?</h2>
+    <p class="cta-d" id="cta-desc">Fale com nosso consultor e tire todas as suas dúvidas sobre o projeto.</p>
+    <a class="btn-cta" id="btn-wpp" href="#" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.848L.057 23.116a.5.5 0 0 0 .609.67l5.498-1.44A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.005-1.373l-.36-.214-3.724.976.993-3.63-.234-.373A9.79 9.79 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+      Falar pelo WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div>LumenGrid Energia Inteligente · lumengridbrasil.com.br</div>
+  <div style="margin-top:4px">Feito por Domani Consultoria</div>
+</footer>
+
+<script>
+var P = new URLSearchParams(window.location.search);
+var LIMIT = 7500;
+
+// Consultores
+var CONSULTORES = {
+  hingrid: {nome:'Hingrid Dias', wpp:'5511999999999'},
+  lucas:   {nome:'Lucas Vieira', wpp:'5511999999999'},
+  ana:     {nome:'Ana', wpp:'5511999999999'}
+};
+
+var c = P.get('consultor') || 'lucas';
+var C = CONSULTORES[c.toLowerCase()];
+var CLIENTE = P.get('cliente') || '';
+
+// Preencher meta
+if (CLIENTE) {
+  document.getElementById('hero-cliente').textContent = CLIENTE;
+  document.title = 'Proposta Off-Grid · ' + CLIENTE + ' · LumenGrid';
+}
+if (C) document.getElementById('meta-consultor').textContent = C.nome;
+
+// Localização
+var loc = P.get('loc');
+if (loc) {
+  document.getElementById('location-wrap').style.display = 'flex';
+  document.getElementById('location-link').href = loc;
+}
+
+// Validade
+var val = P.get('validade');
+if (val) document.getElementById('meta-validade').textContent = 'Válido até ' + val;
+
+// WhatsApp
+if (C && C.wpp) {
+  var msg = encodeURIComponent('Olá' + (CLIENTE ? ', ' + CLIENTE : '') + '! Gostaria de saber mais sobre a proposta off-grid Sigenergy.');
+  document.getElementById('btn-wpp').href = 'https://wa.me/' + C.wpp + '?text=' + msg;
+}
+
+// Nav scroll
+window.addEventListener('scroll', function(){
+  document.getElementById('nav').classList.toggle('solid', window.scrollY > 40);
+});
+
+// Simulador
+function calcTotal() {
+  var total = 0;
+  document.querySelectorAll('.sim-item.ativo').forEach(function(el){
+    total += parseInt(el.dataset.w || 0);
+  });
+  return total;
+}
+
+function updateMeter() {
+  var total = calcTotal();
+  var pct = Math.min((total / LIMIT) * 100, 100);
+  var over = total > LIMIT;
+  var near = total > LIMIT * 0.75;
+
+  var color = over ? 'var(--red)' : near ? 'var(--yellow)' : 'var(--green)';
+  var barColor = over ? '#ef4444' : near ? '#f59e0b' : '#22c55e';
+
+  document.getElementById('sim-kw-display').style.color = color;
+  document.getElementById('sim-kw-display').innerHTML = total.toLocaleString('pt-BR') + '<span class="unit">W</span>';
+  document.getElementById('sim-bar').style.width = pct + '%';
+  document.getElementById('sim-bar').style.background = barColor;
+
+  var statusEl = document.getElementById('sim-status');
+  statusEl.style.color = color;
+  if (over) {
+    statusEl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg> Limite excedido — ' + (total - LIMIT).toLocaleString('pt-BR') + ' W acima da capacidade';
+  } else if (near) {
+    statusEl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Atenção — próximo do limite (' + Math.round(pct) + '%)';
+  } else {
+    statusEl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Dentro da capacidade do inversor (' + Math.round(pct) + '%)';
+  }
+
+  document.getElementById('sim-warning').classList.toggle('show', over);
+}
+
+function toggleItem(el) {
+  el.classList.toggle('ativo');
+  updateMeter();
+}
+
+function setCooktop(w, btn) {
+  document.querySelectorAll('.sim-cooktop-btn').forEach(function(b){ b.classList.remove('sel'); });
+  btn.classList.add('sel');
+  var item = document.getElementById('cooktop-item');
+  item.dataset.w = w;
+  document.getElementById('cooktop-w-lbl').textContent = w.toLocaleString('pt-BR') + ' W';
+  updateMeter();
+}
+
+// Tabs A/B
+function switchAB(id, btn) {
+  document.querySelectorAll('.ab-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.ab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+updateMeter();
+</script>
+</body>
+</html>
