@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title id="page-title">Proposta Off-Grid · LumenGrid</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -150,6 +152,19 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);border-bottom:
 .btn-cta{display:inline-flex;align-items:center;gap:10px;background:var(--or);color:#fff;padding:16px 36px;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;text-decoration:none;transition:all .25s}
 .btn-cta:hover{background:var(--or-l);transform:translateY(-2px);box-shadow:0 12px 32px rgba(242,101,34,.3)}
 
+
+/* INVESTIMENTO */
+.inv-section{max-width:720px;margin:0 auto;padding:0}
+.inv-card{background:linear-gradient(135deg,rgba(0,180,216,.1) 0%,rgba(0,180,216,.04) 100%);border:1.5px solid rgba(0,180,216,.3);border-radius:20px;padding:36px 40px;text-align:center;position:relative;overflow:hidden}
+.inv-card::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,180,216,.12) 0%,transparent 70%);pointer-events:none}
+.inv-eye{font-size:10px;font-weight:800;letter-spacing:.2em;color:var(--sig);text-transform:uppercase;margin-bottom:12px}
+.inv-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.inv-val{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:800;color:var(--text);letter-spacing:-2px;line-height:1;margin-bottom:6px}
+.inv-val .inv-cur{font-size:24px;color:var(--sig);vertical-align:top;margin-top:8px;display:inline-block;margin-right:4px;font-weight:700}
+.inv-sub{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6}
+.inv-tags{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.inv-tag{background:rgba(0,180,216,.08);border:1px solid rgba(0,180,216,.2);color:var(--sig);font-size:10px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.04em}
+
 /* FOOTER */
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56px;text-align:center;font-size:10px;color:var(--dim)}
 
@@ -170,9 +185,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
 <body>
 
 <nav id="nav">
-  <div>
-    <div class="nav-logo"><span class="l">LUMEN</span><span class="g">GRID</span></div>
-    <div style="font-size:7px;color:rgba(242,101,34,.7);letter-spacing:.3em;text-transform:uppercase;margin-top:2px">Energia Inteligente</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <img src="imagens/LOGOS/logo-icone.png" height="42" alt="LumenGrid" style="filter:drop-shadow(0 0 10px rgba(242,101,34,.55));display:block">
+    <div>
+      <div class="nav-logo"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+      <div style="font-size:7px;color:rgba(242,101,34,.7);letter-spacing:.3em;text-transform:uppercase;margin-top:1px">Energia Inteligente</div>
+    </div>
   </div>
   <div class="nav-badge">Proposta Off-Grid</div>
 </nav>
@@ -507,15 +525,34 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
   </div>
 </section>
 
+<!-- INVESTIMENTO -->
+<section class="sec" id="investimento" style="display:none">
+  <div class="sec-c">
+    <div class="eye">Investimento</div>
+    <h2 class="sh2">Proposta <span class="grad-sig">Sigenergy</span></h2>
+    <div class="rule" style="background:var(--sig)"></div>
+  </div>
+  <div class="inv-section">
+    <div class="inv-card">
+      <div class="inv-eye">Sistema Off-Grid · Sigenergy SigenStor EC</div>
+      <div class="inv-title">Investimento total do projeto</div>
+      <div class="inv-val"><span class="inv-cur">R$</span><span id="inv-valor">—</span></div>
+      <div class="inv-sub">Inclui equipamentos, instalação e homologação.<br>Condições de pagamento a combinar.</div>
+      <div class="inv-tags">
+        <div class="inv-tag">9,92 kWp de geração solar</div>
+        <div class="inv-tag" id="inv-tag-bat">Sigenergy LFP</div>
+        <div class="inv-tag">Instalação incluída</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="sec sec-mid" id="cta">
   <div class="cta-box">
-    <h2 class="cta-h">Pronto para dar o próximo passo?</h2>
-    <p class="cta-d" id="cta-desc">Fale com nosso consultor e tire todas as suas dúvidas sobre o projeto.</p>
-    <a class="btn-cta" id="btn-wpp" href="#" target="_blank" rel="noopener">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.848L.057 23.116a.5.5 0 0 0 .609.67l5.498-1.44A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.005-1.373l-.36-.214-3.724.976.993-3.63-.234-.373A9.79 9.79 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
-      Falar pelo WhatsApp
-    </a>
+    <h2 class="cta-h">Próximos passos</h2>
+    <p class="cta-d" id="cta-desc">Seu consultor está disponível para esclarecer dúvidas técnicas, discutir condições de pagamento e definir a data de início do projeto.</p>
+    <div id="cta-consultor" style="display:none;background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.2);border-radius:12px;padding:16px 24px;font-size:13px;font-weight:700;color:var(--text)"></div>
   </div>
 </section>
 
@@ -557,10 +594,21 @@ if (loc) {
 var val = P.get('validade');
 if (val) document.getElementById('meta-validade').textContent = 'Válido até ' + val;
 
-// WhatsApp
-if (C && C.wpp) {
-  var msg = encodeURIComponent('Olá' + (CLIENTE ? ', ' + CLIENTE : '') + '! Gostaria de saber mais sobre a proposta off-grid Sigenergy.');
-  document.getElementById('btn-wpp').href = 'https://wa.me/' + C.wpp + '?text=' + msg;
+// Consultor no CTA
+if (C) {
+  var ctaEl = document.getElementById('cta-consultor');
+  ctaEl.style.display = 'block';
+  ctaEl.textContent = 'Consultor: ' + C.nome;
+}
+
+// Valor / Investimento
+var valor = P.get('valor');
+if (valor) {
+  var num = parseFloat(valor.replace(/\./g,'').replace(',','.'));
+  if (!isNaN(num)) {
+    document.getElementById('investimento').style.display = 'block';
+    document.getElementById('inv-valor').textContent = num.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
 }
 
 // Nav scroll
