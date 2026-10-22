@@ -285,6 +285,11 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);border-bottom:
 @media(max-width:640px){.plan-grid{grid-template-columns:repeat(2,1fr)}.auto-scenarios{grid-template-columns:repeat(2,1fr)}}
 
 /* FOOTER */
+
+/* Tab panel layout */
+.tab-hd-wrap{padding:32px 56px}
+.tab-hd-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.tab-cd-wrap{padding:40px 56px;max-width:1012px;margin:0 auto}
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56px;text-align:center;font-size:10px;color:var(--dim)}
 
 /* RESPONSIVE */
@@ -298,6 +303,25 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
   .sys-grid{grid-template-columns:1fr}
   .comp-row{flex-direction:column}
   .comp-sig,.comp-gw{border-left:none;border-top:1px solid var(--border)}
+}
+
+/* ── MOBILE OVERRIDES ── */
+@media(max-width:640px){
+  .tab-hd-wrap{padding:24px 20px}
+  .tab-hd-inner{grid-template-columns:1fr;gap:20px}
+  .tab-hd-inner>div:last-child img{max-height:160px}
+  .tab-cd-wrap{padding:20px 16px}
+  .plan-card{padding:24px 20px}
+  .plan-item-val{font-size:16px}
+  .auto-section{padding:18px 16px}
+  .auto-scen-val{font-size:18px}
+  .cta-box{padding:28px 20px}
+  footer{padding:20px}
+  .aviso-box{flex-direction:column;padding:18px 20px;gap:12px}
+  .global-stats-wrap{max-height:none}
+  .fullbleed img{max-height:280px}
+  .inv-card{padding:28px 20px}
+  .sec{padding:40px 20px}
 }
 </style>
 </head>
@@ -729,8 +753,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
   <!-- TAB A: SIGENERGY -->
   <div class="ab-panel active" id="panel-sig">
     <!-- Header azul Sigenergy -->
-    <div style="background:linear-gradient(135deg,rgba(0,180,216,.12),rgba(0,180,216,.04));border-top:2px solid rgba(0,180,216,.3);border-bottom:1px solid rgba(0,180,216,.15);padding:32px 56px;margin-bottom:0">
-      <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+    <div class="tab-hd-wrap" style="background:linear-gradient(135deg,rgba(0,180,216,.12),rgba(0,180,216,.04));border-top:2px solid rgba(0,180,216,.3);border-bottom:1px solid rgba(0,180,216,.15);margin-bottom:0">
+      <div class="tab-hd-inner">
         <div>
           <div style="font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--sig);text-transform:uppercase;margin-bottom:10px">Opção A · Recomendada</div>
           <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:12px">Sigenergy<br>SigenStor EC</div>
@@ -748,7 +772,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
       </div>
     </div>
     <!-- Cards -->
-    <div style="padding:40px 56px;max-width:1012px;margin:0 auto">
+    <div class="tab-cd-wrap">
       <div class="sys-grid">
         <div class="sys-card hl-sig">
           <div class="sys-card-eye sig-c">Inversor Off-Grid</div>
@@ -800,8 +824,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
   <!-- TAB B: GOODWE -->
   <div class="ab-panel" id="panel-gw">
     <!-- Header verde GoodWe -->
-    <div style="background:linear-gradient(135deg,rgba(0,165,80,.12),rgba(0,165,80,.04));border-top:2px solid rgba(0,165,80,.3);border-bottom:1px solid rgba(0,165,80,.15);padding:32px 56px;margin-bottom:0">
-      <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+    <div class="tab-hd-wrap" style="background:linear-gradient(135deg,rgba(0,165,80,.12),rgba(0,165,80,.04));border-top:2px solid rgba(0,165,80,.3);border-bottom:1px solid rgba(0,165,80,.15);margin-bottom:0">
+      <div class="tab-hd-inner">
         <div>
           <div style="font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--gw);text-transform:uppercase;margin-bottom:10px">Opção B · Alternativa</div>
           <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:12px">GoodWe<br>GW7.5K-ES-LD</div>
@@ -819,7 +843,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
       </div>
     </div>
     <!-- Cards -->
-    <div style="padding:40px 56px;max-width:1012px;margin:0 auto">
+    <div class="tab-cd-wrap">
       <div class="sys-grid">
         <div class="sys-card hl-gw">
           <div class="sys-card-eye gw-c">Inversor Híbrido/Off-Grid</div>
