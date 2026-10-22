@@ -234,6 +234,42 @@ nav.solid{background:rgba(7,11,20,.94);backdrop-filter:blur(24px);border-bottom:
   .fh3{font-size:26px}
 }
 
+
+/* ── PLAN CARD ── */
+.plan-card{max-width:900px;margin:0 auto;background:linear-gradient(135deg,rgba(0,180,216,.08),rgba(0,180,216,.02));border:1.5px solid rgba(0,180,216,.25);border-radius:20px;padding:32px 40px;position:relative;overflow:hidden}
+.plan-card::before{content:"";position:absolute;top:-80px;right:-80px;width:240px;height:240px;background:radial-gradient(circle,rgba(0,180,216,.12),transparent 70%);pointer-events:none}
+.plan-card-eye{font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--sig);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.plan-card-eye::after{content:"";flex:1;height:1px;background:rgba(0,180,216,.2)}
+.plan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.plan-item{display:flex;flex-direction:column;gap:3px}
+.plan-item-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.plan-item-val{font-family:"Space Grotesk",sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.3px;line-height:1.2}
+.plan-item-sub{font-size:10px;color:var(--sig);font-weight:600}
+.plan-divider{width:1px;background:rgba(255,255,255,.08);margin:0 4px}
+/* Hours input in simulator */
+.sim-item-hours{display:none;padding:8px 16px 10px 44px;border-top:1px solid rgba(242,101,34,.12);background:rgba(242,101,34,.04);gap:10px;align-items:center;flex-wrap:wrap}
+.sim-item.ativo .sim-item-hours{display:flex}
+.sim-hours-lbl{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap}
+.sim-hours-inp{width:50px;background:var(--bg3);border:1px solid rgba(242,101,34,.3);border-radius:6px;color:var(--text);font-size:12px;font-weight:800;padding:4px 6px;text-align:center;font-family:inherit;-moz-appearance:textfield}
+.sim-hours-inp::-webkit-inner-spin-button,.sim-hours-inp::-webkit-outer-spin-button{-webkit-appearance:none}
+.sim-hours-inp:focus{outline:none;border-color:var(--or)}
+.sim-kwh-live{font-size:10px;font-weight:800;color:var(--or)}
+/* Autonomy scenarios */
+.auto-section{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-top:20px}
+.auto-section-title{font-size:10px;font-weight:800;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.auto-section-title::after{content:"";flex:1;height:1px;background:var(--border)}
+.auto-scenarios{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.auto-scen{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-align:center;transition:all .2s}
+.auto-scen.ativo-scen{border-color:rgba(0,180,216,.4);background:rgba(0,180,216,.06)}
+.auto-scen-bat{font-size:9px;font-weight:800;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.auto-scen-kwh{font-size:10px;color:var(--sig);font-weight:700;margin-bottom:8px}
+.auto-scen-val{font-family:"Space Grotesk",sans-serif;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1}
+.auto-scen-unit{font-size:10px;color:var(--muted);margin-top:3px;font-weight:600}
+.auto-total{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.auto-total-lbl{font-size:11px;color:var(--muted)}
+.auto-total-val{font-size:13px;font-weight:800;color:var(--or)}
+@media(max-width:640px){.plan-grid{grid-template-columns:repeat(2,1fr)}.auto-scenarios{grid-template-columns:repeat(2,1fr)}}
+
 /* FOOTER */
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56px;text-align:center;font-size:10px;color:var(--dim)}
 
@@ -290,6 +326,38 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
   </div>
 </div>
 
+<!-- PLAN CARD -->
+<section class="sec" id="plan-section" style="display:none;padding-top:40px;padding-bottom:0">
+  <div class="plan-card">
+    <div class="plan-card-eye">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Sistema configurado · <span id="plan-cliente-label">Off-Grid</span>
+    </div>
+    <div class="plan-grid">
+      <div class="plan-item">
+        <div class="plan-item-lbl">Inversor</div>
+        <div class="plan-item-val">7,5 kW</div>
+        <div class="plan-item-sub">SigenStor EC bifásico</div>
+      </div>
+      <div class="plan-item">
+        <div class="plan-item-lbl">Baterias</div>
+        <div class="plan-item-val" id="plan-bat-count">—</div>
+        <div class="plan-item-sub" id="plan-bat-kwh">SigenStor LFP</div>
+      </div>
+      <div class="plan-item">
+        <div class="plan-item-lbl">Geração Solar</div>
+        <div class="plan-item-val">9,92 kWp</div>
+        <div class="plan-item-sub">Placas fotovoltaicas</div>
+      </div>
+      <div class="plan-item">
+        <div class="plan-item-lbl">DoD</div>
+        <div class="plan-item-val" style="color:var(--sig)">100%</div>
+        <div class="plan-item-sub">Energia totalmente utilizável</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- AVISO OFF-GRID -->
 <section class="sec" style="padding-top:48px;padding-bottom:32px">
   <div class="aviso-box">
@@ -342,6 +410,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <div class="sim-item-name">Geladeira Inverter</div>
           <div class="sim-item-w">150 W</div>
         </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="6" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_150_2541">0,9 kWh/dia</span>
+        </div>
       </div>
 
       <div class="sim-item" data-w="200" onclick="toggleItem(this)">
@@ -349,6 +423,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="sim-item-info">
           <div class="sim-item-name">TV (× 2)</div>
           <div class="sim-item-w">200 W cada · 400 W total</div>
+        </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="6" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_200_3833">1,2 kWh/dia</span>
         </div>
       </div>
 
@@ -358,6 +438,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <div class="sim-item-name">Notebook</div>
           <div class="sim-item-w">65 W</div>
         </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="24" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_65_8444">1,56 kWh/dia</span>
+        </div>
       </div>
 
       <div class="sim-item" data-w="750" onclick="toggleItem(this)">
@@ -365,6 +451,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="sim-item-info">
           <div class="sim-item-name">Ar-condicionado 8.000 BTU</div>
           <div class="sim-item-w">750 W</div>
+        </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="4" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_750_1415">3,0 kWh/dia</span>
         </div>
       </div>
 
@@ -374,6 +466,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <div class="sim-item-name">Lavadora de Roupas</div>
           <div class="sim-item-w">1.000 W</div>
         </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="1" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_1000_890">1,0 kWh/dia</span>
+        </div>
       </div>
 
       <div class="sim-item" data-w="1300" onclick="toggleItem(this)">
@@ -381,6 +479,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="sim-item-info">
           <div class="sim-item-name">Micro-ondas</div>
           <div class="sim-item-w">1.300 W</div>
+        </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="1" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_1300_1994">1,3 kWh/dia</span>
         </div>
       </div>
 
@@ -390,6 +494,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <div class="sim-item-name">Air Fryer</div>
           <div class="sim-item-w">1.500 W</div>
         </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="1" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_1500_800">1,5 kWh/dia</span>
+        </div>
       </div>
 
       <div class="sim-item" data-w="1500" onclick="toggleItem(this)">
@@ -397,6 +507,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="sim-item-info">
           <div class="sim-item-name">Aquecedor Elétrico a Óleo</div>
           <div class="sim-item-w">1.500 W</div>
+        </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="1" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_1500_9375">1,5 kWh/dia</span>
         </div>
       </div>
 
@@ -406,6 +522,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <div class="sim-item-name">Secador de Cabelo</div>
           <div class="sim-item-w">1.800 W</div>
         </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="1" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_1800_1653">1,8 kWh/dia</span>
+        </div>
       </div>
 
       <div class="sim-item" data-w="800" onclick="toggleItem(this)">
@@ -413,6 +535,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="sim-item-info">
           <div class="sim-item-name">Cafeteira</div>
           <div class="sim-item-w">800 W</div>
+        </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="4" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_800_3903">3,2 kWh/dia</span>
         </div>
       </div>
 
@@ -422,6 +550,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <div class="sim-item-name">Sanduicheira</div>
           <div class="sim-item-w">800 W</div>
         </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="4" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_800_4880">3,2 kWh/dia</span>
+        </div>
       </div>
 
       <div class="sim-item" data-w="500" onclick="toggleItem(this)">
@@ -430,6 +564,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
           <div class="sim-item-name">Liquidificador</div>
           <div class="sim-item-w">500 W</div>
         </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="4" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_500_3768">2,0 kWh/dia</span>
+        </div>
       </div>
 
       <div class="sim-item" data-w="800" onclick="toggleItem(this)">
@@ -437,6 +577,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
         <div class="sim-item-info">
           <div class="sim-item-name">Aspirador de Pó</div>
           <div class="sim-item-w">800 W</div>
+        </div>
+      
+        <div class="sim-item-hours" onclick="event.stopPropagation()">
+          <span class="sim-hours-lbl">Horas/dia:</span>
+          <input type="number" class="sim-hours-inp" value="4" min="0.5" max="24" step="0.5" oninput="updateMeter()">
+          <span class="sim-kwh-live" id="kwhlive_800_3420">3,2 kWh/dia</span>
         </div>
       </div>
 
@@ -468,7 +614,26 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
       </div>
     </div>
 
-    <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.6">* Potência total instalada estimada: 14.665 a 17.165 W. O simulador mostra uso simultâneo — na prática os equipamentos não ficam todos ligados ao mesmo tempo.</p>
+    <!-- Autonomy scenarios -->
+    <div class="auto-section" id="auto-section" style="display:none;margin-top:20px">
+      <div class="auto-section-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+        Autonomia estimada por cenário de bateria · Sigenergy LFP 100% DoD
+      </div>
+      <div class="auto-scenarios">
+        <div class="auto-scen" id="scen-1"><div class="auto-scen-bat">1 Bateria</div><div class="auto-scen-kwh">9 kWh úteis</div><div class="auto-scen-val" id="scen-1-val">—</div><div class="auto-scen-unit" id="scen-1-unit"></div></div>
+        <div class="auto-scen" id="scen-2"><div class="auto-scen-bat">2 Baterias</div><div class="auto-scen-kwh">18 kWh úteis</div><div class="auto-scen-val" id="scen-2-val">—</div><div class="auto-scen-unit" id="scen-2-unit"></div></div>
+        <div class="auto-scen" id="scen-3"><div class="auto-scen-bat">3 Baterias</div><div class="auto-scen-kwh">27 kWh úteis</div><div class="auto-scen-val" id="scen-3-val">—</div><div class="auto-scen-unit" id="scen-3-unit"></div></div>
+        <div class="auto-scen" id="scen-4"><div class="auto-scen-bat">4 Baterias</div><div class="auto-scen-kwh">36 kWh úteis</div><div class="auto-scen-val" id="scen-4-val">—</div><div class="auto-scen-unit" id="scen-4-unit"></div></div>
+      </div>
+      <div class="auto-total">
+        <span class="auto-total-lbl">Consumo diário configurado: <strong id="auto-kwh-dia">—</strong> kWh/dia</span>
+        <span class="auto-total-val" id="auto-total-note"></span>
+      </div>
+      <p style="font-size:10px;color:var(--dim);margin-top:12px;line-height:1.6">* Baseado nas horas de uso definidas acima. Autonomia real pode variar. Sigenergy: 100% DoD.</p>
+    </div>
+
+    <p style="font-size:10px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.6">* Potência simultânea estimada. Na prática os equipamentos não ficam todos ligados ao mesmo tempo.</p>
   </div>
 </section>
 
@@ -863,6 +1028,15 @@ if (C) {
   ctaEl.textContent = 'Consultor: ' + C.nome;
 }
 
+// Plan card
+var sigBatsGlobal = parseInt(P.get('baterias') || '0');
+if (sigBatsGlobal > 0) {
+  document.getElementById('plan-section').style.display = 'block';
+  document.getElementById('plan-cliente-label').textContent = CLIENTE || 'Off-Grid';
+  document.getElementById('plan-bat-count').textContent = sigBatsGlobal + '×';
+  document.getElementById('plan-bat-kwh').textContent = (sigBatsGlobal * 9) + ' kWh total · LFP 100% DoD';
+}
+
 // Valor / Investimento
 var valor = P.get('valor');
 var valorGw = P.get('valor_gw');
@@ -876,8 +1050,10 @@ if (valor) {
   }
 }
 // Battery description in Sig card
-var sigBatsInv = parseInt(P.get('baterias') || '1');
-document.getElementById('inv-bat-desc').textContent = sigBatsInv + '× SigenStor LFP · ' + (sigBatsInv * 9) + ' kWh total';
+var sigBatsInv = parseInt(P.get('baterias') || '0');
+if (sigBatsInv > 0) {
+  document.getElementById('inv-bat-desc').textContent = sigBatsInv + '× SigenStor LFP · ' + (sigBatsInv * 9) + ' kWh total';
+}
 if (valorGw) {
   var numGw = parseFloat(valorGw.replace(/\./g,'').replace(',','.'));
   if (!isNaN(numGw)) {
@@ -902,19 +1078,35 @@ function calcTotal() {
   return total;
 }
 
+function fmtH(h) {
+  if (h >= 48) return [Math.round(h/24).toString(), h > 48 ? 'dias' : 'dia'];
+  if (h >= 24) return [(h/24).toFixed(1).replace('.',','), 'dias'];
+  if (h >= 1) return [h.toFixed(1).replace('.',','), 'horas'];
+  return [Math.round(h * 60).toString(), 'min'];
+}
+
+function calcKwhDay() {
+  var total = 0;
+  document.querySelectorAll('.sim-item.ativo').forEach(function(el) {
+    var w = parseInt(el.dataset.w || 0);
+    var inp = el.querySelector('.sim-hours-inp');
+    var h = inp ? parseFloat(inp.value) || 1 : 1;
+    total += (w * h) / 1000;
+  });
+  return total;
+}
+
 function updateMeter() {
   var total = calcTotal();
   var pct = Math.min((total / LIMIT) * 100, 100);
   var over = total > LIMIT;
   var near = total > LIMIT * 0.75;
-
   var color = over ? 'var(--red)' : near ? 'var(--yellow)' : 'var(--green)';
   var barColor = over ? '#ef4444' : near ? '#f59e0b' : '#22c55e';
 
   var simKw = document.getElementById('sim-kw');
   simKw.style.color = color;
   simKw.querySelector('.val').textContent = (total / 1000).toFixed(2).replace('.', ',');
-
   document.getElementById('sim-bar').style.width = pct + '%';
   document.getElementById('sim-bar').style.background = barColor;
 
@@ -927,28 +1119,39 @@ function updateMeter() {
   } else {
     statusEl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Dentro da capacidade do inversor (' + Math.round(pct) + '%)';
   }
-
   document.getElementById('sim-warning').classList.toggle('show', over);
 
-  // Duração da bateria
-  var durEl = document.getElementById('sim-duracao');
-  if (total > 0) {
-    var kwLoad = total / 1000;
-    var sigBats = parseInt(P.get('baterias') || '1');
-    var sigKwh = sigBats * 9;
-    var gwKwh = 4 * 5 * 0.9; // 4× Lynx U G3 · 90% DoD = 18 kWh utilizável
-    function fmtH(h) {
-      if (h >= 48) return Math.round(h/24) + ' dias';
-      if (h >= 24) return (h/24).toFixed(1).replace('.',',') + ' dias';
-      if (h >= 1) return h.toFixed(1).replace('.',',') + 'h';
-      return Math.round(h * 60) + ' min';
+  // kWh/day live update for each selected item
+  document.querySelectorAll('.sim-item.ativo').forEach(function(el) {
+    var w = parseInt(el.dataset.w || 0);
+    var inp = el.querySelector('.sim-hours-inp');
+    var live = el.querySelector('.sim-kwh-live');
+    if (inp && live) {
+      var h = parseFloat(inp.value) || 1;
+      live.textContent = (w * h / 1000).toFixed(2).replace('.', ',') + ' kWh/dia';
     }
-    document.getElementById('dur-sig-v').textContent = fmtH(sigKwh / kwLoad);
-    document.getElementById('dur-gw-v').textContent = fmtH(gwKwh / kwLoad);
-    document.getElementById('dur-sig-bat').textContent = sigBats + '× bat · ' + sigKwh + ' kWh';
-    durEl.classList.add('show');
+  });
+
+  // Autonomy scenarios
+  var kwhDay = calcKwhDay();
+  var autoSection = document.getElementById('auto-section');
+  if (kwhDay > 0) {
+    autoSection.style.display = 'block';
+    document.getElementById('auto-kwh-dia').textContent = kwhDay.toFixed(2).replace('.', ',');
+    var configBats = parseInt(P.get('baterias') || '1');
+    [1, 2, 3, 4].forEach(function(n) {
+      var kwh = n * 9; // 100% DoD
+      var days = kwh / kwhDay;
+      var parts = fmtH(days * 24);
+      document.getElementById('scen-' + n + '-val').textContent = parts[0];
+      document.getElementById('scen-' + n + '-unit').textContent = parts[1];
+      var scen = document.getElementById('scen-' + n);
+      scen.classList.toggle('ativo-scen', n === configBats);
+    });
+    var note = configBats > 0 ? 'Proposta: ' + configBats + ' baterias · ' + (configBats*9) + ' kWh' : '';
+    document.getElementById('auto-total-note').textContent = note;
   } else {
-    durEl.classList.remove('show');
+    autoSection.style.display = 'none';
   }
 }
 
