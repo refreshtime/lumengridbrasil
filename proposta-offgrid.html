@@ -304,12 +304,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
 </section>
 
 <!-- SIMULADOR DE CARGAS -->
-<section class="sec sec-dark" id="simulador">
+<section class="sec sec-dark" id="simulador" style="border-top:2px solid rgba(242,101,34,.2)">
   <div class="sec-c">
-    <div class="eye">Simulador Interativo</div>
-    <h2 class="sh2">Simule o consumo <span class="grad">simultâneo.</span></h2>
+    <div class="eye">Simulador de Carga</div>
+    <h2 class="sh2">Quais equipamentos<br>você vai usar?</h2>
     <div class="rule"></div>
-    <p class="ssub">Selecione os equipamentos que deseja usar ao mesmo tempo. O sistema avisa quando a potência ultrapassa o limite do inversor.</p>
+    <p class="ssub">Toque nos equipamentos para simular o uso simultâneo. Veja em tempo real se o sistema suporta a combinação e por quanto tempo as baterias duram.</p>
   </div>
 
   <div class="sim-wrap">
@@ -318,7 +318,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
       <div class="sim-meter-top">
         <div>
           <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Potência selecionada</div>
-          <div class="sim-kw" id="sim-kw-display">0<span class="unit">W</span></div>
+          <div class="sim-kw" id="sim-kw"><span class="val">0,00</span><span class="unit"> kW</span></div>
         </div>
         <div class="sim-limit">
           Limite do inversor<br><strong>7.500 W</strong>
@@ -754,30 +754,49 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
 <section class="sec" id="investimento" style="display:none">
   <div class="sec-c">
     <div class="eye">Investimento</div>
-    <h2 class="sh2">Proposta <span class="grad-sig">Sigenergy</span></h2>
-    <div class="rule" style="background:var(--sig)"></div>
+    <h2 class="sh2">Compare os <span class="grad">cenários.</span></h2>
+    <div class="rule"></div>
+    <p class="ssub" id="inv-subtitle">Valores incluem equipamentos, instalação e homologação.</p>
   </div>
   <div class="inv-section">
     <div class="inv-card">
-      <div class="inv-eye">Sistema Off-Grid · Sigenergy SigenStor EC</div>
+      <div style="position:absolute;top:16px;right:16px;background:rgba(0,180,216,.15);border:1px solid rgba(0,180,216,.3);color:var(--sig);font-size:9px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:.1em">RECOMENDADO</div>
+      <div class="inv-eye">Opção A · Sigenergy SigenStor EC</div>
       <div class="inv-title">Investimento total do projeto</div>
       <div class="inv-val"><span class="inv-cur">R$</span><span id="inv-valor">—</span></div>
-      <div class="inv-sub">Inclui equipamentos, instalação e homologação.<br>Condições de pagamento a combinar.</div>
-      <div class="inv-tags">
-        <div class="inv-tag">9,92 kWp de geração solar</div>
-        <div class="inv-tag" id="inv-tag-bat">Sigenergy LFP</div>
-        <div class="inv-tag">Instalação incluída</div>
+      <div style="margin:16px 0;padding:12px 0;border-top:1px solid rgba(0,180,216,.15);border-bottom:1px solid rgba(0,180,216,.15)">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600">Composição do sistema</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);display:flex;flex-direction:column;gap:4px">
+          <span>Inversor SigenStor EC 7,5 kW</span>
+          <span id="inv-bat-desc" style="color:var(--sig)">— baterias LFP 9 kWh</span>
+          <span>9,92 kWp · placas solares</span>
+        </div>
+      </div>
+      <div class="inv-sub">Condições de pagamento a combinar.</div>
+      <div class="inv-tags" style="margin-top:14px">
+        <div class="inv-tag">100% DoD</div>
+        <div class="inv-tag">10.000 ciclos</div>
+        <div class="inv-tag">0 ms switching</div>
       </div>
     </div>
     <div class="inv-card-gw" id="inv-card-gw" style="display:none">
-      <div class="inv-eye" style="color:var(--gw)">Sistema Off-Grid · GoodWe GW7.5K-ES-LD</div>
+      <div style="position:absolute;top:16px;right:16px;background:rgba(0,165,80,.12);border:1px solid rgba(0,165,80,.25);color:var(--gw);font-size:9px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:.1em">OPÇÃO B</div>
+      <div class="inv-eye" style="color:var(--gw)">Opção B · GoodWe GW7.5K-ES-LD</div>
       <div class="inv-title">Investimento total do projeto</div>
       <div class="inv-val"><span class="inv-cur inv-cur-gw">R$</span><span id="inv-valor-gw">—</span></div>
-      <div class="inv-sub">Inclui equipamentos, instalação e homologação.<br>Condições de pagamento a combinar.</div>
-      <div class="inv-tags">
-        <div class="inv-tag-gw">9,92 kWp de geração solar</div>
-        <div class="inv-tag-gw">4× GoodWe Lynx U G3</div>
-        <div class="inv-tag-gw">Instalação incluída</div>
+      <div style="margin:16px 0;padding:12px 0;border-top:1px solid rgba(0,165,80,.15);border-bottom:1px solid rgba(0,165,80,.15)">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600">Composição do sistema</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);display:flex;flex-direction:column;gap:4px">
+          <span>Inversor GW7.5K-ES-LD 7,5 kW</span>
+          <span style="color:var(--gw)">4× GoodWe Lynx U G3 · 20 kWh total</span>
+          <span>9,92 kWp · placas solares</span>
+        </div>
+      </div>
+      <div class="inv-sub">Condições de pagamento a combinar.</div>
+      <div class="inv-tags" style="margin-top:14px">
+        <div class="inv-tag-gw">90% DoD</div>
+        <div class="inv-tag-gw">6.000 ciclos</div>
+        <div class="inv-tag-gw">Suporte amplo BR</div>
       </div>
     </div>
   </div>
@@ -849,6 +868,9 @@ if (valor) {
     document.getElementById('inv-valor').textContent = num.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
   }
 }
+// Battery description in Sig card
+var sigBatsInv = parseInt(P.get('baterias') || '1');
+document.getElementById('inv-bat-desc').textContent = sigBatsInv + '× SigenStor LFP · ' + (sigBatsInv * 9) + ' kWh total';
 if (valorGw) {
   var numGw = parseFloat(valorGw.replace(/\./g,'').replace(',','.'));
   if (!isNaN(numGw)) {
