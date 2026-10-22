@@ -638,123 +638,187 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
 </section>
 
 <!-- PROPOSTA A/B -->
-<section class="sec" id="proposta">
+<section class="sec" id="proposta" style="padding-bottom:0">
   <div class="sec-c">
-    <div class="eye">Opções de Sistema</div>
-    <h2 class="sh2">Compare os <span class="grad-sig">equipamentos.</span></h2>
-    <div class="rule" style="background:var(--sig)"></div>
-    <p class="ssub" style="margin-bottom:32px">Apresentamos duas opções de sistema para seu projeto off-grid. Analise e escolha a que melhor se encaixa.</p>
+    <div class="eye">Equipamentos do Projeto</div>
+    <h2 class="sh2">Duas opções,<br>uma decisão.</h2>
+    <div class="rule"></div>
+    <p class="ssub" style="margin-bottom:40px">Selecione a aba para conhecer os equipamentos de cada cenário. O comparativo técnico fica logo abaixo.</p>
 
-    <div class="ab-tabs">
+    <div class="ab-tabs" style="max-width:600px;border-radius:14px">
       <button class="ab-tab sig active" onclick="switchAB('sig', this)">
-        <span style="display:flex;align-items:center;justify-content:center;gap:7px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Sigenergy</span><span style="font-size:9px;opacity:.7;display:block;font-weight:600;margin-top:2px">Recomendado</span>
+        <span style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Sigenergy
+        </span>
+        <span style="font-size:10px;opacity:.7;display:block;font-weight:600;margin-top:3px;letter-spacing:.05em">RECOMENDADO</span>
       </button>
       <button class="ab-tab gw" onclick="switchAB('gw', this)">
-        <span style="display:flex;align-items:center;justify-content:center;gap:7px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>GoodWe</span><span style="font-size:9px;opacity:.7;display:block;font-weight:600;margin-top:2px">Alternativa</span>
+        <span style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+          GoodWe
+        </span>
+        <span style="font-size:10px;opacity:.7;display:block;font-weight:600;margin-top:3px;letter-spacing:.05em">ALTERNATIVA</span>
       </button>
     </div>
   </div>
 
   <!-- TAB A: SIGENERGY -->
   <div class="ab-panel active" id="panel-sig">
-    <div class="sys-grid">
-      <div class="sys-card hl-sig">
-        <div class="sys-card-eye sig-c">Inversor Off-Grid</div>
-        <div class="sys-card-title">SigenStor EC 7,5 kW</div>
-        <table class="sys-table">
-          <tr><td>Potência AC saída</td><td class="hl-sig">7.500 W bifásico</td></tr>
-          <tr><td>Potência FV (placas)</td><td>9,92 kWp</td></tr>
-          <tr><td>Modo off-grid</td><td>Nativo</td></tr>
-          <tr><td>Switching time</td><td class="hl-sig">0 ms</td></tr>
-          <tr><td>MPPT</td><td class="hl-sig">4 entradas</td></tr>
-          <tr><td>Grau de proteção</td><td>IP65</td></tr>
-          <tr><td>Garantia</td><td>10 anos</td></tr>
-        </table>
-        <img src="imagens/PROJETOS/sigenergy-bateria-wallbox.jpeg" alt="Sigenergy" style="width:100%;border-radius:10px;margin-top:16px;display:block;object-fit:cover;max-height:160px">
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
-          <a class="ds-link" href="SIGENERGY/DATASHEET_INVERSOR.pdf" target="_blank" rel="noopener">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            Datasheet Inversor
-          </a>
-          <a class="ds-link" href="SIGENERGY/DATASHEET_BATERIA.pdf" target="_blank" rel="noopener">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
-            Datasheet Bateria
-          </a>
+    <!-- Header azul Sigenergy -->
+    <div style="background:linear-gradient(135deg,rgba(0,180,216,.12),rgba(0,180,216,.04));border-top:2px solid rgba(0,180,216,.3);border-bottom:1px solid rgba(0,180,216,.15);padding:32px 56px;margin-bottom:0">
+      <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+        <div>
+          <div style="font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--sig);text-transform:uppercase;margin-bottom:10px">Opção A · Recomendada</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:12px">Sigenergy<br>SigenStor EC</div>
+          <p style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px">Plataforma off-grid nativa com bateria LFP 100% DoD, inteligência artificial integrada e 10.000 ciclos de vida útil — tecnologia de ponta para total independência energética.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span style="background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.25);color:var(--sig);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px">100% DoD</span>
+            <span style="background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.25);color:var(--sig);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px">10.000 ciclos</span>
+            <span style="background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.25);color:var(--sig);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px">0 ms switching</span>
+            <span style="background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.25);color:var(--sig);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px">IA integrada</span>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <img src="SIGENERGY/Detalhes sigenergy.png" alt="Sigenergy SigenStor EC" style="max-height:200px;width:auto;display:inline-block;filter:drop-shadow(0 10px 30px rgba(0,180,216,.2))">
         </div>
       </div>
-      <div class="sys-card">
-        <div class="sys-card-eye sig-c">Bateria</div>
-        <div class="sys-card-title">SigenStor LFP 9 kWh</div>
-        <table class="sys-table">
-          <tr><td>Capacidade</td><td>9 kWh por módulo</td></tr>
-          <tr><td>DoD</td><td class="hl-sig">100% (único no mercado)</td></tr>
-          <tr><td>Ciclos de vida</td><td class="hl-sig">&gt; 10.000 ciclos</td></tr>
-          <tr><td>Expansível (baterias)</td><td>Até 6 módulos · 54 kWh</td></tr>
-          <tr><td>Garantia</td><td>10 anos</td></tr>
-        </table>
-        <ul class="vant-list">
-          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Maior DoD do mercado: 100%</li>
-          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ecossistema integrado nativo</li>
-          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>V2X bidirecional (lançamento Out/26)</li>
-          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>App unificado inversor + bateria</li>
-        </ul>
+    </div>
+    <!-- Cards -->
+    <div style="padding:40px 56px;max-width:1012px;margin:0 auto">
+      <div class="sys-grid">
+        <div class="sys-card hl-sig">
+          <div class="sys-card-eye sig-c">Inversor Off-Grid</div>
+          <div class="sys-card-title">SigenStor EC 7,5 kW</div>
+          <table class="sys-table">
+            <tr><td>Potência AC saída</td><td class="hl-sig">7.500 W bifásico</td></tr>
+            <tr><td>Potência FV (placas)</td><td>9,92 kWp</td></tr>
+            <tr><td>Modo off-grid</td><td>Nativo</td></tr>
+            <tr><td>Switching time</td><td class="hl-sig">0 ms</td></tr>
+            <tr><td>MPPT</td><td class="hl-sig">4 entradas</td></tr>
+            <tr><td>Grau de proteção</td><td>IP65</td></tr>
+            <tr><td>Garantia</td><td>10 anos</td></tr>
+          </table>
+          <div style="display:flex;gap:8px;margin-top:16px">
+            <a class="ds-link" href="SIGENERGY/DATASHEET_INVERSOR.pdf" target="_blank" rel="noopener" style="flex:1;justify-content:center">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Datasheet
+            </a>
+          </div>
+        </div>
+        <div class="sys-card hl-sig">
+          <div class="sys-card-eye sig-c">Bateria</div>
+          <div class="sys-card-title">SigenStor LFP 9 kWh</div>
+          <table class="sys-table">
+            <tr><td>Capacidade</td><td>9 kWh por módulo</td></tr>
+            <tr><td>DoD</td><td class="hl-sig">100% (único no mercado)</td></tr>
+            <tr><td>Ciclos de vida</td><td class="hl-sig">&gt; 10.000 ciclos</td></tr>
+            <tr><td>Química</td><td>LiFePO4 (LFP)</td></tr>
+            <tr><td>Expansível (baterias)</td><td>Até 6 módulos · 54 kWh</td></tr>
+            <tr><td>Garantia</td><td>10 anos</td></tr>
+          </table>
+          <ul class="vant-list">
+            <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Maior DoD do mercado: 100%</li>
+            <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ecossistema integrado nativo</li>
+            <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>V2X bidirecional (lançamento Out/26)</li>
+            <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>App unificado inversor + bateria</li>
+          </ul>
+          <div style="display:flex;gap:8px;margin-top:16px">
+            <a class="ds-link" href="SIGENERGY/DATASHEET_BATERIA.pdf" target="_blank" rel="noopener" style="flex:1;justify-content:center">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+              Datasheet
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- TAB B: GOODWE -->
   <div class="ab-panel" id="panel-gw">
-    <div class="sys-grid">
-      <div class="sys-card hl-gw">
-        <div class="sys-card-eye gw-c">Inversor Híbrido/Off-Grid</div>
-        <div class="sys-card-title">GoodWe GW7.5K-ES-LD</div>
-        <table class="sys-table">
-          <tr><td>Potência AC saída</td><td class="hl-gw">7.500 W bifásico</td></tr>
-          <tr><td>Potência FV (placas)</td><td>9,92 kWp</td></tr>
-          <tr><td>Modo off-grid</td><td>EPS (backup)</td></tr>
-          <tr><td>Switching time</td><td>&lt; 30 ms</td></tr>
-          <tr><td>MPPT</td><td>2 entradas</td></tr>
-          <tr><td>Grau de proteção</td><td>IP65</td></tr>
-          <tr><td>Garantia</td><td>10 anos</td></tr>
-        </table>
-        <a class="ds-link ds-link-gw" href="GOODWEE/DATASHEET_PRODUCT_GW7.5K-ES-LD-G10.pdf" target="_blank" rel="noopener">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Site GoodWe ET Plus
-        </a>
+    <!-- Header verde GoodWe -->
+    <div style="background:linear-gradient(135deg,rgba(0,165,80,.12),rgba(0,165,80,.04));border-top:2px solid rgba(0,165,80,.3);border-bottom:1px solid rgba(0,165,80,.15);padding:32px 56px;margin-bottom:0">
+      <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+        <div>
+          <div style="font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--gw);text-transform:uppercase;margin-bottom:10px">Opção B · Alternativa</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:12px">GoodWe<br>GW7.5K-ES-LD</div>
+          <p style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px">Inversor híbrido com bateria de baixa tensão Lynx U G3 — solução consolidada com a mais ampla rede de suporte técnico no Brasil e excelente custo-benefício.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span style="background:rgba(0,165,80,.1);border:1px solid rgba(0,165,80,.25);color:var(--gw);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px">90% DoD</span>
+            <span style="background:rgba(0,165,80,.1);border:1px solid rgba(0,165,80,.25);color:var(--gw);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px">6.000 ciclos</span>
+            <span style="background:rgba(0,165,80,.1);border:1px solid rgba(0,165,80,.25);color:var(--gw);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px">Suporte amplo BR</span>
+            <span style="background:rgba(0,165,80,.1);border:1px solid rgba(0,165,80,.25);color:var(--gw);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px">150 kWh expansível</span>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <img src="imagens/TECNOLOGIA/inversor-bateria-goodwe.jpg" alt="GoodWe GW7.5K + Lynx U G3" style="max-height:200px;width:auto;display:inline-block;border-radius:12px;filter:drop-shadow(0 10px 30px rgba(0,165,80,.15))">
+        </div>
       </div>
-      <div class="sys-card">
-        <div class="sys-card-eye gw-c">Bateria Compatível</div>
-        <div class="sys-card-title">GoodWe Lynx U G3</div>
-        <table class="sys-table">
-          <tr><td>Capacidade</td><td>5 kWh por módulo</td></tr>
-          <tr><td>DoD</td><td class="hl-gw">90%</td></tr>
-          <tr><td>Ciclos de vida</td><td>&gt; 6.000 ciclos</td></tr>
-          <tr><td>Química</td><td>LiFePO4 (LFP)</td></tr>
-          <tr><td>Expansível (baterias)</td><td>Até 30 módulos · 150 kWh</td></tr>
-          <tr><td>Garantia</td><td>10 anos</td></tr>
-        </table>
-        <ul class="vant-list">
-          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Marca consolidada no Brasil</li>
-          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ampla rede de assistência técnica</li>
-          <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Custo-benefício competitivo</li>
-          <li class="con"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>DoD 90% (menos energia utilizável)</li>
-          <li class="con"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sem V2X bidirecional</li>
-        </ul>
-        <a class="ds-link ds-link-gw" href="GOODWEE/DATASHEET_PRODUCT_BATERIA.pdf" target="_blank" rel="noopener">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-          Datasheet Lynx U G3
-        </a>
+    </div>
+    <!-- Cards -->
+    <div style="padding:40px 56px;max-width:1012px;margin:0 auto">
+      <div class="sys-grid">
+        <div class="sys-card hl-gw">
+          <div class="sys-card-eye gw-c">Inversor Híbrido/Off-Grid</div>
+          <div class="sys-card-title">GoodWe GW7.5K-ES-LD</div>
+          <table class="sys-table">
+            <tr><td>Potência AC saída</td><td class="hl-gw">7.500 W bifásico</td></tr>
+            <tr><td>Potência FV (placas)</td><td>9,92 kWp</td></tr>
+            <tr><td>Modo off-grid</td><td>EPS (backup)</td></tr>
+            <tr><td>Switching time</td><td>&lt; 30 ms</td></tr>
+            <tr><td>MPPT</td><td>2 entradas</td></tr>
+            <tr><td>Grau de proteção</td><td>IP65</td></tr>
+            <tr><td>Garantia</td><td>10 anos</td></tr>
+          </table>
+          <div style="display:flex;gap:8px;margin-top:16px">
+            <a class="ds-link ds-link-gw" href="GOODWEE/DATASHEET_PRODUCT_GW7.5K-ES-LD-G10.pdf" target="_blank" rel="noopener" style="flex:1;justify-content:center">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Datasheet
+            </a>
+          </div>
+        </div>
+        <div class="sys-card hl-gw">
+          <div class="sys-card-eye gw-c">Bateria</div>
+          <div class="sys-card-title">GoodWe Lynx U G3</div>
+          <table class="sys-table">
+            <tr><td>Capacidade</td><td>5 kWh por módulo</td></tr>
+            <tr><td>DoD</td><td class="hl-gw">90%</td></tr>
+            <tr><td>Ciclos de vida</td><td>&gt; 6.000 ciclos</td></tr>
+            <tr><td>Química</td><td>LiFePO4 (LFP)</td></tr>
+            <tr><td>Expansível (baterias)</td><td>Até 30 módulos · 150 kWh</td></tr>
+            <tr><td>Garantia</td><td>10 anos</td></tr>
+          </table>
+          <ul class="vant-list">
+            <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Marca consolidada no Brasil</li>
+            <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ampla rede de assistência técnica</li>
+            <li class="pro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Custo-benefício competitivo</li>
+            <li class="con"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>DoD 90% (menos energia utilizável)</li>
+            <li class="con"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sem V2X bidirecional</li>
+          </ul>
+          <div style="display:flex;gap:8px;margin-top:16px">
+            <a class="ds-link ds-link-gw" href="GOODWEE/DATASHEET_PRODUCT_BATERIA.pdf" target="_blank" rel="noopener" style="flex:1;justify-content:center">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+              Datasheet
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Comparativo rápido -->
-  <div style="max-width:900px;margin:32px auto 0">
-    <p style="font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--or);text-transform:uppercase;margin-bottom:14px;text-align:center">Comparativo rápido</p>
+<!-- COMPARATIVO -->
+<section class="sec sec-dark" style="padding-top:48px">
+  <div class="sec-c">
+    <div class="eye">Comparativo Técnico</div>
+    <h2 class="sh2">Sigenergy <span style="color:var(--dim);font-weight:400">vs</span> GoodWe</h2>
+    <div class="rule"></div>
+  </div>
+  <div style="max-width:860px;margin:0 auto">
     <div class="comp-row header">
       <div class="comp-lbl">Critério</div>
       <div class="comp-sig">Sigenergy</div>
-      <div class="comp-gw">GoodWe + BYD</div>
+      <div class="comp-gw">GoodWe + Lynx U G3</div>
     </div>
     <div class="comp-row"><div class="comp-lbl">DoD da bateria</div><div class="comp-sig">100%</div><div class="comp-gw">90%</div></div>
     <div class="comp-row"><div class="comp-lbl">Ciclos de vida (bat.)</div><div class="comp-sig">&gt; 10.000</div><div class="comp-gw">&gt; 6.000</div></div>
@@ -763,6 +827,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 56p
     <div class="comp-row"><div class="comp-lbl">Switching time</div><div class="comp-sig">0 ms*</div><div class="comp-gw">&lt; 30 ms</div></div>
     <div class="comp-row"><div class="comp-lbl">Ecossistema integrado</div><div class="comp-sig">Nativo</div><div class="comp-gw">Parcial</div></div>
     <div class="comp-row"><div class="comp-lbl">Assistência no Brasil</div><div class="comp-sig">Crescente</div><div class="comp-gw">Ampla</div></div>
+    <p style="font-size:10px;color:var(--dim);margin-top:16px;text-align:center;line-height:1.6">* 0 ms com Sigen LoadHub. Sigenergy EC funciona como off-grid nativo sem necessidade de rede elétrica.</p>
   </div>
 </section>
 
