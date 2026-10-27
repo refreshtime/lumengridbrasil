@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Financiamento 90 dias</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #0a0a10; display: flex; justify-content: center; padding: 0; }
+  .li { height: 58px; width: auto; object-fit: contain; filter: drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9)); }
+</style>
+</head>
+<body>
+<div style="width:1080px;height:1350px;position:relative;overflow:hidden;background:#08080d;">
+
+  <!-- Fundo: gradiente radial sutil para profundidade -->
+  <div style="position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(ellipse 900px 600px at 80% 30%, rgba(242,101,34,.07) 0%, transparent 70%),
+      radial-gradient(ellipse 600px 400px at 10% 80%, rgba(242,101,34,.04) 0%, transparent 60%),
+      #08080d;"></div>
+
+  <!-- Grade sutil de linhas -->
+  <div style="position:absolute;inset:0;z-index:1;opacity:.04;
+    background-image: linear-gradient(rgba(242,101,34,1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(242,101,34,1) 1px, transparent 1px);
+    background-size: 60px 60px;"></div>
+
+  <!-- Linha lateral esquerda decorativa -->
+  <div style="position:absolute;left:0;top:0;bottom:0;width:4px;z-index:5;
+    background:linear-gradient(to bottom, transparent 0%, #F26522 20%, #F26522 80%, transparent 100%);
+    opacity:.7;"></div>
+
+  <!-- ===== LOGO — topo esquerdo ===== -->
+  <div style="position:absolute;top:72px;left:72px;display:flex;align-items:center;gap:12px;z-index:30;">
+    <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:baseline;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;text-shadow:0 2px 10px rgba(0,0,0,.95);">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;text-shadow:0 2px 10px rgba(0,0,0,.95);">GRID</span>
+      </div>
+      <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);text-shadow:0 2px 8px rgba(0,0,0,.95);">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <!-- Badge carência -->
+  <div style="position:absolute;top:72px;right:72px;z-index:30;
+    background:rgba(242,101,34,.15);border:1.5px solid rgba(242,101,34,.55);border-radius:40px;
+    padding:10px 24px;display:flex;align-items:center;gap:8px;">
+    <div style="width:8px;height:8px;border-radius:50%;background:#F26522;box-shadow:0 0 8px rgba(242,101,34,.9);"></div>
+    <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;color:#F26522;letter-spacing:1px;text-transform:uppercase;">Carência de 90 dias</span>
+  </div>
+
+  <!-- ===== ÁREA PRINCIPAL ===== -->
+  <div style="position:absolute;left:72px;right:72px;top:210px;z-index:20;">
+
+    <!-- Eyebrow -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:#F26522;margin:0 0 18px;opacity:.90;">▶ financiamento solar</p>
+
+    <!-- Headline -->
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:54px;font-weight:800;color:#FAFAFA;line-height:1.05;letter-spacing:-1.5px;margin:0;">Seu sistema solar<br>sem entrada.<br><span style="color:#F26522;">Sem esperar.</span></p>
+
+    <!-- Traço -->
+    <div style="width:52px;height:3px;background:#F26522;border-radius:2px;margin:30px 0 28px;"></div>
+
+    <!-- Valor total -->
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:36px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:rgba(250,250,250,.55);text-transform:uppercase;letter-spacing:2px;">Valor do sistema</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:800;color:#FAFAFA;letter-spacing:-1px;">R$ 23.863<span style="font-size:26px;color:rgba(250,250,250,.7)">,00</span></span>
+    </div>
+
+    <!-- Tabela de parcelas -->
+    <div style="background:rgba(255,255,255,.035);border:1px solid rgba(242,101,34,.18);border-radius:20px;overflow:hidden;">
+
+      <!-- Header tabela -->
+      <div style="display:flex;align-items:center;padding:20px 36px;background:rgba(242,101,34,.10);border-bottom:1px solid rgba(242,101,34,.18);">
+        <span style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);flex:1;">Prazo</span>
+        <span style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);">Parcela mensal</span>
+      </div>
+
+      <!-- Linha destaque — 84x (melhor opção) -->
+      <div style="display:flex;align-items:center;padding:26px 36px;background:rgba(242,101,34,.08);border-bottom:1px solid rgba(255,255,255,.05);position:relative;">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#F26522;border-radius:0 2px 2px 0;"></div>
+        <div style="flex:1;display:flex;align-items:center;gap:14px;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:#F26522;">84x</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(242,101,34,.80);background:rgba(242,101,34,.12);border:1px solid rgba(242,101,34,.35);border-radius:20px;padding:4px 12px;">Melhor opção</span>
+        </div>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;color:#FAFAFA;letter-spacing:-.5px;">R$ 619<span style="font-size:20px;color:rgba(250,250,250,.65)">,55</span></span>
+      </div>
+
+      <!-- Linha 72x -->
+      <div style="display:flex;align-items:center;padding:22px 36px;border-bottom:1px solid rgba(255,255,255,.05);">
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:rgba(250,250,250,.80);flex:1;">72x</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:rgba(250,250,250,.85);letter-spacing:-.5px;">R$ 689<span style="font-size:18px;color:rgba(250,250,250,.55)">,81</span></span>
+      </div>
+
+      <!-- Linha 60x -->
+      <div style="display:flex;align-items:center;padding:22px 36px;border-bottom:1px solid rgba(255,255,255,.05);">
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:rgba(250,250,250,.80);flex:1;">60x</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:rgba(250,250,250,.85);letter-spacing:-.5px;">R$ 750<span style="font-size:18px;color:rgba(250,250,250,.55)">,21</span></span>
+      </div>
+
+      <!-- Linha 48x -->
+      <div style="display:flex;align-items:center;padding:22px 36px;border-bottom:1px solid rgba(255,255,255,.05);">
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:rgba(250,250,250,.80);flex:1;">48x</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:rgba(250,250,250,.85);letter-spacing:-.5px;">R$ 850<span style="font-size:18px;color:rgba(250,250,250,.55)">,07</span></span>
+      </div>
+
+      <!-- Linha 36x -->
+      <div style="display:flex;align-items:center;padding:22px 36px;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:rgba(250,250,250,.80);flex:1;">36x</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:rgba(250,250,250,.85);letter-spacing:-.5px;">R$ 1.031<span style="font-size:18px;color:rgba(250,250,250,.55)">,41</span></span>
+      </div>
+
+    </div>
+
+    <!-- Rodapé info -->
+    <div style="display:flex;align-items:center;gap:10px;margin-top:28px;">
+      <div style="width:6px;height:6px;border-radius:50%;background:rgba(242,101,34,.70);flex-shrink:0;"></div>
+      <p style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:400;color:rgba(250,250,250,.50);margin:0;line-height:1.5;">Simulação sujeita a análise de crédito. Parcelas estimadas — condições confirmadas na proposta.</p>
+    </div>
+
+    <!-- CTA -->
+    <div style="margin-top:36px;display:flex;align-items:center;gap:20px;">
+      <div style="flex:1;height:1px;background:rgba(242,101,34,.25);"></div>
+      <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:#F26522;margin:0;text-transform:uppercase;letter-spacing:3px;">Solicite sua simulação</p>
+      <div style="flex:1;height:1px;background:rgba(242,101,34,.25);"></div>
+    </div>
+
+  </div>
+
+  <!-- Rodapé Domani -->
+  <div style="position:absolute;bottom:28px;left:0;right:0;z-index:30;display:flex;justify-content:center;">
+    <span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:400;color:rgba(255,255,255,.20);letter-spacing:2px;text-transform:uppercase;">Feito por Domani Consultoria</span>
+  </div>
+
+</div>
+</body>
+</html>

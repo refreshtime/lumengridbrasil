@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Etiqueta Inversor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    gap: 28px;
+    padding: 60px 40px;
+  }
+  .hint {
+    color: rgba(255,255,255,.35);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* === ETIQUETA === */
+  .etiqueta {
+    width: 960px;
+    height: 400px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(242,101,34,.18),
+      0 24px 80px rgba(0,0,0,.85),
+      0 4px 20px rgba(0,0,0,.60);
+  }
+
+  /* Fundo com gradiente sutil premium */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 80% at 20% 50%, rgba(242,101,34,.06) 0%, transparent 60%),
+      linear-gradient(135deg, #141414 0%, #0e0e0e 50%, #141414 100%);
+  }
+
+  /* Linha superior laranja — sotaque premium */
+  .accent-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #F26522 30%, #ff8c42 55%, #F26522 70%, transparent 100%);
+    opacity: .90;
+  }
+
+  /* Layout principal */
+  .layout {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: stretch;
+  }
+
+  /* ---- BLOCO ESQUERDO: identidade ---- */
+  .bloco-identidade {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 56px;
+    gap: 0;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+  .logo-icon {
+    height: 72px;
+    width: auto;
+    object-fit: contain;
+    filter:
+      drop-shadow(0 0 20px rgba(242,101,34,.60))
+      drop-shadow(0 0 8px rgba(242,101,34,.40));
+  }
+  .logo-txt {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .logo-nome {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: -.6px;
+  }
+  .logo-nome .l { color: #F26522; }
+  .logo-nome .g { color: #F5F5F5; }
+  .logo-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: .42em;
+    color: rgba(242,101,34,.75);
+  }
+
+  /* Divisor fino */
+  .div-h {
+    width: 36px;
+    height: 1.5px;
+    background: linear-gradient(90deg, #F26522, transparent);
+    margin-bottom: 28px;
+    border-radius: 2px;
+  }
+
+  /* Contatos */
+  .contatos {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .ct-linha {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ct-icone {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: .80;
+  }
+  .ct-icone svg {
+    width: 17px;
+    height: 17px;
+    fill: #F26522;
+  }
+  .ct-texto {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 17px;
+    color: rgba(245,245,245,.80);
+    letter-spacing: .01em;
+  }
+
+  /* ---- SEPARADOR VERTICAL ---- */
+  .sep-v {
+    width: 1px;
+    margin: 52px 0;
+    background: linear-gradient(to bottom, transparent, rgba(242,101,34,.22) 30%, rgba(242,101,34,.22) 70%, transparent);
+    flex-shrink: 0;
+  }
+
+  /* ---- BLOCO DIREITO: QR ---- */
+  .bloco-qr {
+    width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 0 44px;
+  }
+
+  .qr-frame {
+    background: #FFFFFF;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.08),
+      0 8px 32px rgba(0,0,0,.50),
+      0 0 40px rgba(242,101,34,.12);
+  }
+
+  .qr-label {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .30em;
+    color: rgba(242,101,34,.65);
+    text-align: center;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+  <p class="hint">Etiqueta — Inversor LumenGrid</p>
+
+  <div class="etiqueta">
+    <div class="bg"></div>
+    <div class="accent-top"></div>
+
+    <div class="layout">
+
+      <!-- Identidade -->
+      <div class="bloco-identidade">
+        <div class="logo-row">
+          <img src="/Users/Hingrid/Documents/LUMENGRID/imagens/LOGOS/logo-icone.png" alt="" class="logo-icon">
+          <div class="logo-txt">
+            <div class="logo-nome"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="logo-tag">Energia Inteligente</div>
+          </div>
+        </div>
+
+        <div class="div-h"></div>
+
+        <div class="contatos">
+          <div class="ct-linha">
+            <div class="ct-icone">
+              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </div>
+            <span class="ct-texto">@lumen.grid</span>
+          </div>
+          <div class="ct-linha">
+            <div class="ct-icone">
+              <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1 21.945V18h2v3.945C7.945 21.478 3 17.177 3 12c0-.34.017-.677.049-1.009L7 15v1c0 1.103.897 2 2 2v1.945zM17.1 17.4C16.747 16.578 15.938 16 15 16h-1v-3c0-.552-.448-1-1-1H8v-2h2c.552 0 1-.448 1-1V7h2c1.103 0 2-.897 2-2v-.41C17.928 5.777 21 8.65 21 12c0 2.144-.91 4.078-2.362 5.445L17.1 17.4z"/></svg>
+            </div>
+            <span class="ct-texto">lumengridbrasil.com.br</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sep-v"></div>
+
+      <!-- QR Code -->
+      <div class="bloco-qr">
+        <div class="qr-frame">
+          <div id="qrcode"></div>
+        </div>
+        <div class="qr-label">Siga no<br>Instagram</div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="hint">Ctrl+P → Gráficos de plano de fundo → Tamanho real</p>
+
+<script>
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://www.instagram.com/lumen.grid/",
+    width: 156,
+    height: 156,
+    colorDark: "#0e0e0e",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+</script>
+
+</body>
+</html>

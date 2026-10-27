@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Manual de Organização Instagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0e0e0e;color:#FAFAFA;font-family:'DM Sans',sans-serif;padding:60px 40px 120px;line-height:1.6;}
+.container{max-width:900px;margin:0 auto;}
+
+/* Header */
+.header{margin-bottom:64px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.07);}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:rgba(242,101,34,.70);margin-bottom:12px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:800;color:#FAFAFA;letter-spacing:-.5px;line-height:1.1;margin-bottom:16px;}
+h1 span{color:#F26522;}
+.header-sub{font-size:16px;color:rgba(255,255,255,.45);max-width:600px;}
+
+/* Section */
+.section{margin-bottom:56px;}
+h2{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#FAFAFA;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.06);}
+h3{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:rgba(242,101,34,.90);margin-bottom:10px;letter-spacing:.03em;}
+p{color:rgba(255,255,255,.60);font-size:15px;margin-bottom:12px;}
+
+/* Folder tree */
+.tree{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:28px 32px;font-family:'SF Mono','Fira Code',monospace;font-size:13px;line-height:2;margin-bottom:24px;}
+.tree-root{color:#F26522;font-weight:700;}
+.tree-folder{color:#FAFAFA;}
+.tree-folder.dim{color:rgba(255,255,255,.35);}
+.tree-file{color:rgba(255,255,255,.45);}
+.tree-note{color:rgba(242,101,34,.50);font-style:italic;font-size:11px;margin-left:8px;}
+.tree-tag{display:inline-block;background:rgba(242,101,34,.12);color:rgba(242,101,34,.75);font-size:10px;padding:1px 7px;border-radius:4px;margin-left:8px;font-family:'DM Sans',sans-serif;font-style:normal;letter-spacing:.05em;vertical-align:middle;}
+.tree-tag.ok{background:rgba(34,197,94,.10);color:rgba(34,197,94,.65);}
+.tree-tag.draft{background:rgba(255,255,255,.05);color:rgba(255,255,255,.30);}
+.tree-tag.wip{background:rgba(255,200,30,.08);color:rgba(255,200,30,.55);}
+
+/* Cards de pasta */
+.folder-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+.folder-card{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:20px 22px;}
+.folder-card h4{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#FAFAFA;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.folder-card h4 .fc-icon{font-size:16px;}
+.folder-card p{font-size:13px;color:rgba(255,255,255,.45);margin:0;}
+.folder-card .fc-path{display:block;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#F26522;margin-bottom:8px;opacity:.70;}
+
+/* Regras */
+.rules{display:flex;flex-direction:column;gap:12px;}
+.rule{display:flex;gap:14px;align-items:flex-start;background:#111;border-radius:8px;padding:14px 16px;}
+.rule-num{width:24px;height:24px;border-radius:50%;background:rgba(242,101,34,.15);color:#F26522;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Space Grotesk',sans-serif;margin-top:1px;}
+.rule-text{font-size:14px;color:rgba(255,255,255,.65);}
+.rule-text strong{color:#FAFAFA;font-weight:600;}
+
+/* Convenção de nomes */
+.naming-table{width:100%;border-collapse:collapse;}
+.naming-table th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.30);text-align:left;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06);}
+.naming-table td{font-size:13px;color:rgba(255,255,255,.65);padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);}
+.naming-table td:first-child{font-family:'SF Mono','Fira Code',monospace;color:#F26522;font-size:12px;}
+.naming-table tr:last-child td{border-bottom:none;}
+
+/* Quick links */
+.quicklinks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.ql{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:16px 18px;text-decoration:none;transition:border-color .15s;}
+.ql:hover{border-color:rgba(242,101,34,.35);}
+.ql-label{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,101,34,.55);display:block;margin-bottom:4px;}
+.ql-name{font-size:14px;font-weight:600;color:#FAFAFA;}
+
+/* Fluxo de trabalho */
+.flow{display:flex;align-items:center;gap:0;margin-bottom:24px;flex-wrap:wrap;gap:8px;}
+.flow-step{background:#111;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:12px 16px;flex:1;min-width:140px;}
+.flow-step-num{font-size:10px;font-weight:700;color:rgba(242,101,34,.55);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.flow-step-name{font-size:13px;font-weight:600;color:#FAFAFA;margin-bottom:2px;}
+.flow-step-desc{font-size:11px;color:rgba(255,255,255,.35);}
+.flow-arrow{color:rgba(242,101,34,.35);font-size:18px;flex-shrink:0;}
+
+/* Divider */
+.divider{height:1px;background:rgba(255,255,255,.06);margin:48px 0;}
+
+/* Footer */
+.footer{font-size:12px;color:rgba(255,255,255,.18);text-align:center;margin-top:64px;}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">LumenGrid · Instagram</div>
+    <h1>Manual de<br><span>Organização</span></h1>
+    <p class="header-sub">Onde cada arquivo fica, como nomear novos posts e qual o fluxo para criar e publicar.</p>
+  </div>
+
+  <!-- Estrutura de pastas -->
+  <div class="section">
+    <h2>Estrutura de Pastas</h2>
+    <div class="tree">
+      <div class="tree-root">📁 INSTAGRAM LUMENGRID/</div>
+      <div style="margin-left:20px;">
+        <div class="tree-file">├── GUIA_DESIGN_POSTS.md <span class="tree-tag ok">regras visuais</span></div>
+        <div class="tree-file">├── PLANEJAMENTO_FEED.md <span class="tree-tag ok">ordem de publicação</span></div>
+        <div class="tree-file">├── legendas.md <span class="tree-tag draft">legendas dos posts</span></div>
+        <div class="tree-file">├── MANUAL_ORGANIZACAO.html <span class="tree-tag ok">este arquivo</span></div>
+        <br>
+        <div class="tree-folder">├── 📁 PUBLICACOES/ <span class="tree-tag ok">posts finais com imagem</span></div>
+        <div style="margin-left:24px;">
+          <div class="tree-file">├── _feed_preview.html <span class="tree-tag ok">simulador do feed</span></div>
+          <div class="tree-file">├── post01_manifesto.html</div>
+          <div class="tree-file">├── post04_on_grid_vs_hibrido OK.html</div>
+          <div class="tree-file">├── post06_apagao OK.html</div>
+          <div class="tree-file">├── post07_energia_solar OK.html</div>
+          <div class="tree-file">├── post08_sistema_hibrido- OK.html</div>
+          <div class="tree-file">├── post11_wallbox OK.html</div>
+          <div class="tree-file">├── post15_como_trabalhamos.html</div>
+          <div class="tree-file">├── Post03_ApagaALuz.dc. - imagem html.html</div>
+          <div class="tree-file">├── post05_carro_eletrico_bateria_litio…html</div>
+          <div class="tree-file">├── post09_independencia_energetica ok.…html <span class="tree-tag wip">não publicado</span></div>
+          <div class="tree-file">├── post10_bateria_residencial…html <span class="tree-tag wip">não publicado</span></div>
+          <div class="tree-file">├── post12_casa_inteligente…html <span class="tree-tag wip">não publicado</span></div>
+          <div class="tree-file">├── post_empresa_telhado.html <span class="tree-tag wip">não publicado</span></div>
+          <div class="tree-file">├── post_empresa_telhado_v2.html <span class="tree-tag wip">não publicado</span></div>
+          <div class="tree-file">├── post_posto_backup_litio.html <span class="tree-tag wip">não publicado</span></div>
+          <div class="tree-file">├── post_indicacao.html <span class="tree-tag wip">não publicado</span></div>
+          <div class="tree-file">├── post_goodwe_inversor.html <span class="tree-tag wip">não publicado</span></div>
+          <div class="tree-file">├── logo_estilo_aprovado.html</div>
+          <div class="tree-folder dim">├── 📁 capturas/ <span class="tree-tag ok">PNGs prontos para postar</span></div>
+          <div class="tree-folder dim">├── 📁 assets/images/ <span class="tree-tag ok">fotos de fundo dos posts</span></div>
+          <div class="tree-folder dim">└── 📁 _scripts/ <span class="tree-tag draft">scripts de exportação</span></div>
+        </div>
+        <br>
+        <div class="tree-folder">├── 📁 RASCUNHOS/ <span class="tree-tag draft">versões sem imagem / backup</span></div>
+        <div style="margin-left:24px;">
+          <div class="tree-file">├── post01_manifesto OK .html</div>
+          <div class="tree-file">├── post02_nossa_historia.html</div>
+          <div class="tree-file">├── post03_confianca.html <span class="tree-tag wip">a criar</span></div>
+          <div class="tree-file">└── … (versões texto de todos os posts)</div>
+        </div>
+        <br>
+        <div class="tree-folder">├── 📁 WPP/ <span class="tree-tag draft">posts para WhatsApp</span></div>
+        <div style="margin-left:24px;">
+          <div class="tree-file">├── wpp_apagao_casa.html</div>
+          <div class="tree-file">├── wpp_apagao_hibrido.html</div>
+          <div class="tree-file">└── wpp_oferta.html</div>
+        </div>
+        <br>
+        <div class="tree-folder">├── 📁 imagens/ <span class="tree-tag ok">biblioteca compartilhada de imagens</span></div>
+        <div style="margin-left:24px;">
+          <div class="tree-file">├── logo - icone da logo.png <span class="tree-tag ok">logo oficial</span></div>
+          <div class="tree-file">├── familia.png · familia-capa.png</div>
+          <div class="tree-file">├── instalador.png · handshake.png</div>
+          <div class="tree-file">└── … (fotos reutilizáveis)</div>
+        </div>
+        <br>
+        <div class="tree-folder">├── 📁 uploads/ <span class="tree-tag draft">imagens temporárias / antigas</span></div>
+        <div class="tree-folder dim">└── 📁 _SCRIPTS/ <span class="tree-tag draft">ferramentas (gerador, support)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O que vai onde -->
+  <div class="section">
+    <h2>O que vai onde</h2>
+    <div class="folder-cards">
+      <div class="folder-card">
+        <h4><span class="fc-icon">✅</span> PUBLICACOES/</h4>
+        <span class="fc-path">INSTAGRAM LUMENGRID/PUBLICACOES/</span>
+        <p>Posts <strong>finais com imagem gerada por IA</strong>. Este é o destino de todo post novo. Se o post tem foto de fundo, fica aqui.</p>
+      </div>
+      <div class="folder-card">
+        <h4><span class="fc-icon">📝</span> RASCUNHOS/</h4>
+        <span class="fc-path">INSTAGRAM LUMENGRID/RASCUNHOS/</span>
+        <p>Versões texto puras (sem foto de fundo) e backups de versões anteriores. Não publicar a partir daqui.</p>
+      </div>
+      <div class="folder-card">
+        <h4><span class="fc-icon">💬</span> WPP/</h4>
+        <span class="fc-path">INSTAGRAM LUMENGRID/WPP/</span>
+        <p>Posts adaptados para WhatsApp. Formato e tamanho diferentes dos posts do Instagram.</p>
+      </div>
+      <div class="folder-card">
+        <h4><span class="fc-icon">🖼️</span> imagens/</h4>
+        <span class="fc-path">INSTAGRAM LUMENGRID/imagens/</span>
+        <p>Biblioteca de fotos <strong>reutilizáveis</strong>: logo, família, instalador, handshake. Nunca apagar daqui — vários posts dependem dessas imagens.</p>
+      </div>
+      <div class="folder-card">
+        <h4><span class="fc-icon">📸</span> PUBLICACOES/capturas/</h4>
+        <span class="fc-path">PUBLICACOES/capturas/</span>
+        <p>PNGs exportados prontos para postar. São os arquivos que você de fato sobe no Instagram. Um PNG por slide.</p>
+      </div>
+      <div class="folder-card">
+        <h4><span class="fc-icon">🎨</span> PUBLICACOES/assets/images/</h4>
+        <span class="fc-path">PUBLICACOES/assets/images/</span>
+        <p>Fotos de fundo usadas nos posts com imagem. Específicas de cada post, não são para reuso geral.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Convenção de nomes -->
+  <div class="section">
+    <h2>Convenção de Nomes</h2>
+    <p>Todo novo arquivo deve seguir este padrão para se manter organizado:</p>
+    <br>
+    <table class="naming-table">
+      <thead>
+        <tr>
+          <th>Padrão</th>
+          <th>Quando usar</th>
+          <th>Exemplo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>postNN_tema.html</td>
+          <td>Post da série principal numerada</td>
+          <td>post09_independencia_energetica.html</td>
+        </tr>
+        <tr>
+          <td>postNN_tema OK.html</td>
+          <td>Post aprovado e pronto para publicar</td>
+          <td>post07_energia_solar OK.html</td>
+        </tr>
+        <tr>
+          <td>post_tema.html</td>
+          <td>Post avulso fora da série (empresa, campanhas)</td>
+          <td>post_empresa_telhado.html</td>
+        </tr>
+        <tr>
+          <td>post_tema_v2.html</td>
+          <td>Segunda versão do mesmo tema</td>
+          <td>post_empresa_telhado_v2.html</td>
+        </tr>
+        <tr>
+          <td>wpp_tema.html</td>
+          <td>Post adaptado para WhatsApp</td>
+          <td>wpp_apagao_casa.html</td>
+        </tr>
+        <tr>
+          <td>postNN_tema_slideNN.png</td>
+          <td>Captura PNG de um slide específico</td>
+          <td>post03_apaga_a_luz_slide01.png</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Fluxo de trabalho -->
+  <div class="section">
+    <h2>Fluxo para Criar um Post Novo</h2>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-step-num">01</div>
+        <div class="flow-step-name">Definir tema</div>
+        <div class="flow-step-desc">Ver PLANEJAMENTO_FEED.md — próximo post da sequência</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">02</div>
+        <div class="flow-step-name">Gerar imagem</div>
+        <div class="flow-step-desc">ChatGPT / MidJourney → salvar em Downloads</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">03</div>
+        <div class="flow-step-name">Criar HTML</div>
+        <div class="flow-step-desc">Claude → criar post em PUBLICACOES/ seguindo o GUIA</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">04</div>
+        <div class="flow-step-name">Simular feed</div>
+        <div class="flow-step-desc">Abrir _feed_preview.html → arrastar para o feed</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">05</div>
+        <div class="flow-step-name">Exportar PNG</div>
+        <div class="flow-step-desc">Captura de tela ou script → salvar em capturas/</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">06</div>
+        <div class="flow-step-name">Publicar</div>
+        <div class="flow-step-desc">Upload do PNG no Instagram → atualizar status no PLANEJAMENTO</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Regras -->
+  <div class="section">
+    <h2>Regras de Manutenção</h2>
+    <div class="rules">
+      <div class="rule">
+        <div class="rule-num">1</div>
+        <div class="rule-text"><strong>Post novo vai sempre em PUBLICACOES/</strong> — nunca criar post final em RASCUNHOS ou na raiz da pasta.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">2</div>
+        <div class="rule-text"><strong>imagens/ nunca pode ser apagada ou renomeada</strong> — dezenas de posts HTML dependem do caminho <code style="color:#F26522;background:rgba(242,101,34,.08);padding:1px 5px;border-radius:3px;">../imagens/</code>. Alterar esse caminho quebraria tudo.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">3</div>
+        <div class="rule-text"><strong>Após publicar, marcar como publicado</strong> no PLANEJAMENTO_FEED.md e adicionar " OK" no nome do arquivo HTML.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">4</div>
+        <div class="rule-text"><strong>Imagem nova vai em assets/images/</strong> se for específica de um post, ou em <strong>imagens/</strong> se for reutilizável (logo, pessoas, ambientes).</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">5</div>
+        <div class="rule-text"><strong>Nunca criar arquivo solto na raiz</strong> de INSTAGRAM LUMENGRID. A raiz é só para documentação (MDs e este manual).</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">6</div>
+        <div class="rule-text"><strong>Uploads temporários</strong> ficam em uploads/ ou Downloads/ até serem usados. Depois de usar em um post, pode deletar o original.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Quick links -->
+  <div class="section">
+    <h2>Acesso Rápido</h2>
+    <div class="quicklinks">
+      <a class="ql" href="PUBLICACOES/_feed_preview.html" target="_blank">
+        <span class="ql-label">Ferramenta</span>
+        <span class="ql-name">🗂 Feed Simulator</span>
+      </a>
+      <a class="ql" href="GUIA_DESIGN_POSTS.md" target="_blank">
+        <span class="ql-label">Documentação</span>
+        <span class="ql-name">🎨 Guia de Design</span>
+      </a>
+      <a class="ql" href="PLANEJAMENTO_FEED.md" target="_blank">
+        <span class="ql-label">Estratégia</span>
+        <span class="ql-name">📅 Planejamento do Feed</span>
+      </a>
+      <a class="ql" href="legendas.md" target="_blank">
+        <span class="ql-label">Conteúdo</span>
+        <span class="ql-name">✍️ Legendas dos Posts</span>
+      </a>
+      <a class="ql" href="PUBLICACOES/capturas/" target="_blank">
+        <span class="ql-label">Exportação</span>
+        <span class="ql-name">📸 PNGs para Postar</span>
+      </a>
+      <a class="ql" href="imagens/" target="_blank">
+        <span class="ql-label">Assets</span>
+        <span class="ql-name">🖼️ Biblioteca de Imagens</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">LumenGrid · Manual de Organização Instagram · Atualizado em agosto de 2026</div>
+
+</div>
+</body>
+</html>

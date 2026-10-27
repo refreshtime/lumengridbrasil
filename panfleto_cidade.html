@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Panfleto Consultor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0a0a10;
+  display: flex;
+  justify-content: center;
+  padding: 48px 24px 80px;
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════
+   A4  |  794 × 1123 px  (print → 210×297mm)
+══════════════════════════════════════════ */
+.pf {
+  width: 794px;
+  height: 1123px;
+  position: relative;
+  overflow: hidden;
+  background: #0a0a10;
+}
+
+/* ─────────────────────────────────────────
+   ZONA FOTO  (0 → 540px)
+
+   Técnica dos posts aprovados:
+   - Foto sem overlay agressivo
+   - Somente gradiente no TOPO (logo legível)
+     e na BASE (headline legível)
+   - Centro da foto RESPIRA — instalador visível
+───────────────────────────────────────── */
+.foto {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 470px;
+  background: url('../ENERTUR/Instalador.png')
+              center top / cover no-repeat;
+  z-index: 0;
+}
+/* Gradiente: dark-topo, foto-centro, dark-base */
+.ov {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 470px;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,10,16,1.00)  0%,
+    rgba(10,10,16,.96)   6%,
+    rgba(10,10,16,.70)  14%,
+    rgba(10,10,16,.08)  30%,
+    rgba(10,10,16,.04)  50%,
+    rgba(10,10,16,.10)  60%,
+    rgba(10,10,16,.55)  72%,
+    rgba(10,10,16,.90)  88%,
+    rgba(10,10,16,.99) 100%
+  );
+  z-index: 1;
+}
+
+/* ── BARRA LARANJA ── */
+.barra {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 5px;
+  background: #F26522;
+  z-index: 30;
+}
+
+/* ── LOGO — topo esquerdo (mesmo padrão dos posts) ── */
+.logo {
+  position: absolute;
+  top: 22px; left: 48px;
+  display: flex; align-items: center; gap: 11px;
+  z-index: 20;
+}
+.logo img {
+  height: 52px;
+  filter: drop-shadow(0 0 18px rgba(242,101,34,.85))
+          drop-shadow(0 0 7px rgba(242,101,34,.55))
+          drop-shadow(0 2px 10px rgba(0,0,0,.99));
+}
+.logo-txt { display: flex; flex-direction: column; gap: 2px; }
+.logo-r   { display: flex; align-items: baseline; line-height: 1; }
+.la { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:26px; text-transform:uppercase; text-shadow:0 2px 12px rgba(0,0,0,.99); }
+.la.o { color:#F26522; }
+.la.w { color:#FAFAFA; }
+.lt { font-family:'DM Sans',sans-serif; font-weight:600; font-size:8px; text-transform:uppercase; letter-spacing:.3em; color:rgba(242,101,34,.90); text-shadow:0 2px 8px rgba(0,0,0,.99); }
+
+/* ── EYEBROW — acima do headline ── */
+.ey {
+  position: absolute;
+  top: 296px; left: 48px;
+  font-family:'DM Sans',sans-serif;
+  font-size: 14px; font-weight: 600;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(242,101,34,1);
+  background: rgba(10,10,16,.72);
+  padding: 4px 10px;
+  border-radius: 4px;
+  z-index: 20;
+}
+
+/* ── HEADLINE — base da foto, como nos posts aprovados
+   54px × lh1.07 × 3 linhas = 173px
+   Posição: bottom da zona foto, acima do separador        ── */
+.hl {
+  position: absolute;
+  /* top = 540 - 30 (pad base) - 173 (headline) = 337px */
+  top: 322px; left: 48px; right: 48px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 46px;
+  line-height: 1.07;
+  letter-spacing: -1.2px;
+  color: #FAFAFA;
+  text-shadow:
+    0 4px 28px rgba(0,0,0,.98),
+    0 0  60px rgba(0,0,0,.80),
+    0 2px  8px rgba(0,0,0,1);
+  z-index: 20;
+}
+.hl em { color: #F26522; font-style: normal; }
+
+/* ─────────────────────────────────────────
+   ZONA CONTEÚDO  (540px → 1123px = 583px)
+
+   Estrutura visual:
+   ① Barra laranja 85%  (acento forte, quebra o preto)
+   ② Soluções 2×2       (organizado, escaneável)
+   ③ Investimento        (texto, sem box)
+   ④ CTA laranja         (ação clara)
+   ⑤ Rodapé              (assinatura)
+───────────────────────────────────────── */
+.dn {
+  position: absolute;
+  top: 470px; left: 0; right: 0; bottom: 0;
+  background: #0a0a10;
+  z-index: 5;
+}
+
+/* Conteúdo: padding 18px topo, 48px lados, 18px base */
+.dn-in {
+  position: absolute;
+  inset: 18px 48px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* espaçamento extra entre investimento e CTA */
+.inv { margin-bottom: 8px; }
+
+/* ① STAT 85% — escuro com número laranja de impacto */
+.eco {
+  background: rgba(242,101,34,.08);
+  border: 1.5px solid rgba(242,101,34,.40);
+  border-radius: 10px;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.eco-n {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: -3px;
+  color: #F26522;
+  text-shadow: 0 0 32px rgba(242,101,34,.55), 0 0 8px rgba(242,101,34,.30);
+  flex-shrink: 0;
+}
+.eco-r { display: flex; flex-direction: column; gap: 7px; }
+.eco-t1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px; font-weight: 700;
+  color: #FAFAFA; line-height: 1.25;
+  letter-spacing: -.3px;
+}
+.eco-t2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px; font-weight: 400;
+  color: rgba(250,250,250,.86); line-height: 1.5;
+}
+
+/* ② SOLUÇÕES 2×2 */
+.sol-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.sol-cell {
+  padding: 14px 16px;
+  border-left: 3px solid rgba(242,101,34,.65);
+  background: rgba(255,255,255,.04);
+  border-radius: 0 8px 8px 0;
+}
+.sol-icon { font-size: 24px; margin-bottom: 7px; }
+.sol-t {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px; font-weight: 700;
+  color: #F26522;
+  text-transform: uppercase; letter-spacing: .03em;
+  margin-bottom: 5px;
+}
+.sol-d {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 400;
+  color: rgba(250,250,250,.84);
+  line-height: 1.55;
+}
+
+/* ③ INVESTIMENTO — dois tempos visuais, centralizado */
+.inv {
+  padding: 14px 20px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.04);
+  border-left: 3px solid rgba(242,101,34,.70);
+  flex-shrink: 0;
+  text-align: center;
+}
+.inv-l1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 19px; font-weight: 700;
+  color: #FAFAFA;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.inv-l2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 400;
+  color: #F26522;
+  line-height: 1.5;
+}
+
+/* ④ CTA */
+.cta {
+  background: rgba(242,101,34,.10);
+  border: 1.5px solid rgba(242,101,34,.55);
+  border-radius: 10px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.cta-c { flex: 1; }
+.cta-t {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 23px; font-weight: 800;
+  color: #F26522;
+  text-transform: uppercase; letter-spacing: .04em;
+  line-height: 1.15; margin-bottom: 8px;
+}
+.cta-s {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 400;
+  color: rgba(250,250,250,.84);
+  line-height: 1.60;
+}
+/* QR */
+.qr {
+  flex-shrink: 0; width: 82px; height: 82px;
+  background: #FAFAFA; border-radius: 7px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; padding: 8px;
+}
+.qr-inner {
+  width: 58px; height: 58px;
+  background:
+    /* cantos superiores */
+    linear-gradient(#0a0a10,#0a0a10) 0 0 / 18px 18px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 100% 0 / 18px 18px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 0 100% / 18px 18px no-repeat,
+    /* miolo dos cantos */
+    linear-gradient(#FAFAFA,#FAFAFA) 3px 3px / 12px 12px no-repeat,
+    linear-gradient(#FAFAFA,#FAFAFA) calc(100% - 3px) 3px / 12px 12px no-repeat,
+    linear-gradient(#FAFAFA,#FAFAFA) 3px calc(100% - 3px) / 12px 12px no-repeat,
+    /* ponto central */
+    linear-gradient(#0a0a10,#0a0a10) 6px 6px / 6px 6px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) calc(100% - 6px) 6px / 6px 6px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 6px calc(100% - 6px) / 6px 6px no-repeat,
+    /* linhas de dados simuladas */
+    repeating-linear-gradient(0deg, #0a0a10 0, #0a0a10 2px, transparent 2px, transparent 5px) 22px 4px / 14px 50px no-repeat,
+    repeating-linear-gradient(90deg, #0a0a10 0, #0a0a10 2px, transparent 2px, transparent 5px) 4px 22px / 50px 14px no-repeat,
+    #FAFAFA;
+}
+.ql { font-family:'DM Sans',sans-serif; font-size:6px; font-weight:700; color:rgba(10,10,16,.40); letter-spacing:.1em; text-transform:uppercase; }
+
+/* ⑤ RODAPÉ */
+.ft {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.ft-l { display: flex; align-items: center; gap: 8px; }
+.ft-l img { height: 24px; filter: drop-shadow(0 0 6px rgba(242,101,34,.55)); }
+.ft-n { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:12px; color:#FAFAFA; }
+.ft-n span { color:#F26522; }
+.ft-d { font-family:'DM Sans',sans-serif; font-size:9px; color:rgba(255,255,255,.25); letter-spacing:.08em; }
+
+/* ══ PRINT ══ */
+@media print {
+  body { background:none; padding:0; margin:0; }
+  .pf  { width:210mm; height:297mm; }
+  @page { size:A4 portrait; margin:0; }
+}
+</style>
+</head>
+<body>
+<div class="pf">
+
+  <!-- FOTO + OVERLAY -->
+  <div class="foto"></div>
+  <div class="ov"></div>
+  <div class="barra"></div>
+
+  <!-- LOGO (topo, padrão dos posts) -->
+  <div class="logo">
+    <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="logo-txt">
+      <div class="logo-r"><span class="la o">LUMEN</span><span class="la w">GRID</span></div>
+      <span class="lt">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <!-- EYEBROW (acima do headline) -->
+  <div class="ey">ECONOMIZE ▶ Garanta sua independência energética</div>
+
+  <!-- HEADLINE (base da foto — como post07 aprovado) -->
+  <div class="hl">
+    Não espere o <em>verão</em><br>
+    chegar para se assustar<br>
+    com a sua fatura de energia.
+  </div>
+
+  <!-- ZONA CONTEÚDO -->
+  <div class="dn">
+    <div class="dn-in">
+
+      <!-- ① 85% -->
+      <div class="eco">
+        <div class="eco-n">85%</div>
+        <div class="eco-r">
+          <div class="eco-t1">de economia na conta de energia</div>
+          <div class="eco-t2">Isso é possível para a sua casa. Descubra como.</div>
+        </div>
+      </div>
+
+      <!-- ② SOLUÇÕES 2×2 -->
+      <div class="sol-grid">
+        <div class="sol-cell">
+          <div class="sol-icon">☀️</div>
+          <div class="sol-t">Energia Solar</div>
+          <div class="sol-d">Gere energia limpa e reduza sua conta.</div>
+        </div>
+        <div class="sol-cell">
+          <div class="sol-icon">⚡</div>
+          <div class="sol-t">Solar + Bateria</div>
+          <div class="sol-d">Continue com energia quando a luz acaba.</div>
+        </div>
+        <div class="sol-cell">
+          <div class="sol-icon">🚗</div>
+          <div class="sol-t">Carregamento Elétrico</div>
+          <div class="sol-d">Carregue seu carro em casa com segurança.</div>
+        </div>
+        <div class="sol-cell">
+          <div class="sol-icon">💳</div>
+          <div class="sol-t">Financiamento EV</div>
+          <div class="sol-d">Acesse as melhores condições para adquirir seu Carro Elétrico.</div>
+        </div>
+      </div>
+
+      <!-- ③ INVESTIMENTO -->
+      <div class="inv">
+        <div class="inv-l1">Você não precisa decidir nada agora.</div>
+        <div class="inv-l2">Primeiro, descubra as possibilidades para você.</div>
+      </div>
+
+      <!-- ④ CTA -->
+      <div class="cta">
+        <div class="cta-c">
+          <div class="cta-t">Avalie sem compromisso</div>
+          <div class="cta-s">Fale agora com o especialista LumenGrid na sua região.<br>📲 <strong style="color:#FAFAFA;">+55 16 99645-9253</strong> — Leia o QR code.</div>
+        </div>
+        <div class="qr">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fwa.me%2F5516996459253%3Ftext%3DOl%C3%A1!+Vi+o+material+da+LumenGrid+e+quero+fazer+minha+avalia%C3%A7%C3%A3o+gratuita.&color=0a0a10&bgcolor=FAFAFA&margin=2" width="62" height="62" alt="QR WhatsApp LumenGrid" style="border-radius:3px;">
+          <div class="ql">WhatsApp</div>
+        </div>
+      </div>
+
+      <!-- ⑤ RODAPÉ -->
+      <div class="ft">
+        <div class="ft-l">
+          <img src="imagens/LOGOS/logo-icone.png" alt="">
+          <div class="ft-n"><span>Lumen</span>Grid | Energia Inteligente</div>
+        </div>
+        <div class="ft-d">Feito por Domani Consultoria</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Stories — Sistema Hibrido | LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    padding: 40px 20px;
+}
+
+/* ─── STORY BASE ─── */
+.story {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    overflow: hidden;
+    background: #111111;
+    flex-shrink: 0;
+}
+
+/* ─── PHOTO PLACEHOLDER ─── */
+.photo-bg {
+    position: absolute;
+    inset: 0;
+    background: #18201f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.photo-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.10);
+    text-align: center;
+    padding: 0 120px;
+    line-height: 2;
+}
+
+/* ─── OVERLAYS ─── */
+.ov-full {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.62);
+    z-index: 2;
+}
+.ov-left {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(6,6,10,.92) 48%, rgba(6,6,10,.45) 75%, rgba(6,6,10,.20) 100%);
+    z-index: 2;
+}
+.ov-bottom {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+        rgba(6,6,10,.96) 0%,
+        rgba(6,6,10,.80) 40%,
+        rgba(6,6,10,.42) 70%,
+        rgba(6,6,10,.18) 100%);
+    z-index: 2;
+}
+.ov-top-heavy {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+        rgba(6,6,10,.96) 0%,
+        rgba(6,6,10,.88) 55%,
+        rgba(6,6,10,.55) 78%,
+        rgba(6,6,10,.22) 100%);
+    z-index: 2;
+}
+
+/* ─── HEADER ─── */
+.hdr {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 68px 72px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 30;
+}
+.hdr-left { display: flex; align-items: center; gap: 16px; }
+.hdr-logo {
+    height: 58px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px rgba(242,101,34,.80))
+            drop-shadow(0 0 7px rgba(242,101,34,.55))
+            drop-shadow(0 2px 10px rgba(0,0,0,.9));
+}
+.hdr-brand { display: flex; flex-direction: column; gap: 2px; }
+.hdr-wm { display: flex; align-items: baseline; line-height: 1; }
+.hdr-wm .l {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 27px;
+    text-transform: uppercase;
+    color: #F26522;
+    letter-spacing: -.3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.95);
+}
+.hdr-wm .g {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 27px;
+    text-transform: uppercase;
+    color: #FAFAFA;
+    letter-spacing: -.3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.95);
+}
+.hdr-tl {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: .3em;
+    color: rgba(242,101,34,.90);
+    text-shadow: 0 2px 8px rgba(0,0,0,.95);
+}
+.hdr-dots {
+    font-size: 22px;
+    color: rgba(255,255,255,.55);
+    letter-spacing: 4px;
+}
+
+/* ─── ACCENT LINES ─── */
+.accent-top {
+    position: absolute;
+    top: 174px;
+    left: 72px;
+    width: 56px;
+    height: 3px;
+    background: #F26522;
+    border-radius: 2px;
+    z-index: 30;
+}
+.accent-bottom {
+    position: absolute;
+    bottom: 56px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: #F26522;
+    border-radius: 2px;
+    z-index: 30;
+}
+
+/* ─── CONTENT WRAPPERS ─── */
+.c {
+    position: absolute;
+    z-index: 10;
+    left: 72px;
+    right: 72px;
+}
+.c.top    { top: 210px; }
+.c.middle { top: 50%; transform: translateY(-50%); }
+.c.bottom { bottom: 120px; }
+
+/* ─── TYPOGRAPHY ─── */
+.eyebrow-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: rgba(242,101,34,.90);
+    margin-bottom: 20px;
+}
+.t-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: #FAFAFA;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+.t-big-orange {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 104px;
+    color: #F26522;
+    text-transform: uppercase;
+    line-height: 1.0;
+}
+.t-xl {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 72px;
+    color: #FAFAFA;
+    line-height: 1.12;
+}
+.t-lg {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 58px;
+    color: #FAFAFA;
+    line-height: 1.15;
+}
+.t-md {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 48px;
+    color: #FAFAFA;
+    line-height: 1.18;
+}
+.t-body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: rgba(250,250,250,.88);
+    line-height: 1.65;
+}
+.t-small {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(250,250,250,.58);
+    line-height: 1.65;
+}
+.or { color: #F26522; }
+.wh { color: #FAFAFA; }
+
+/* ─── DIVIDER ─── */
+.odiv {
+    width: 52px;
+    height: 3px;
+    background: #F26522;
+    border-radius: 2px;
+    margin: 28px 0;
+}
+
+/* ─── ICON CIRCLE (list items) ─── */
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    border-radius: 50%;
+    background: rgba(242,101,34,.13);
+    border: 2px solid rgba(242,101,34,.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    line-height: 1;
+}
+
+/* ─── ICON SQUARE (story 5) ─── */
+.icon-sq {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    border-radius: 10px;
+    background: rgba(242,101,34,.10);
+    border: 1.5px solid rgba(242,101,34,.40);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    line-height: 1;
+}
+
+/* ─── LIST ITEMS ─── */
+.icon-list { display: flex; flex-direction: column; gap: 24px; }
+.list-item { display: flex; align-items: flex-start; gap: 22px; }
+.list-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 24px;
+    color: rgba(250,250,250,.90);
+    line-height: 1.45;
+    padding-top: 12px;
+}
+.list-text small {
+    display: block;
+    font-size: 17px;
+    color: rgba(250,250,250,.45);
+    margin-top: 4px;
+}
+
+/* ─── INFO CARDS (story 2) ─── */
+.info-card {
+    background: rgba(8,10,14,.75);
+    border: 1px solid rgba(242,101,34,.28);
+    border-radius: 20px;
+    padding: 32px 36px;
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+}
+.info-card + .info-card { margin-top: 20px; }
+.card-icon {
+    width: 68px;
+    height: 68px;
+    min-width: 68px;
+    border-radius: 50%;
+    background: rgba(242,101,34,.14);
+    border: 2px solid rgba(242,101,34,.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.card-txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    color: rgba(250,250,250,.88);
+    line-height: 1.60;
+    padding-top: 10px;
+}
+
+/* ─── POLL BUTTONS (story 3) ─── */
+.poll-wrap { display: flex; flex-direction: column; gap: 18px; }
+.poll-btn {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 26px 36px;
+    border: 2px solid rgba(255,255,255,.28);
+    border-radius: 18px;
+    background: rgba(255,255,255,.04);
+    backdrop-filter: blur(4px);
+}
+.poll-btn.selected {
+    background: rgba(255,255,255,.12);
+    border-color: rgba(255,255,255,.60);
+}
+.poll-emoji { font-size: 40px; line-height: 1; }
+.poll-txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 24px;
+    color: #FAFAFA;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+/* ─── FEATURE CARD (story 4) ─── */
+.feature-card {
+    background: rgba(242,101,34,.08);
+    border: 1.5px solid rgba(242,101,34,.35);
+    border-radius: 20px;
+    padding: 36px;
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+}
+.fc-icon {
+    width: 76px;
+    height: 76px;
+    min-width: 76px;
+    border-radius: 50%;
+    background: rgba(242,101,34,.18);
+    border: 2px solid #F26522;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    line-height: 1;
+    color: #F26522;
+    flex-shrink: 0;
+}
+.fc-txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 24px;
+    color: rgba(250,250,250,.92);
+    line-height: 1.60;
+    padding-top: 8px;
+}
+
+/* ─── CALL-TO-ACTION BUTTON (story 6) ─── */
+.cta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 30px 56px;
+    border: 2.5px solid #F26522;
+    border-radius: 60px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #F26522;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: rgba(242,101,34,.08);
+    width: 100%;
+}
+.cta-arrow {
+    width: 36px;
+    height: 36px;
+    background: #F26522;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+/* ─── ARROW DOWN (story 3) ─── */
+.arrow-down {
+    font-size: 36px;
+    color: rgba(242,101,34,.80);
+    text-align: center;
+    margin-top: 8px;
+}
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════
+     STORY 1 — DIA 1 DE INSTALACAO
+     Foto: instalação do inversor GoodWe + baterias na parede
+══════════════════════════════════════ -->
+<div class="story">
+    <div class="photo-bg" style="background: url('../../../../Downloads/ChatGPT Image 3 de ago. de 2026, 17_30_38.png') center top / cover no-repeat;"></div>
+    <div style="position:absolute;inset:0;z-index:2;background:linear-gradient(to right, rgba(6,6,10,.82) 0%, rgba(6,6,10,.72) 40%, rgba(6,6,10,.25) 58%, transparent 78%);"></div>
+    <div style="position:absolute;top:0;left:0;right:0;height:220px;z-index:2;background:linear-gradient(to bottom, rgba(6,6,10,.70) 0%, transparent 100%);"></div>
+
+    <div class="hdr">
+        <div class="hdr-left">
+            <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+            <div class="hdr-brand">
+                <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+                <div class="hdr-tl">Energia Inteligente</div>
+            </div>
+        </div>
+        <div class="hdr-dots">&bull;&bull;&bull;</div>
+    </div>
+    <div class="accent-top"></div>
+
+    <div class="c top" style="right: 520px;">
+        <div class="t-label">DIA 1 DE</div>
+        <div class="t-big-orange" style="font-size:88px;line-height:1.0;">INSTALA&Ccedil;&Atilde;O</div>
+
+        <div class="odiv"></div>
+
+        <p class="t-body">Começamos hoje a instalação deste sistema híbrido.</p>
+
+        <p class="t-small" style="margin-top:20px;">Projeto dimensionado para manter funcionando durante um apagão:</p>
+
+        <div class="icon-list" style="margin-top:36px;">
+            <div class="list-item">
+                <div class="icon-circle">&#10052;</div>
+                <div class="list-text">
+                    Freezer
+                    <small>(o cliente viaja com frequência e já perdeu alimentos)</small>
+                </div>
+            </div>
+            <div class="list-item">
+                <div class="icon-circle">&#128161;</div>
+                <div class="list-text">Iluminação</div>
+            </div>
+            <div class="list-item">
+                <div class="icon-circle" style="font-size:20px;font-weight:700;color:#F26522;font-family:'Space Grotesk',sans-serif;">Wi</div>
+                <div class="list-text">Wi-Fi</div>
+            </div>
+            <div class="list-item">
+                <div class="icon-circle">&#128682;</div>
+                <div class="list-text">Portão eletrônico</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="accent-bottom"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STORY 2 — GERACAO SOLAR
+     Foto: casa com painéis solares no telhado, tomada noturna/crepúsculo
+══════════════════════════════════════ -->
+<div class="story">
+    <div class="photo-bg" style="background: url('../../imagens/PROJETOS/casa-solar-premium.png') center / cover no-repeat;"></div>
+    <div class="ov-bottom"></div>
+
+    <div class="hdr">
+        <div class="hdr-left">
+            <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+            <div class="hdr-brand">
+                <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+                <div class="hdr-tl">Energia Inteligente</div>
+            </div>
+        </div>
+        <div class="hdr-dots">&bull;&bull;&bull;</div>
+    </div>
+    <div class="accent-top"></div>
+
+    <!-- Headline no topo -->
+    <div class="c" style="top: 210px;">
+        <p class="t-lg">
+            Além do backup, este projeto também conta com <span class="or">GERACAO SOLAR.</span>
+        </p>
+    </div>
+
+    <!-- Cards no meio-baixo -->
+    <div class="c bottom" style="bottom: 140px;">
+        <div class="info-card">
+            <div class="card-icon">&#9728;</div>
+            <p class="card-txt">Durante o dia, as placas abastecem a casa e recarregam as baterias.</p>
+        </div>
+        <div class="info-card">
+            <div class="card-icon">&#128267;</div>
+            <p class="card-txt">À noite ou durante um apagão, a energia armazenada assume automaticamente.</p>
+        </div>
+    </div>
+
+    <div class="accent-bottom"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STORY 3 — E VOCE? (Enquete)
+     Foto: casa iluminada a noite, fotografia aerea ou frontal
+══════════════════════════════════════ -->
+<div class="story">
+    <div class="photo-bg" style="background:#141820;"></div>
+    <div class="ov-top-heavy"></div>
+
+    <div class="hdr">
+        <div class="hdr-left">
+            <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+            <div class="hdr-brand">
+                <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+                <div class="hdr-tl">Energia Inteligente</div>
+            </div>
+        </div>
+        <div class="hdr-dots">&bull;&bull;&bull;</div>
+    </div>
+    <div class="accent-top"></div>
+
+    <div class="c" style="top: 210px;">
+        <div class="t-xl" style="color:#F26522;font-size:88px;">E você?</div>
+        <p class="t-lg" style="margin-top:20px;font-size:50px;">Já ficou sem energia e teve algum prejuízo?</p>
+
+        <div style="margin-top:52px;">
+            <div class="poll-wrap">
+                <div class="poll-btn">
+                    <span class="poll-emoji">&#128542;</span>
+                    <span class="poll-txt">Sim, mais<br>de uma vez</span>
+                </div>
+                <div class="poll-btn selected">
+                    <span class="poll-emoji">&#128512;</span>
+                    <span class="poll-txt">Ainda não</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="t-body" style="margin-top:44px;text-align:center;">Conta pra gente!</p>
+        <div class="arrow-down">&#8964;</div>
+    </div>
+
+    <div class="accent-bottom"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STORY 4 — SISTEMA CONVENCIONAL DESLIGA
+     Foto: cidade a noite com apagão, silhueta de prédios
+══════════════════════════════════════ -->
+<div class="story">
+    <div class="photo-bg" style="background: url('../../imagens/PROJETOS/bairro-apagao.png') center / cover no-repeat;"></div>
+    <div class="ov-full" style="background:rgba(0,0,0,.70);"></div>
+
+    <div class="hdr">
+        <div class="hdr-left">
+            <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+            <div class="hdr-brand">
+                <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+                <div class="hdr-tl">Energia Inteligente</div>
+            </div>
+        </div>
+        <div class="hdr-dots">&bull;&bull;&bull;</div>
+    </div>
+    <div class="accent-top"></div>
+
+    <div class="c top">
+        <p class="t-xl">Muita gente acha que energia solar resolve isso.</p>
+
+        <div style="margin-top:44px;">
+            <p class="t-xl" style="font-size:58px;">
+                Na verdade, o sistema convencional <span class="or">desliga</span> quando a rede cai.
+            </p>
+        </div>
+
+        <div class="odiv" style="margin-top:48px;width:80px;"></div>
+
+        <div class="feature-card" style="margin-top:8px;">
+            <div class="fc-icon">&#9889;</div>
+            <p class="fc-txt">
+                Quem garante energia durante o apagão é o <span class="or">sistema híbrido com baterias.</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="accent-bottom"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STORY 5 — EQUIPAMENTOS PRIORIDADE
+     Foto: cozinha ou ambiente interno escuro / iluminado
+══════════════════════════════════════ -->
+<div class="story">
+    <div class="photo-bg" style="background: url('../../../../Downloads/GELDAEIRA.png') center / cover no-repeat;"></div>
+    <div style="position:absolute;inset:0;z-index:2;background:linear-gradient(to top, rgba(0,0,0,.92) 0%, rgba(0,0,0,.70) 28%, rgba(0,0,0,.18) 50%, transparent 65%);"></div>
+
+    <div class="hdr">
+        <div class="hdr-left">
+            <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+            <div class="hdr-brand">
+                <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+                <div class="hdr-tl">Energia Inteligente</div>
+            </div>
+        </div>
+        <div class="hdr-dots">&bull;&bull;&bull;</div>
+    </div>
+    <div class="accent-top"></div>
+
+    <div class="c" style="bottom: 140px;">
+        <p class="t-lg">
+            Você sabe quais equipamentos seriam <span class="or">prioridade</span> na sua casa ou empresa?
+        </p>
+
+        <p class="t-small" style="margin-top:32px;margin-bottom:28px;">Normalmente começamos por:</p>
+
+        <div class="icon-list">
+            <div class="list-item">
+                <div class="icon-sq">&#127968;</div>
+                <div class="list-text">Geladeira e freezer</div>
+            </div>
+            <div class="list-item">
+                <div class="icon-sq" style="font-size:16px;font-weight:700;color:#F26522;font-family:'Space Grotesk',sans-serif;letter-spacing:-1px;">Wi-Fi</div>
+                <div class="list-text">Internet</div>
+            </div>
+            <div class="list-item">
+                <div class="icon-sq">&#128161;</div>
+                <div class="list-text">Iluminação</div>
+            </div>
+            <div class="list-item">
+                <div class="icon-sq">&#128682;</div>
+                <div class="list-text">Portão eletrônico</div>
+            </div>
+            <div class="list-item">
+                <div class="icon-sq">&#128247;</div>
+                <div class="list-text">Câmeras de segurança</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="accent-bottom"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STORY 6 — NAO FIQUE NO ESCURO (CTA)
+     Fundo solido escuro (sem foto necessaria)
+══════════════════════════════════════ -->
+<div class="story" style="background:#0e0e0e;">
+    <!-- Glow radial sutil -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+                width:900px;height:900px;
+                background:radial-gradient(circle, rgba(242,101,34,.10) 0%, transparent 65%);
+                pointer-events:none;z-index:1;"></div>
+
+    <div class="hdr">
+        <div class="hdr-left">
+            <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+            <div class="hdr-brand">
+                <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+                <div class="hdr-tl">Energia Inteligente</div>
+            </div>
+        </div>
+        <div class="hdr-dots">&bull;&bull;&bull;</div>
+    </div>
+    <div class="accent-top"></div>
+
+    <div class="c middle" style="text-align:center;">
+        <p class="t-xl" style="color:#F26522;">Não fique no escuro.</p>
+        <p class="t-lg" style="margin-top:20px;">
+            Tenha energia, segurança e tranquilidade <span class="or">sempre.</span>
+        </p>
+
+        <!-- Icone casa com raio -->
+        <div style="margin:60px auto;display:flex;align-items:center;justify-content:center;">
+            <svg width="200" height="200" viewBox="0 0 200 200" style="filter:drop-shadow(0 0 32px rgba(242,101,34,.50)) drop-shadow(0 0 12px rgba(242,101,34,.35));">
+                <!-- Glow circle -->
+                <circle cx="100" cy="108" r="80" fill="rgba(242,101,34,.08)" stroke="rgba(242,101,34,.20)" stroke-width="1.5"/>
+                <!-- Telhado / triangulo -->
+                <path d="M20 100 L100 28 L180 100" fill="none" stroke="#F26522" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+                <!-- Corpo da casa -->
+                <rect x="38" y="100" width="124" height="80" rx="4" fill="none" stroke="#F26522" stroke-width="5"/>
+                <!-- Raio interno -->
+                <path d="M112 58 L88 105 L105 105 L88 148 L114 95 L97 95 Z" fill="#F26522"/>
+            </svg>
+        </div>
+
+        <p class="t-body" style="line-height:1.7;">
+            Me chama no direct que faço uma <span class="or">simulação</span> do seu projeto.
+        </p>
+
+        <div style="margin-top:48px;">
+            <div class="cta-btn">
+                <div class="cta-arrow">&#10148;</div>
+                FALAR COM ESPECIALISTA
+            </div>
+        </div>
+    </div>
+
+    <div class="accent-bottom"></div>
+</div>
+
+
+<footer style="color:rgba(255,255,255,.15);font-family:'DM Sans',sans-serif;font-size:12px;padding:16px 0 40px;letter-spacing:2px;text-align:center;">
+    Feito por Domani Consultoria
+</footer>
+
+</body>
+</html>

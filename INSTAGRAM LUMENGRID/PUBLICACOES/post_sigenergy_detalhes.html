@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Sigenergy Detalhes — Panorâmica</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: #030507;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    padding: 40px 20px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.hdr {
+    position: absolute;
+    top: 72px; left: 88px;
+    display: flex; align-items: center; gap: 14px;
+    z-index: 20;
+}
+.hdr-logo {
+    height: 48px; width: auto; object-fit: contain;
+    filter: drop-shadow(0 0 14px rgba(242,101,34,.65))
+            drop-shadow(0 0 5px rgba(242,101,34,.40))
+            drop-shadow(0 2px 8px rgba(0,0,0,.9));
+}
+.hdr-wm { display: flex; align-items: baseline; line-height: 1; }
+.hdr-wm .l {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800; font-size: 22px; text-transform: uppercase;
+    color: #F26522; letter-spacing: -.3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.95);
+}
+.hdr-wm .g {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800; font-size: 22px; text-transform: uppercase;
+    color: #FAFAFA; letter-spacing: -.3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.95);
+}
+.hdr-tl {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600; font-size: 7px; text-transform: uppercase;
+    letter-spacing: .3em; color: rgba(242,101,34,.80);
+}
+</style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 1 — PANORÂMICA PARTE A
+     Mostra a metade ESQUERDA da imagem "Detalhes sigenergy"
+     A imagem sangra para fora da borda direita — convida o swipe
+     CTA: conhecer a Sigenergy
+════════════════════════════════════════ -->
+<div class="slide" style="background:#0d0a12;">
+
+    <!--
+        A imagem tem 2380px de largura.
+        Em full-height (1350px) ela fica ~3023px de largura.
+        Posicionada em 0px, o slide (1080px) mostra a porção esquerda.
+        A imagem "sangra" naturalmente pelo lado direito — efeito panorâmico.
+    -->
+    <div style="position:absolute;inset:0;z-index:0;
+        background: url('../../SIGENERGY/Detalhes sigenergy.png') 0px center / auto 88% no-repeat;
+        background-color: #0d0a12;">
+    </div>
+
+    <!-- Overlay esquerdo: cobre texto, deixa imagem respirar no centro-direita -->
+    <div style="position:absolute;inset:0;z-index:2;
+        background: linear-gradient(to right,
+            rgba(8,6,14,.96) 0%,
+            rgba(8,6,14,.88) 28%,
+            rgba(8,6,14,.52) 52%,
+            rgba(8,6,14,.12) 72%,
+            rgba(8,6,14,.00) 100%);">
+    </div>
+
+    <!-- Overlay topo — logo lê -->
+    <div style="position:absolute;top:0;left:0;right:0;height:220px;z-index:2;
+        background: linear-gradient(to bottom, rgba(8,6,14,.85) 0%, transparent 100%);">
+    </div>
+
+    <!-- Overlay base — texto CTA lê -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:480px;z-index:2;
+        background: linear-gradient(to top, rgba(8,6,14,.98) 0%, rgba(8,6,14,.70) 45%, transparent 100%);">
+    </div>
+
+    <!-- Indicador de continuidade — borda direita esmaece sugerindo que tem mais -->
+    <div style="position:absolute;top:0;right:0;bottom:0;width:120px;z-index:3;
+        background: linear-gradient(to left, rgba(8,6,14,.45) 0%, transparent 100%);">
+    </div>
+
+    <!-- Logo LumenGrid -->
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div style="display:flex;flex-direction:column;gap:1px;">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+
+    <!-- Badge Sigenergy — topo direito -->
+    <div style="position:absolute;top:88px;right:88px;z-index:20;
+        display:flex;align-items:center;gap:8px;
+        background:rgba(0,180,216,.10);border:1px solid rgba(0,180,216,.30);
+        border-radius:20px;padding:6px 16px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:#00B4D8;
+            box-shadow:0 0 8px rgba(0,180,216,.90);flex-shrink:0;display:inline-block;"></span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:800;
+            letter-spacing:2.5px;color:#00B4D8;text-transform:uppercase;">Sigenergy</span>
+    </div>
+
+    <!-- Eyebrow -->
+    <div style="position:absolute;top:160px;left:88px;z-index:20;
+        font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;
+        letter-spacing:3px;text-transform:uppercase;color:rgba(0,180,216,.90);
+        text-shadow:0 2px 10px rgba(0,0,0,.90);">
+        &#9654; A tecnologia nos detalhes
+    </div>
+
+    <!-- CTA principal — base esquerda -->
+    <div style="position:absolute;left:88px;right:88px;bottom:108px;z-index:10;">
+
+        <!-- Linha teal -->
+        <div style="height:3px;width:52px;background:linear-gradient(90deg,#00B4D8,rgba(0,180,216,.20));
+            border-radius:2px;margin-bottom:32px;"></div>
+
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:66px;
+            color:#F0F4F8;line-height:1.06;letter-spacing:-2px;
+            text-shadow:0 4px 32px rgba(0,0,0,.99);">
+            Cada detalhe<br>foi pensado<br>
+            <span style="color:#00B4D8;">para durar.</span>
+        </h1>
+
+        <p style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;
+            color:rgba(240,244,248,.68);line-height:1.60;margin-top:24px;
+            text-shadow:0 2px 24px rgba(0,0,0,.99);">
+            314Ah · 100% descarga · IP66 · 5 camadas de proteção.<br>
+            <span style="color:rgba(240,244,248,.40);font-size:24px;">A bateria mais completa do mercado.</span>
+        </p>
+
+        <!-- Indicador de swipe -->
+        <div style="display:flex;align-items:center;gap:16px;margin-top:36px;">
+            <div style="height:1px;width:44px;background:rgba(0,180,216,.45);"></div>
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;
+                letter-spacing:3px;text-transform:uppercase;color:rgba(0,180,216,.65);">
+                Deslize para conhecer
+            </span>
+            <span style="color:#00B4D8;font-size:20px;letter-spacing:-2px;">→</span>
+        </div>
+
+    </div>
+
+    <!-- Progress dots -->
+    <div style="position:absolute;bottom:52px;right:88px;
+        display:flex;gap:9px;align-items:center;z-index:20;">
+        <div style="width:24px;height:8px;border-radius:4px;background:#00B4D8;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.18);"></div>
+    </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     LABEL — ESPAÇO PARA SLIDE 2
+     (a ser construído na próxima etapa)
+════════════════════════════════════════ -->
+<div style="width:1080px;padding:24px 0;text-align:center;
+    font-family:'DM Sans',sans-serif;font-size:13px;letter-spacing:3px;
+    text-transform:uppercase;color:rgba(255,255,255,.20);">
+    ↓ &nbsp; Slide 2 — continuação da panorâmica &nbsp; ↓
+</div>
+
+
+<footer style="color:rgba(255,255,255,.12);font-family:'DM Sans',sans-serif;
+    font-size:12px;padding:16px 0 40px;letter-spacing:2px;text-align:center;">
+    Feito por Domani Consultoria
+</footer>
+
+</body>
+</html>

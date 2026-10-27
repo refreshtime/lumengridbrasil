@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Post 15 — Como Trabalhamos</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a10;display:flex;justify-content:center;padding:0;}
+.li{height:58px;width:auto;object-fit:contain;filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9));}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .45s ease;pointer-events:none;}
+.slide.on{opacity:1;pointer-events:auto;}
+.dots{position:absolute;bottom:44px;left:0;right:0;display:flex;justify-content:center;gap:9px;z-index:30;}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(250,250,250,.25);cursor:pointer;border:none;padding:0;transition:background .3s;}
+.dot.a{background:#F26522;}
+.arr{position:absolute;top:50%;transform:translateY(-50%);z-index:40;background:rgba(242,101,34,.18);border:1.5px solid rgba(242,101,34,.55);color:#F26522;font-size:28px;width:56px;height:56px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;user-select:none;}
+.arr:hover{background:rgba(242,101,34,.38);}
+.arr-l{left:20px;}
+.arr-r{right:20px;}
+.logo{position:absolute;top:72px;left:88px;display:flex;align-items:center;gap:12px;z-index:30;}
+.num{font-family:'Space Grotesk',sans-serif;font-size:180px;font-weight:800;color:rgba(242,101,34,.07);line-height:1;letter-spacing:-6px;margin:0 0 -40px -8px;}
+.eyebrow{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.80);margin:0 0 20px;}
+.bar{width:44px;height:3px;background:#F26522;border-radius:2px;margin:0 0 28px;}
+.h1{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;color:#FAFAFA;line-height:1.10;letter-spacing:-.8px;margin:0 0 28px;text-shadow:0 2px 20px rgba(0,0,0,.9),0 4px 40px rgba(0,0,0,.7);}
+.body{font-family:'DM Sans',sans-serif;font-size:24px;font-weight:300;color:rgba(250,250,250,.90);line-height:1.70;max-width:560px;margin:0;text-shadow:0 1px 12px rgba(0,0,0,.9);}
+</style>
+</head>
+<body>
+<div style="width:1080px;height:1350px;position:relative;overflow:hidden;background:#0b0b12;">
+
+  <!-- ─── SLIDE 1 — HOOK ────────────────────────────────────────────── -->
+  <div class="slide on" id="s1">
+    <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/PROCESSO/01-capa.png') center center/cover no-repeat;"></div>
+    <!-- gradiente suave só no topo para logo + texto -->
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,18,.55) 0%,rgba(11,11,18,.35) 22%,rgba(11,11,18,.10) 45%,rgba(11,11,18,0) 60%);"></div>
+
+    <div class="logo">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+        </div>
+        <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);">Energia Inteligente</span>
+      </div>
+    </div>
+
+    <div style="position:absolute;top:163px;left:88px;right:88px;z-index:20;">
+      <p style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0 0 32px;text-shadow:0 1px 10px rgba(0,0,0,.9);">▶ como trabalhamos</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:300;color:rgba(250,250,250,.55);letter-spacing:.02em;margin:0 0 24px;text-shadow:0 1px 10px rgba(0,0,0,.9);">5 etapas.</p>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:68px;font-weight:700;color:#FAFAFA;line-height:1.05;letter-spacing:-1.5px;margin:0 0 32px;text-shadow:0 2px 20px rgba(0,0,0,.9);">Cada projeto<br>começa muito<br>antes da<br>instalação.</p>
+      <div style="width:44px;height:3px;background:#F26522;border-radius:2px;margin:0 0 24px;"></div>
+      <p style="font-family:'DM Sans',sans-serif;font-size:24px;font-weight:300;color:rgba(250,250,250,.65);margin:0;text-shadow:0 1px 10px rgba(0,0,0,.9);">Deslize e conheça o nosso processo.</p>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 2 — 01. DIAGNÓSTICO ───────────────────────────────── -->
+  <div class="slide" id="s2">
+    <div style="position:absolute;inset:0;z-index:0;background:url('assets/images/Daiganostico .png') center center/cover no-repeat;"></div>
+    <!-- gradiente topo para texto -->
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,18,.60) 0%,rgba(11,11,18,.40) 25%,rgba(11,11,18,.10) 50%,rgba(11,11,18,0) 65%);"></div>
+
+    <div class="logo">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+        </div>
+        <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);">Energia Inteligente</span>
+      </div>
+    </div>
+
+    <div style="position:absolute;top:163px;left:88px;right:88px;z-index:20;">
+      <div class="bar"></div>
+      <p class="eyebrow">01. Diagnóstico</p>
+      <p class="h1">Tudo começa entendendo<br>a sua necessidade.</p>
+      <p class="body">Analisamos seu consumo, seus objetivos e o que você espera do sistema — economia, proteção contra apagões ou mais independência energética.</p>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 3 — 02. PROJETO PERSONALIZADO ─────────────────────── -->
+  <div class="slide" id="s3">
+    <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/PROCESSO/03-projeto.png') center center/cover no-repeat;"></div>
+    <!-- gradiente topo: área escura acima do modelo -->
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,18,.65) 0%,rgba(11,11,18,.45) 28%,rgba(11,11,18,.10) 52%,rgba(11,11,18,0) 65%);"></div>
+
+    <div class="logo">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+        </div>
+        <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);">Energia Inteligente</span>
+      </div>
+    </div>
+
+    <div style="position:absolute;top:163px;left:88px;right:88px;z-index:20;">
+      <div class="bar"></div>
+      <p class="eyebrow">02. Projeto Personalizado</p>
+      <p class="h1">Não trabalhamos<br>com soluções prontas.</p>
+      <p class="body">Dimensionamos o sistema considerando seu objetivo, o histórico de consumo, a incidência solar, as cargas que precisam de backup e as particularidades do projeto.</p>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 4 — 03. HOMOLOGAÇÃO ───────────────────────────────── -->
+  <div class="slide" id="s4">
+    <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/PROCESSO/02-diagnostico.png') center center/cover no-repeat;"></div>
+    <!-- técnico na direita, texto à esquerda -->
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to right,rgba(11,11,18,.80) 0%,rgba(11,11,18,.55) 38%,rgba(11,11,18,.10) 60%,rgba(11,11,18,0) 75%);"></div>
+
+    <div class="logo">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+        </div>
+        <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);">Energia Inteligente</span>
+      </div>
+    </div>
+
+    <div style="position:absolute;left:88px;right:55%;top:50%;transform:translateY(-50%);z-index:20;">
+      <p class="num" style="color:rgba(242,101,34,.10);">03</p>
+      <div class="bar"></div>
+      <p class="eyebrow">03. Engenharia e Homologação</p>
+      <p class="h1">Cuidamos de toda<br>a parte técnica.</p>
+      <p class="body" style="max-width:420px;">Elaboramos o projeto elétrico, os diagramas e a documentação necessária para garantir uma instalação segura e adequada às exigências da concessionária.</p>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 5 — 04. INSTALAÇÃO ─────────────────────────────────── -->
+  <div class="slide" id="s5">
+    <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/PROCESSO/04-instalacao.png') center center/cover no-repeat;"></div>
+    <!-- gradiente topo: céu laranja tem espaço para texto -->
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,18,.50) 0%,rgba(11,11,18,.30) 22%,rgba(11,11,18,.05) 45%,rgba(11,11,18,0) 58%);"></div>
+
+    <div class="logo">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+        </div>
+        <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);">Energia Inteligente</span>
+      </div>
+    </div>
+
+    <div style="position:absolute;top:163px;left:88px;right:88px;z-index:20;">
+      <div class="bar"></div>
+      <p class="eyebrow">04. Instalação</p>
+      <p class="h1">Execução cuidadosa,<br>do início ao fim.</p>
+      <p class="body">Nossa equipe realiza a instalação seguindo padrões técnicos de segurança, organização e acabamento, com testes de funcionamento antes da entrega.</p>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 6 — 05. MONITORAMENTO E SUPORTE ───────────────────── -->
+  <div class="slide" id="s6">
+    <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/PROCESSO/05-pos-venda.png') center center/cover no-repeat;"></div>
+    <!-- gradiente topo-esquerda: área escura superior da imagem -->
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,18,.65) 0%,rgba(11,11,18,.40) 25%,rgba(11,11,18,.08) 50%,rgba(11,11,18,0) 62%);"></div>
+
+    <div class="logo">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+        </div>
+        <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);">Energia Inteligente</span>
+      </div>
+    </div>
+
+    <div style="position:absolute;top:163px;left:88px;right:88px;z-index:20;">
+      <div class="bar"></div>
+      <p class="eyebrow">05. Monitoramento e Suporte</p>
+      <p class="h1">A entrega não termina<br>quando ligamos<br>o sistema.</p>
+      <p class="body">Orientamos você sobre o funcionamento, configuramos o monitoramento e permanecemos disponíveis para acompanhar o desempenho do projeto.</p>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 7 — FINAL / CTA ────────────────────────────────────── -->
+  <div class="slide" id="s7">
+    <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/PESSOAS/familia-independencia.png') center center/cover no-repeat;"></div>
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(11,11,18,0) 0%,rgba(11,11,18,0) 38%,rgba(11,11,18,.68) 65%,rgba(11,11,18,.97) 100%);"></div>
+
+    <div class="logo">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+        </div>
+        <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);">Energia Inteligente</span>
+      </div>
+    </div>
+
+    <div style="position:absolute;bottom:110px;left:88px;right:88px;z-index:20;">
+      <div style="width:44px;height:3px;background:#F26522;border-radius:2px;margin:0 0 36px;"></div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:50px;font-weight:700;color:#FAFAFA;line-height:1.08;letter-spacing:-.8px;margin:0 0 28px;">Energia inteligente<br>exige planejamento,<br>engenharia e cuidado<br>em cada etapa.</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:24px;font-weight:300;color:rgba(250,250,250,.75);line-height:1.70;max-width:560px;margin:0 0 44px;">Dê o próximo passo para ter mais controle sobre sua energia.</p>
+      <div style="display:inline-flex;flex-direction:column;gap:6px;padding:28px 36px;border-left:3px solid #F26522;background:rgba(242,101,34,.06);">
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:800;color:#F26522;margin:0;letter-spacing:-.3px;">Fale com a LumenGrid.</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:rgba(250,250,250,.45);margin:0;letter-spacing:3px;text-transform:uppercase;">Energia Inteligente</p>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+<script>
+let c=0;
+const sl=document.querySelectorAll('.slide');
+function goTo(n){sl[c].classList.remove('on');c=n;sl[c].classList.add('on');}
+function next(){if(c<sl.length-1)goTo(c+1);}
+function prev(){if(c>0)goTo(c-1);}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev();});
+</script>
+</body>
+</html>

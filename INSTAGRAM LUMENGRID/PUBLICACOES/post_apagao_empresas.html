@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Apagão: seu negócio não para</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body { margin:0; background:#060608; display:flex; flex-direction:column; align-items:center; gap:0; padding:0; }
+.slide { width:1080px; height:1350px; position:relative; overflow:hidden; flex-shrink:0; }
+.li { height:58px; width:auto; object-fit:contain; filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9)); }
+.lumen { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:27px; text-transform:uppercase; color:#F26522; letter-spacing:-.3px; text-shadow:0 2px 12px rgba(0,0,0,.99); }
+.grid  { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:27px; text-transform:uppercase; color:#FAFAFA; letter-spacing:-.3px; text-shadow:0 2px 12px rgba(0,0,0,.99); }
+.subtag { font-family:'DM Sans',sans-serif; font-weight:600; font-size:8px; text-transform:uppercase; letter-spacing:.3em; color:rgba(242,101,34,.90); text-shadow:0 2px 8px rgba(0,0,0,.99); }
+</style>
+</head>
+<body>
+
+<!-- ════════ SLIDE 1 — CAPA / ACADEMIA ════════ -->
+<!-- Foto: ginásio 2 andares centralizado, céu azul no topo, terreno escuro na base -->
+<!-- Layout: headline na BASE (terreno escuro abaixo do ginásio). Gym totalmente visível. -->
+<div class="slide" id="s1">
+
+  <!-- BG: Academia -->
+  <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/NAO_UTILIZADAS/ACADEMIA NOVA.png') center center/cover no-repeat;"></div>
+
+  <!-- Overlay topo: escurece o céu azul para o header ficar legível -->
+  <div style="position:absolute;top:0;left:0;right:0;height:260px;z-index:1;background:linear-gradient(to bottom, rgba(0,0,0,.70) 0%, rgba(0,0,0,.35) 60%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Overlay base: zona de texto no terreno escuro -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:620px;z-index:1;background:linear-gradient(to top, rgba(0,0,0,.96) 0%, rgba(0,0,0,.85) 40%, rgba(0,0,0,.40) 70%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Header -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:20;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ backup de energia</p>
+  </div>
+
+  <!-- Conteúdo: BASE do slide, no terreno escuro abaixo do ginásio -->
+  <div style="position:absolute;left:88px;right:88px;bottom:100px;z-index:20;text-align:center;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:#FAFAFA;line-height:.97;letter-spacing:-2.5px;margin:0 0 8px;">A energia</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:#FAFAFA;line-height:.97;letter-spacing:-2.5px;margin:0 0 8px;">caiu.</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:68px;font-weight:700;color:rgba(250,250,250,.28);line-height:1.05;letter-spacing:-1.5px;margin:0 0 40px;">Seu negócio,</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:84px;font-weight:700;color:#F26522;line-height:.97;letter-spacing:-2px;margin:0 0 44px;">não.</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:300;color:rgba(250,250,250,.55);letter-spacing:3.5px;text-transform:uppercase;margin:0 0 36px;">Academias &nbsp;·&nbsp; Farmácias &nbsp;·&nbsp; Mercados</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:500;color:rgba(242,101,34,.75);letter-spacing:1.5px;margin:0;">Deslize e veja como →</p>
+  </div>
+
+</div>
+
+
+<!-- ════════ SLIDE 2 — FARMÁCIA ════════ -->
+<!-- Foto: farmácia centralizada, céu azul, lados escuros (loja fechada esq e dir) -->
+<!-- Layout: painel editorial esquerdo. Texto na zona escura esquerda. Farmácia à direita visível. -->
+<div class="slide" id="s2">
+
+  <!-- BG: Farmácia -->
+  <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/NAO_UTILIZADAS/FARMACIA NOVA.png') center center/cover no-repeat;"></div>
+
+  <!-- Overlay topo: escurece o céu azul para o header -->
+  <div style="position:absolute;top:0;left:0;right:0;height:240px;z-index:1;background:linear-gradient(to bottom, rgba(0,0,0,.68) 0%, rgba(0,0,0,.30) 65%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Painel esquerdo: zona de texto (lado esquerdo já é escuro na foto) -->
+  <div style="position:absolute;inset:0;z-index:2;background:linear-gradient(to right, rgba(4,6,5,.96) 0%, rgba(4,6,5,.90) 35%, rgba(4,6,5,.50) 52%, rgba(4,6,5,.10) 68%, rgba(4,6,5,0) 80%);"></div>
+
+  <!-- Overlay base leve: harmoniza rodapé -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:200px;z-index:2;background:linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Moldura laranja -->
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.65);pointer-events:none;"></div>
+
+  <!-- Header -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ energia para empresas</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ farmácia</p>
+  </div>
+
+  <!-- Conteúdo: coluna esquerda, centro vertical -->
+  <div style="position:absolute;left:88px;right:500px;top:50%;transform:translateY(-50%);z-index:20;">
+
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:72px;font-weight:700;color:#FAFAFA;line-height:1.00;letter-spacing:-1.8px;margin:0 0 40px;">Atendimento<br>não pode<br><span style="color:#F26522;">esperar.</span></p>
+
+    <div style="display:flex;flex-direction:column;gap:22px;margin-bottom:44px;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:20px;height:2px;background:#F26522;border-radius:2px;flex-shrink:0;"></div>
+        <span style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:400;color:rgba(250,250,250,.88);">Iluminação</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:20px;height:2px;background:#F26522;border-radius:2px;flex-shrink:0;"></div>
+        <span style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:400;color:rgba(250,250,250,.88);">Internet</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:20px;height:2px;background:#F26522;border-radius:2px;flex-shrink:0;"></div>
+        <span style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:400;color:rgba(250,250,250,.88);">Refrigeração</span>
+      </div>
+    </div>
+
+    <div style="border-left:3px solid rgba(242,101,34,.75);padding-left:18px;">
+      <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:500;color:rgba(250,250,250,.72);line-height:1.60;margin:0;">Baterias de lítio.<br>Sem barulho.<br>Sem combustível.</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ════════ SLIDE 3 — MERCADO + CTA ════════ -->
+<!-- Foto: mercado centro-esquerda iluminado, loja escura à direita, céu azul no topo -->
+<!-- Layout: texto na BASE no terreno escuro abaixo do mercado. CTA em laranja. -->
+<div class="slide" id="s3">
+
+  <!-- BG: Mercado -->
+  <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/NAO_UTILIZADAS/MERCADO NOVO - OK.png') center center/cover no-repeat;"></div>
+
+  <!-- Overlay topo: escurece o céu azul para o header -->
+  <div style="position:absolute;top:0;left:0;right:0;height:260px;z-index:1;background:linear-gradient(to bottom, rgba(0,0,0,.65) 0%, rgba(0,0,0,.25) 60%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Overlay base: zona de texto abaixo do mercado -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:580px;z-index:1;background:linear-gradient(to top, rgba(0,0,0,.98) 0%, rgba(0,0,0,.88) 38%, rgba(0,0,0,.45) 65%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Moldura laranja -->
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.65);pointer-events:none;"></div>
+
+  <!-- Header -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ energia para empresas</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ mercado</p>
+  </div>
+
+  <!-- Conteúdo: BASE do slide, texto centralizado no terreno escuro -->
+  <div style="position:absolute;left:88px;right:88px;bottom:100px;z-index:20;text-align:center;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:80px;font-weight:700;color:#FAFAFA;line-height:.98;letter-spacing:-2px;margin:0 0 8px;">Continue</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:80px;font-weight:700;color:#FAFAFA;line-height:.98;letter-spacing:-2px;margin:0 0 8px;">vendendo.</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:56px;font-weight:700;color:rgba(250,250,250,.25);line-height:1.05;letter-spacing:-1px;margin:0 0 44px;">Mesmo no apagão.</p>
+    <div style="width:44px;height:2px;background:#F26522;border-radius:2px;margin:0 auto 36px;opacity:.80;"></div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:400;color:rgba(250,250,250,.72);line-height:1.65;margin:0 0 36px;">Caixas, internet, iluminação<br>e refrigeração em funcionamento<br>durante qualquer apagão.</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:26px;font-weight:500;color:#F26522;line-height:1.40;margin:0;">Descubra o sistema de backup ideal<br>para o seu negócio.</p>
+  </div>
+
+</div>
+
+<!-- Feito por Domani Consultoria -->
+</body>
+</html>

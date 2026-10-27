@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUMENGRID — Identidade Visual · Aplicações de Cor</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Inter:wght@300;400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Inter:wght@300;400&display=swap"></noscript>
+<style>
+/* ── ÍCONE ORBITAL ──────────────────────────────────────────
+   Path: M59 15 A36 36 0 1 1 25 25
+   Arco único 300° · abertura 60° no canto superior-esquerdo
+   Ponto: cx=68 cy=19 r=5.5
+   ─────────────────────────────────────────────────────────*/
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--or:#F57832}
+body{font-family:'Inter',system-ui,sans-serif;background:#f0efeb;min-height:100vh}
+
+/* CABEÇALHO */
+header{
+  padding:56px 64px 40px;
+  border-bottom:1px solid rgba(0,0,0,.08);
+  background:#f0efeb;
+}
+.hd-eye{
+  font-size:9px;letter-spacing:5px;text-transform:uppercase;
+  color:var(--or);margin-bottom:10px;
+}
+.hd-title{
+  font-family:'Raleway',sans-serif;font-weight:300;
+  font-size:28px;letter-spacing:12px;text-transform:uppercase;
+  color:#111;margin-bottom:4px;
+}
+.hd-sub{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#aaa;
+}
+
+/* GRADE 2×3 */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+/* PAINEL */
+.panel{
+  padding:64px 56px 52px;
+  border:0.5px solid rgba(0,0,0,.06);
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+}
+.panel-tag{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  opacity:.3;font-family:'Inter',sans-serif;
+}
+.logo{display:flex;align-items:center;gap:20px}
+.logo svg{width:88px;height:88px;flex-shrink:0}
+.logo-type{}
+.logo-name{
+  font-family:'Raleway',sans-serif;font-weight:500;
+  font-size:30px;letter-spacing:5px;text-transform:uppercase;
+  line-height:1;
+}
+.logo-sub{
+  font-family:'Raleway',sans-serif;font-weight:300;
+  font-size:8px;letter-spacing:5px;text-transform:uppercase;
+  margin-top:9px;opacity:.38;
+}
+
+/* MINI VERSÃO (ícone só) */
+.mini-row{display:flex;align-items:center;gap:24px}
+.mini-row svg{width:40px;height:40px}
+.mini-row span{font-size:9px;letter-spacing:2px;text-transform:uppercase;opacity:.3}
+
+/* TEMAS */
+.bg-white{background:#ffffff;color:#111111}
+.bg-black{background:#111111;color:#f0f0f0}
+.bg-black .panel-tag{color:#f0f0f0}
+.bg-black .logo-name{color:#f0f0f0}
+.bg-black .logo-sub{color:#f0f0f0}
+.bg-white .panel-tag{color:#111111}
+
+/* RODAPÉ */
+footer{
+  padding:32px 64px;
+  text-align:center;
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#bbb;
+  background:#f0efeb;border-top:1px solid rgba(0,0,0,.06);
+}
+
+@media(max-width:720px){
+  .grid{grid-template-columns:1fr}
+  header,footer{padding:40px 28px}
+  .panel{padding:48px 28px 40px}
+  .logo svg{width:68px;height:68px}
+  .logo-name{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-eye">Lumengrid · Identidade Visual · Outubro 2026</div>
+  <div class="hd-title">Lumengrid</div>
+  <div class="hd-sub">Símbolo Orbital · Aplicações de cor</div>
+</header>
+
+<div class="grid">
+
+  <!-- 01 CLARA · TRADICIONAL ─────────────── -->
+  <div class="panel bg-white">
+    <div class="panel-tag">01 · Clara · Tradicional</div>
+    <div class="logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#F57832"/>
+      </svg>
+      <div class="logo-type">
+        <div class="logo-name" style="color:#111111">LUMENGRID</div>
+        <div class="logo-sub" style="color:#111111">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="mini-row">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#F57832"/>
+      </svg>
+      <span>Símbolo isolado</span>
+    </div>
+  </div>
+
+  <!-- 02 ESCURA · TRADICIONAL ─────────────── -->
+  <div class="panel bg-black">
+    <div class="panel-tag">02 · Escura · Tradicional</div>
+    <div class="logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#f0f0f0" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#F57832"/>
+      </svg>
+      <div class="logo-type">
+        <div class="logo-name" style="color:#f0f0f0">LUMENGRID</div>
+        <div class="logo-sub" style="color:#f0f0f0">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="mini-row">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#f0f0f0" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#F57832"/>
+      </svg>
+      <span style="color:#f0f0f0">Símbolo isolado</span>
+    </div>
+  </div>
+
+  <!-- 03 LUMEN EM DESTAQUE · CLARA ─────────── -->
+  <div class="panel bg-white">
+    <div class="panel-tag">03 · Lumen em Destaque · Clara</div>
+    <div class="logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#F57832"/>
+      </svg>
+      <div class="logo-type">
+        <div class="logo-name">
+          <span style="color:#F57832">LUMEN</span><span style="color:#111111">GRID</span>
+        </div>
+        <div class="logo-sub" style="color:#111111">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="mini-row">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#F57832"/>
+      </svg>
+      <span>Símbolo isolado</span>
+    </div>
+  </div>
+
+  <!-- 04 LUMEN EM DESTAQUE · ESCURA ─────────── -->
+  <div class="panel bg-black">
+    <div class="panel-tag">04 · Lumen em Destaque · Escura</div>
+    <div class="logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#f0f0f0" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#F57832"/>
+      </svg>
+      <div class="logo-type">
+        <div class="logo-name">
+          <span style="color:#F57832">LUMEN</span><span style="color:#f0f0f0">GRID</span>
+        </div>
+        <div class="logo-sub" style="color:#f0f0f0">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="mini-row">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#f0f0f0" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#F57832"/>
+      </svg>
+      <span style="color:#f0f0f0">Símbolo isolado</span>
+    </div>
+  </div>
+
+  <!-- 05 ÓRBITA ÂMBAR · CLARA ─────────────── -->
+  <div class="panel bg-white">
+    <div class="panel-tag">05 · Órbita Âmbar · Clara</div>
+    <div class="logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#F57832" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#111111"/>
+      </svg>
+      <div class="logo-type">
+        <div class="logo-name" style="color:#111111">LUMENGRID</div>
+        <div class="logo-sub" style="color:#111111">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="mini-row">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#F57832" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" fill="#111111"/>
+      </svg>
+      <span>Símbolo isolado</span>
+    </div>
+  </div>
+
+  <!-- 06 ÓRBITA ÂMBAR · ESCURA ─────────────── -->
+  <div class="panel bg-black">
+    <div class="panel-tag">06 · Órbita Âmbar · Escura</div>
+    <div class="logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#F57832" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="logo-type">
+        <div class="logo-name" style="color:#f0f0f0">LUMENGRID</div>
+        <div class="logo-sub" style="color:#f0f0f0">Energia Inteligente</div>
+      </div>
+    </div>
+    <div class="mini-row">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#F57832" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="5.5" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+      </svg>
+      <span style="color:#f0f0f0">Símbolo isolado</span>
+    </div>
+  </div>
+
+</div>
+
+<footer>Feito por Domani Consultoria</footer>
+
+</body>
+</html>

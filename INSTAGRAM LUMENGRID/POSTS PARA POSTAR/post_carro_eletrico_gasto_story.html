@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Story: Carro elétrico vs combustão</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body { margin:0; background:#060608; display:flex; flex-direction:column; align-items:center; gap:0; padding:0; }
+.slide { width:1080px; height:1920px; position:relative; overflow:hidden; flex-shrink:0; }
+.li { height:58px; width:auto; object-fit:contain; filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9)); }
+.lumen { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:27px; text-transform:uppercase; color:#F26522; letter-spacing:-.3px; text-shadow:0 2px 12px rgba(0,0,0,.99); }
+.grid  { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:27px; text-transform:uppercase; color:#FAFAFA; letter-spacing:-.3px; text-shadow:0 2px 12px rgba(0,0,0,.99); }
+.subtag { font-family:'DM Sans',sans-serif; font-weight:600; font-size:8px; text-transform:uppercase; letter-spacing:.3em; color:rgba(242,101,34,.90); text-shadow:0 2px 8px rgba(0,0,0,.99); }
+</style>
+</head>
+<body>
+
+
+<!-- ════════ STORY 1 — GANCHO ════════ -->
+<div class="slide" id="s1">
+
+  <!-- BG: carro elétrico passando em frente ao posto -->
+  <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/NAO_UTILIZADAS/CARRO ELETRICO CAPA.png') center 35%/cover no-repeat;"></div>
+
+  <!-- Overlay topo (safe zone barra de progresso + header) -->
+  <div style="position:absolute;top:0;left:0;right:0;height:400px;z-index:1;background:linear-gradient(to bottom, rgba(0,0,0,.80) 0%, rgba(0,0,0,.40) 65%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Overlay base: zona de texto -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1000px;z-index:1;background:linear-gradient(to top, rgba(0,0,0,.98) 0%, rgba(0,0,0,.90) 40%, rgba(0,0,0,.55) 65%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Header -->
+  <div style="position:absolute;top:100px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:20;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ mobilidade elétrica</p>
+  </div>
+
+  <!-- Conteúdo: base do story (acima da safe zone de swipe) -->
+  <div style="position:absolute;left:88px;right:88px;bottom:220px;z-index:20;text-align:center;">
+
+    <!-- Eyebrow -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0 0 48px;">▶ mobilidade elétrica</p>
+
+    <div style="width:48px;height:2px;background:rgba(242,101,34,.40);border-radius:2px;margin:0 auto 48px;"></div>
+
+    <!-- Headline -->
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:68px;font-weight:700;color:#FAFAFA;line-height:1.08;letter-spacing:-1.6px;margin:0 0 56px;text-shadow:0 4px 36px rgba(0,0,0,.99);">Quanto você deixaria<br>de gastar no posto<br>se seu próximo carro<br>fosse <span style="color:#F26522;">elétrico?</span></p>
+
+    <div style="width:44px;height:2px;background:#F26522;border-radius:2px;margin:0 auto 44px;opacity:.65;"></div>
+
+    <!-- CTA deslize -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:34px;font-weight:400;color:rgba(250,250,250,.80);margin:0;letter-spacing:.3px;">Veja o próximo story e faça as contas.</p>
+
+  </div>
+
+</div>
+
+
+<!-- ════════ STORY 2 — COMPARAÇÃO ════════ -->
+<div class="slide" id="s2">
+
+  <!-- BG: comparação gasolina vs carregador -->
+  <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/NAO_UTILIZADAS/CARRO ELETRICO gasolinaVShibrido.png') center 25%/cover no-repeat;"></div>
+
+  <!-- Overlay topo -->
+  <div style="position:absolute;top:0;left:0;right:0;height:380px;z-index:1;background:linear-gradient(to bottom, rgba(0,0,0,.78) 0%, rgba(0,0,0,.40) 65%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Overlay base: zona de texto -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1200px;z-index:1;background:linear-gradient(to top, rgba(0,0,0,.99) 0%, rgba(0,0,0,.97) 45%, rgba(0,0,0,.82) 65%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Moldura laranja -->
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.55);pointer-events:none;"></div>
+
+  <!-- Header -->
+  <div style="position:absolute;top:100px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteúdo: base do story -->
+  <div style="position:absolute;left:88px;right:88px;bottom:220px;z-index:20;text-align:center;">
+
+    <!-- Setup -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:32px;font-weight:600;color:#FAFAFA;letter-spacing:1px;margin:0 0 52px;text-shadow:0 2px 24px rgba(0,0,0,.99),0 0 48px rgba(0,0,0,.99);">Considere 1.200 km por mês:</p>
+
+    <!-- Cards de comparação -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:0 0 52px;">
+
+      <!-- Combustão -->
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(250,250,250,.14);border-radius:16px;padding:44px 28px;text-align:center;">
+        <p style="font-family:'DM Sans',sans-serif;font-size:52px;margin:0 0 20px;line-height:1;">⛽</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(250,250,250,.55);margin:0 0 24px;">Combustão</p>
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:64px;font-weight:700;color:rgba(250,250,250,.88);line-height:1;letter-spacing:-1.5px;margin:0 0 10px;">R$ 600</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:rgba(250,250,250,.40);margin:0;">por mês</p>
+      </div>
+
+      <!-- Elétrico -->
+      <div style="background:rgba(242,101,34,.09);border:2px solid rgba(242,101,34,.50);border-radius:16px;padding:44px 28px;text-align:center;">
+        <p style="font-family:'DM Sans',sans-serif;font-size:52px;margin:0 0 20px;line-height:1;">⚡</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0 0 24px;">Elétrico</p>
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:64px;font-weight:700;color:#F26522;line-height:1;letter-spacing:-1.5px;margin:0 0 10px;">R$ 190</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:rgba(242,101,34,.55);margin:0;">por mês</p>
+      </div>
+
+    </div>
+
+    <!-- Divisor -->
+    <div style="width:44px;height:2px;background:#F26522;border-radius:2px;margin:0 auto 44px;opacity:.65;"></div>
+
+    <!-- Frase de impacto -->
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;color:#FAFAFA;line-height:1.12;letter-spacing:-.8px;margin:0 0 16px;">São mais de</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:88px;font-weight:700;color:#F26522;line-height:1;letter-spacing:-2.2px;margin:0 0 16px;">R$ 400</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;color:#FAFAFA;line-height:1.12;letter-spacing:-.8px;margin:0;">de diferença todos os meses.</p>
+
+  </div>
+
+</div>
+
+
+<!-- ════════ STORY 3 — SOLAR + CTA ════════ -->
+<div class="slide" id="s3">
+
+  <!-- BG: carregador elétrico + solar -->
+  <div style="position:absolute;inset:0;z-index:0;background:url('../../imagens/TECNOLOGIA/carregadores-eletricos.png') center top/cover no-repeat;"></div>
+
+  <!-- Overlay topo -->
+  <div style="position:absolute;top:0;left:0;right:0;height:380px;z-index:1;background:linear-gradient(to bottom, rgba(0,0,0,.82) 0%, rgba(0,0,0,.45) 65%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Overlay base -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1150px;z-index:1;background:linear-gradient(to top, rgba(0,0,0,.99) 0%, rgba(0,0,0,.95) 40%, rgba(0,0,0,.65) 62%, rgba(0,0,0,.22) 78%, rgba(0,0,0,0) 100%);"></div>
+
+  <!-- Moldura laranja -->
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.55);pointer-events:none;"></div>
+
+  <!-- Header -->
+  <div style="position:absolute;top:100px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteúdo: base do story -->
+  <div style="position:absolute;left:88px;right:88px;bottom:220px;z-index:20;text-align:center;">
+
+    <!-- Headline -->
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;color:#FAFAFA;line-height:1.08;letter-spacing:-1.3px;margin:0 0 52px;text-shadow:0 4px 36px rgba(0,0,0,.99),0 0 80px rgba(0,0,0,.80);">Agora imagine carregar<br>seu carro com a energia<br>produzida no seu próprio<br><span style="color:#F26522;">telhado.</span></p>
+
+    <!-- Card explicativo -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(242,101,34,.28);border-radius:16px;padding:44px 48px;margin:0 0 52px;text-align:left;">
+      <p style="font-family:'DM Sans',sans-serif;font-size:26px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(242,101,34,.80);margin:0 0 28px;">Solar + carregador veicular:</p>
+      <div style="display:flex;flex-direction:column;gap:22px;">
+        <div style="display:flex;align-items:center;gap:18px;">
+          <span style="color:#F26522;font-size:32px;flex-shrink:0;line-height:1;">—</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:34px;font-weight:400;color:rgba(250,250,250,.90);line-height:1.45;">menos dependência do posto</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;">
+          <span style="color:#F26522;font-size:32px;flex-shrink:0;line-height:1;">—</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:34px;font-weight:400;color:rgba(250,250,250,.90);line-height:1.45;">mais controle sobre seus gastos</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:48px;height:2px;background:rgba(242,101,34,.55);border-radius:2px;margin:0 auto 40px;"></div>
+
+    <!-- CTA -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:32px;font-weight:600;color:#F26522;margin:0;letter-spacing:.5px;text-shadow:0 2px 18px rgba(0,0,0,.90);">Conheça as soluções da LumenGrid.</p>
+
+  </div>
+
+</div>
+
+
+<!-- Feito por Domani Consultoria -->
+</body>
+</html>

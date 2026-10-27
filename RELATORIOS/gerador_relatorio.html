@@ -202,6 +202,14 @@ body {
   margin-bottom: 3px;
 }
 
+.sec-flabel-hint {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgba(250,250,250,.20);
+}
+
 .sec-input, .sec-textarea {
   width: 100%;
   background: #111;
@@ -215,38 +223,7 @@ body {
   transition: border-color .15s;
 }
 .sec-input:focus, .sec-textarea:focus { border-color: rgba(242,101,34,.4); }
-.sec-textarea { min-height: 44px; resize: vertical; }
-
-.items-lista { display: flex; flex-direction: column; gap: 4px; }
-
-.item-row { display: flex; gap: 5px; align-items: center; }
-
-.item-row input {
-  flex: 1;
-  background: #111;
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 5px;
-  padding: 6px 9px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  color: #FAFAFA;
-  outline: none;
-  transition: border-color .15s;
-}
-.item-row input:focus { border-color: rgba(242,101,34,.35); }
-
-.btn-rem-item {
-  background: none;
-  border: none;
-  color: rgba(255,80,80,.38);
-  font-size: 13px;
-  cursor: pointer;
-  flex-shrink: 0;
-  line-height: 1;
-  padding: 2px;
-  transition: color .15s;
-}
-.btn-rem-item:hover { color: #ff5050; }
+.sec-textarea { min-height: 90px; resize: vertical; line-height: 1.55; }
 
 /* ─── BOTÕES ─── */
 .btn {
@@ -368,7 +345,7 @@ body {
   background: #161616;
   padding: 24px 52px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 20px;
 }
 .ficha-label {
@@ -401,13 +378,11 @@ body {
   font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:700;
   color:#0f0f0f; letter-spacing:-.2px; margin-bottom:14px;
 }
-.secao-intro {
-  font-family:'DM Sans',sans-serif; font-size:14px; color:#3a3a3a; line-height:1.65; margin-bottom:14px;
+.secao-p {
+  font-family:'DM Sans',sans-serif; font-size:14px; color:#3a3a3a; line-height:1.65; margin-bottom:12px;
 }
-.secao-texto {
-  font-family:'DM Sans',sans-serif; font-size:14px; color:#3a3a3a; line-height:1.70;
-}
-.secao-lista { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.secao-p:last-child { margin-bottom: 0; }
+.secao-lista { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
 .lista-item { display: flex; align-items: flex-start; gap: 12px; }
 .lista-marker {
   width: 6px; height: 6px; border-radius: 50%; background: #F26522;
@@ -511,29 +486,61 @@ body {
     overflow: visible;
   }
 
+  /* Fluxo natural — sem min-height fixo; browser quebra páginas automaticamente */
   .page {
     width: 210mm;
-    min-height: auto;
+    height: auto;
+    min-height: 0;
     box-shadow: none;
     margin: 0 !important;
     display: block;
   }
 
+  /* Página 2 sempre começa numa nova página */
   #page2 {
-    display: block !important;
     break-before: page;
     page-break-before: always;
+    margin-top: 0 !important;
   }
 
-  .foto-wrap { flex: none; display: block; }
-  .body { flex: none; }
-  .secao { page-break-inside: avoid; }
-  .footer { margin-top: 32px; }
-  .assinaturas { padding-bottom: 0; }
+  .page-foto { margin-top: 0 !important; display: block; }
+
+  /* Header + ficha ficam juntos na mesma página */
+  .header { page-break-after: avoid; break-after: avoid; }
+  .ficha   { page-break-before: avoid; break-before: avoid; page-break-after: avoid; break-after: avoid; }
+
+  /* Não quebrar no meio de seções */
+  .secao   { page-break-inside: avoid; break-inside: avoid; }
+  .obs-box { page-break-inside: avoid; break-inside: avoid; }
+
+  .footer { margin-top: 0; }
 }
 </style>
 </head>
 <body>
+
+<!-- ════════════ MODAL IMPORTAR TEXTO ════════════ -->
+<div id="modal-importar" style="display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.75); align-items:center; justify-content:center;">
+  <div style="background:#1b1b1b; border:1px solid rgba(242,101,34,.30); border-radius:10px; padding:24px; width:540px; max-width:92vw; max-height:82vh; overflow-y:auto; display:flex; flex-direction:column; gap:12px;">
+    <div style="font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#F26522;">Importar Texto</div>
+    <p style="font-size:12px; color:rgba(250,250,250,.45); line-height:1.65;">Cole o conteúdo do relatório abaixo. Use <code style="background:#111;padding:1px 6px;border-radius:3px;color:#F26522;font-size:11px;">## Título da seção</code> para separar seções. Dentro de cada seção, linhas que começam com <code style="background:#111;padding:1px 6px;border-radius:3px;color:#F26522;font-size:11px;">-</code> viram itens de lista; linhas em branco separam parágrafos.</p>
+    <textarea id="importar-textarea" style="width:100%;min-height:260px;background:#111;border:1px solid rgba(255,255,255,.09);border-radius:6px;padding:10px 12px;font-family:'DM Sans',monospace;font-size:12px;color:#FAFAFA;outline:none;resize:vertical;line-height:1.6;" placeholder="## Padrão de entrada
+Foram identificadas as seguintes adequações necessárias:
+
+- 1 cabo vermelho 4 mm² (CC)
+- 1 cabo preto 4 mm² (CC)
+- 1 cabo verde 4 mm² (aterramento)
+
+A instalação seguirá as normas da ABNT.
+
+## Adequação de ventilação
+O local do inversor necessita de ventilação adequada para..."></textarea>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-dark btn-mini" onclick="fecharModalImportar()">Cancelar</button>
+      <button class="btn btn-primary btn-mini" onclick="processarImportacao()">Importar seções</button>
+    </div>
+  </div>
+</div>
 
 <!-- ════════════ PAINEL EDITOR ════════════ -->
 <div class="editor">
@@ -591,7 +598,10 @@ body {
 
       <div id="secoes-lista"></div>
 
-      <button class="btn btn-ghost btn-mini" onclick="adicionarSecao()">+ Adicionar seção</button>
+      <div style="display:flex; gap:7px; flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-mini" onclick="adicionarSecao()">+ Adicionar seção</button>
+        <button class="btn btn-dark btn-mini" onclick="abrirModalImportar()">↓ Importar texto</button>
+      </div>
     </div>
 
     <!-- OBSERVAÇÕES -->
@@ -653,26 +663,19 @@ let secaoCounter = 0;
    INICIALIZAÇÃO
 ═══════════════════════════════════════════════════ */
 (function init() {
-  // Auto-número
   const ano = new Date().getFullYear();
-  const seq = parseInt(localStorage.getItem('lg_rel_seq') || '0') + 1;
-  localStorage.setItem('lg_rel_seq', seq);
-  document.getElementById('campo-numero').value = `${String(seq).padStart(4,'0')}/${ano}`;
+  const seq = Math.floor(1000 + Math.random() * 9000);
+  document.getElementById('campo-numero').value = `${seq}/${ano}`;
 
-  // Data de hoje
   const hoje = new Date();
-  const dd = String(hoje.getDate()).padStart(2,'0');
-  const mm = String(hoje.getMonth()+1).padStart(2,'0');
-  const aaaa = hoje.getFullYear();
-  document.getElementById('campo-data').value = `${dd}/${mm}/${aaaa}`;
+  const dd   = String(hoje.getDate()).padStart(2,'0');
+  const mm   = String(hoje.getMonth()+1).padStart(2,'0');
+  document.getElementById('campo-data').value = `${dd}/${mm}/${hoje.getFullYear()}`;
 
-  // Seção inicial padrão
-  adicionarSecao('Padrão de entrada', 'Foram identificadas as seguintes adequações necessárias:', [], null);
+  adicionarSecao('Padrão de entrada', 'Foram identificadas as seguintes adequações necessárias:');
 
-  // Eventos globais de input para preview ao vivo
   document.querySelector('.editor').addEventListener('input', debounce(atualizaPreview, 200));
 
-  // Imagem
   document.getElementById('campo-imagem').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -694,10 +697,10 @@ let secaoCounter = 0;
 /* ═══════════════════════════════════════════════════
    SEÇÕES
 ═══════════════════════════════════════════════════ */
-function adicionarSecao(titulo='', intro='', itens=[], textPos='') {
+function adicionarSecao(titulo='', conteudo='') {
   secaoCounter++;
   const lista = document.getElementById('secoes-lista');
-  const idx = lista.children.length;
+  const idx   = lista.children.length;
 
   const card = document.createElement('div');
   card.className = 'secao-card';
@@ -706,7 +709,7 @@ function adicionarSecao(titulo='', intro='', itens=[], textPos='') {
   card.innerHTML = `
     <div class="secao-card-header" onclick="toggleSecao(this)">
       <div class="sec-badge">${idx + 1}</div>
-      <div class="sec-preview-label">${titulo || 'Nova seção'}</div>
+      <div class="sec-preview-label">${escHtml(titulo) || 'Nova seção'}</div>
       <button class="btn-rem-sec" onclick="removerSecao(event, this)" title="Remover seção">✕</button>
     </div>
     <div class="secao-card-body">
@@ -716,30 +719,17 @@ function adicionarSecao(titulo='', intro='', itens=[], textPos='') {
           oninput="this.closest('.secao-card').querySelector('.sec-preview-label').textContent = this.value || 'Nova seção'; atualizaPreview();">
       </div>
       <div>
-        <span class="sec-flabel">Texto introdutório (opcional)</span>
-        <textarea class="sec-textarea inp-intro" placeholder="Ex: Foram identificadas as seguintes adequações...">${escHtml(intro)}</textarea>
-      </div>
-      <div>
-        <span class="sec-flabel">Itens da lista (opcional)</span>
-        <div class="items-lista"></div>
-        <button class="btn btn-ghost btn-mini" style="margin-top:5px;" onclick="adicionarItem(this)">+ Item</button>
-      </div>
-      <div>
-        <span class="sec-flabel">Texto após a lista (opcional)</span>
-        <textarea class="sec-textarea inp-texto" placeholder="Ex: O telhado encontra-se em perfeitas condições..."></textarea>
+        <span class="sec-flabel">Conteúdo <span class="sec-flabel-hint">— linha em branco = parágrafo · " - " no início = item de lista</span></span>
+        <textarea class="sec-textarea inp-conteudo" placeholder="Foram identificadas as seguintes adequações:
+
+- 1 cabo vermelho 4 mm² (CC)
+- 1 cabo preto 4 mm² (CC)
+
+A instalação seguirá as normas da ABNT.">${escHtml(conteudo)}</textarea>
       </div>
     </div>`;
 
   lista.appendChild(card);
-
-  // Preencher itens
-  const itemsContainer = card.querySelector('.items-lista');
-  if (itens && itens.length > 0) {
-    itens.forEach(item => adicionarItemNaLista(itemsContainer, item));
-  }
-
-  if (textPos) card.querySelector('.inp-texto').value = textPos;
-
   renumerarSecoes();
   atualizaPreview();
 }
@@ -763,20 +753,90 @@ function toggleSecao(header) {
 }
 
 /* ═══════════════════════════════════════════════════
-   ITENS
+   IMPORTAR TEXTO
 ═══════════════════════════════════════════════════ */
-function adicionarItem(btn) {
-  const container = btn.previousElementSibling;
-  adicionarItemNaLista(container, '');
-  atualizaPreview();
+function abrirModalImportar() {
+  const modal = document.getElementById('modal-importar');
+  modal.style.display = 'flex';
+  document.getElementById('importar-textarea').focus();
 }
 
-function adicionarItemNaLista(container, valor) {
-  const row = document.createElement('div');
-  row.className = 'item-row';
-  row.innerHTML = `<input type="text" value="${escHtml(valor)}" placeholder="Descreva o item...">
-    <button class="btn-rem-item" onclick="this.parentElement.remove(); atualizaPreview();" title="Remover">✕</button>`;
-  container.appendChild(row);
+function fecharModalImportar() {
+  document.getElementById('modal-importar').style.display = 'none';
+}
+
+function processarImportacao() {
+  const texto = document.getElementById('importar-textarea').value.trim();
+  if (!texto) return;
+
+  // Divide pelo marcador ## (início de linha)
+  const partes = texto.split(/^## /m).filter(Boolean);
+
+  // Se nenhuma linha começa com ##, o split retorna o texto inteiro como 1 parte —
+  // nesse caso não há marcadores reais de seção.
+  if (!texto.includes('\n## ') && !texto.startsWith('## ')) {
+    alert('Nenhuma seção encontrada. Use "## Título da seção" para separar as seções.');
+    return;
+  }
+
+  const msg = `Importar ${partes.length} seção(ões)? As seções existentes serão substituídas.`;
+  if (!confirm(msg)) return;
+
+  document.getElementById('secoes-lista').innerHTML = '';
+  secaoCounter = 0;
+
+  partes.forEach(parte => {
+    const nl = parte.indexOf('\n');
+    const titulo   = nl === -1 ? parte.trim() : parte.slice(0, nl).trim();
+    const conteudo = nl === -1 ? ''            : parte.slice(nl + 1).trim();
+    adicionarSecao(titulo, conteudo);
+  });
+
+  fecharModalImportar();
+  document.getElementById('importar-textarea').value = '';
+}
+
+/* ═══════════════════════════════════════════════════
+   PARSER DE CONTEÚDO LIVRE
+═══════════════════════════════════════════════════ */
+/**
+ * Converte texto livre em array de blocos:
+ *   { type: 'p',    text: '...' }
+ *   { type: 'item', text: '...' }
+ *
+ * Regras:
+ *  - Linhas com "- ", "• ", "* ", "– " no início → item
+ *  - Bloco separado por linha(s) em branco → novo parágrafo
+ */
+function parseConteudo(texto) {
+  if (!texto || !texto.trim()) return [];
+
+  const blocos = [];
+  // Divide em grupos de linhas separados por linhas em branco
+  const grupos = texto.split(/\n{2,}/);
+
+  grupos.forEach(grupo => {
+    const linhas = grupo.split('\n');
+    let bufP = [];
+
+    const flushP = () => {
+      const txt = bufP.join(' ').trim();
+      if (txt) blocos.push({ type: 'p', text: txt });
+      bufP = [];
+    };
+
+    linhas.forEach(linha => {
+      if (/^[-•*–]\s+/.test(linha)) {
+        flushP();
+        blocos.push({ type: 'item', text: linha.replace(/^[-•*–]\s+/, '').trim() });
+      } else {
+        bufP.push(linha);
+      }
+    });
+    flushP();
+  });
+
+  return blocos;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -786,29 +846,21 @@ function coletaDados() {
   const secoes = [];
   document.querySelectorAll('.secao-card').forEach(card => {
     const titulo   = card.querySelector('.inp-titulo').value.trim();
-    const intro    = card.querySelector('.inp-intro').value.trim();
-    const textPos  = card.querySelector('.inp-texto').value.trim();
-    const itens    = [...card.querySelectorAll('.items-lista .item-row input')]
-                      .map(i => i.value.trim()).filter(Boolean);
-    secoes.push({
-      titulo,
-      intro:     intro || null,
-      itens,
-      texto_pos: textPos || null
-    });
+    const conteudo = card.querySelector('.inp-conteudo').value;
+    secoes.push({ titulo, conteudo });
   });
 
   return {
-    numero:          document.getElementById('campo-numero').value.trim(),
-    data:            document.getElementById('campo-data').value.trim(),
-    cliente:         document.getElementById('campo-cliente').value.trim() || '—',
-    endereco:        document.getElementById('campo-endereco').value.trim() || '—',
-    bairro:          document.getElementById('campo-bairro').value.trim() || '',
-    tecnico:         document.getElementById('campo-tecnico').value.trim() || '—',
+    numero:         document.getElementById('campo-numero').value.trim(),
+    data:           document.getElementById('campo-data').value.trim(),
+    cliente:        document.getElementById('campo-cliente').value.trim() || '—',
+    endereco:       document.getElementById('campo-endereco').value.trim() || '—',
+    bairro:         document.getElementById('campo-bairro').value.trim() || '',
+    tecnico:        document.getElementById('campo-tecnico').value.trim() || '—',
     secoes,
-    observacoes:     document.getElementById('campo-obs').value.trim() || null,
-    imagem_telhado:  imageDataURL,
-    imagem_legenda:  document.getElementById('campo-legenda').value.trim(),
+    observacoes:    document.getElementById('campo-obs').value.trim() || null,
+    imagem_telhado: imageDataURL,
+    imagem_legenda: document.getElementById('campo-legenda').value.trim(),
   };
 }
 
@@ -816,20 +868,28 @@ function coletaDados() {
    RENDERIZAÇÃO
 ═══════════════════════════════════════════════════ */
 function renderSecao(s, idx) {
-  const itensHTML = s.itens.map(item => `
-    <div class="lista-item">
-      <div class="lista-marker"></div>
-      <span class="lista-texto">${item}</span>
-    </div>`).join('');
+  const blocos = parseConteudo(s.conteudo);
+
+  let conteudoHTML = '';
+  let listaOpen    = false;
+
+  blocos.forEach(b => {
+    if (b.type === 'item') {
+      if (!listaOpen) { conteudoHTML += '<div class="secao-lista">'; listaOpen = true; }
+      conteudoHTML += `<div class="lista-item"><div class="lista-marker"></div><span class="lista-texto">${escHtml(b.text)}</span></div>`;
+    } else {
+      if (listaOpen) { conteudoHTML += '</div>'; listaOpen = false; }
+      conteudoHTML += `<p class="secao-p">${escHtml(b.text)}</p>`;
+    }
+  });
+  if (listaOpen) conteudoHTML += '</div>';
 
   return `
     <div class="secao">
       <div class="secao-numero">${idx + 1}</div>
       <div class="secao-conteudo">
-        <div class="secao-titulo">${s.titulo || '—'}</div>
-        ${s.intro  ? `<p class="secao-intro">${s.intro}</p>` : ''}
-        ${s.itens.length ? `<div class="secao-lista">${itensHTML}</div>` : ''}
-        ${s.texto_pos ? `<p class="secao-texto">${s.texto_pos}</p>` : ''}
+        <div class="secao-titulo">${escHtml(s.titulo) || '—'}</div>
+        ${conteudoHTML}
       </div>
     </div>`;
 }
@@ -840,7 +900,7 @@ function render(d) {
   const obsHTML = d.observacoes ? `
     <div class="obs-box">
       <div class="obs-label">Observações</div>
-      ${d.observacoes}
+      ${escHtml(d.observacoes)}
     </div>` : '';
 
   // ── Página 1 ──
@@ -864,17 +924,21 @@ function render(d) {
     <div class="ficha">
       <div class="ficha-item">
         <div class="ficha-label">Cliente</div>
-        <div class="ficha-value">${d.cliente}</div>
+        <div class="ficha-value">${escHtml(d.cliente)}</div>
       </div>
       <div class="ficha-item">
         <div class="ficha-label">Endereço</div>
-        <div class="ficha-value">${d.endereco}${d.bairro ? '<br>' + d.bairro : ''}</div>
+        <div class="ficha-value">${escHtml(d.endereco)}${d.bairro ? '<br>' + escHtml(d.bairro) : ''}</div>
+      </div>
+      <div class="ficha-item">
+        <div class="ficha-label">Técnico Responsável</div>
+        <div class="ficha-value">${escHtml(d.tecnico)}</div>
       </div>
       <div class="ficha-item" style="text-align:right;">
         <div class="ficha-label">Data da visita</div>
-        <div class="ficha-value">${d.data}</div>
+        <div class="ficha-value">${escHtml(d.data)}</div>
         <div class="ficha-label" style="margin-top:10px;">Nº do relatório</div>
-        <div class="ficha-value">${d.numero}</div>
+        <div class="ficha-value">${escHtml(d.numero)}</div>
       </div>
     </div>
 
@@ -885,7 +949,7 @@ function render(d) {
 
     <div class="footer">
       <span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span>
-      <span class="footer-right">${d.numero}</span>
+      <span class="footer-right">${escHtml(d.numero)}</span>
     </div>`;
 
   // ── Página 2: foto ──
@@ -894,7 +958,7 @@ function render(d) {
     p2.style.display = 'flex';
     p2.innerHTML = `
       <div class="foto-topo">
-        <span class="foto-topo-esq">LumenGrid &nbsp;·&nbsp; ${d.cliente}</span>
+        <span class="foto-topo-esq">LumenGrid &nbsp;·&nbsp; ${escHtml(d.cliente)}</span>
         <span class="foto-topo-dir">Anexo — Layout do Telhado</span>
       </div>
       <div class="foto-wrap">
@@ -902,12 +966,12 @@ function render(d) {
         ${d.imagem_legenda ? `
         <div class="foto-legenda-box">
           <div class="foto-legenda-label">Observação</div>
-          <div class="foto-legenda-txt">${d.imagem_legenda}</div>
+          <div class="foto-legenda-txt">${escHtml(d.imagem_legenda)}</div>
         </div>` : ''}
       </div>
       <div class="footer">
         <span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span>
-        <span class="footer-right">${d.numero}</span>
+        <span class="footer-right">${escHtml(d.numero)}</span>
       </div>`;
   } else {
     p2.style.display = 'none';
@@ -939,24 +1003,19 @@ function removerImagem() {
 function novoRelatorio() {
   if (!confirm('Limpar o formulário e iniciar um novo relatório?')) return;
 
-  // Novo número
   const ano = new Date().getFullYear();
-  const seq = parseInt(localStorage.getItem('lg_rel_seq') || '0') + 1;
-  localStorage.setItem('lg_rel_seq', seq);
-  document.getElementById('campo-numero').value = `${String(seq).padStart(4,'0')}/${ano}`;
+  const seq = Math.floor(1000 + Math.random() * 9000);
+  document.getElementById('campo-numero').value = `${seq}/${ano}`;
 
-  // Limpar campos
   ['campo-cliente','campo-endereco','campo-bairro','campo-tecnico','campo-obs','campo-legenda'].forEach(id => {
     document.getElementById(id).value = '';
   });
 
-  // Resetar seções
   document.getElementById('secoes-lista').innerHTML = '';
+  secaoCounter = 0;
   adicionarSecao();
 
-  // Resetar imagem
   removerImagem();
-
   atualizaPreview();
 }
 
@@ -977,12 +1036,6 @@ function salvarHTML() {
    GERADOR DE HTML STANDALONE (para download)
 ═══════════════════════════════════════════════════ */
 function gerarHTMLRelatorio(d) {
-  const imgTag = d.imagem_telhado
-    ? `<img src="${d.imagem_telhado}" alt="Layout do telhado">`
-    : '';
-
-  const secoesJS = JSON.stringify(d.secoes, null, 2);
-
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -992,7 +1045,7 @@ function gerarHTMLRelatorio(d) {
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#E8E8E8;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column;align-items:center;padding:40px 20px;gap:0}
-.page{width:794px;min-height:1123px;background:#FAFAFA;position:relative;display:flex;flex-direction:column;box-shadow:0 4px 40px rgba(0,0,0,.18)}
+.page{width:794px;background:#FAFAFA;position:relative;display:flex;flex-direction:column;box-shadow:0 4px 40px rgba(0,0,0,.18)}
 .header{background:#0f0f0f;padding:36px 52px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #F26522}
 .header-brand{display:flex;align-items:center;gap:16px}
 .header-logo{height:48px;filter:drop-shadow(0 0 12px rgba(242,101,34,.70)) drop-shadow(0 0 5px rgba(242,101,34,.40))}
@@ -1004,7 +1057,7 @@ body{background:#E8E8E8;font-family:'DM Sans',sans-serif;display:flex;flex-direc
 .header-doc{text-align:right}
 .header-doc-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(250,250,250,.55);margin-bottom:4px}
 .header-doc-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#FAFAFA;letter-spacing:-.3px}
-.ficha{background:#161616;padding:24px 52px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.ficha{background:#161616;padding:24px 52px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px}
 .ficha-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(242,101,34,.75);margin-bottom:5px}
 .ficha-value{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500;color:#FAFAFA;line-height:1.4}
 .body{padding:44px 52px;display:flex;flex-direction:column;gap:36px}
@@ -1012,9 +1065,9 @@ body{background:#E8E8E8;font-family:'DM Sans',sans-serif;display:flex;flex-direc
 .secao-numero{flex-shrink:0;width:36px;height:36px;border-radius:6px;background:#F26522;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#FAFAFA;margin-top:2px}
 .secao-conteudo{flex:1;border-top:1px solid rgba(242,101,34,.25);padding-top:10px}
 .secao-titulo{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:#0f0f0f;letter-spacing:-.2px;margin-bottom:14px}
-.secao-intro{font-family:'DM Sans',sans-serif;font-size:14px;color:#3a3a3a;line-height:1.65;margin-bottom:14px}
-.secao-texto{font-family:'DM Sans',sans-serif;font-size:14px;color:#3a3a3a;line-height:1.70}
-.secao-lista{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.secao-p{font-family:'DM Sans',sans-serif;font-size:14px;color:#3a3a3a;line-height:1.65;margin-bottom:12px}
+.secao-p:last-child{margin-bottom:0}
+.secao-lista{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
 .lista-item{display:flex;align-items:flex-start;gap:12px}
 .lista-marker{width:6px;height:6px;border-radius:50%;background:#F26522;flex-shrink:0;margin-top:7px}
 .lista-texto{font-family:'DM Sans',sans-serif;font-size:14px;color:#2a2a2a;line-height:1.60}
@@ -1033,40 +1086,95 @@ body{background:#E8E8E8;font-family:'DM Sans',sans-serif;display:flex;flex-direc
 .foto-legenda-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F26522;margin-bottom:5px}
 .foto-legenda-txt{font-family:'DM Sans',sans-serif;font-size:13px;color:#3a3a3a;line-height:1.60}
 @page{size:A4 portrait;margin:0}
-@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{background:white;padding:0;margin:0;display:block}.page{width:210mm;min-height:auto;box-shadow:none;margin:0!important;display:block}.page-foto{display:block!important;break-before:page;page-break-before:always}.foto-wrap{flex:none;display:block}.body{flex:none}.secao{page-break-inside:avoid}}
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background:white;padding:0;margin:0;display:block}
+  .page{width:210mm;height:auto;min-height:0;box-shadow:none;margin:0!important;display:block}
+  .page-foto{display:block!important;break-before:page;page-break-before:always;margin-top:0!important}
+  .header{page-break-after:avoid;break-after:avoid}
+  .ficha{page-break-before:avoid;break-before:avoid;page-break-after:avoid;break-after:avoid}
+  .secao{page-break-inside:avoid;break-inside:avoid}
+  .obs-box{page-break-inside:avoid;break-inside:avoid}
+}
 </style>
 </head>
 <body>
 <div id="page"></div>
 <div id="page2" style="display:none"></div>
 <script>
-var dados = {
-  numero: ${JSON.stringify(d.numero)},
-  data: ${JSON.stringify(d.data)},
-  cliente: ${JSON.stringify(d.cliente)},
-  endereco: ${JSON.stringify(d.endereco)},
-  bairro: ${JSON.stringify(d.bairro)},
-  tecnico: ${JSON.stringify(d.tecnico)},
-  secoes: ${secoesJS},
-  observacoes: ${JSON.stringify(d.observacoes)},
-  imagem_telhado: ${JSON.stringify(d.imagem_telhado)},
-  imagem_legenda: ${JSON.stringify(d.imagem_legenda)}
-};
+var dados = ${JSON.stringify(d)};
 
-function renderSecao(s,idx){
-  var itens=s.itens.map(function(i){return'<div class="lista-item"><div class="lista-marker"></div><span class="lista-texto">'+i+'</span></div>'}).join('');
-  return'<div class="secao"><div class="secao-numero">'+(idx+1)+'</div><div class="secao-conteudo"><div class="secao-titulo">'+(s.titulo||'—')+'</div>'+(s.intro?'<p class="secao-intro">'+s.intro+'</p>':'')+(s.itens.length?'<div class="secao-lista">'+itens+'</div>':'')+(s.texto_pos?'<p class="secao-texto">'+s.texto_pos+'</p>':'')+'</div></div>';
+function esc(s){
+  if(!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-var secoesHTML=dados.secoes.map(renderSecao).join('');
-var obsHTML=dados.observacoes?'<div class="obs-box"><div class="obs-label">Observações</div>'+dados.observacoes+'</div>':'';
-document.getElementById('page').innerHTML='<div class="header"><div class="header-brand"><img class="header-logo" src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid"><div class="header-wordmark"><div class="header-wm-line"><span class="wm-l">LUMEN</span><span class="wm-g">GRID</span></div><div class="header-tagline">Energia Inteligente</div></div></div><div class="header-doc"><div class="header-doc-title">Documento</div><div class="header-doc-name">Relatório de Visita Técnica</div></div></div><div class="ficha"><div class="ficha-item"><div class="ficha-label">Cliente</div><div class="ficha-value">'+dados.cliente+'</div></div><div class="ficha-item"><div class="ficha-label">Endereço</div><div class="ficha-value">'+dados.endereco+(dados.bairro?'<br>'+dados.bairro:'')+'</div></div><div class="ficha-item" style="text-align:right"><div class="ficha-label">Data da visita</div><div class="ficha-value">'+dados.data+'</div><div class="ficha-label" style="margin-top:10px">Nº do relatório</div><div class="ficha-value">'+dados.numero+'</div></div></div><div class="body">'+secoesHTML+obsHTML+'</div>'+'<div class="footer"><span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span><span class="footer-right">'+dados.numero+'</span></div>';
+function parseConteudo(texto){
+  if(!texto||!texto.trim()) return [];
+  var blocos=[];
+  var grupos=texto.split(/\\n{2,}/);
+  grupos.forEach(function(grupo){
+    var linhas=grupo.split('\\n');
+    var bufP=[];
+    function flushP(){
+      var txt=bufP.join(' ').trim();
+      if(txt) blocos.push({type:'p',text:txt});
+      bufP=[];
+    }
+    linhas.forEach(function(linha){
+      if(/^[-•*–]\\s+/.test(linha)){
+        flushP();
+        blocos.push({type:'item',text:linha.replace(/^[-•*–]\\s+/,'').trim()});
+      } else {
+        bufP.push(linha);
+      }
+    });
+    flushP();
+  });
+  return blocos;
+}
+
+function renderSecao(s,idx){
+  var blocos=parseConteudo(s.conteudo);
+  var html='';
+  var listaOpen=false;
+  blocos.forEach(function(b){
+    if(b.type==='item'){
+      if(!listaOpen){html+='<div class="secao-lista">';listaOpen=true;}
+      html+='<div class="lista-item"><div class="lista-marker"></div><span class="lista-texto">'+esc(b.text)+'</span></div>';
+    } else {
+      if(listaOpen){html+='</div>';listaOpen=false;}
+      html+='<p class="secao-p">'+esc(b.text)+'</p>';
+    }
+  });
+  if(listaOpen) html+='</div>';
+  return '<div class="secao"><div class="secao-numero">'+(idx+1)+'</div><div class="secao-conteudo"><div class="secao-titulo">'+(esc(s.titulo)||'—')+'</div>'+html+'</div></div>';
+}
+
+var secoesHTML=dados.secoes.map(function(s,i){return renderSecao(s,i);}).join('');
+var obsHTML=dados.observacoes?'<div class="obs-box"><div class="obs-label">Observações</div>'+esc(dados.observacoes)+'</div>':'';
+
+document.getElementById('page').innerHTML=
+  '<div class="header"><div class="header-brand"><img class="header-logo" src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid"><div class="header-wordmark"><div class="header-wm-line"><span class="wm-l">LUMEN</span><span class="wm-g">GRID</span></div><div class="header-tagline">Energia Inteligente</div></div></div><div class="header-doc"><div class="header-doc-title">Documento</div><div class="header-doc-name">Relatório de Visita Técnica</div></div></div>'+
+  '<div class="ficha">'+
+    '<div class="ficha-item"><div class="ficha-label">Cliente</div><div class="ficha-value">'+esc(dados.cliente)+'</div></div>'+
+    '<div class="ficha-item"><div class="ficha-label">Endereço</div><div class="ficha-value">'+esc(dados.endereco)+(dados.bairro?'<br>'+esc(dados.bairro):'')+'</div></div>'+
+    '<div class="ficha-item"><div class="ficha-label">Técnico Responsável</div><div class="ficha-value">'+esc(dados.tecnico)+'</div></div>'+
+    '<div class="ficha-item" style="text-align:right"><div class="ficha-label">Data da visita</div><div class="ficha-value">'+esc(dados.data)+'</div><div class="ficha-label" style="margin-top:10px">Nº do relatório</div><div class="ficha-value">'+esc(dados.numero)+'</div></div>'+
+  '</div>'+
+  '<div class="body">'+secoesHTML+obsHTML+'</div>'+
+  '<div class="footer"><span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span><span class="footer-right">'+esc(dados.numero)+'</span></div>';
 
 if(dados.imagem_telhado){
   var p2=document.getElementById('page2');
   p2.style.display='flex';
   p2.className='page page-foto';
-  p2.innerHTML='<div class="foto-topo"><span class="foto-topo-esq">LumenGrid &nbsp;·&nbsp; '+dados.cliente+'</span><span class="foto-topo-dir">Anexo — Layout do Telhado</span></div><div class="foto-wrap"><img src="'+dados.imagem_telhado+'" alt="Layout do telhado">'+(dados.imagem_legenda?'<div class="foto-legenda-box"><div class="foto-legenda-label">Observação</div><div class="foto-legenda-txt">'+dados.imagem_legenda+'</div></div>':'')+'</div><div class="footer"><span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span><span class="footer-right">'+dados.numero+'</span></div>';
+  p2.innerHTML=
+    '<div class="foto-topo"><span class="foto-topo-esq">LumenGrid &nbsp;·&nbsp; '+esc(dados.cliente)+'</span><span class="foto-topo-dir">Anexo — Layout do Telhado</span></div>'+
+    '<div class="foto-wrap"><img src="'+dados.imagem_telhado+'" alt="Layout do telhado">'+
+    (dados.imagem_legenda?'<div class="foto-legenda-box"><div class="foto-legenda-label">Observação</div><div class="foto-legenda-txt">'+esc(dados.imagem_legenda)+'</div></div>':'')+
+    '</div>'+
+    '<div class="footer"><span class="footer-left">LumenGrid Energia Inteligente &nbsp;·&nbsp; lumengridbrasil.com.br</span><span class="footer-right">'+esc(dados.numero)+'</span></div>';
 }
 <\/script>
 <!-- Feito por Domani Consultoria -->
@@ -1087,7 +1195,7 @@ function debounce(fn, delay) {
 
 function escHtml(str) {
   if (!str) return '';
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 

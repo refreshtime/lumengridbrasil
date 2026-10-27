@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Post 10 Story — Bateria Residencial</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a10;display:flex;justify-content:center;padding:0;}
+.li{height:58px;width:auto;object-fit:contain;filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9));}
+</style>
+</head>
+<body>
+<div style="width:1080px;height:1920px;position:relative;overflow:hidden;background:#0c0c10;">
+
+  <!-- BG: imagem centralizada, mostrando raios no topo -->
+  <div style="position:absolute;inset:0;z-index:0;
+    background:url('../../imagens/TECNOLOGIA/bateria-residencial-noite.png') center 15%/cover no-repeat;"></div>
+
+  <!-- Overlay vertical: escuro topo (texto), transparente meio (casa), escuro base (texto) -->
+  <div style="position:absolute;inset:0;z-index:1;
+    background:linear-gradient(to bottom,
+      rgba(8,8,13,.88) 0%,
+      rgba(8,8,13,.72) 15%,
+      rgba(8,8,13,.35) 28%,
+      rgba(8,8,13,.00) 40%,
+      rgba(8,8,13,.00) 62%,
+      rgba(8,8,13,.72) 78%,
+      rgba(8,8,13,.94) 100%);"></div>
+
+  <!-- Overlay lateral direito: suaviza a bateria -->
+  <div style="position:absolute;inset:0;z-index:2;
+    background:linear-gradient(to left,
+      rgba(8,8,13,.65) 0%,
+      rgba(8,8,13,.30) 18%,
+      rgba(8,8,13,.00) 38%);"></div>
+
+  <!-- Logo — topo esquerdo -->
+  <div style="position:absolute;top:88px;left:72px;display:flex;align-items:center;gap:12px;z-index:20;">
+    <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:baseline;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;text-shadow:0 2px 10px rgba(0,0,0,.95);">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;text-shadow:0 2px 10px rgba(0,0,0,.95);">GRID</span>
+      </div>
+      <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);text-shadow:0 2px 8px rgba(0,0,0,.95);">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <!-- TOPO: eyebrow + headline — sobre o céu escuro -->
+  <div style="position:absolute;top:230px;left:72px;right:72px;z-index:20;
+    display:flex;flex-direction:column;align-items:center;text-align:center;">
+
+    <!-- Eyebrow -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+      color:rgba(242,101,34,.90);margin:0 0 28px;
+      text-shadow:0 1px 8px rgba(0,0,0,.9);">▶ bateria residencial</p>
+
+    <!-- Headline -->
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:76px;font-weight:800;color:#FAFAFA;
+      line-height:1.06;letter-spacing:-2px;margin:0;
+      text-shadow:0 2px 22px rgba(0,0,0,.98);">
+      Energia não vale<br>só quando<br>é gerada.
+    </p>
+
+  </div>
+
+  <!-- RODAPÉ: subheadline + corpo — sobre a base escura -->
+  <div style="position:absolute;bottom:0;left:72px;right:72px;z-index:20;
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+    padding-bottom:100px;">
+
+    <!-- Traço -->
+    <div style="width:44px;height:3px;background:#F26522;border-radius:2px;margin:0 0 26px;"></div>
+
+    <!-- Subheadline laranja -->
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;color:#F26522;
+      line-height:1.25;letter-spacing:-.3px;margin:0 0 32px;
+      text-shadow:0 2px 12px rgba(0,0,0,.90);">
+      Vale quando continua disponível.
+    </p>
+
+    <!-- Corpo — clímax crescente -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:500;
+      color:rgba(250,250,250,.88);line-height:1.90;margin:0;
+      text-shadow:0 1px 14px rgba(0,0,0,.98);">
+      A noite chegou.<br>
+      A rede caiu.<br>
+      A sua casa continuou.<br>
+      <span style="color:rgba(242,101,34,.95);font-weight:600;">Isso é bateria residencial.</span>
+    </p>
+
+  </div>
+
+</div>
+</body>
+</html>
