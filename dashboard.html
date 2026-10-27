@@ -261,6 +261,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 /* ── BADGE COUNTER ── */
 .tab-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;border-radius:10px;font-size:9px;font-weight:700;min-width:16px;height:16px;padding:0 4px;margin-left:4px}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -932,6 +933,44 @@ function saveCfg(){
   if(_GS_URL)sincronizarSheets();
 }
 
+// ── SUPABASE — armazenamento em nuvem (tool interno) ──
+const _SB_URL2='https://hbhkftdsfmlxgxsblerc.supabase.co';
+const _SB_KEY2='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiaGtmdGRzZm1seGd4c2JsZXJjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjYxODYyNCwiZXhwIjoyMTA4MTk0NjI0fQ.MoDlaKwfzJTYzkjIKxmrzRORwKMsK56w5MHUWQivhH0';
+let _sbFin=null;
+function getSBFin(){if(!_sbFin&&window.supabase)_sbFin=window.supabase.createClient(_SB_URL2,_SB_KEY2,{auth:{persistSession:false}});return _sbFin;}
+
+async function sbInsertEntry(tipo,entry){
+  const sb=getSBFin();if(!sb)return;
+  try{
+    const vn=v=>{const n=parseFloat(String(v||0));return isNaN(n)?null:n;};
+    await sb.from('financial_entries').insert({
+      tipo,
+      descricao:       tipo==='receita'?(entry.cliente||entry.desc):(entry.desc||entry.descricao),
+      situacao:        entry.situacao||entry.status||'Em aberto',
+      cliente_fornecedor: entry.cliente||entry.clienteFor||null,
+      categoria:       entry.cat||entry.categoria||null,
+      num_contrato:    entry.numContrato||null,
+      data_emissao:    entry.data||null,
+      data_competencia:entry.competencia||null,
+      data_vencimento: entry.vencimento||null,
+      valor_previsto:  vn(entry.valor||entry.valorPrevisto),
+      forma_pagamento: entry.metodo||entry.pagamento||null,
+      conta:           entry.conta||null,
+      observacoes:     entry.obs||null,
+      raw_json:        entry,
+    });
+  }catch(e){console.warn('[SBFin]',e.message);}
+}
+
+async function sbLoadEntries(){
+  const sb=getSBFin();if(!sb)return null;
+  try{
+    const{data,error}=await sb.from('financial_entries').select('*').order('data_emissao',{ascending:false}).limit(2000);
+    if(error||!data?.length)return null;
+    return data;
+  }catch(e){return null;}
+}
+
 let despesas=loadData('despesas',[]);
 let receitas=loadData('receitas',[]);
 let previsoes=loadData('previsoes',[]);
@@ -1052,6 +1091,7 @@ function addDespesa(){
   despesas.sort((a,b)=>b.data.localeCompare(a.data));
   saveData('despesas',despesas);
   enviarSheets('save_despesa',{id,data,desc,cat,valor,metodo,obs,lancadoPor,projetoId,numContrato});
+  sbInsertEntry('despesa',{id,data,desc,cat,valor,metodo,obs,lancadoPor,numContrato,competencia,vencimento,situacao:jaPago?'Liquidado':situacao,conta,clienteFor,valorPrevisto:valorPrev});
 
   // Novo endpoint: create_lancamento
   enviarSheets('create_lancamento',{
@@ -1221,6 +1261,7 @@ function addReceita(){
   receitas.sort((a,b)=>b.data.localeCompare(a.data));
   saveData('receitas',receitas);
   enviarSheets('save_receita',{id:_nr.id,data,cliente,doc,ender,tipo,kvp,modulos,inversor,bateria,valor,recebido,pagamento,condicoes,consultor,status,obs,numContrato});
+  sbInsertEntry('receita',{id:_nr.id,data,cliente,desc:cliente,cat:tipo,valor,pagamento,numContrato,competencia,situacao,conta,vencimento,obs});
   const lancBody={action:'create_lancamento',token:API_TOKEN_FRONT,tipo:'Receita',descricao:cliente+(numContrato?' — '+numContrato:''),clienteFornecedor:cliente,categoria:tipo==='Residencial'?'Sistema solar on-grid':'Outras receitas',grupoDRE:'Receita',dataEmissao:data,dataCompetencia:competencia,dataVencimento:vencimento||data,valorPrevisto:valor,situacao:semVinculo?'Previsto':situacao,statusVinculo:semVinculo||!numContrato?'Pendente':'Vinculado',numContrato:numContrato||'',contaPrevista:conta,usuario:'dashboard',id:_nr.id};
   if(_GS_URL)fetch(_GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(lancBody)}).catch(()=>{});
   if(jaRecebido&&_GS_URL){const baixa={action:'liquidar_lancamento',token:API_TOKEN_FRONT,idLancamento:_nr.id,dataCaixa:data,valorPrincipal:valor,contaFinanceira:conta,metodo:pagamento,usuario:'dashboard'};fetch(_GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(baixa)}).catch(()=>{});}

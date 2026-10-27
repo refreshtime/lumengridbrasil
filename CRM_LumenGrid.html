@@ -756,6 +756,7 @@ tbody tr td:first-child{font-weight:700}
 #syncOverlay .so-retry{color:#EF4444;font-size:12px;display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -1507,7 +1508,7 @@ function saveLeads(leads, changedLead) {
     const others = getAllLeadsRaw().filter(l => !leadIds.has(l.id));
     localStorage.setItem('lg_leads', JSON.stringify([...leads, ...others]));
   }
-  if (changedLead) syncOneLead(changedLead);
+  if (changedLead) { syncOneLead(changedLead); syncLeadToSB(changedLead); }
   else syncToSheets();
 }
 
@@ -1623,6 +1624,67 @@ const HOMOLAG_URL = 'https://script.google.com/macros/s/AKfycbx9g9pBVHctzQwR37V1
 const getConfig = () => { try { return { parceirosUrl: PARCEIROS_URL, gsUrl: CRM_SHEETS_URL, ...JSON.parse(localStorage.getItem('lg_config')||'{}') }; } catch { return { parceirosUrl: PARCEIROS_URL, gsUrl: CRM_SHEETS_URL }; } };
 const saveConfig = c => localStorage.setItem('lg_config', JSON.stringify(c));
 const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2,6);
+
+/* ━━━ SUPABASE — armazenamento em nuvem (tool interno) ━━━ */
+const _SB_URL = 'https://hbhkftdsfmlxgxsblerc.supabase.co';
+const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiaGtmdGRzZm1seGd4c2JsZXJjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjYxODYyNCwiZXhwIjoyMTA4MTk0NjI0fQ.MoDlaKwfzJTYzkjIKxmrzRORwKMsK56w5MHUWQivhH0';
+let _sb = null;
+function getSB() {
+  if (!_sb && window.supabase) {
+    _sb = window.supabase.createClient(_SB_URL, _SB_KEY, { auth: { persistSession: false } });
+  }
+  return _sb;
+}
+
+function _sbLeadRow(lead) {
+  const val = v => { const n = parseFloat(String(v||'').replace(/[R$\s.]/g,'').replace(',','.')); return isNaN(n) ? null : n; };
+  const sis = (lead.sistema||'').toLowerCase();
+  return {
+    nome:        lead.nome,
+    telefone:    String(lead.telefone || ''),
+    email:       lead.email || null,
+    cidade:      lead.cidade || null,
+    kwh:         lead.kwh ? val(lead.kwh) : null,
+    tipo_telhado:lead.telhado || null,
+    sistema:     ['on-grid','hibrido','wallbox','outro'].includes(sis) ? sis : null,
+    origem:      lead.origem || null,
+    responsavel: lead.resp || null,
+    valor:       lead.valor ? val(lead.valor) : null,
+    raw_json:    { ...lead, _crm: true },
+    updated_at:  new Date().toISOString(),
+  };
+}
+
+async function syncLeadToSB(lead) {
+  const sb = getSB(); if (!sb) return;
+  try {
+    const { error } = await sb.from('leads').upsert(_sbLeadRow(lead), { onConflict: 'nome,telefone' });
+    if (error) console.warn('[SB]', error.message);
+  } catch(e) { console.warn('[SB error]', e.message); }
+}
+
+async function loadFromSupabase() {
+  const sb = getSB(); if (!sb) return null;
+  try {
+    const { data, error } = await sb.from('leads')
+      .select('raw_json')
+      .filter('raw_json->>_crm', 'eq', 'true')
+      .order('updated_at', { ascending: false })
+      .limit(5000);
+    if (error || !data?.length) return null;
+    return data.map(r => r.raw_json).filter(Boolean);
+  } catch(e) { return null; }
+}
+
+async function pushAllLeadsToSB() {
+  const sb = getSB(); if (!sb) return;
+  const all = getAllLeadsRaw();
+  if (!all.length) return;
+  const rows = all.map(l => _sbLeadRow(l));
+  for (let i = 0; i < rows.length; i += 200) {
+    await sb.from('leads').upsert(rows.slice(i, i+200), { onConflict: 'nome,telefone' });
+  }
+}
 
 /* ━━━ LOGIN ━━━ */
 let selectedUser = null;
@@ -1749,18 +1811,29 @@ function initApp() {
       const retryEl = document.getElementById('syncOverlayRetry');
       if (msgEl) msgEl.textContent = 'Sincronizando dados...';
       if (retryEl) retryEl.style.display = 'none';
-      loadFromSheets(false, 5).then(ok => {
-        if (ok) {
+      // Tenta Supabase primeiro (mais rápido e offline-safe)
+      loadFromSupabase().then(sbLeads => {
+        if (sbLeads?.length) {
+          localStorage.setItem('lg_leads', JSON.stringify(sbLeads));
           if (overlay) overlay.style.display = 'none';
           renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner();
-        } else {
-          if (msgEl) msgEl.textContent = 'Falha ao carregar dados do servidor.';
-          if (retryEl) {
-            retryEl.innerHTML = '<button onclick="tentarSync()" style="margin-top:8px;padding:10px 24px;background:#F26522;border:none;border-radius:8px;color:#111;font-size:12px;font-weight:800;cursor:pointer;letter-spacing:1px">TENTAR NOVAMENTE</button>';
-            retryEl.style.display = 'block';
-          }
+          return;
         }
-      });
+        // Fallback para GAS
+        loadFromSheets(false, 5).then(ok => {
+          if (ok) {
+            if (overlay) overlay.style.display = 'none';
+            renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner();
+            pushAllLeadsToSB(); // persiste no Supabase para próxima vez
+          } else {
+            if (msgEl) msgEl.textContent = 'Falha ao carregar dados do servidor.';
+            if (retryEl) {
+              retryEl.innerHTML = '<button onclick="tentarSync()" style="margin-top:8px;padding:10px 24px;background:#F26522;border:none;border-radius:8px;color:#111;font-size:12px;font-weight:800;cursor:pointer;letter-spacing:1px">TENTAR NOVAMENTE</button>';
+              retryEl.style.display = 'block';
+            }
+          }
+        });
+      }).catch(() => tentarSync());
     }
     tentarSync();
   } else {
@@ -1769,6 +1842,19 @@ function initApp() {
     renderKanban();
     renderLeadsList();
     updateRetornoBanner();
+    // Sincroniza com Supabase em background (merge por ID)
+    loadFromSupabase().then(sbLeads => {
+      if (sbLeads?.length) {
+        const local = getAllLeadsRaw();
+        const serverById = {};
+        sbLeads.forEach(l => { if (l.id) serverById[l.id] = l; });
+        const merged = [...sbLeads];
+        local.forEach(l => { if (l.id && !serverById[l.id]) merged.push(l); });
+        merged.sort((a, b) => (b.updatedAt||0) - (a.updatedAt||0));
+        localStorage.setItem('lg_leads', JSON.stringify(merged));
+        renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner();
+      }
+    }).catch(() => {});
     loadFromSheets().then(() => { renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner(); });
   }
   // Auto-sync a cada 10 segundos para manter todos os usuários atualizados

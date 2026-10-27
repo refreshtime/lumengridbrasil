@@ -88,6 +88,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   .main{padding:32px 16px 48px}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -186,6 +187,32 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <script>
 const CRM_URL = 'https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
+
+// ── SUPABASE (tool interno) ──
+let _sbSol = null;
+function getSBSol() {
+  if (!_sbSol && window.supabase)
+    _sbSol = window.supabase.createClient(
+      'https://hbhkftdsfmlxgxsblerc.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiaGtmdGRzZm1seGd4c2JsZXJjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjYxODYyNCwiZXhwIjoyMTA4MTk0NjI0fQ.MoDlaKwfzJTYzkjIKxmrzRORwKMsK56w5MHUWQivhH0',
+      { auth: { persistSession: false } }
+    );
+  return _sbSol;
+}
+async function sbSaveSolicitacao(sol) {
+  const sb = getSBSol(); if (!sb) return;
+  try {
+    await sb.from('internal_requests').insert({
+      data:         new Date().toISOString().slice(0, 10),
+      nome:         sol.nome,
+      tipo:         sol.tipo,
+      urgencia:     sol.urg || 'Normal',
+      descricao:    sol.desc,
+      link_arquivo: sol.link || null,
+      status:       'Pendente',
+    });
+  } catch(e) { console.warn('[SB sol]', e.message); }
+}
 let tipoSelecionado = '';
 let arquivoSelecionado = null;
 
@@ -264,12 +291,13 @@ async function enviar() {
   lista.unshift(solLocal);
   localStorage.setItem('lg_solicitacoes', JSON.stringify(lista));
 
-  // Enviar para Apps Script (Drive + Sheets)
+  // Enviar para Apps Script (Drive + Sheets) e Supabase
   fetch(CRM_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify({ action: 'save_solicitacao', solicitacao: sol })
   }).catch(() => {});
+  sbSaveSolicitacao(sol);
 
   // Limpar
   document.getElementById('sol-nome').value = '';

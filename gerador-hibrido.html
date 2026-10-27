@@ -222,6 +222,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   @page{size:A4 portrait;margin:0}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -1743,8 +1744,14 @@ function generateProposal(criarCard){
   $('prevEmpty').style.display='none';
   $('prevPanel').scrollTop=0;
 
-  // ── SYNC CRM ──
+  // ── SYNC CRM + SUPABASE ──
   if(criarCard){
+    syncPropostaHibToSB({
+      nome:name,telefone:get('clientPhone'),cidade:addr,kWp:kVp,
+      modQty,modModel,modPower,invModel,invQty,invPower,
+      valor:projectVal,genKwh:genKwhNum,ecoMonthly,consultor:vendNome,
+      batKwh,batModel,batQty,
+    });
     syncToCRM({
       nome:         name,
       telefone:     get('clientPhone'),
@@ -1775,6 +1782,53 @@ function generateProposal(criarCard){
 
 // ── CRM SYNC ──
 const CRM_GS_URL='https://script.google.com/macros/s/AKfycbxJLO_NpPMXUVIh5krJ1kQzKsQmBSwZfKPaGCQFLvanNeNOd-O_1aWl6UgdrO9ZtvSCKg/exec';
+
+// ── SUPABASE (tool interno) ──
+let _sbHib=null;
+function getSBHib(){
+  if(!_sbHib&&window.supabase)
+    _sbHib=window.supabase.createClient(
+      'https://hbhkftdsfmlxgxsblerc.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiaGtmdGRzZm1seGd4c2JsZXJjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjYxODYyNCwiZXhwIjoyMTA4MTk0NjI0fQ.MoDlaKwfzJTYzkjIKxmrzRORwKMsK56w5MHUWQivhH0',
+      {auth:{persistSession:false}}
+    );
+  return _sbHib;
+}
+
+async function syncPropostaHibToSB(dados){
+  const sb=getSBHib();if(!sb)return;
+  try{
+    const{data:lead}=await sb.from('leads').upsert({
+      nome:        dados.nome,
+      telefone:    String(dados.telefone||''),
+      cidade:      dados.cidade||null,
+      responsavel: dados.consultor||null,
+      valor:       dados.valor||null,
+      kwp:         dados.kWp||null,
+      sistema:     'hibrido',
+      updated_at:  new Date().toISOString(),
+    },{onConflict:'nome,telefone'}).select('id').single();
+    if(!lead?.id)return;
+    await sb.from('lead_proposals').insert({
+      lead_id:   lead.id,
+      tipo:      'hibrido',
+      kwp:       dados.kWp||null,
+      mod_qty:   dados.modQty||null,
+      mod_model: dados.modModel||null,
+      mod_power: dados.modPower||null,
+      inv_model: dados.invModel||null,
+      inv_qty:   dados.invQty||null,
+      inv_power: dados.invPower||null,
+      valor:     dados.valor||null,
+      gen_kwh:   dados.genKwh||null,
+      eco_monthly:dados.ecoMonthly||null,
+      consultor: dados.consultor||null,
+      bat_kwh:   dados.batKwh||null,
+      bat_model: dados.batModel||null,
+      bat_qty:   dados.batQty||null,
+    });
+  }catch(e){console.warn('[SB hib proposta]',e.message);}
+}
 
 function syncToCRM(dados){
   const cbName='__crmCb'+Date.now();

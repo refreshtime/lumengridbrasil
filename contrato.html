@@ -146,6 +146,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);m
 #gasUrlSection{background:#0a0c10;border:1.5px dashed rgba(26,115,232,.4);border-radius:8px;padding:12px;margin-bottom:14px}
 #gasUrlSection .fl{color:#1a73e8}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -933,6 +934,38 @@ function _fileToBase64(file) {
 }
 
 // ── SALVAR NO DRIVE ──────────────────────────────────────────────────────────
+// ── SUPABASE (tool interno) ──
+let _sbCon=null;
+function getSBCon(){
+  if(!_sbCon&&window.supabase)
+    _sbCon=window.supabase.createClient(
+      'https://hbhkftdsfmlxgxsblerc.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiaGtmdGRzZm1seGd4c2JsZXJjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjYxODYyNCwiZXhwIjoyMTA4MTk0NjI0fQ.MoDlaKwfzJTYzkjIKxmrzRORwKMsK56w5MHUWQivhH0',
+      {auth:{persistSession:false}}
+    );
+  return _sbCon;
+}
+async function sbSaveContract(c){
+  const sb=getSBCon();if(!sb)return;
+  try{
+    await sb.from('contracts').upsert({
+      num_contrato:    c.num||null,
+      data_emissao:    c.dataEmissao||null,
+      cliente:         c.cliNome,
+      cpf_cnpj:        c.cliDoc||null,
+      telefone:        String(c.cliFone||''),
+      email:           c.cliEmail||null,
+      tipo_sistema:    c.tipoSistema||null,
+      kvp:             c.eqKvp?parseFloat(c.eqKvp):null,
+      valor_total:     c.payTotal||null,
+      forma_pagamento: c.payModo||null,
+      consultor:       c.vendNome||null,
+      status:          'Gerado',
+      raw_json:        c,
+    },{onConflict:'num_contrato'});
+  }catch(e){console.warn('[SB contrato]',e.message);}
+}
+
 async function salvarNoDrive() {
   const gasUrl = document.getElementById('gasUrl').value.trim();
   if (!gasUrl || !gasUrl.startsWith('https://script.google.com')) {
@@ -1025,6 +1058,16 @@ async function salvarNoDrive() {
       fatura: faturaBase64 ? { data: faturaBase64, type: faturaFile.type, name: faturaFile.name } : null,
       titular: titularBase64 ? { data: titularBase64, type: titularFile.type, name: titularFile.name } : null
     });
+
+    // Salva no Supabase em paralelo (não bloqueia o Drive)
+    sbSaveContract({ num, dataEmissao: document.getElementById('cData').value,
+      tipoSistema: document.getElementById('tipoSistema').value, cliNome,
+      cliDoc: document.getElementById('cliDoc').value.trim(),
+      cliFone: document.getElementById('cliFone').value.trim(),
+      cliEmail: document.getElementById('cliEmail').value.trim(),
+      eqKvp: document.getElementById('eqKvp').value.trim(),
+      payTotal, payModo: document.getElementById('payModo').value,
+      vendNome: document.getElementById('vendNome').value.trim() });
 
     fetch(gasUrl + '?action=salvarContrato', {
       method: 'POST',
