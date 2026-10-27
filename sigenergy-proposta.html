@@ -1940,11 +1940,14 @@ calcAutonomia();
     return {el: div, val: n};
   }
 
-  function buildInfo(titulo, desc) {
+  function buildInfo(titulo, desc, link) {
     if (!titulo) return null;
+    var linkHtml = link
+      ? '<a href="'+link+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:10px;font-weight:700;color:var(--sig);text-decoration:none;letter-spacing:.04em">Ver datasheet <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>'
+      : '';
     var div = document.createElement('div');
     div.className = 'desconto-item';
-    div.innerHTML = '<div class="desconto-item-body"><div class="desconto-titulo">'+(titulo)+'</div><div class="desconto-desc">'+(desc||'')+'</div></div>'
+    div.innerHTML = '<div class="desconto-item-body"><div class="desconto-titulo">'+titulo+'</div><div class="desconto-desc">'+(desc||'')+'</div>'+linkHtml+'</div>'
       + '<div class="desconto-item-right"><div class="desconto-valor" style="font-size:11px;letter-spacing:.05em;opacity:.7">Adicional</div></div>';
     return {el: div, val: 0};
   }
@@ -1952,7 +1955,7 @@ calcAutonomia();
   var items = [];
   var d1 = buildItem(P.get('desconto'), P.get('desconto_titulo'), P.get('desconto_desc'), P.get('desconto_validade'));
   var d2 = buildItem(P.get('desconto2'), P.get('desconto2_titulo'), P.get('desconto2_desc'), P.get('desconto2_validade'));
-  var inf = buildInfo(P.get('info_titulo'), P.get('info_desc'));
+  var inf = buildInfo(P.get('info_titulo'), P.get('info_desc'), P.get('info_link'));
   if (d1) items.push(d1);
   if (d2) items.push(d2);
   if (inf) items.push(inf);
