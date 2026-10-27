@@ -1833,7 +1833,18 @@ function initApp() {
             }
           }
         });
-      }).catch(() => tentarSync());
+      }).catch(() => {
+        // SB falhou — vai direto para GAS sem loop
+        loadFromSheets(false, 5).then(ok => {
+          if (ok) {
+            if (overlay) overlay.style.display = 'none';
+            renderDashboard(); renderKanban(); renderLeadsList(); updateRetornoBanner();
+          } else {
+            if (msgEl) msgEl.textContent = 'Falha ao carregar dados do servidor.';
+            if (retryEl) { retryEl.innerHTML='<button onclick="tentarSync()" style="margin-top:8px;padding:10px 24px;background:#F26522;border:none;border-radius:8px;color:#111;font-size:12px;font-weight:800;cursor:pointer;letter-spacing:1px">TENTAR NOVAMENTE</button>'; retryEl.style.display='block'; }
+          }
+        });
+      });
     }
     tentarSync();
   } else {
