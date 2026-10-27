@@ -1940,19 +1940,31 @@ calcAutonomia();
     return {el: div, val: n};
   }
 
+  function buildInfo(titulo, desc) {
+    if (!titulo) return null;
+    var div = document.createElement('div');
+    div.className = 'desconto-item';
+    div.innerHTML = '<div class="desconto-item-body"><div class="desconto-titulo">'+(titulo)+'</div><div class="desconto-desc">'+(desc||'')+'</div></div>'
+      + '<div class="desconto-item-right"><div class="desconto-valor" style="font-size:11px;letter-spacing:.05em;opacity:.7">Adicional</div></div>';
+    return {el: div, val: 0};
+  }
+
   var items = [];
   var d1 = buildItem(P.get('desconto'), P.get('desconto_titulo'), P.get('desconto_desc'), P.get('desconto_validade'));
   var d2 = buildItem(P.get('desconto2'), P.get('desconto2_titulo'), P.get('desconto2_desc'), P.get('desconto2_validade'));
+  var inf = buildInfo(P.get('info_titulo'), P.get('info_desc'));
   if (d1) items.push(d1);
   if (d2) items.push(d2);
+  if (inf) items.push(inf);
 
   if (items.length > 0) {
     var db = document.getElementById('desconto-bar');
     var container = document.getElementById('desconto-items');
     if (db) db.classList.add('ativo');
     items.forEach(function(i){ if (container) container.appendChild(i.el); });
-    if (items.length > 1) {
-      var total = items.reduce(function(s,i){ return s + i.val; }, 0);
+    var monetaryItems = items.filter(function(i){ return i.val > 0; });
+    if (monetaryItems.length > 1) {
+      var total = monetaryItems.reduce(function(s,i){ return s + i.val; }, 0);
       var totalEl = document.getElementById('desconto-total');
       var totalVal = document.getElementById('desconto-total-val');
       if (totalEl) totalEl.style.display = 'flex';
@@ -1975,15 +1987,18 @@ if (P.get('cargas')) {
 // ── PARÂMETRO: plan=VALOR → exibe terceiro card de investimento ──
 var PLAN = P.get('plan');
 if (PLAN) {
-  var planVal = parseInt(PLAN.replace(/\D/g, ''));
+  // Suporta pt-BR (99.873,32) e decimal puro (99873.32)
+  var planVal = PLAN.indexOf(',') !== -1
+    ? parseFloat(PLAN.replace(/\./g,'').replace(',','.'))
+    : parseFloat(PLAN);
   if (!isNaN(planVal) && planVal > 0) {
     // Mostrar card
     var cardPlan = document.getElementById('inv-card-plan');
     if (cardPlan) cardPlan.style.display = '';
 
-    // Preencher valor formatado
+    // Preencher valor formatado (suporta centavos)
     var planValEl = document.getElementById('inv-plan-val');
-    if (planValEl) planValEl.textContent = planVal.toLocaleString('pt-BR');
+    if (planValEl) planValEl.textContent = planVal.toLocaleString('pt-BR', {minimumFractionDigits: planVal % 1 !== 0 ? 2 : 0, maximumFractionDigits: 2});
 
     // Parâmetros opcionais: plan_titulo, plan_nota
     var planTitulo = P.get('plan_titulo');
