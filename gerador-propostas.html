@@ -97,9 +97,9 @@ footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
       Sigenergy Exclusivo
     </button>
-    <button class="tab-btn" onclick="switchTab('ab',this)">
+    <button class="tab-btn" disabled style="opacity:.4;cursor:not-allowed;" title="Em revisão — em breve disponível">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="5" width="10" height="14" rx="2"/><rect x="13" y="5" width="10" height="14" rx="2"/></svg>
-      A/B Híbrido / Off-Grid
+      A/B Híbrido / Off-Grid <span style="font-size:9px;background:rgba(255,255,255,.15);border-radius:4px;padding:1px 5px;margin-left:4px;">Em revisão</span>
     </button>
   </div>
 
@@ -115,9 +115,11 @@ footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top
         <div class="field">
           <label>Consultor</label>
           <select id="s-consultor" oninput="gerarSig()">
-            <option value="hingrid">Hingrid Dias</option>
+            <option value="hingrid">Hingrid Oliveira</option>
             <option value="lucas">Lucas Vieira</option>
             <option value="ana">Ana</option>
+            <option value="giovani">Giovani</option>
+            <option value="bruno">Bruno Romualdo</option>
           </select>
         </div>
         <div class="field">
@@ -226,9 +228,11 @@ footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top
         <div class="field">
           <label>Consultor</label>
           <select id="ab-consultor" oninput="gerarAB()">
-            <option value="hingrid">Hingrid Dias</option>
+            <option value="hingrid">Hingrid Oliveira</option>
             <option value="lucas">Lucas Vieira</option>
             <option value="ana">Ana</option>
+            <option value="giovani">Giovani</option>
+            <option value="bruno">Bruno Romualdo</option>
           </select>
         </div>
         <div class="field">
