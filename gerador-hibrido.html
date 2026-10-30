@@ -855,9 +855,9 @@ function calcHibridoKit(k){
   const custoDireto=k.equip+instalDEG+homo;
   const margem=margemHi(k.bats);
   const minimo=Math.round(custoDireto/(1-margem)/10)*10;
-  const bomba=Math.round(custoDireto/0.76/10)*10+1000;
+  const bomba=Math.round(custoDireto/0.76/10)*10+2000;
   const cheio=minimo/(1-0.06);
-  return{minimo,bomba,cheio:Math.round(cheio)+1000};
+  return{minimo:minimo+1000,bomba,cheio:Math.round(cheio)+2000};
 }
 
 // precoMin = preço mínimo (31% margem s/ NEG)
