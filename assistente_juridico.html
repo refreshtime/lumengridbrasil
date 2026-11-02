@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lumen Grid — Assistente Jurídico</title>
+<script>(function(){var t=sessionStorage.getItem('lg_auth');if(!t){location.replace('login.html');return;}try{var d=atob(t).split(':'),age=Date.now()-parseInt(d[1]);if(age>28800000)throw 1;}catch(e){sessionStorage.clear();location.replace('login.html');}})()</script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--or:#E8641A;--or-l:#FF8040;--ink:#0F0F0F;--ui:#0e1117;--uic:#16191f;--uib:#2a2d35;--uit:#e8eaf0;--uim:#7a8090;}
+body{font-family:'Montserrat',sans-serif;background:var(--ui);color:var(--uit);min-height:100vh}
+.ed-header{background:var(--ink);border-bottom:2px solid rgba(232,100,26,.3);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.ed-logo{font-size:18px;font-weight:900;letter-spacing:3px;color:var(--or)}.ed-logo span{color:#fff}
+.ed-sub{font-size:8px;letter-spacing:3px;color:rgba(232,100,26,.5);margin-top:3px}
+.ed-layout{display:grid;grid-template-columns:420px 1fr;min-height:calc(100vh - 68px)}
+.form-panel{background:var(--uic);border-right:1px solid var(--uib);overflow-y:auto;max-height:calc(100vh - 68px);padding:20px 18px 100px;position:sticky;top:0}
+.fs{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--uib)}
+.fs:last-of-type{border-bottom:none}
+.fs-title{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:12px;padding-left:9px;border-left:3px solid var(--or)}
+.fl{display:block;font-size:9px;font-weight:700;color:var(--uim);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.fi,.fsel,.fta{width:100%;padding:8px 11px;background:#0a0c10;border:1.5px solid var(--uib);border-radius:6px;font-size:12px;color:var(--uit);font-family:inherit;transition:border-color .2s;margin-bottom:9px}
+.fi:focus,.fsel:focus,.fta:focus{outline:none;border-color:var(--or)}
+.fi::placeholder{color:#3a3f4a}
+.fta{resize:vertical;min-height:60px}
+.fsel option{background:#0e1117}
+.frow{display:flex;gap:8px}.frow>div{flex:1}
+.btn-bar{display:flex;gap:7px;padding:14px 18px;background:var(--ink);border-top:1px solid var(--uib);position:sticky;bottom:0;width:420px}
+.btn{padding:10px 18px;border-radius:6px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:inherit;transition:all .2s}
+.bp{background:var(--or);color:#fff}.bp:hover{background:var(--or-l)}
+.bpdf{background:#1a1f1a;color:var(--or);border:1.5px solid var(--or);padding:10px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.tab-bar{display:flex;gap:4px;margin-bottom:18px;background:#0a0c10;border-radius:8px;padding:4px}
+.tab-btn{flex:1;padding:8px 10px;border:none;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:all .2s;background:transparent;color:var(--uim)}
+.tab-btn.active{background:var(--or);color:#fff}
+.cb-group{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px}
+.cb-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--uit);cursor:pointer}
+.cb-item input{accent-color:var(--or);width:13px;height:13px}
+.prev-panel{overflow-y:auto;background:#e8e8e8;padding:30px;display:flex;flex-direction:column;align-items:center}
+.cpage{width:800px;background:#fff;padding:44px 60px;margin-bottom:8px;font-family:'Times New Roman',Times,serif;font-size:11.5px;line-height:1.55;color:#111;position:relative;box-shadow:0 2px 20px rgba(0,0,0,.15)}
+.cpage-cont{width:800px;background:#fff;padding:30px 60px 44px;margin-bottom:8px;font-family:'Times New Roman',Times,serif;font-size:11.5px;line-height:1.55;color:#111;box-shadow:0 2px 20px rgba(0,0,0,.15)}
+.ch{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;border-bottom:3px solid #E8641A;margin-bottom:24px}
+.ch-logo{height:48px;object-fit:contain}
+.ch-right{text-align:right}
+.ch-title{font-size:13px;font-weight:700;letter-spacing:2px;color:#E8641A;font-family:'Montserrat',sans-serif}
+.ch-subtitle{font-size:9px;color:#666;font-family:'Montserrat',sans-serif;margin-top:2px}
+.ctitle{text-align:center;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;color:#111;font-family:'Montserrat',sans-serif}
+.csubtitle{text-align:center;font-size:10px;color:#555;margin-bottom:22px;font-style:italic;line-height:1.5}
+.cnum{font-weight:700;color:#E8641A}
+.clausula{margin-bottom:12px}
+.clausula-title{font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;color:#111;border-left:3px solid #E8641A;padding-left:7px;font-family:'Montserrat',sans-serif}
+.clausula p{margin-bottom:4px;text-align:justify}
+.clausula ul{margin:4px 0 4px 20px}
+.clausula ul li{margin-bottom:2px;text-align:justify}
+.qual-box{background:#f8f8f8;border:1px solid #ddd;border-radius:5px;padding:11px 15px;margin-bottom:10px}
+.qual-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#E8641A;margin-bottom:4px;font-family:'Montserrat',sans-serif}
+.qual-line{margin-bottom:2px;font-size:11px}
+.qual-line strong{color:#111}
+.sign-section{margin-top:24px}
+.sign-line{display:flex;gap:36px;margin-bottom:24px}
+.sign-block{flex:1;text-align:center}
+.sign-underline{border-top:1px solid #333;padding-top:7px;margin-top:36px;font-size:10.5px;font-weight:700}
+.sign-role{font-size:9.5px;color:#666;margin-top:2px}
+.sign-test-line{display:flex;gap:36px;margin-top:8px}
+.doc-footer{border-top:2px solid #E8641A;margin-top:24px;padding-top:9px;display:flex;justify-content:space-between;align-items:center}
+.df-brand{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;color:#E8641A}
+.df-info{font-size:8.5px;color:#999}
+#gasUrlSection{background:#0a0c10;border:1.5px dashed rgba(26,115,232,.4);border-radius:8px;padding:12px;margin-bottom:14px}
+#gasUrlSection .fl{color:#1a73e8}
+@media print{body{background:#fff}.ed-header,.form-panel,.btn-bar{display:none!important}.ed-layout{display:block}.prev-panel{background:#fff;padding:0}.cpage,.cpage-cont{box-shadow:none;margin:0;width:100%}.cpage-cont+.cpage-cont,.cpage+.cpage-cont{page-break-before:always;break-before:page}@page{size:A4;margin:12mm}}
+@media(max-width:768px){.form-panel{max-height:none}#prevPanel{display:none}.ed-layout{display:block}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+<div class="ed-header">
+  <div>
+    <div class="ed-logo">LUMEN<span>GRID</span></div>
+    <div class="ed-sub">ASSISTENTE JURÍDICO — ENERGIA INTELIGENTE</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <a href="portal.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);text-decoration:none">← Portal</a>
+    <button class="bpdf" onclick="downloadPDF()">&#128424; Imprimir / PDF</button>
+  </div>
+</div>
+<div class="ed-layout">
+<div class="form-panel">
+  <div id="gasUrlSection">
+    <label class="fl">URL do Web App (GAS Jurídico)</label>
+    <input class="fi" id="gasUrl" placeholder="https://script.google.com/macros/s/...">
+    <div style="font-size:9px;color:rgba(255,255,255,.3);line-height:1.5">Cole a URL do <strong style="color:rgba(255,255,255,.5)">ASSISTENTE_JURIDICO_Codigo.gs</strong> implantado.</div>
+  </div>
+  <div class="fs">
+    <div class="fs-title">LumenGrid (Contratante)</div>
+    <label class="fl">Representante Legal</label>
+    <input class="fi" id="lgRep" placeholder="Nome do sócio-administrador">
+    <label class="fl">Endereço da Empresa</label>
+    <input class="fi" id="lgEnder" placeholder="Rua, Nº, Bairro, Cidade — UF, CEP">
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabV" onclick="setTab('vendedor')">Contrato de Vendedor</button>
+    <button class="tab-btn" id="tabP" onclick="setTab('parceiro')">Contrato de Parceria</button>
+  </div>
+  <!-- == VENDEDOR FORM == -->
+  <div id="formVendedor">
+    <div class="fs">
+      <div class="fs-title">Dados do Contrato</div>
+      <div class="frow">
+        <div><label class="fl">N&ordm; do Contrato</label><input class="fi" id="vNum" placeholder="LG-V-2026-0001"></div>
+        <div><label class="fl">Data</label><input class="fi" type="date" id="vData"></div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Contratado (Vendedor)</div>
+      <label class="fl">Nome Completo <span style="color:#E8641A">*</span></label>
+      <input class="fi" id="vNome" placeholder="Nome completo">
+      <div class="frow">
+        <div><label class="fl">CPF <span style="color:#E8641A">*</span></label><input class="fi" id="vCPF" placeholder="000.000.000-00"></div>
+        <div><label class="fl">RG</label><input class="fi" id="vRG" placeholder="00.000.000-0"></div>
+      </div>
+      <label class="fl">Endere&ccedil;o</label>
+      <input class="fi" id="vEnder" placeholder="Rua, n&uacute;mero, bairro">
+      <div class="frow">
+        <div><label class="fl">Cidade / UF</label><input class="fi" id="vCidade" placeholder="S&atilde;o Paulo, SP"></div>
+        <div><label class="fl">CEP</label><input class="fi" id="vCEP" placeholder="00000-000"></div>
+      </div>
+      <div class="frow">
+        <div><label class="fl">E-mail</label><input class="fi" id="vEmail" placeholder="email@exemplo.com"></div>
+        <div><label class="fl">Telefone <span style="color:#E8641A">*</span></label><input class="fi" id="vFone" placeholder="(11) 9 0000-0000"></div>
+      </div>
+      <label class="fl">CNPJ MEI (opcional)</label>
+      <input class="fi" id="vMEI" placeholder="00.000.000/0001-00">
+    </div>
+    <div class="fs">
+      <div class="fs-title">Territ&oacute;rio e Produtos</div>
+      <label class="fl">&Aacute;rea de Atua&ccedil;&atilde;o</label>
+      <textarea class="fta" id="vTerritorio" placeholder="Ex: Grande S&atilde;o Paulo, Regi&atilde;o do ABC..."></textarea>
+      <label class="fl">Produtos Autorizados</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="vProdOG" checked> <span>On-Grid</span></label>
+        <label class="cb-item"><input type="checkbox" id="vProdHib"> <span>H&iacute;brido</span></label>
+        <label class="cb-item"><input type="checkbox" id="vProdWB"> <span>Wallbox</span></label>
+        <label class="cb-item"><input type="checkbox" id="vProdMan"> <span>Manuten&ccedil;&atilde;o</span></label>
+      </div>
+      <label class="fl">Exclusividade</label>
+      <select class="fsel" id="vExclusividade">
+        <option value="nao">N&atilde;o exclusivo</option>
+        <option value="semi">Semi-exclusivo (prioridade LumenGrid)</option>
+        <option value="sim">Exclusivo no territ&oacute;rio</option>
+      </select>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Comiss&atilde;o</div>
+      <div class="frow">
+        <div><label class="fl">Percentual (%)</label><input class="fi" type="number" id="vComissaoPct" value="5" step="0.5" min="0"></div>
+        <div><label class="fl">Base de C&aacute;lculo</label>
+          <select class="fsel" id="vComissaoBase">
+            <option value="margem_cash">Margem Cash</option>
+            <option value="valor_total">Valor Total da Venda</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div><label class="fl">Prazo de Pagamento</label>
+          <select class="fsel" id="vPrazoPagto">
+            <option value="ate_5">At&eacute; o dia 5 do m&ecirc;s seguinte</option>
+            <option value="ate_10">At&eacute; o dia 10 do m&ecirc;s seguinte</option>
+            <option value="ate_15">At&eacute; o dia 15 do m&ecirc;s seguinte</option>
+            <option value="15_dias">15 dias ap&oacute;s a venda</option>
+            <option value="30_dias">30 dias ap&oacute;s a venda</option>
+          </select>
+        </div>
+        <div><label class="fl">Meta Mensal (R$, opcional)</label><input class="fi" type="number" id="vMeta" placeholder="0"></div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Vig&ecirc;ncia</div>
+      <div class="frow">
+        <div><label class="fl">Dura&ccedil;&atilde;o</label>
+          <select class="fsel" id="vVigencia">
+            <option value="6m">6 meses</option>
+            <option value="12m" selected>12 meses</option>
+            <option value="indeterminado">Prazo indeterminado</option>
+          </select>
+        </div>
+        <div><label class="fl">Aviso Pr&eacute;vio (dias)</label><input class="fi" type="number" id="vAviso" value="30"></div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Foro e Observa&ccedil;&otilde;es</div>
+      <label class="fl">Cidade para Foro</label>
+      <input class="fi" id="vForo" value="S&atilde;o Paulo">
+      <label class="fl">Observa&ccedil;&otilde;es Especiais</label>
+      <textarea class="fta" id="vObs" placeholder="Condi&ccedil;&otilde;es especiais adicionais..."></textarea>
+    </div>
+  </div>
+
+  <!-- == PARCEIRO FORM == -->
+  <div id="formParceiro" style="display:none">
+    <div class="fs">
+      <div class="fs-title">Dados do Contrato</div>
+      <div class="frow">
+        <div><label class="fl">N&ordm; do Contrato</label><input class="fi" id="pNum" placeholder="LG-P-2026-0001"></div>
+        <div><label class="fl">Data</label><input class="fi" type="date" id="pData"></div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Parceiro Instalador</div>
+      <label class="fl">Raz&atilde;o Social <span style="color:#E8641A">*</span></label>
+      <input class="fi" id="pRazao" placeholder="Nome empresarial completo">
+      <div class="frow">
+        <div><label class="fl">CNPJ <span style="color:#E8641A">*</span></label><input class="fi" id="pCNPJ" placeholder="00.000.000/0001-00"></div>
+        <div><label class="fl">Insc. Estadual</label><input class="fi" id="pIE" placeholder="Opcional"></div>
+      </div>
+      <div class="frow">
+        <div><label class="fl">Respons&aacute;vel T&eacute;cnico <span style="color:#E8641A">*</span></label><input class="fi" id="pRespTec" placeholder="Nome do engenheiro"></div>
+        <div><label class="fl">CREA / CFT <span style="color:#E8641A">*</span></label><input class="fi" id="pCREA" placeholder="CREA-SP 000000"></div>
+      </div>
+      <label class="fl">Endere&ccedil;o</label>
+      <input class="fi" id="pEnder" placeholder="Rua, n&uacute;mero, bairro">
+      <div class="frow">
+        <div><label class="fl">Cidade / UF</label><input class="fi" id="pCidade" placeholder="S&atilde;o Paulo, SP"></div>
+        <div><label class="fl">CEP</label><input class="fi" id="pCEP" placeholder="00000-000"></div>
+      </div>
+      <div class="frow">
+        <div><label class="fl">E-mail</label><input class="fi" id="pEmail" placeholder="email@empresa.com"></div>
+        <div><label class="fl">Telefone <span style="color:#E8641A">*</span></label><input class="fi" id="pFone" placeholder="(11) 9 0000-0000"></div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Escopo e Servi&ccedil;os</div>
+      <label class="fl">Servi&ccedil;os Autorizados</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="pSrvOG" checked> <span>Inst. On-Grid</span></label>
+        <label class="cb-item"><input type="checkbox" id="pSrvHib"> <span>Inst. H&iacute;brida</span></label>
+        <label class="cb-item"><input type="checkbox" id="pSrvMP"> <span>Manut. Preventiva</span></label>
+        <label class="cb-item"><input type="checkbox" id="pSrvMC"> <span>Manut. Corretiva</span></label>
+        <label class="cb-item"><input type="checkbox" id="pSrvTI"> <span>Troca Inversores</span></label>
+        <label class="cb-item"><input type="checkbox" id="pSrvAmp"> <span>Amplia&ccedil;&atilde;o</span></label>
+      </div>
+      <label class="fl">&Aacute;rea de Atua&ccedil;&atilde;o</label>
+      <textarea class="fta" id="pArea" placeholder="Ex: Grande S&atilde;o Paulo..."></textarea>
+      <label class="fl">Exclusividade</label>
+      <select class="fsel" id="pExclusividade">
+        <option value="nao">Sem exclusividade</option>
+        <option value="semi">Semi-exclusiva (prioridade)</option>
+        <option value="sim">Exclusiva no territ&oacute;rio</option>
+      </select>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Remunera&ccedil;&atilde;o</div>
+      <label class="fl">Modelo</label>
+      <select class="fsel" id="pRemunModelo">
+        <option value="kwp">R$/kWp instalado</option>
+        <option value="fixo">Valor fixo por OS</option>
+        <option value="pct">Percentual do contrato (%)</option>
+      </select>
+      <div class="frow">
+        <div><label class="fl">Valor (R$ ou %)</label><input class="fi" type="number" id="pRemunValor" placeholder="0.00" step="0.01"></div>
+        <div><label class="fl">Prazo de Pagamento</label>
+          <select class="fsel" id="pPrazoPagto">
+            <option value="5d_os">5 dias ap&oacute;s aceite da OS</option>
+            <option value="10d_os">10 dias ap&oacute;s aceite da OS</option>
+            <option value="15d_os">15 dias ap&oacute;s aceite da OS</option>
+            <option value="30d_os">30 dias ap&oacute;s aceite da OS</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Qualidade e Seguran&ccedil;a</div>
+      <div class="frow">
+        <div><label class="fl">Garantia M&atilde;o de Obra (meses)</label><input class="fi" type="number" id="pGarantia" value="12"></div>
+        <div><label class="fl">Seguro RC</label>
+          <select class="fsel" id="pSeguroRC">
+            <option value="sim">Exigido</option>
+            <option value="nao">N&atilde;o exigido</option>
+          </select>
+        </div>
+      </div>
+      <label class="fl">Certifica&ccedil;&otilde;es Obrigat&oacute;rias</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="pNR10" checked> <span>NR-10</span></label>
+        <label class="cb-item"><input type="checkbox" id="pNR35" checked> <span>NR-35</span></label>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Vig&ecirc;ncia</div>
+      <div class="frow">
+        <div><label class="fl">Dura&ccedil;&atilde;o</label>
+          <select class="fsel" id="pVigencia">
+            <option value="12m" selected>12 meses</option>
+            <option value="24m">24 meses</option>
+            <option value="indeterminado">Prazo indeterminado</option>
+          </select>
+        </div>
+        <div><label class="fl">Aviso Pr&eacute;vio (dias)</label><input class="fi" type="number" id="pAviso" value="30"></div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fs-title">Foro e Observa&ccedil;&otilde;es</div>
+      <label class="fl">Cidade para Foro</label>
+      <input class="fi" id="pForo" value="S&atilde;o Paulo">
+      <label class="fl">Observa&ccedil;&otilde;es Especiais</label>
+      <textarea class="fta" id="pObs" placeholder="Condi&ccedil;&otilde;es t&eacute;cnicas especiais..."></textarea>
+    </div>
+  </div>
+
+  <div class="btn-bar">
+    <button class="bp btn" onclick="renderPreview()">&#128196; Gerar Contrato</button>
+    <button class="bpdf btn" onclick="downloadPDF()">&#128424; PDF</button>
+    <button class="btn" id="btnDrive" onclick="salvarNoDrive()" style="background:#1a73e8;color:#fff;border:none">&#9729; Drive</button>
+  </div>
+</div>
+<div class="prev-panel" id="prevPanel">
+  <div style="color:#999;text-align:center;margin:auto;font-family:Montserrat,sans-serif;font-size:12px">
+    <div style="font-size:40px;margin-bottom:14px">&#9878;</div>
+    Selecione o tipo de contrato, preencha os dados e clique em <strong>Gerar Contrato</strong>
+  </div>
+</div>
+</div>
+<div style="text-align:center;padding:8px;font-size:10px;color:rgba(255,255,255,.2);font-family:Montserrat,sans-serif">Feito por Domani Consultoria</div>
+
+<script>
+var currentTab = 'vendedor';
+(function init() {
+  var today = new Date().toISOString().split('T')[0];
+  var y = new Date().getFullYear();
+  var vSeq = String(parseInt(localStorage.getItem('lg_v_seq') || '0') + 1).padStart(4, '0');
+  var pSeq = String(parseInt(localStorage.getItem('lg_p_seq') || '0') + 1).padStart(4, '0');
+  document.getElementById('vNum').value = 'LG-V-' + y + '-' + vSeq;
+  document.getElementById('pNum').value = 'LG-P-' + y + '-' + pSeq;
+  document.getElementById('vData').value = today;
+  document.getElementById('pData').value = today;
+  var savedUrl = localStorage.getItem('lg_aj_gasUrl');
+  if (savedUrl) document.getElementById('gasUrl').value = savedUrl;
+  var savedRep = localStorage.getItem('lg_aj_rep');
+  var savedEnder = localStorage.getItem('lg_aj_ender');
+  if (savedRep) document.getElementById('lgRep').value = savedRep;
+  if (savedEnder) document.getElementById('lgEnder').value = savedEnder;
+  document.getElementById('gasUrl').addEventListener('change', function(e) { localStorage.setItem('lg_aj_gasUrl', e.target.value); });
+  document.getElementById('lgRep').addEventListener('change', function(e) { localStorage.setItem('lg_aj_rep', e.target.value); });
+  document.getElementById('lgEnder').addEventListener('change', function(e) { localStorage.setItem('lg_aj_ender', e.target.value); });
+})();
+
+function setTab(t) {
+  currentTab = t;
+  document.getElementById('tabV').className = 'tab-btn' + (t === 'vendedor' ? ' active' : '');
+  document.getElementById('tabP').className = 'tab-btn' + (t === 'parceiro' ? ' active' : '');
+  document.getElementById('formVendedor').style.display = t === 'vendedor' ? 'block' : 'none';
+  document.getElementById('formParceiro').style.display = t === 'parceiro' ? 'block' : 'none';
+  document.getElementById('prevPanel').innerHTML = '<div style="color:#999;text-align:center;margin:auto;font-family:Montserrat,sans-serif;font-size:12px"><div style="font-size:32px;margin-bottom:14px">&#9878;</div>Preencha os dados e clique em <strong>Gerar Contrato</strong></div>';
+}
+
+function fmtData(s) {
+  if (!s) return '[DATA]';
+  var parts = s.split('-');
+  var meses = ['janeiro','fevereiro','mar\u00e7o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  return parseInt(parts[2]) + ' de ' + meses[parseInt(parts[1]) - 1] + ' de ' + parts[0];
+}
+
+function pctExtenso(n) {
+  var map = {1:'um',2:'dois',3:'tr\u00eas',4:'quatro',5:'cinco',6:'seis',7:'sete',8:'oito',9:'nove',10:'dez',11:'onze',12:'doze',15:'quinze',20:'vinte',25:'vinte e cinco',30:'trinta'};
+  return map[n] || String(n);
+}
+
+function mesesExtenso(n) {
+  var words = ['zero','um','dois','tr\u00eas','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze','quatorze','quinze','dezesseis','dezessete','dezoito','dezenove','vinte','vinte e um','vinte e dois','vinte e tr\u00eas','vinte e quatro'];
+  return words[n] !== undefined ? words[n] : String(n);
+}
+
+function vigenciaTexto(v) {
+  if (v === '6m') return 'prazo determinado de 06 (seis) meses';
+  if (v === '12m') return 'prazo determinado de 12 (doze) meses';
+  if (v === '24m') return 'prazo determinado de 24 (vinte e quatro) meses';
+  return 'prazo indeterminado';
+}
+
+function prazoPagtoVText(v) {
+  var map = {'ate_5':'at\u00e9 o 5\u00ba (quinto) dia do m\u00eas seguinte ao da venda','ate_10':'at\u00e9 o 10\u00ba (d\u00e9cimo) dia do m\u00eas seguinte ao da venda','ate_15':'at\u00e9 o 15\u00ba (d\u00e9cimo quinto) dia do m\u00eas seguinte ao da venda','15_dias':'em at\u00e9 15 (quinze) dias ap\u00f3s a confirma\u00e7\u00e3o da venda','30_dias':'em at\u00e9 30 (trinta) dias ap\u00f3s a confirma\u00e7\u00e3o da venda'};
+  return map[v] || v;
+}
+
+function prazoPagtoPText(v) {
+  var map = {'5d_os':'em at\u00e9 5 (cinco) dias \u00fateis ap\u00f3s o aceite da Ordem de Servi\u00e7o','10d_os':'em at\u00e9 10 (dez) dias \u00fateis ap\u00f3s o aceite da Ordem de Servi\u00e7o','15d_os':'em at\u00e9 15 (quinze) dias \u00fateis ap\u00f3s o aceite da Ordem de Servi\u00e7o','30d_os':'em at\u00e9 30 (trinta) dias corridos ap\u00f3s o aceite da Ordem de Servi\u00e7o'};
+  return map[v] || v;
+}
+
+function remunTexto(m, v) {
+  var vf = parseFloat(v) || 0;
+  var vStr = vf.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+  if (m === 'kwp') return 'R$ ' + vStr + ' (reais) por kWp instalado';
+  if (m === 'fixo') return 'R$ ' + vStr + ' (reais) por Ordem de Servi\u00e7o conclu\u00edda';
+  if (m === 'pct') return vf + '% (' + pctExtenso(vf) + ' por cento) do valor total do contrato';
+  return String(v);
+}
+
+function diasExtenso(n) {
+  var map = {15:'quinze',30:'trinta',45:'quarenta e cinco',60:'sessenta',90:'noventa'};
+  return n + ' (' + (map[n] || n) + ')';
+}
+
+function getVendedorData() {
+  var produtos = [];
+  if (document.getElementById('vProdOG').checked) produtos.push('Sistemas Fotovoltaicos On-Grid');
+  if (document.getElementById('vProdHib').checked) produtos.push('Sistemas Fotovoltaicos H\u00edbridos com Armazenamento em Bateria');
+  if (document.getElementById('vProdWB').checked) produtos.push('Carregadores Veiculares Wallbox');
+  if (document.getElementById('vProdMan').checked) produtos.push('Servi\u00e7os de Manuten\u00e7\u00e3o Fotovoltaica');
+  return {
+    num: document.getElementById('vNum').value.trim(),
+    data: document.getElementById('vData').value,
+    lgRep: document.getElementById('lgRep').value.trim() || '[REPRESENTANTE LEGAL]',
+    lgEnder: document.getElementById('lgEnder').value.trim() || '[ENDERE\u00c7O DA EMPRESA]',
+    nome: document.getElementById('vNome').value.trim(),
+    cpf: document.getElementById('vCPF').value.trim(),
+    rg: document.getElementById('vRG').value.trim(),
+    ender: document.getElementById('vEnder').value.trim(),
+    cidade: document.getElementById('vCidade').value.trim(),
+    cep: document.getElementById('vCEP').value.trim(),
+    email: document.getElementById('vEmail').value.trim(),
+    fone: document.getElementById('vFone').value.trim(),
+    mei: document.getElementById('vMEI').value.trim(),
+    territorio: document.getElementById('vTerritorio').value.trim(),
+    produtos: produtos,
+    exclusividade: document.getElementById('vExclusividade').value,
+    comissaoPct: parseFloat(document.getElementById('vComissaoPct').value) || 5,
+    comissaoBase: document.getElementById('vComissaoBase').value,
+    prazoPagto: document.getElementById('vPrazoPagto').value,
+    meta: parseFloat(document.getElementById('vMeta').value) || 0,
+    vigencia: document.getElementById('vVigencia').value,
+    aviso: parseInt(document.getElementById('vAviso').value) || 30,
+    foro: document.getElementById('vForo').value.trim() || 'S\u00e3o Paulo',
+    obs: document.getElementById('vObs').value.trim()
+  };
+}
+
+function getParceiroData() {
+  var servicos = [];
+  if (document.getElementById('pSrvOG').checked) servicos.push('Instala\u00e7\u00e3o de Sistemas On-Grid');
+  if (document.getElementById('pSrvHib').checked) servicos.push('Instala\u00e7\u00e3o de Sistemas H\u00edbridos');
+  if (document.getElementById('pSrvMP').checked) servicos.push('Manuten\u00e7\u00e3o Preventiva');
+  if (document.getElementById('pSrvMC').checked) servicos.push('Manuten\u00e7\u00e3o Corretiva');
+  if (document.getElementById('pSrvTI').checked) servicos.push('Troca e Upgrade de Inversores');
+  if (document.getElementById('pSrvAmp').checked) servicos.push('Amplia\u00e7\u00e3o de Sistemas');
+  var nrs = [];
+  if (document.getElementById('pNR10').checked) nrs.push('NR-10 (Seguran\u00e7a em Instala\u00e7\u00f5es El\u00e9tricas)');
+  if (document.getElementById('pNR35').checked) nrs.push('NR-35 (Trabalho em Altura)');
+  return {
+    num: document.getElementById('pNum').value.trim(),
+    data: document.getElementById('pData').value,
+    lgRep: document.getElementById('lgRep').value.trim() || '[REPRESENTANTE LEGAL]',
+    lgEnder: document.getElementById('lgEnder').value.trim() || '[ENDERE\u00c7O DA EMPRESA]',
+    razao: document.getElementById('pRazao').value.trim(),
+    cnpj: document.getElementById('pCNPJ').value.trim(),
+    ie: document.getElementById('pIE').value.trim(),
+    respTec: document.getElementById('pRespTec').value.trim(),
+    crea: document.getElementById('pCREA').value.trim(),
+    ender: document.getElementById('pEnder').value.trim(),
+    cidade: document.getElementById('pCidade').value.trim(),
+    cep: document.getElementById('pCEP').value.trim(),
+    email: document.getElementById('pEmail').value.trim(),
+    fone: document.getElementById('pFone').value.trim(),
+    servicos: servicos,
+    area: document.getElementById('pArea').value.trim(),
+    exclusividade: document.getElementById('pExclusividade').value,
+    remunModelo: document.getElementById('pRemunModelo').value,
+    remunValor: document.getElementById('pRemunValor').value,
+    prazoPagto: document.getElementById('pPrazoPagto').value,
+    garantia: parseInt(document.getElementById('pGarantia').value) || 12,
+    seguroRC: document.getElementById('pSeguroRC').value,
+    nrs: nrs,
+    vigencia: document.getElementById('pVigencia').value,
+    aviso: parseInt(document.getElementById('pAviso').value) || 30,
+    foro: document.getElementById('pForo').value.trim() || 'S\u00e3o Paulo',
+    obs: document.getElementById('pObs').value.trim()
+  };
+}
+
+function renderPreview() {
+  var panel = document.getElementById('prevPanel');
+  try {
+    var html, d;
+    if (currentTab === 'vendedor') {
+      d = getVendedorData();
+      if (!d.nome || !d.cpf || !d.fone) { alert('Preencha ao menos Nome, CPF e Telefone do vendedor.'); return; }
+      html = generateContractVendedor(d);
+    } else {
+      d = getParceiroData();
+      if (!d.razao || !d.cnpj || !d.fone) { alert('Preencha ao menos Raz\u00e3o Social, CNPJ e Telefone do parceiro.'); return; }
+      html = generateContractParceiro(d);
+    }
+    panel.innerHTML = html;
+  } catch(e) { alert('Erro ao gerar contrato: ' + e.message); console.error(e); }
+}
+
+function generateContractVendedor(d) {
+  var dataFmt = fmtData(d.data);
+  var tot = 6;
+  function hdr() { return '<div class="ch"><img src="imagens/LOGOS/logo-icone.png" class="ch-logo" onerror="this.style.display=\'none\'"/><div class="ch-right"><div class="ch-title">CONTRATO N&ordm; <span class="cnum">' + d.num + '</span></div><div class="ch-subtitle">Representa\u00e7\u00e3o Comercial Aut\u00f4noma &middot; Lei n\u00ba 4.886/65</div></div></div>'; }
+  function ftr(p) { return '<div class="doc-footer"><div class="df-brand">LumenGrid Brasil Ltda. &mdash; CNPJ 36.028.241/0001-96</div><div class="df-info">P\u00e1gina ' + p + ' de ' + tot + ' &middot; ' + dataFmt + '</div></div>'; }
+  var excTexto = d.exclusividade === 'sim' ? 'car\u00e1ter <strong>exclusivo</strong> no Territ\u00f3rio definido, comprometendo-se o CONTRATADO a n\u00e3o exercer representa\u00e7\u00e3o de produtos concorrentes durante a vig\u00eancia' : d.exclusividade === 'semi' ? 'car\u00e1ter <strong>semi-exclusivo</strong>, com prioridade \u00e0 CONTRATANTE, podendo o CONTRATADO representar outros produtos desde que n\u00e3o concorrentes diretos e mediante comunica\u00e7\u00e3o pr\u00e9via' : 'car\u00e1ter <strong>n\u00e3o exclusivo</strong>, podendo o CONTRATADO representar outros produtos, desde que n\u00e3o configure conflito de interesse direto com a CONTRATANTE';
+  var comissaoBaseTexto = d.comissaoBase === 'margem_cash' ? '<strong>Margem Cash</strong>, definida como o resultado l\u00edquido do projeto ap\u00f3s dedu\u00e7\u00e3o dos custos diretos, impostos sobre a receita (10%) e taxa de gest\u00e3o operacional (20% da margem bruta)' : '<strong>Valor Total de Venda</strong> constante no contrato firmado com o cliente final';
+  var produtosTexto = d.produtos.length ? d.produtos.join('; ') : 'Produtos e servi\u00e7os da linha LumenGrid';
+  var territorioTexto = d.territorio || 'a ser definido entre as partes mediante aditivo';
+  var metaClausula = d.meta > 0 ? '<p><span class="cnum">7.5.</span> As partes estabelecem como refer\u00eancia de desempenho mensal o valor de <strong>R$ ' + d.meta.toLocaleString('pt-BR', {minimumFractionDigits:2}) + '</strong>, sem car\u00e1ter obrigat\u00f3rio, servindo apenas como indicador para avalia\u00e7\u00e3o conjunta.</p>' : '';
+  var obsClausula = d.obs ? '<p><span class="cnum">14.4.</span> <strong>Disposi\u00e7\u00f5es Especiais:</strong> ' + d.obs + '</p>' : '';
+
+  var p1 = '<div class="cpage">' + hdr() + '<div class="ctitle">CONTRATO DE REPRESENTA\u00c7\u00c3O COMERCIAL AUT\u00d4NOMA</div><div class="csubtitle">Celebrado na forma da Lei n.\u00ba 4.886, de 9 de dezembro de 1965 (alterada pela Lei n.\u00ba 8.420/1992) e do C\u00f3digo Civil Brasileiro (Lei n.\u00ba 10.406/2002).</div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 1\u00aa \u2014 Das Partes</div><p><span class="cnum">1.1.</span> <strong>CONTRATANTE:</strong></p><div class="qual-box"><div class="qual-label">CONTRATANTE</div><div class="qual-line"><strong>Raz\u00e3o Social:</strong> LumenGrid Brasil Ltda.</div><div class="qual-line"><strong>CNPJ:</strong> 36.028.241/0001-96</div><div class="qual-line"><strong>Endere\u00e7o:</strong> ' + d.lgEnder + '</div><div class="qual-line"><strong>Representante:</strong> ' + d.lgRep + '</div></div><p><span class="cnum">1.2.</span> <strong>CONTRATADO:</strong></p><div class="qual-box"><div class="qual-label">CONTRATADO (REPRESENTANTE COMERCIAL)</div><div class="qual-line"><strong>Nome:</strong> ' + (d.nome||'[NOME]') + '</div><div class="qual-line"><strong>CPF:</strong> ' + (d.cpf||'[CPF]') + (d.rg?' &nbsp;&middot;&nbsp; <strong>RG:</strong> '+d.rg:'') + '</div>' + (d.mei?'<div class="qual-line"><strong>MEI/CNPJ:</strong> '+d.mei+'</div>':'') + '<div class="qual-line"><strong>Endere\u00e7o:</strong> ' + (d.ender||'[ENDERE\u00c7O]') + (d.cidade?', '+d.cidade:'') + (d.cep?' &mdash; CEP: '+d.cep:'') + '</div><div class="qual-line"><strong>E-mail:</strong> ' + (d.email||'[EMAIL]') + ' &nbsp;&middot;&nbsp; <strong>Tel.:</strong> ' + (d.fone||'[TEL]') + '</div></div></div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 2\u00aa \u2014 Do Objeto</div><p><span class="cnum">2.1.</span> O presente Contrato tem por objeto a presta\u00e7\u00e3o de servi\u00e7os de <strong>representa\u00e7\u00e3o comercial aut\u00f4noma</strong> pelo CONTRATADO, mediante a intermedia\u00e7\u00e3o de neg\u00f3cios de venda dos produtos da CONTRATANTE junto a potenciais clientes, na forma da Lei n.\u00ba 4.886/65.</p><p><span class="cnum">2.2.</span> S\u00e3o produtos autorizados para comercializa\u00e7\u00e3o: <strong>' + produtosTexto + '</strong>.</p><p><span class="cnum">2.3.</span> A intermedia\u00e7\u00e3o dever\u00e1 observar rigorosamente as tabelas de pre\u00e7o e condi\u00e7\u00f5es comerciais vigentes, sendo vedada a concess\u00e3o de descontos sem autoriza\u00e7\u00e3o expressa e pr\u00e9via da CONTRATANTE.</p></div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 3\u00aa \u2014 Da Natureza da Rela\u00e7\u00e3o Jur\u00eddica</div><p><span class="cnum">3.1.</span> A rela\u00e7\u00e3o jur\u00eddica tem <strong>natureza civil</strong>, nos termos da Lei n.\u00ba 4.886/65, n\u00e3o configurando v\u00ednculo empregat\u00edcio, afastando-se expressamente a aplica\u00e7\u00e3o da CLT.</p><p><span class="cnum">3.2.</span> O CONTRATADO exercer\u00e1 sua atividade com <strong>plena autonomia</strong>, sendo o \u00fanico respons\u00e1vel pelos tributos e encargos previdenci\u00e1rios decorrentes de sua atividade.</p><p><span class="cnum">3.3.</span> Caso pessoa f\u00edsica, o CONTRATADO dever\u00e1 efetuar as contribui\u00e7\u00f5es ao INSS na qualidade de contribuinte individual ou como MEI.</p></div>' + ftr(1) + '</div>';
+
+  var p2 = '<div class="cpage-cont">' + hdr() + '<div class="clausula"><div class="clausula-title">Cl\u00e1usula 4\u00aa \u2014 Do Territ\u00f3rio e Da Exclusividade</div><p><span class="cnum">4.1.</span> O CONTRATADO atuar\u00e1 preferencialmente na seguinte \u00e1rea geogr\u00e1fica: <strong>' + territorioTexto + '</strong>.</p><p><span class="cnum">4.2.</span> A atua\u00e7\u00e3o no Territ\u00f3rio ocorrer\u00e1 com ' + excTexto + '.</p><p><span class="cnum">4.3.</span> A atua\u00e7\u00e3o fora do Territ\u00f3rio definido dever\u00e1 ser previamente autorizada pela CONTRATANTE, podendo esta designar outro representante para a \u00e1rea em quest\u00e3o.</p></div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 5\u00aa \u2014 Das Obriga\u00e7\u00f5es do Contratado</div><p><span class="cnum">5.1.</span> S\u00e3o obriga\u00e7\u00f5es do CONTRATADO:</p><ul><li>Prospectar ativamente clientes potenciais para os produtos da CONTRATANTE;</li><li>Observar rigorosamente as tabelas de pre\u00e7os e condi\u00e7\u00f5es comerciais vigentes;</li><li>Utilizar o sistema de CRM disponibilizado pela CONTRATANTE;</li><li>Apresentar relat\u00f3rio mensal de atividades;</li><li>N\u00e3o conceder descontos ou condi\u00e7\u00f5es divergentes sem autoriza\u00e7\u00e3o expressa;</li><li>Representar com \u00e9tica e profissionalismo a marca LUMENGRID.</li></ul></div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 6\u00aa \u2014 Das Obriga\u00e7\u00f5es da Contratante</div><p><span class="cnum">6.1.</span> S\u00e3o obriga\u00e7\u00f5es da CONTRATANTE:</p><ul><li>Fornecer treinamento t\u00e9cnico e comercial sobre os produtos e servi\u00e7os da linha LUMENGRID;</li><li>Disponibilizar materiais de marketing e ferramentas de suporte \u00e0 venda;</li><li>Prestar suporte t\u00e9cnico e comercial para elabora\u00e7\u00e3o de propostas;</li><li>Pagar as comiss\u00f5es nas condi\u00e7\u00f5es estabelecidas neste instrumento;</li><li>Manter atualizadas as tabelas de pre\u00e7o e comunicar quaisquer altera\u00e7\u00f5es.</li></ul></div>' + ftr(2) + '</div>';
+
+  var p3 = '<div class="cpage-cont">' + hdr() + '<div class="clausula"><div class="clausula-title">Cl\u00e1usula 7\u00aa \u2014 Da Remunera\u00e7\u00e3o e Das Comiss\u00f5es</div><p><span class="cnum">7.1.</span> A remunera\u00e7\u00e3o do CONTRATADO ser\u00e1 exclusivamente por <strong>comiss\u00f5es</strong> sobre os neg\u00f3cios efetivamente conclu\u00eddos por sua intermedia\u00e7\u00e3o e pagos pela CONTRATANTE, sem qualquer valor fixo ou garantia m\u00ednima de rendimentos.</p><p><span class="cnum">7.2.</span> O percentual de comiss\u00e3o \u00e9 de <strong>' + d.comissaoPct + '% (' + pctExtenso(d.comissaoPct) + ' por cento)</strong>, calculado sobre ' + comissaoBaseTexto + '.</p><p><span class="cnum">7.3.</span> O pagamento das comiss\u00f5es ser\u00e1 realizado <strong>' + prazoPagtoVText(d.prazoPagto) + '</strong>, exclusivamente via PIX para conta de titularidade do CONTRATADO.</p><p><span class="cnum">7.4.</span> Para fins de pagamento, o CONTRATADO dever\u00e1 emitir Nota Fiscal de Presta\u00e7\u00e3o de Servi\u00e7os correspondente ao valor das comiss\u00f5es devidas, nos termos do art. 32 da Lei n.\u00ba 4.886/65.</p>' + metaClausula + '</div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 8\u00aa \u2014 Da Vig\u00eancia e Da Rescis\u00e3o</div><p><span class="cnum">8.1.</span> O presente Contrato vigor\u00e1r\u00e1 por <strong>' + vigenciaTexto(d.vigencia) + '</strong>, contados da data de assinatura, podendo ser renovado por iguais per\u00edodos mediante aditivo.</p><p><span class="cnum">8.2.</span> Qualquer das partes poder\u00e1 rescindir este Contrato mediante aviso pr\u00e9vio escrito com anteced\u00eancia m\u00ednima de <strong>' + diasExtenso(d.aviso) + ' dias</strong>.</p><p><span class="cnum">8.3.</span> A rescis\u00e3o sem justa causa por iniciativa da CONTRATANTE assegura ao CONTRATADO indeniza\u00e7\u00e3o equivalente a <strong>1/12 (um doze avos)</strong> do total das comiss\u00f5es auferidas durante a vig\u00eancia, nos termos do art. 34 da Lei n.\u00ba 4.886/65.</p><p><span class="cnum">8.4.</span> A rescis\u00e3o por justa causa exime a parte infratora de indeniza\u00e7\u00f5es, mantendo-se apenas o direito \u00e0s comiss\u00f5es j\u00e1 vencidas e n\u00e3o pagas.</p><p><span class="cnum">8.5.</span> Constituem justa causa para rescis\u00e3o pela CONTRATANTE: viola\u00e7\u00e3o de confidencialidade; concorr\u00eancia desleal; apresenta\u00e7\u00e3o de informa\u00e7\u00f5es falsas a clientes; descumprimento reiterado das obriga\u00e7\u00f5es da Cl\u00e1usula 5\u00aa.</p></div>' + ftr(3) + '</div>';
+
+  var p4 = '<div class="cpage-cont">' + hdr() + '<div class="clausula"><div class="clausula-title">Cl\u00e1usula 9\u00aa \u2014 Da Confidencialidade</div><p><span class="cnum">9.1.</span> O CONTRATADO compromete-se a manter em sigilo absoluto todas as informa\u00e7\u00f5es confidenciais da CONTRATANTE, incluindo: tabelas de pre\u00e7os, margens, dados de clientes, estrat\u00e9gias comerciais e informa\u00e7\u00f5es sobre fornecedores.</p><p><span class="cnum">9.2.</span> A obriga\u00e7\u00e3o de sigilo persiste por <strong>2 (dois) anos</strong> ap\u00f3s o t\u00e9rmino do Contrato.</p><p><span class="cnum">9.3.</span> Ao t\u00e9rmino, o CONTRATADO dever\u00e1 devolver imediatamente todos os materiais e arquivos de propriedade da CONTRATANTE.</p></div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 10\u00aa \u2014 Da N\u00e3o Concorr\u00eancia</div><p><span class="cnum">10.1.</span> Durante a vig\u00eancia, o CONTRATADO n\u00e3o exercer\u00e1 atividade de representa\u00e7\u00e3o de produtos diretamente concorrentes no Territ\u00f3rio definido.</p><p><span class="cnum">10.2.</span> Ap\u00f3s o t\u00e9rmino, a proibi\u00e7\u00e3o de concorr\u00eancia direta no Territ\u00f3rio se estende por <strong>6 (seis) meses</strong>, exceto em caso de rescis\u00e3o sem justa causa pela CONTRATANTE.</p><p><span class="cnum">10.3.</span> N\u00e3o configura viola\u00e7\u00e3o a atua\u00e7\u00e3o em segmentos distintos da gera\u00e7\u00e3o de energia solar fotovoltaica.</p></div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 11\u00aa \u2014 Da Propriedade Intelectual e Carteira de Clientes</div><p><span class="cnum">11.1.</span> A marca, os materiais de marketing e os ativos intelectuais da CONTRATANTE permanecem de titularidade exclusiva desta.</p><p><span class="cnum">11.2.</span> A carteira de clientes desenvolvida durante a vig\u00eancia pertence \u00e0 CONTRATANTE e dever\u00e1 ser integralmente transferida ao seu t\u00e9rmino, sem indeniza\u00e7\u00e3o ao CONTRATADO.</p></div>' + ftr(4) + '</div>';
+
+  var p5 = '<div class="cpage-cont">' + hdr() + '<div class="clausula"><div class="clausula-title">Cl\u00e1usula 12\u00aa \u2014 Das Penalidades</div><p><span class="cnum">12.1.</span> Em caso de descumprimento, a parte infratora pagar\u00e1 multa de <strong>2% (dois por cento)</strong> sobre o total das comiss\u00f5es dos \u00faltimos 12 meses.</p><p><span class="cnum">12.2.</span> Viola\u00e7\u00e3o comprovada de sigilo sujeita o CONTRATADO a multa de <strong>R$ 20.000,00 (vinte mil reais)</strong>, sem preju\u00edzo de outras perdas e danos.</p></div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 13\u00aa \u2014 Da Prote\u00e7\u00e3o de Dados (LGPD)</div><p><span class="cnum">13.1.</span> As partes comprometem-se a observar a Lei n.\u00ba 13.709/2018 (LGPD) no tratamento de dados pessoais a que tiverem acesso em raz\u00e3o deste Contrato.</p><p><span class="cnum">13.2.</span> Os dados pessoais de clientes coletados pelo CONTRATADO somente poder\u00e3o ser utilizados para as finalidades estritamente necess\u00e1rias \u00e0 execu\u00e7\u00e3o deste Contrato.</p><p><span class="cnum">13.3.</span> O CONTRATADO dever\u00e1 registrar e armazenar dados de clientes exclusivamente pelo sistema de CRM da CONTRATANTE.</p><p><span class="cnum">13.4.</span> Ao t\u00e9rmino, o CONTRATADO dever\u00e1 cessar imediatamente todo tratamento de dados pessoais vinculados \u00e0 representa\u00e7\u00e3o comercial.</p></div><div class="clausula"><div class="clausula-title">Cl\u00e1usula 14\u00aa \u2014 Das Disposi\u00e7\u00f5es Gerais</div><p><span class="cnum">14.1.</span> A toler\u00e2ncia de qualquer das partes n\u00e3o representar\u00e1 nova\u00e7\u00e3o ou ren\u00fancia de direitos.</p><p><span class="cnum">14.2.</span> Quaisquer altera\u00e7\u00f5es contratuais somente ser\u00e3o v\u00e1lidas mediante Termo Aditivo firmado por ambas as partes.</p><p><span class="cnum">14.3.</span> As partes reconhecem a validade jur\u00eddica deste instrumento firmado por meio eletr\u00f4nico, digital ou f\u00edsico, nos termos da Lei n.\u00ba 14.063/2020.</p>' + obsClausula + '</div>' + ftr(5) + '</div>';
+
+  var p6 = '<div class="cpage-cont">' + hdr() + '<div class="clausula"><div class="clausula-title">Cl\u00e1usula 15\u00aa \u2014 Do Foro</div><p><span class="cnum">15.1.</span> As partes elegem o Foro da Comarca de <strong>' + d.foro + '</strong> para dirimir quaisquer d\u00favidas ou lit\u00edgios oriundos deste instrumento, com ren\u00fancia expressa a qualquer outro, por mais privilegiado que seja.</p><p>E, por estarem assim justas e contratadas, firmam o presente instrumento em 2 (duas) vias de igual teor e forma.</p></div><div class="sign-section"><p style="text-align:center;margin-bottom:20px;font-family:Montserrat,sans-serif;font-weight:700">' + d.foro + ', ' + dataFmt + '</p><div class="sign-line"><div class="sign-block"><div class="sign-underline">LumenGrid Brasil Ltda.</div><div class="sign-role">CONTRATANTE &mdash; CNPJ: 36.028.241/0001-96</div><div class="sign-role">' + d.lgRep + '</div></div><div class="sign-block"><div class="sign-underline">' + (d.nome||'____________________________') + '</div><div class="sign-role">CONTRATADO (REPRESENTANTE COMERCIAL)</div><div class="sign-role">CPF: ' + (d.cpf||'_________________') + '</div></div></div><p style="text-align:center;font-size:10px;color:#666;margin-bottom:10px;font-family:Montserrat,sans-serif;font-weight:600">TESTEMUNHAS</p><div class="sign-test-line"><div class="sign-block"><div class="sign-underline">_____________________________</div><div class="sign-role">Nome: _______________________</div><div class="sign-role">CPF: ________________________</div></div><div class="sign-block"><div class="sign-underline">_____________________________</div><div class="sign-role">Nome: _______________________</div><div class="sign-role">CPF: ________________________</div></div></div></div>' + ftr(6) + '</div>';
+
+  return p1 + p2 + p3 + p4 + p5 + p6;
+}
+
+
+function generateContractParceiro(d) {
+  const hoje = fmtData(d.dataContrato);
+  var numStr = d.numContrato || 'LG-P-' + new Date().getFullYear() + '-0001';
+
+  function hdr(n) {
+    return '<div class="cpage' + (n > 1 ? '-cont' : '') + '">' +
+      '<div class="ch"><div class="ch-logo"><span style="color:#E8641A;font-weight:700;font-size:18px;">LUMEN</span><span style="color:#222;font-weight:700;font-size:18px;">GRID</span></div>' +
+      '<div class="ch-info"><div class="ch-title">CONTRATO DE PARCERIA T\u00c9CNICA DE INSTALA\u00c7\u00c3O</div>' +
+      '<div class="ch-num">N\u00ba ' + numStr + ' &nbsp;|&nbsp; ' + hoje + '</div></div></div>';
+  }
+  function ftr(n) {
+    return '<div class="doc-footer"><span>LumenGrid Energia &mdash; CNPJ 36.028.241/0001-96 &mdash; contato@lumengridbrasil.com.br</span><span>P\u00e1gina ' + n + '/7</span></div>';
+  }
+
+  var exclusStr = d.exclusividade === 'exclusivo' ? 'com exclusividade de territ\u00f3rio' :
+                  d.exclusividade === 'preferencial' ? 'com prefer\u00eancia de territ\u00f3rio (sem exclusividade)' :
+                  'sem exclusividade de territ\u00f3rio';
+
+  var servicosStr = (d.servicos && d.servicos.length > 0) ? d.servicos.join(', ') : 'conforme acordado em Ordem de Servi\u00e7o';
+
+  var remunStr = remunTexto(d);
+  var prazoPStr = prazoPagtoPText(d);
+
+  // PAGE 1
+  var p1 = hdr(1) +
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 1\u00aa &mdash; DAS PARTES E QUALIFICA\u00c7\u00c3O</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p><strong>CONTRATANTE:</strong> <strong>LUMENGRID ENERGIA SOLAR LTDA</strong>, pessoa jur\u00eddica de direito privado, ' +
+    'inscrita no CNPJ sob n\u00ba 36.028.241/0001-96, com sede na cidade de Campo Grande/MS, doravante denominada simplesmente <strong>CONTRATANTE</strong>.</p>' +
+    '<p><strong>PARCEIRO INSTALADOR:</strong> ' + d.razaoSocial + ', pessoa jur\u00eddica de direito privado, ' +
+    'inscrita no CNPJ sob n\u00ba ' + d.cnpj + (d.inscEstadual ? ', Inscri\u00e7\u00e3o Estadual ' + d.inscEstadual : '') + ', ' +
+    'representada por seu Respons\u00e1vel T\u00e9cnico <strong>' + d.respTecnico + '</strong>, ' +
+    (d.crea ? 'titular do ' + d.crea + ', ' : '') +
+    'com endere\u00e7o em ' + d.endereco + ', ' + d.cidadeUF + (d.cep ? ', CEP ' + d.cep : '') + ', ' +
+    'e-mail: ' + d.email + ', telefone: ' + d.telefone + ', doravante denominada <strong>PARCEIRO</strong>.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 2\u00aa &mdash; DO OBJETO</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>O presente instrumento tem por objeto o estabelecimento de parceria t\u00e9cnica para a presta\u00e7\u00e3o de servi\u00e7os de ' +
+    'instala\u00e7\u00e3o de sistemas de energia solar fotovoltaica e servi\u00e7os correlatos (' + servicosStr + '), ' +
+    'em projetos indicados pela CONTRATANTE ao PARCEIRO, mediante emiss\u00e3o de Ordem de Servi\u00e7o (OS) espec\u00edfica para cada projeto.</p>' +
+    '<p>A parceria \u00e9 fundamentada nos Arts. 593 a 609 do C\u00f3digo Civil Brasileiro, caracterizando-se como rela\u00e7\u00e3o de ' +
+    'presta\u00e7\u00e3o de servi\u00e7os entre pessoas jur\u00eddicas, <strong>sem qualquer v\u00ednculo empregat\u00edcio ou subordina\u00e7\u00e3o</strong> ' +
+    'entre as partes ou entre os profissionais do PARCEIRO e a CONTRATANTE.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 3\u00aa &mdash; DO ESCOPO E NORMAS T\u00c9CNICAS</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>Os servi\u00e7os objeto deste contrato dever\u00e3o ser executados em estrita conformidade com:</p>' +
+    '<p style="margin-left:20px;">(a) O projeto el\u00e9trico e documentos t\u00e9cnicos fornecidos pela CONTRATANTE para cada OS;<br>' +
+    '(b) <strong>ABNT NBR 16690</strong> &mdash; Sistemas fotovoltaicos &mdash; Requisitos de projeto;<br>' +
+    '(c) <strong>ABNT NBR 5410</strong> &mdash; Instala\u00e7\u00f5es el\u00e9tricas de baixa tens\u00e3o;<br>' +
+    '(d) <strong>NR-10</strong> &mdash; Seguran\u00e7a em instala\u00e7\u00f5es e servi\u00e7os em eletricidade;<br>' +
+    '(e) <strong>NR-35</strong> &mdash; Trabalho em altura;<br>' +
+    '(f) Regulamentos da <strong>ANEEL</strong> e da distribuidora local;<br>' +
+    '(g) Manual t\u00e9cnico dos fabricantes dos equipamentos instalados.</p>' +
+    '<p>Cada projeto ser\u00e1 formalizado por Ordem de Servi\u00e7o contendo: endere\u00e7o, descri\u00e7\u00e3o do sistema, prazo de execu\u00e7\u00e3o, ' +
+    'valor e documentos t\u00e9cnicos vinculados.</p>' +
+    '</div></div>' +
+    ftr(1) + '</div>';
+
+  // PAGE 2
+  var p2 = hdr(2) +
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 4\u00aa &mdash; DOS PADR\u00d5ES DE QUALIDADE E EXECU\u00c7\u00c3O</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>O PARCEIRO compromete-se a manter os seguintes padr\u00f5es de qualidade em todas as instala\u00e7\u00f5es:</p>' +
+    '<p style="margin-left:20px;">(a) Utilizar exclusivamente os equipamentos fornecidos ou aprovados pela CONTRATANTE;<br>' +
+    '(b) Seguir rigorosamente o projeto el\u00e9trico; qualquer desvio deve ser previamente autorizado por escrito;<br>' +
+    '(c) Realizar registro fotogr\u00e1fico completo antes, durante e ap\u00f3s a instala\u00e7\u00e3o;<br>' +
+    '(d) Apresentar \u00e0 CONTRATANTE o aceite do cliente e o relat\u00f3rio de vistoria no prazo de 48h ap\u00f3s conclus\u00e3o;<br>' +
+    '(e) Corrigir qualquer n\u00e3o-conformidade apontada pela CONTRATANTE no prazo m\u00e1ximo de 48 horas;<br>' +
+    '(f) Respeitar o prazo de execu\u00e7\u00e3o estipulado em cada OS.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 5\u00aa &mdash; DA GARANTIA E RESPONSABILIDADE T\u00c9CNICA</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>O PARCEIRO garante a m\u00e3o de obra de cada instala\u00e7\u00e3o por <strong>' + mesesExtenso(d.garantiaMeses || 12) + ' (' + (d.garantiaMeses || 12) + ') meses</strong> ' +
+    'contados da data do aceite pelo cliente, respondendo pelos v\u00edcios e defeitos resultantes de falha de execu\u00e7\u00e3o, nos termos dos Arts. 618 e 619 do C\u00f3digo Civil.</p>' +
+    '<p>Para cada OS, o PARCEIRO dever\u00e1 emitir <strong>ART (Anota\u00e7\u00e3o de Responsabilidade T\u00e9cnica)</strong> ou <strong>RRT (Registro de Responsabilidade T\u00e9cnica)</strong> ' +
+    'junto ao CREA/CAU competente, entregando c\u00f3pia \u00e0 CONTRATANTE no ato da emiss\u00e3o da OS.</p>' +
+    '<p>O PARCEIRO \u00e9 civil e tecnicamente respons\u00e1vel por danos causados ao cliente ou a terceiros em raz\u00e3o de erro de execu\u00e7\u00e3o, ' +
+    'descumprimento de normas t\u00e9cnicas ou aus\u00eancia de EPI, eximindo a CONTRATANTE de qualquer \u00f4nus decorrente.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 6\u00aa &mdash; DO SEGURO E DAS CERTIFICA\u00c7\u00d5ES</strong></div>' +
+    '<div class="clausula-body">' +
+    (d.seguroRC === 'sim' ?
+      '<p>O PARCEIRO declara possuir e manter vigente, durante toda a execu\u00e7\u00e3o deste contrato, ' +
+      '<strong>Seguro de Responsabilidade Civil Profissional (RC)</strong>, entregando c\u00f3pia da ap\u00f3lice \u00e0 CONTRATANTE. ' +
+      'O vencimento da ap\u00f3lice sem renova\u00e7\u00e3o autoriza a CONTRATANTE a suspender novas OS at\u00e9 a regulariza\u00e7\u00e3o.</p>' :
+      '<p>As partes acordam que, neste momento, o PARCEIRO n\u00e3o possui Seguro de Responsabilidade Civil, ' +
+      'ficando expressamente recomendada sua contrata\u00e7\u00e3o. A aus\u00eancia do seguro n\u00e3o afasta a responsabilidade civil do PARCEIRO.</p>') +
+    '<p>O PARCEIRO declara que todos os profissionais t\u00e9cnicos que participar\u00e3o das instala\u00e7\u00f5es possuem certificados v\u00e1lidos de ' +
+    '<strong>NR-10</strong> e <strong>NR-35</strong>, comprometendo-se a manter c\u00f3pias atualizadas arquivadas e dispon\u00edveis \u00e0 CONTRATANTE a qualquer momento. ' +
+    'Certifica\u00e7\u00f5es vencidas implicam na imediata substitui\u00e7\u00e3o do profissional.</p>' +
+    '</div></div>' +
+    ftr(2) + '</div>';
+
+  // PAGE 3
+  var p3 = hdr(3) +
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 7\u00aa &mdash; DAS OBRIGA\u00c7\u00d5ES DA CONTRATANTE</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>S\u00e3o obriga\u00e7\u00f5es da CONTRATANTE:</p>' +
+    '<p style="margin-left:20px;">(a) Fornecer o projeto el\u00e9trico completo e demais documentos t\u00e9cnicos com anteced\u00eancia m\u00ednima de 48 horas antes do in\u00edcio da OS;<br>' +
+    '(b) Disponibilizar os equipamentos e materiais no local de instala\u00e7\u00e3o conforme cronograma acordado na OS;<br>' +
+    '(c) Prestar suporte t\u00e9cnico ao PARCEIRO durante a execu\u00e7\u00e3o dos servi\u00e7os;<br>' +
+    '(d) Conduzir o processo de homologa\u00e7\u00e3o junto \u00e0 distribuidora local, exceto quando contratado de forma diversa;<br>' +
+    '(e) Efetuar o pagamento das OS no prazo e forma estipulados neste instrumento;<br>' +
+    '(f) Fornecer materiais de apoio t\u00e9cnico e comercial, quando dispon\u00edveis.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 8\u00aa &mdash; DA REMUNERA\u00c7\u00c3O E PAGAMENTO</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>Pela presta\u00e7\u00e3o dos servi\u00e7os objeto deste contrato, a CONTRATANTE pagar\u00e1 ao PARCEIRO ' + remunStr + ', conforme especificado em cada Ordem de Servi\u00e7o.</p>' +
+    '<p>O pagamento ser\u00e1 efetuado ' + prazoPStr + ', via transfer\u00eancia banc\u00e1ria (PIX ou TED), ap\u00f3s a comprova\u00e7\u00e3o da conclus\u00e3o dos servi\u00e7os ' +
+    'com o aceite do cliente, relat\u00f3rio fotogr\u00e1fico e ART/RRT entregues.</p>' +
+    '<p>O pagamento fica condicionado \u00e0 emiss\u00e3o de <strong>Nota Fiscal de Servi\u00e7os</strong> pelo PARCEIRO, ' +
+    'correspondente ao valor de cada OS. O n\u00e3o-fornecimento da NF suspende a obriga\u00e7\u00e3o de pagamento da CONTRATANTE, sem incid\u00eancia de penalidades.</p>' +
+    '<p>Poder\u00e3o ser deduzidos do pagamento eventuais custos comprovados de retrabalho causados por falha de execu\u00e7\u00e3o do PARCEIRO, ' +
+    'ap\u00f3s notifica\u00e7\u00e3o e prazo de defesa de 5 dias \u00fateis.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 9\u00aa &mdash; DAS OBRIGA\u00c7\u00d5ES DO PARCEIRO</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>S\u00e3o obriga\u00e7\u00f5es do PARCEIRO, al\u00e9m das j\u00e1 previstas neste instrumento:</p>' +
+    '<p style="margin-left:20px;">(a) Executar os servi\u00e7os dentro das especifica\u00e7\u00f5es t\u00e9cnicas e prazo definidos em cada OS;<br>' +
+    '(b) Disponibilizar equipe qualificada, com os devidos EPI e certifica\u00e7\u00f5es exigidas;<br>' +
+    '(c) Registrar todas as etapas da instala\u00e7\u00e3o com fotos e envi\u00e1-las \u00e0 CONTRATANTE via sistema indicado;<br>' +
+    '(d) Obter o aceite formal do cliente ao final de cada OS e encaminh\u00e1-lo \u00e0 CONTRATANTE;<br>' +
+    '(e) N\u00e3o abordar diretamente os clientes indicados pela CONTRATANTE para oferecer servi\u00e7os fora deste contrato;<br>' +
+    '(f) Manter sigilo sobre pre\u00e7os, clientes e informa\u00e7\u00f5es comerciais da CONTRATANTE;<br>' +
+    '(g) Comunicar imediatamente qualquer impedimento que afete o cumprimento de OS j\u00e1 aceita.</p>' +
+    '</div></div>' +
+    ftr(3) + '</div>';
+
+  // PAGE 4
+  var p4 = hdr(4) +
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 10\u00aa &mdash; DO TERRIT\u00d3RIO E EXCLUSIVIDADE</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>A presente parceria contempla a \u00e1rea geogr\u00e1fica de: <strong>' + (d.areaAtuacao || 'conforme acordado por OS') + '</strong>, ' + exclusStr + '.</p>' +
+    (d.exclusividade === 'exclusivo' ?
+      '<p>Durante a vig\u00eancia deste contrato, a CONTRATANTE se compromete a n\u00e3o contratar outro instalador para projetos na regi\u00e3o exclusiva, ' +
+      'exceto nos casos em que o PARCEIRO declare indisponibilidade formal para atender determinada OS no prazo estipulado.</p>' :
+      '<p>A CONTRATANTE poder\u00e1, a seu crit\u00e9rio, designar outros parceiros instaladores para projetos na mesma regi\u00e3o, ' +
+      'especialmente quando o PARCEIRO n\u00e3o puder atender determinada OS no prazo solicitado.</p>') +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 11\u00aa &mdash; DAS PENALIDADES</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>Pelo descumprimento das obriga\u00e7\u00f5es deste contrato, ficam estabelecidas as seguintes penalidades:</p>' +
+    '<p style="margin-left:20px;">(a) <strong>Atraso na conclus\u00e3o da OS:</strong> multa de 1% (um por cento) por dia de atraso sobre o valor da OS em quest\u00e3o, limitada a 10% (dez por cento) do valor total;<br>' +
+    '(b) <strong>Retrabalho por erro de execu\u00e7\u00e3o:</strong> o custo integral de materiais e servi\u00e7os de reparo ser\u00e1 descontado dos pagamentos pendentes;<br>' +
+    '(c) <strong>Viola\u00e7\u00e3o de normas de seguran\u00e7a (NR-10/NR-35):</strong> multa de R$ 5.000,00 (cinco mil reais) por ocorr\u00eancia, al\u00e9m de suspens\u00e3o imediata das OS;<br>' +
+    '(d) <strong>3 (tr\u00eas) infra\u00e7\u00f5es registradas</strong> em per\u00edodo de 12 meses autorizam a rescis\u00e3o imediata do contrato por justa causa.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 12\u00aa &mdash; DA VIG\u00caNCIA E RESCIS\u00c3O</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>O presente contrato entra em vigor na data de sua assinatura e ter\u00e1 vig\u00eancia de ' + vigenciaTexto(d) + '.</p>' +
+    '<p>Qualquer das partes poder\u00e1 resilir o contrato mediante aviso pr\u00e9vio de <strong>' + diasExtenso(d.avisoPrevio || 30) + ' (' + (d.avisoPrevio || 30) + ') dias</strong>, ' +
+    'por escrito. Neste caso, as OS j\u00e1 aceitas e em andamento dever\u00e3o ser conclu\u00eddas pelo PARCEIRO, e as remunera\u00e7\u00f5es correspondentes ser\u00e3o quitadas normalmente.</p>' +
+    '<p>Constituem causa de rescis\u00e3o imediata, independente de aviso pr\u00e9vio: descumprimento reiterado de normas t\u00e9cnicas, ' +
+    'aus\u00eancia de certifica\u00e7\u00f5es vigentes, abordagem direta de clientes da CONTRATANTE, ou viola\u00e7\u00e3o grave de confidencialidade.</p>' +
+    '</div></div>' +
+    ftr(4) + '</div>';
+
+  // PAGE 5
+  var p5 = hdr(5) +
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 13\u00aa &mdash; DA CONFIDENCIALIDADE</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>As partes reconhecem como <strong>informa\u00e7\u00f5es confidenciais</strong>: dados de clientes, projetos t\u00e9cnicos, tabelas de pre\u00e7os, ' +
+    'condi\u00e7\u00f5es comerciais, processos operacionais, fornecedores e toda informa\u00e7\u00e3o t\u00e9cnica ou comercial n\u00e3o p\u00fablica.</p>' +
+    '<p>O PARCEIRO se compromete a n\u00e3o revelar, reproduzir ou utilizar tais informa\u00e7\u00f5es para qualquer fim diverso da execu\u00e7\u00e3o das OS, ' +
+    'inclusive ap\u00f3s o t\u00e9rmino do contrato, pelo prazo de <strong>2 (dois) anos</strong>. A mesma obriga\u00e7\u00e3o \u00e9 estendida a todos os colaboradores do PARCEIRO.</p>' +
+    '<p>Ao t\u00e9rmino do contrato, o PARCEIRO dever\u00e1 devolver ou destruir toda documenta\u00e7\u00e3o f\u00edsica ou digital que contenha informa\u00e7\u00f5es confidenciais da CONTRATANTE, ' +
+    'no prazo de 10 dias \u00fateis.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 14\u00aa &mdash; DA N\u00c3O-CONCORR\u00caNCIA</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>O PARCEIRO poder\u00e1 prestar servi\u00e7os de instala\u00e7\u00e3o para outras empresas durante a vig\u00eancia deste contrato, ' +
+    'desde que n\u00e3o comprometa a prioridade de atendimento das OS aceitas junto \u00e0 CONTRATANTE e n\u00e3o utilize informa\u00e7\u00f5es, clientes ou projetos da CONTRATANTE em benef\u00edcio de concorrentes.</p>' +
+    '<p>\u00c9 expressamente vedado ao PARCEIRO:</p>' +
+    '<p style="margin-left:20px;">(a) Oferecer servi\u00e7os diretamente a clientes indicados pela CONTRATANTE, desviando-os do ecossistema LumenGrid;<br>' +
+    '(b) Utilizar tabelas de pre\u00e7os, especifica\u00e7\u00f5es t\u00e9cnicas ou projetos da CONTRATANTE para beneficiar concorrentes;<br>' +
+    '(c) Recrutar ou subcontratar profissionais apresentados pela CONTRATANTE sem autoriza\u00e7\u00e3o pr\u00e9via por escrito.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 15\u00aa &mdash; DA RESPONSABILIDADE CIVIL E INDENIZA\u00c7\u00c3O</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>O PARCEIRO responde integralmente por sinistros, danos a pessoas ou bens decorrentes de erro de execu\u00e7\u00e3o, uso inadequado de EPI, ' +
+    'descumprimento de normas t\u00e9cnicas ou qualquer falha operacional de sua equipe, indenizando a CONTRATANTE e/ou terceiros por perdas e danos.</p>' +
+    '<p>A CONTRATANTE responde pelos defeitos dos equipamentos por ela fornecidos, desde que o PARCEIRO comprove que instalou corretamente e ' +
+    'dentro das especifica\u00e7\u00f5es t\u00e9cnicas. Defeitos de f\u00e1brica s\u00e3o de responsabilidade dos fabricantes.</p>' +
+    '<p>Nenhuma das partes ser\u00e1 responsabilizada por falhas decorrentes de <strong>for\u00e7a maior ou caso fortuito</strong>, ' +
+    'assim reconhecidos na forma do Art. 393 do C\u00f3digo Civil, desde que comunicados imediatamente ap\u00f3s o evento.</p>' +
+    '</div></div>' +
+    ftr(5) + '</div>';
+
+  // PAGE 6
+  var p6 = hdr(6) +
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 16\u00aa &mdash; DA PROTE\u00c7\u00c3O DE DADOS (LGPD)</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>As partes comprometem-se a tratar os dados pessoais dos clientes estritamente para as finalidades de execu\u00e7\u00e3o dos servi\u00e7os contratados, ' +
+    'em conformidade com a <strong>Lei n\u00ba 13.709/2018 (LGPD)</strong>.</p>' +
+    '<p>O PARCEIRO compromete-se a n\u00e3o utilizar dados pessoais dos clientes para finalidades diversas da execu\u00e7\u00e3o das OS, ' +
+    'vedando expressamente o uso de tais dados para prospec\u00e7\u00e3o comercial pr\u00f3pria. ' +
+    'Os dados coletados em campo (fotos, documentos, endere\u00e7o) dever\u00e3o ser transmitidos \u00e0 CONTRATANTE e n\u00e3o retidos pelo PARCEIRO ap\u00f3s o t\u00e9rmino da OS.</p>' +
+    '</div></div>' +
+
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 17\u00aa &mdash; DAS DISPOSI\u00c7\u00d5ES GERAIS</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>O PARCEIRO \u00e9 prestador de servi\u00e7os independente e n\u00e3o representa a CONTRATANTE para nenhum fim al\u00e9m do descrito neste contrato. ' +
+    'N\u00e3o se estabelece entre as partes qualquer rela\u00e7\u00e3o societ\u00e1ria, empregat\u00edcia ou de represent\u00e7\u00e3o comercial.</p>' +
+    '<p>A toler\u00e2ncia de qualquer das partes ao descumprimento de cl\u00e1usula deste instrumento n\u00e3o implicar\u00e1 em ren\u00fancia, nova\u00e7\u00e3o ou altera\u00e7\u00e3o contratual.</p>' +
+    '<p>Qualquer altera\u00e7\u00e3o ao presente instrumento dever\u00e1 ser formalizada por aditivo escrito, assinado por ambas as partes. ' +
+    'Assinaturas eletr\u00f4nicas ou digitais ter\u00e3o a mesma validade jur\u00eddica das f\u00edsicas, conforme a MP 2.200-2/2001 e a Lei 14.063/2020.</p>' +
+    '</div></div>' +
+    ftr(6) + '</div>';
+
+  // PAGE 7
+  var p7 = hdr(7) +
+    '<div class="cl-section"><div class="clausula-title"><strong>CL\u00c1USULA 18\u00aa &mdash; DO FORO</strong></div>' +
+    '<div class="clausula-body">' +
+    '<p>Fica eleito o foro da Comarca de <strong>' + (d.foro || 'Campo Grande, Estado do Mato Grosso do Sul') + '</strong>, ' +
+    'com exclus\u00e3o de qualquer outro, por mais privilegiado que seja, para dirimir quaisquer d\u00favidas ou lit\u00edgios oriundos do presente instrumento.</p>' +
+    (d.observacoes ? '<p><strong>Observa\u00e7\u00f5es adicionais:</strong> ' + d.observacoes + '</p>' : '') +
+    '</div></div>' +
+
+    '<div class="cl-section" style="margin-top:30px;">' +
+    '<p style="text-align:center;margin-bottom:20px;">E, por estarem assim justas e contratadas, as partes assinam o presente instrumento em 2 (duas) vias de igual teor e forma, na presen\u00e7a das testemunhas abaixo identificadas.</p>' +
+    '<p style="text-align:center;margin-bottom:30px;"><strong>' + (d.cidadeUF ? d.cidadeUF.split('/')[0].trim() : 'Campo Grande') + ', ' + hoje + '.</strong></p>' +
+
+    '<div class="sign-line">' +
+    '<div class="sign-block"><div class="sign-underline">_____________________________</div>' +
+    '<div class="sign-role"><strong>LUMENGRID ENERGIA SOLAR LTDA</strong></div>' +
+    '<div class="sign-role">CNPJ: 36.028.241/0001-96</div>' +
+    '<div class="sign-role">CONTRATANTE</div></div>' +
+    '<div class="sign-block"><div class="sign-underline">_____________________________</div>' +
+    '<div class="sign-role"><strong>' + d.razaoSocial + '</strong></div>' +
+    '<div class="sign-role">CNPJ: ' + d.cnpj + '</div>' +
+    '<div class="sign-role">Resp. T\u00e9cnico: ' + d.respTecnico + '</div>' +
+    '<div class="sign-role">PARCEIRO INSTALADOR</div></div></div>' +
+
+    '<p style="text-align:center;margin:30px 0 10px;"><strong>TESTEMUNHAS:</strong></p>' +
+    '<div class="sign-line"><div class="sign-block"><div class="sign-underline">_____________________________</div>' +
+    '<div class="sign-role">Nome: _______________________</div>' +
+    '<div class="sign-role">CPF: ________________________</div></div>' +
+    '<div class="sign-block"><div class="sign-underline">_____________________________</div>' +
+    '<div class="sign-role">Nome: _______________________</div>' +
+    '<div class="sign-role">CPF: ________________________</div></div></div>' +
+    '</div>' +
+    ftr(7) + '</div>';
+
+  return p1 + p2 + p3 + p4 + p5 + p6 + p7;
+}
+
+
+async function downloadPDF() {
+  var preview = document.getElementById('preview');
+  if (!preview || !preview.innerHTML.trim()) { alert('Gere o contrato antes de baixar o PDF.'); return; }
+  var btn = document.getElementById('btnPDF');
+  btn.disabled = true; btn.textContent = 'Gerando PDF...';
+  try {
+    var pages = preview.querySelectorAll('.cpage, .cpage-cont');
+    if (!pages.length) { alert('Nenhuma p\u00e1gina encontrada no preview.'); btn.disabled=false; btn.textContent='Baixar PDF'; return; }
+    var pdf = new jspdf.jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    var pW = 210, pH = 297;
+    for (var i = 0; i < pages.length; i++) {
+      var canvas = await html2canvas(pages[i], { scale:2, allowTaint:true, useCORS:true, backgroundColor:'#ffffff' });
+      var imgData = canvas.toDataURL('image/jpeg', 0.92);
+      var ratio = Math.min(pW / (canvas.width/2*0.264583), pH / (canvas.height/2*0.264583));
+      var w = (canvas.width/2*0.264583) * ratio;
+      var h = (canvas.height/2*0.264583) * ratio;
+      var x = (pW - w) / 2, y = 0;
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', x, y, w, h);
+    }
+    var numStr = currentTab === 'vendedor' ?
+      document.getElementById('numContratoV').value :
+      document.getElementById('numContratoP').value;
+    pdf.save('Contrato_' + numStr + '.pdf');
+  } catch(e) { alert('Erro ao gerar PDF: ' + e.message); }
+  btn.disabled = false; btn.textContent = 'Baixar PDF';
+}
+
+function getSBCon() {
+  var LG_SUPABASE_URL = 'https://hbhkftdsfmlxgxsblerc.supabase.co';
+  var _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiaGtmdGRzZm1seGd4c2JsZXJjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyNTYyNTYxMSwiZXhwIjoyMDQxMjAxNjExfQ.MoDlaKwfzJTYzkjIKxmrzRORwKMsK56w5MHUWQivhH0';
+  return supabase.createClient(LG_SUPABASE_URL, _SB_KEY);
+}
+
+async function sbSaveVendedor(d) {
+  try {
+    var sb = getSBCon();
+    var payload = {
+      nome: d.nomeContratado,
+      cpf: d.cpf || null,
+      cnpj_mei: d.cnpjMei || null,
+      email: d.emailContratado || null,
+      telefone: d.telefoneContratado || null,
+      territorio: d.areaAtuacao || null,
+      comissao_pct: parseFloat(d.comissaoPct) || 5.00,
+      ativo: true,
+      raw_json: d
+    };
+    var { error } = await sb.from('vendedores').upsert(payload, { onConflict: 'cpf' });
+    if (error) console.warn('sbSaveVendedor error:', error.message);
+  } catch(e) { console.warn('sbSaveVendedor exc:', e.message); }
+}
+
+async function sbSaveJuridico(tipo, d, numContrato) {
+  try {
+    var sb = getSBCon();
+    var payload = {
+      num_contrato: numContrato,
+      tipo_sistema: tipo,
+      cliente_nome: tipo === 'vendedor' ? d.nomeContratado : d.razaoSocial,
+      cliente_cpf_cnpj: tipo === 'vendedor' ? (d.cpf || null) : (d.cnpj || null),
+      cliente_email: tipo === 'vendedor' ? (d.emailContratado || null) : (d.email || null),
+      cliente_telefone: tipo === 'vendedor' ? (d.telefoneContratado || null) : (d.telefone || null),
+      data_contrato: d.dataContrato || null,
+      raw_json: d
+    };
+    var { error } = await sb.from('contracts').upsert(payload, { onConflict: 'num_contrato' });
+    if (error) console.warn('sbSaveJuridico error:', error.message);
+  } catch(e) { console.warn('sbSaveJuridico exc:', e.message); }
+}
+
+function _toast(msg, ok) {
+  var t = document.getElementById('toast');
+  if (!t) { t = document.createElement('div'); t.id='toast';
+    t.style.cssText='position:fixed;bottom:30px;right:30px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;z-index:9999;transition:opacity .4s;';
+    document.body.appendChild(t); }
+  t.textContent = msg;
+  t.style.background = ok ? '#22c55e' : '#ef4444';
+  t.style.color = '#fff';
+  t.style.opacity = '1';
+  setTimeout(function(){ t.style.opacity='0'; }, 3500);
+}
+
+async function salvarNoDrive() {
+  var btn = document.getElementById('btnDrive');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  var action, payload, d;
+  if (currentTab === 'vendedor') {
+    d = getVendedorData();
+    action = 'salvarContratoVendedor';
+    payload = { action: action, dados: d, numContrato: d.numContrato, preview: document.getElementById('preview').innerHTML };
+  } else {
+    d = getParceiroData();
+    action = 'salvarContratoParceiro';
+    payload = { action: action, dados: d, numContrato: d.numContrato, preview: document.getElementById('preview').innerHTML };
+  }
+  try {
+    await sbSaveJuridico(currentTab, d, payload.numContrato);
+    if (currentTab === 'vendedor') await sbSaveVendedor(d);
+    var GAS_URL = 'https://script.google.com/macros/s/AKfycbwJuridico/exec';
+    var resp = await fetch(GAS_URL, { method:'POST', body: JSON.stringify(payload) });
+    var result = await resp.json();
+    if (result.ok) {
+      _toast('\u2713 Contrato salvo com sucesso!', true);
+      var key = currentTab === 'vendedor' ? 'lgNumV' : 'lgNumP';
+      var cur = parseInt(localStorage.getItem(key) || '0');
+      localStorage.setItem(key, cur + 1);
+    } else {
+      _toast('Supabase ok. Drive: ' + (result.error || 'erro'), false);
+    }
+  } catch(e) {
+    _toast('Salvo no Supabase. Drive indispon\u00edvel.', true);
+  }
+  btn.disabled = false; btn.textContent = 'Salvar no Drive';
+}
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
