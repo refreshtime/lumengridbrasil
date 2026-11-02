@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Ficha Cadastral — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #E8E8E8;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* ─── PÁGINA A4 ─── */
+.page {
+  width: 794px;
+  min-height: 1123px;
+  background: #FAFAFA;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 40px rgba(0,0,0,.18);
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: #0f0f0f;
+  padding: 36px 52px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid #F26522;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-logo {
+  height: 48px;
+  width: auto;
+  filter: drop-shadow(0 0 12px rgba(242,101,34,.70)) drop-shadow(0 0 5px rgba(242,101,34,.40));
+}
+.header-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.header-wm-line {
+  display: flex;
+  align-items: baseline;
+  line-height: 1;
+}
+.wm-l {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #F26522;
+  letter-spacing: -.3px;
+}
+.wm-g {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #FAFAFA;
+  letter-spacing: -.3px;
+}
+.header-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .3em;
+  color: rgba(242,101,34,.80);
+}
+.header-doc {
+  text-align: right;
+}
+.header-doc-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(250,250,250,.45);
+  margin-bottom: 5px;
+}
+.header-doc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #FAFAFA;
+  letter-spacing: -.3px;
+}
+
+/* ─── FAIXA DE SUBTÍTULO ─── */
+.subtitulo-faixa {
+  background: #161616;
+  padding: 14px 52px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.subtitulo-linha {
+  width: 3px;
+  height: 20px;
+  background: #F26522;
+  border-radius: 2px;
+}
+.subtitulo-txt {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(250,250,250,.55);
+}
+
+/* ─── CORPO ─── */
+.body {
+  padding: 52px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  flex: 1;
+}
+
+/* ─── BLOCO DE SEÇÃO ─── */
+.bloco {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.bloco-titulo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #F26522;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(242,101,34,.20);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bloco-titulo::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+  background: #F26522;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* ─── CAMPO ─── */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.campo-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(15,15,15,.40);
+}
+.campo-valor {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.4;
+  padding: 12px 16px;
+  background: #F5F5F5;
+  border-radius: 8px;
+  border-left: 3px solid rgba(242,101,34,.25);
+}
+.campo-valor.destaque {
+  background: rgba(242,101,34,.07);
+  border-left: 3px solid #F26522;
+  color: #1a1a1a;
+}
+.campo-valor.vazio {
+  color: rgba(15,15,15,.28);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 13px;
+}
+
+/* ─── BANCO BOX ─── */
+.banco-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ─── PIX BOX ─── */
+.pix-box {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: rgba(242,101,34,.06);
+  border: 1px solid rgba(242,101,34,.28);
+  border-left: 4px solid #F26522;
+  border-radius: 10px;
+  padding: 24px 28px;
+}
+.pix-icon {
+  width: 46px;
+  height: 46px;
+  background: #F26522;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(242,101,34,.30);
+}
+.pix-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: #FAFAFA;
+}
+.pix-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pix-tipo {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #F26522;
+}
+.pix-chave {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f0f0f;
+  letter-spacing: -.3px;
+}
+.pix-obs {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(15,15,15,.50);
+  margin-top: 1px;
+}
+
+/* ─── NOTA ─── */
+.nota {
+  background: #F9F6F3;
+  border: 1px solid rgba(242,101,34,.18);
+  border-left: 4px solid rgba(242,101,34,.50);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(15,15,15,.55);
+  line-height: 1.65;
+}
+.nota strong {
+  color: #F26522;
+  font-weight: 600;
+}
+
+/* ─── RODAPÉ ─── */
+.rodape {
+  padding: 24px 52px;
+  border-top: 1px solid rgba(0,0,0,.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rodape-esq {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(15,15,15,.35);
+}
+.rodape-dir {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(15,15,15,.35);
+}
+
+/* ─── BOTÃO COPIAR ─── */
+.campo-wrap {
+  position: relative;
+}
+.btn-copiar {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: rgba(242,101,34,.12);
+  border: 1px solid rgba(242,101,34,.30);
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #F26522;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.btn-copiar:hover {
+  background: #F26522;
+  color: #FAFAFA;
+}
+.btn-copiar.copiado {
+  background: #22a04b;
+  border-color: #22a04b;
+  color: #FAFAFA;
+}
+.campo-valor.tem-btn {
+  padding-right: 80px;
+}
+
+/* ─── PRINT ─── */
+@media print {
+  body { background: white; padding: 0; }
+  .page { box-shadow: none; }
+  .btn-imprimir { display: none; }
+  .btn-copiar { display: none; }
+  .campo-valor.tem-btn { padding-right: 16px; }
+}
+
+/* ─── BOTÃO IMPRIMIR ─── */
+.btn-imprimir {
+  margin-top: 28px;
+  padding: 14px 40px;
+  background: #F26522;
+  color: #FAFAFA;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(242,101,34,.35);
+  transition: opacity .2s;
+}
+.btn-imprimir:hover { opacity: .85; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ═══ HEADER ═══ -->
+  <div class="header">
+    <div class="header-brand">
+      <img src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid" class="header-logo">
+      <div class="header-wordmark">
+        <div class="header-wm-line">
+          <span class="wm-l">LUMEN</span><span class="wm-g">GRID</span>
+        </div>
+        <span class="header-tagline">Energia Inteligente</span>
+      </div>
+    </div>
+    <div class="header-doc">
+      <div class="header-doc-label">Documento</div>
+      <div class="header-doc-title">Ficha Cadastral</div>
+    </div>
+  </div>
+
+  <!-- ═══ FAIXA SUBTÍTULO ═══ -->
+  <div class="subtitulo-faixa">
+    <div class="subtitulo-linha"></div>
+    <span class="subtitulo-txt">Dados para cadastro de fornecedor / parceiro</span>
+  </div>
+
+  <!-- ═══ CORPO ═══ -->
+  <div class="body">
+
+    <!-- 1. IDENTIFICAÇÃO -->
+    <div class="bloco">
+      <div class="bloco-titulo">Identificação da Empresa</div>
+      <div class="grid-2">
+        <div class="campo">
+          <span class="campo-label">Razão Social</span>
+          <div class="campo-valor">LumenGrid Energia Inteligente Ltda</div>
+        </div>
+        <div class="campo">
+          <span class="campo-label">Nome Fantasia</span>
+          <div class="campo-valor">LumenGrid</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;" class="grid-2">
+        <div class="campo">
+          <span class="campo-label">CNPJ</span>
+          <div class="campo-wrap">
+            <div class="campo-valor destaque tem-btn">36.028.241/0001-96</div>
+            <button class="btn-copiar" onclick="copiar(this,'36.028.241/0001-96')">Copiar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ENDEREÇO -->
+    <div class="bloco">
+      <div class="bloco-titulo">Endereço</div>
+      <div class="grid-2">
+        <div class="campo">
+          <span class="campo-label">Logradouro</span>
+          <div class="campo-valor">Av. Eng. Luiz Carlos Berrini</div>
+        </div>
+        <div class="campo">
+          <span class="campo-label">Número / Complemento</span>
+          <div class="campo-valor">1748 — Conj. 1710</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;" class="grid-3">
+        <div class="campo">
+          <span class="campo-label">Bairro / Distrito</span>
+          <div class="campo-valor">Cidade Monções</div>
+        </div>
+        <div class="campo">
+          <span class="campo-label">Município / UF</span>
+          <div class="campo-valor">São Paulo / SP</div>
+        </div>
+        <div class="campo">
+          <span class="campo-label">CEP</span>
+          <div class="campo-valor">04.571-000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. CONTATO -->
+    <div class="bloco">
+      <div class="bloco-titulo">Contato</div>
+      <div class="grid-2">
+        <div class="campo">
+          <span class="campo-label">E-mail Comercial</span>
+          <div class="campo-wrap">
+            <div class="campo-valor tem-btn">comercial@lumengridbrasil.com.br</div>
+            <button class="btn-copiar" onclick="copiar(this,'comercial@lumengridbrasil.com.br')">Copiar</button>
+          </div>
+        </div>
+        <div class="campo">
+          <span class="campo-label">Site</span>
+          <div class="campo-valor">lumengridbrasil.com.br</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. DADOS BANCÁRIOS / PIX -->
+    <div class="bloco">
+      <div class="bloco-titulo">Dados Bancários</div>
+      <div class="banco-grid">
+        <div class="campo">
+          <span class="campo-label">Banco</span>
+          <div class="campo-valor">Mercado Pago</div>
+        </div>
+        <div class="campo">
+          <span class="campo-label">Titular da Conta</span>
+          <div class="campo-valor">LUMENGRID BRASIL</div>
+        </div>
+      </div>
+      <div class="pix-box">
+        <div class="pix-icon">
+          <!-- ícone PIX -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L6.5 7.5l2.1 2.1L12 6.2l3.4 3.4 2.1-2.1L12 2zm0 20l5.5-5.5-2.1-2.1L12 17.8l-3.4-3.4-2.1 2.1L12 22zm-10-10 5.5-5.5-2.1-2.1L2 8l3.4 3.4L8.5 14 3 8.5 5.5 11l-3.5 1zm20 0-5.5-5.5 2.1-2.1L22 8l-3.4 3.4L15.5 14 21 8.5 18.5 11l3.5 1z"/>
+          </svg>
+        </div>
+        <div class="pix-info">
+          <span class="pix-tipo">Chave PIX</span>
+          <div style="display:flex;align-items:center;gap:14px;">
+            <span class="pix-chave">36.028.241/0001-96</span>
+            <button class="btn-copiar" style="position:static;transform:none;" onclick="copiar(this,'36.028.241/0001-96')">Copiar</button>
+          </div>
+          <span class="pix-obs">Tipo: CNPJ &nbsp;·&nbsp; Favorecido: LUMENGRID BRASIL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTA -->
+    <div class="nota">
+      <strong>Atenção:</strong> Confirme a chave PIX antes de realizar qualquer transferência. Para maiores informações ou dúvidas, entre em contato pelo e-mail <strong>comercial@lumengridbrasil.com.br</strong>.
+    </div>
+
+  </div>
+
+  <!-- ═══ RODAPÉ ═══ -->
+  <div class="rodape">
+    <span class="rodape-esq">LumenGrid — CNPJ 36.028.241/0001-96</span>
+    <span class="rodape-dir">Feito por Domani Consultoria</span>
+  </div>
+
+</div>
+
+<button class="btn-imprimir" onclick="window.print()">Imprimir / Salvar PDF</button>
+
+<script>
+function copiar(btn, texto) {
+  navigator.clipboard.writeText(texto).then(function() {
+    btn.textContent = 'Copiado!';
+    btn.classList.add('copiado');
+    setTimeout(function() {
+      btn.textContent = 'Copiar';
+      btn.classList.remove('copiado');
+    }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

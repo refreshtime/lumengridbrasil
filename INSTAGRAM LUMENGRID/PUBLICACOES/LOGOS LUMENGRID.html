@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Logo Estilo Aprovado</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a10; font-family: 'DM Sans', sans-serif; color: #FAFAFA; padding: 60px; }
+
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; color: #F26522; margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; }
+  .sub { font-size: 12px; color: rgba(250,250,250,0.35); margin-bottom: 60px; letter-spacing: 0.5px; }
+
+  .row { display: flex; gap: 32px; margin-bottom: 40px; align-items: stretch; }
+  .label { font-size: 11px; color: rgba(250,250,250,0.35); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+
+  /* ── blocos de preview ── */
+  .dark-bg {
+    width: 360px; height: 180px; border-radius: 14px;
+    background: #161616;
+    display: flex; align-items: flex-start; padding: 28px;
+    flex-shrink: 0;
+  }
+  .photo-bg {
+    width: 360px; height: 180px; border-radius: 14px;
+    background: url('imagens/familia-lumen.png') center/cover no-repeat;
+    position: relative;
+    display: flex; align-items: flex-start; padding: 28px;
+    flex-shrink: 0;
+  }
+  .photo-bg::before {
+    content: ''; position: absolute; inset: 0; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(10,10,16,0.55) 0%, rgba(10,10,16,0.1) 70%);
+  }
+
+  /* ── LOGO APROVADA ── */
+  .logo-wrap { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    height: 58px; width: auto; object-fit: contain;
+    filter:
+      drop-shadow(0 0 18px rgba(242,101,34,0.80))
+      drop-shadow(0 0 7px rgba(242,101,34,0.55))
+      drop-shadow(0 2px 10px rgba(0,0,0,0.9));
+  }
+  .logo-wm { display: flex; flex-direction: column; gap: 2px; }
+  .logo-name { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 27px; text-transform: uppercase; line-height: 1; letter-spacing: -0.3px; }
+  .logo-name .l { color: #F26522; }
+  .logo-name .g { color: #FAFAFA; }
+  .logo-tag { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 8px; text-transform: uppercase; letter-spacing: 0.3em; color: rgba(242,101,34,0.90); margin-top: 3px; }
+
+  /* ── código de referência ── */
+  .code-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-top: 40px;
+  }
+  .code-box h2 { font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: rgba(250,250,250,0.5); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  pre { font-family: 'Courier New', monospace; font-size: 12px; color: rgba(250,250,250,0.75); line-height: 1.8; white-space: pre-wrap; word-break: break-all; }
+  .hl { color: #F26522; }
+
+  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 48px 0; }
+</style>
+</head>
+<body>
+
+<h1>LumenGrid — Logo Estilo Aprovado</h1>
+<p class="sub">Referência visual do padrão de logo para todos os posts Instagram · Aprovado em Jul/2026</p>
+
+<div class="label">Fundo sólido (#161616)</div>
+<div class="row">
+  <div>
+    <div class="dark-bg">
+      <div class="logo-wrap">
+        <img src="../../imagens/LOGOS/logo-icone.png" class="logo-icon" alt="LumenGrid">
+        <div class="logo-wm">
+          <div class="logo-name"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+          <span class="logo-tag">Energia Inteligente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="label" style="margin-top:32px;">Fundo com foto</div>
+<div class="row">
+  <div>
+    <div class="photo-bg">
+      <div class="logo-wrap">
+        <img src="../../imagens/LOGOS/logo-icone.png" class="logo-icon" alt="LumenGrid">
+        <div class="logo-wm">
+          <div class="logo-name"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+          <span class="logo-tag">Energia Inteligente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ── LOGO INSTAGRAM ─────────────────────────────────────────────── -->
+<h1 style="margin-bottom:4px;">Versões Instagram</h1>
+<p class="sub">Foto de perfil · Highlights · Stories</p>
+
+<!-- Foto de Perfil -->
+<div class="label">Foto de Perfil (320 × 320px — exibida em círculo)</div>
+<div class="row" style="align-items:flex-start;gap:40px;flex-wrap:wrap;">
+
+  <!-- Versão escura -->
+  <div>
+    <div class="label">Fundo escuro</div>
+    <div style="width:160px;height:160px;border-radius:50%;background:#111111;display:flex;align-items:center;justify-content:center;border:3px solid rgba(242,101,34,.50);box-shadow:0 0 0 2px #0a0a10,0 0 28px rgba(242,101,34,.30);">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+           style="height:90px;width:auto;object-fit:contain;filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55));">
+    </div>
+  </div>
+
+  <!-- Versão laranja -->
+  <div>
+    <div class="label">Fundo laranja</div>
+    <div style="width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#F26522 0%,#C94E0F 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #0a0a10,0 0 28px rgba(242,101,34,.40);">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+           style="height:90px;width:auto;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,.5));">
+    </div>
+  </div>
+
+  <!-- Versão branca -->
+  <div>
+    <div class="label">Fundo branco</div>
+    <div style="width:160px;height:160px;border-radius:50%;background:#FAFAFA;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #0a0a10;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+           style="height:90px;width:auto;object-fit:contain;">
+    </div>
+  </div>
+
+</div>
+
+<!-- Foto de Perfil COM NOME -->
+<div class="label" style="margin-top:48px;">Com nome da empresa — tudo dentro do círculo</div>
+<p style="font-size:11px;color:rgba(250,250,250,.30);margin-bottom:24px;line-height:1.6;">O Instagram corta em círculo — ícone + nome precisam caber dentro da área circular segura.</p>
+<div class="row" style="align-items:flex-start;gap:40px;flex-wrap:wrap;">
+
+  <!-- Com nome — fundo escuro -->
+  <div>
+    <div class="label">Fundo escuro</div>
+    <div style="width:160px;height:160px;border-radius:50%;background:#111111;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:3px solid rgba(242,101,34,.50);box-shadow:0 0 0 2px #0a0a10,0 0 28px rgba(242,101,34,.30);">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+           style="height:62px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(242,101,34,.80)) drop-shadow(0 0 5px rgba(242,101,34,.55));">
+      <div style="display:flex;align-items:baseline;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:17px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:17px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Com nome — fundo laranja -->
+  <div>
+    <div class="label">Fundo laranja</div>
+    <div style="width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#F26522 0%,#C94E0F 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 0 2px #0a0a10,0 0 28px rgba(242,101,34,.40);">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+           style="height:62px;width:auto;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,.5));">
+      <div style="display:flex;align-items:baseline;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:17px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:17px;text-transform:uppercase;color:rgba(255,255,255,.70);letter-spacing:-.3px;">GRID</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Com nome + tagline — fundo escuro -->
+  <div>
+    <div class="label">Com tagline</div>
+    <div style="width:160px;height:160px;border-radius:50%;background:#111111;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:3px solid rgba(242,101,34,.50);box-shadow:0 0 0 2px #0a0a10,0 0 28px rgba(242,101,34,.30);">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+           style="height:54px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(242,101,34,.80)) drop-shadow(0 0 5px rgba(242,101,34,.55));">
+      <div style="display:flex;align-items:baseline;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:16px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:16px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;">GRID</span>
+      </div>
+      <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:6.5px;text-transform:uppercase;letter-spacing:.25em;color:rgba(242,101,34,.80);">Energia Inteligente</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Exportar para perfil: quadrado 320×320 com círculo inscrito -->
+<div class="label" style="margin-top:40px;">Arquivo exportável — quadrado 320 × 320px (recortado em círculo pelo Instagram)</div>
+<div style="display:flex;gap:32px;flex-wrap:wrap;margin-bottom:8px;">
+
+  <div style="width:160px;height:160px;border-radius:12px;background:#111111;display:flex;align-items:center;justify-content:center;border:1px solid rgba(242,101,34,.20);">
+    <img src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+         style="height:96px;width:auto;object-fit:contain;filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55));">
+  </div>
+
+  <div style="width:160px;height:160px;border-radius:12px;background:linear-gradient(135deg,#F26522 0%,#C94E0F 100%);display:flex;align-items:center;justify-content:center;">
+    <img src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+         style="height:96px;width:auto;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,.4));">
+  </div>
+
+</div>
+<p style="font-size:11px;color:rgba(250,250,250,.25);margin-bottom:32px;">O Instagram recorta automaticamente em círculo. Use o quadrado para exportar.</p>
+
+<!-- Quadrados exportáveis COM NOME -->
+<div class="label" style="margin-top:8px;">Com nome — exportável (320 × 320px)</div>
+<div style="display:flex;gap:32px;flex-wrap:wrap;margin-bottom:8px;">
+
+  <div style="width:160px;height:160px;border-radius:12px;background:#111111;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(242,101,34,.20);">
+    <img src="../../imagens/LOGOS/logo-icone.png" style="height:72px;width:auto;filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55));">
+    <div>
+      <div style="display:flex;align-items:baseline;justify-content:center;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:18px;color:#F26522;text-transform:uppercase;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:18px;color:#FAFAFA;text-transform:uppercase;letter-spacing:-.3px;">GRID</span>
+      </div>
+      <div style="text-align:center;font-family:'DM Sans',sans-serif;font-weight:600;font-size:7px;text-transform:uppercase;letter-spacing:.25em;color:rgba(242,101,34,.80);margin-top:3px;">Energia Inteligente</div>
+    </div>
+  </div>
+
+  <div style="width:160px;height:160px;border-radius:12px;background:linear-gradient(135deg,#F26522 0%,#C94E0F 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+    <img src="../../imagens/LOGOS/logo-icone.png" style="height:72px;width:auto;filter:brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,.4));">
+    <div>
+      <div style="display:flex;align-items:baseline;justify-content:center;line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:18px;color:#FAFAFA;text-transform:uppercase;letter-spacing:-.3px;">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:18px;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:-.3px;">GRID</span>
+      </div>
+      <div style="text-align:center;font-family:'DM Sans',sans-serif;font-weight:600;font-size:7px;text-transform:uppercase;letter-spacing:.25em;color:rgba(255,255,255,.75);margin-top:3px;">Energia Inteligente</div>
+    </div>
+  </div>
+
+</div>
+<p style="font-size:11px;color:rgba(250,250,250,.25);margin-bottom:48px;">O Instagram recorta automaticamente em círculo. Use o quadrado para exportar.</p>
+
+<!-- Highlights -->
+<div class="label">Capas de Highlights (1080 × 1920px — exibidas em círculo pequeno)</div>
+<div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:8px;">
+
+  <div style="text-align:center;">
+    <div style="width:88px;height:88px;border-radius:50%;background:#111111;display:flex;align-items:center;justify-content:center;border:2.5px solid #F26522;margin:0 auto 8px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" style="height:50px;width:auto;filter:drop-shadow(0 0 10px rgba(242,101,34,.80));">
+    </div>
+    <span style="font-size:10px;color:rgba(250,250,250,.35);letter-spacing:1px;">SOLAR</span>
+  </div>
+
+  <div style="text-align:center;">
+    <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#F26522,#C94E0F);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" style="height:50px;width:auto;filter:brightness(0) invert(1);">
+    </div>
+    <span style="font-size:10px;color:rgba(250,250,250,.35);letter-spacing:1px;">HÍBRIDO</span>
+  </div>
+
+  <div style="text-align:center;">
+    <div style="width:88px;height:88px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;border:2.5px solid rgba(242,101,34,.40);margin:0 auto 8px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" style="height:50px;width:auto;filter:drop-shadow(0 0 10px rgba(242,101,34,.60));">
+    </div>
+    <span style="font-size:10px;color:rgba(250,250,250,.35);letter-spacing:1px;">PROJETOS</span>
+  </div>
+
+  <div style="text-align:center;">
+    <div style="width:88px;height:88px;border-radius:50%;background:#111111;display:flex;align-items:center;justify-content:center;border:2.5px solid #F26522;margin:0 auto 8px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" style="height:50px;width:auto;filter:drop-shadow(0 0 10px rgba(242,101,34,.80));">
+    </div>
+    <span style="font-size:10px;color:rgba(250,250,250,.35);letter-spacing:1px;">WALLBOX</span>
+  </div>
+
+</div>
+<p style="font-size:11px;color:rgba(250,250,250,.25);margin-bottom:0;">Personalize o ícone central por highlight (bateria, painel, carro elétrico etc.).</p>
+
+<hr class="divider">
+
+<div class="code-box">
+  <h2>Código CSS — copiar para novos posts</h2>
+  <pre><span class="hl">&lt;img</span> src="../../imagens/LOGOS/logo-icone.png" alt=""
+  style="<span class="hl">height:58px</span>;width:auto;object-fit:contain;
+         filter:
+           drop-shadow(0 0 18px rgba(242,101,34,0.80))
+           drop-shadow(0 0 7px  rgba(242,101,34,0.55))
+           drop-shadow(0 2px 10px rgba(0,0,0,0.9));"<span class="hl">&gt;</span>
+
+<span class="hl">&lt;!-- Wordmark ao lado --&gt;</span>
+&lt;div style="display:flex;flex-direction:column;gap:2px;"&gt;
+  &lt;div style="display:flex;align-items:baseline;line-height:1;"&gt;
+    &lt;span style="font-family:'Space Grotesk',sans-serif;font-weight:800;
+                 font-size:27px;text-transform:uppercase;color:<span class="hl">#F26522</span>;
+                 letter-spacing:-0.3px;"&gt;LUMEN&lt;/span&gt;
+    &lt;span style="font-family:'Space Grotesk',sans-serif;font-weight:800;
+                 font-size:27px;text-transform:uppercase;color:<span class="hl">#FAFAFA</span>;
+                 letter-spacing:-0.3px;"&gt;GRID&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;
+               text-transform:uppercase;letter-spacing:0.3em;
+               color:rgba(242,101,34,0.90);"&gt;Energia Inteligente&lt;/span&gt;
+&lt;/div&gt;</pre>
+</div>
+
+</body>
+</html>

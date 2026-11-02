@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Sigenergy — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: #030507;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    padding: 40px 20px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    overflow: hidden;
+    background: #070B14;
+    flex-shrink: 0;
+}
+
+/* ─── HEADER — pequeno e discreto nas slides 1–4 ─── */
+.hdr {
+    position: absolute;
+    top: 72px; left: 88px;
+    display: flex; align-items: center; gap: 14px;
+    z-index: 20;
+}
+.hdr-logo {
+    height: 48px; width: auto; object-fit: contain;
+    filter: drop-shadow(0 0 14px rgba(242,101,34,.65))
+            drop-shadow(0 0 5px rgba(242,101,34,.40))
+            drop-shadow(0 2px 8px rgba(0,0,0,.9));
+}
+.hdr-brand { display: flex; flex-direction: column; gap: 1px; }
+.hdr-wm { display: flex; align-items: baseline; line-height: 1; }
+.hdr-wm .l {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800; font-size: 22px; text-transform: uppercase;
+    color: #F26522; letter-spacing: -.3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.95);
+}
+.hdr-wm .g {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800; font-size: 22px; text-transform: uppercase;
+    color: #FAFAFA; letter-spacing: -.3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.95);
+}
+.hdr-tl {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600; font-size: 7px; text-transform: uppercase;
+    letter-spacing: .3em; color: rgba(242,101,34,.80);
+}
+
+/* ─── HEADER GRANDE — slide final ─── */
+.hdr-lg { position: absolute; top: 72px; left: 88px; display: flex; align-items: center; gap: 18px; z-index: 20; }
+.hdr-lg .hdr-logo { height: 58px; }
+.hdr-lg .hdr-wm .l { font-size: 27px; }
+.hdr-lg .hdr-wm .g { font-size: 27px; }
+.hdr-lg .hdr-tl { font-size: 8px; color: rgba(242,101,34,.90); }
+
+/* ─── SLIDE NUMBER ─── */
+.snum {
+    position: absolute; top: 88px; right: 88px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: rgba(255,255,255,.16); letter-spacing: 2px; z-index: 20;
+}
+
+/* ─── EYEBROW ─── */
+.eyebrow {
+    position: absolute; top: 160px; left: 88px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 17px;
+    letter-spacing: 3px; text-transform: uppercase;
+    z-index: 20; text-shadow: 0 2px 10px rgba(0,0,0,.90);
+}
+.eyebrow.teal  { color: rgba(0,180,216,.95); }
+.eyebrow.white { color: rgba(240,244,248,.55); }
+.eyebrow.or    { color: rgba(242,101,34,.95); }
+
+/* ─── PROGRESS DOTS ─── */
+.progress {
+    position: absolute; bottom: 52px; right: 88px;
+    display: flex; gap: 9px; align-items: center; z-index: 20;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.18); }
+.dot.on-teal { width: 24px; height: 8px; border-radius: 4px; background: #00B4D8; }
+.dot.on-or   { width: 24px; height: 8px; border-radius: 4px; background: #F26522; }
+
+/* ─── CONTENT WRAPPERS ─── */
+.c { position: absolute; left: 88px; right: 88px; z-index: 10; }
+.c.bot-l { bottom: 96px; text-align: left; }
+.c.bot-c { bottom: 108px; text-align: center; }
+.c.mid   { top: 50%; transform: translateY(-50%); text-align: center; }
+.c.top   { top: 220px; }
+
+/* ─── TIPOGRAFIA ─── */
+.h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; color: #F0F4F8; line-height: 1.08;
+}
+.h1.xl { font-size: 82px; letter-spacing: -2.5px; }
+.h1.lg { font-size: 64px; letter-spacing: -2px; }
+.h1.md { font-size: 50px; letter-spacing: -1px; }
+.h1.sm { font-size: 38px; }
+
+.body-txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 30px; font-weight: 400;
+    color: rgba(240,244,248,.80); line-height: 1.65;
+    text-shadow: 0 2px 24px rgba(0,0,0,.99);
+}
+
+.tl { color: #00B4D8; }
+.or { color: #F26522; }
+.wh { color: #F0F4F8; }
+
+.rule-teal { height: 3px; background: linear-gradient(90deg, #00B4D8, rgba(0,180,216,.30)); border: none; border-radius: 2px; width: 52px; }
+.rule-or   { height: 3px; background: #F26522; border: none; border-radius: 2px; width: 52px; }
+
+/* ─── GRAD LINES ─── */
+.grad-line {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 36px; line-height: 1.50;
+    text-shadow: 0 2px 12px rgba(0,0,0,.80);
+}
+
+/* ─── CTA BTN ─── */
+.cta-btn {
+    display: inline-block; padding: 24px 56px;
+    background: #F26522; border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 600;
+    color: #FAFAFA; letter-spacing: .3px;
+    text-align: center; line-height: 1.4;
+}
+</style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 1 — CAPA
+     Sigenergy como marca global — foto da bateria real
+     Logo LumenGrid pequeno, discreto
+════════════════════════════════════════ -->
+<div class="slide">
+
+    <!-- Foto real da instalação: bateria branca com LED azul + wallbox -->
+    <div style="position:absolute;inset:0;z-index:0;
+        background:url('../../imagens/PROJETOS/sigenergy-bateria-wallbox.jpeg') center 35%/cover no-repeat;">
+    </div>
+
+    <!-- Overlay: base sólida, topo respira -->
+    <div style="position:absolute;inset:0;z-index:2;
+        background:linear-gradient(to bottom,
+            rgba(7,11,20,.10) 0%,
+            rgba(7,11,20,.08) 25%,
+            rgba(7,11,20,.55) 58%,
+            rgba(7,11,20,.96) 100%);">
+    </div>
+
+    <!-- Glow azul sutil — reflexo do LED da bateria -->
+    <div style="position:absolute;top:15%;right:5%;width:480px;height:480px;z-index:1;
+        background:radial-gradient(circle, rgba(0,180,216,.20) 0%, transparent 65%);
+        pointer-events:none;">
+    </div>
+
+    <!-- Logo LumenGrid — discreto, apenas como "apresentado por" -->
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">01 / 05</div>
+
+    <!-- Sem eyebrow — a foto e a headline falam por si -->
+
+    <div class="c bot-l">
+        <!-- Badge Sigenergy -->
+        <div style="display:inline-flex;align-items:center;gap:10px;
+            border:1px solid rgba(0,180,216,.35);border-radius:20px;padding:7px 18px;
+            background:rgba(0,180,216,.08);margin-bottom:32px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#00B4D8;
+                box-shadow:0 0 10px rgba(0,180,216,.90);display:inline-block;flex-shrink:0;"></span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:800;
+                letter-spacing:2.5px;color:#00B4D8;text-transform:uppercase;">Sigenergy</span>
+        </div>
+
+        <h1 class="h1 xl" style="line-height:1.02;">
+            O sistema que<br>o mundo<br>
+            <span class="tl">escolheu.</span>
+        </h1>
+
+        <div class="rule-teal" style="margin:28px 0;"></div>
+
+        <p class="body-txt" style="font-size:28px;max-width:580px;color:rgba(240,244,248,.72);">
+            Solar. Bateria. EV. Inteligência Artificial.<br>
+            Tudo integrado. Pela primeira vez.
+        </p>
+    </div>
+
+    <div class="progress">
+        <div class="dot on-teal"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 2 — QUEM É A SIGENERGY
+     Presença global — estabelecer credibilidade da marca
+════════════════════════════════════════ -->
+<div class="slide">
+
+    <!-- Glow teal central muito sutil -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+        width:900px;height:900px;
+        background:radial-gradient(circle, rgba(0,180,216,.07) 0%, transparent 65%);
+        pointer-events:none;">
+    </div>
+
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">02 / 05</div>
+    <div class="eyebrow teal">&#9654; Sigenergy no Mundo</div>
+
+    <div class="c top" style="text-align:left;">
+
+        <h1 class="h1 lg" style="line-height:1.10;max-width:820px;">
+            Uma empresa<br>construída para<br>
+            <span class="tl">durar décadas.</span>
+        </h1>
+
+        <div class="rule-teal" style="margin:32px 0;"></div>
+
+        <!-- NÚMEROS GRANDES — linha a linha, respiração ampla -->
+        <div style="display:flex;flex-direction:column;gap:0;">
+
+            <div style="padding:36px 0;border-bottom:1px solid rgba(255,255,255,.07);
+                display:flex;align-items:center;gap:40px;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-size:76px;font-weight:900;
+                    color:#00B4D8;line-height:1;letter-spacing:-3px;min-width:180px;">120<span style="font-size:40px;">+</span></span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.5px;">Países e regiões</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:5px;">Presença comercial estabelecida</p>
+                </div>
+            </div>
+
+            <div style="padding:36px 0;border-bottom:1px solid rgba(255,255,255,.07);
+                display:flex;align-items:center;gap:40px;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-size:76px;font-weight:900;
+                    color:#00B4D8;line-height:1;letter-spacing:-3px;min-width:180px;">980<span style="font-size:40px;">+</span></span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.5px;">Patentes acumuladas</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:5px;">Maior portfólio de I&D do setor</p>
+                </div>
+            </div>
+
+            <div style="padding:36px 0;border-bottom:1px solid rgba(255,255,255,.07);
+                display:flex;align-items:center;gap:40px;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-size:76px;font-weight:900;
+                    color:#00B4D8;line-height:1;letter-spacing:-3px;min-width:180px;">35<span style="font-size:40px;">%</span></span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.5px;">Do time em pesquisa</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:5px;">Inovação como prioridade absoluta</p>
+                </div>
+            </div>
+
+            <div style="padding:36px 0;display:flex;align-items:center;gap:40px;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-size:76px;font-weight:900;
+                    color:#00B4D8;line-height:1;letter-spacing:-3px;min-width:180px;">29K<span style="font-size:40px;">+</span></span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.5px;">Instaladores registrados</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:5px;">Rede global de parceiros certificados</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot on-teal"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 3 — 5 EM 1
+     Narrativo — não card-grid. Manifesto do produto.
+════════════════════════════════════════ -->
+<div class="slide">
+
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+        width:1000px;height:1000px;
+        background:radial-gradient(circle, rgba(0,180,216,.06) 0%, transparent 60%);
+        pointer-events:none;">
+    </div>
+
+    <!-- Linha vertical decorativa teal -->
+    <div style="position:absolute;left:88px;top:240px;bottom:100px;width:2px;
+        background:linear-gradient(to bottom, #00B4D8 0%, rgba(0,180,216,.05) 100%);
+        z-index:5;">
+    </div>
+
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">03 / 05</div>
+    <div class="eyebrow teal">&#9654; Plataforma Integrada</div>
+
+    <div class="c top" style="padding-left:36px;">
+
+        <h1 class="h1 lg" style="line-height:1.08;max-width:700px;">
+            Primeiro do mundo<br>a integrar tudo<br>
+            <span class="tl">em uma plataforma.</span>
+        </h1>
+
+        <p class="body-txt" style="margin-top:20px;font-size:24px;
+            color:rgba(240,244,248,.48);max-width:620px;">
+            O que outros vendem separado, a Sigenergy integrou.
+        </p>
+
+        <!-- LISTA MANIFESTO — espaçada, leve, sem cards -->
+        <div style="margin-top:48px;display:flex;flex-direction:column;gap:0;">
+
+            <div style="display:flex;align-items:center;gap:28px;
+                padding:28px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+                <span style="font-size:30px;flex-shrink:0;">☀️</span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.3px;">Solar fotovoltaico</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:4px;">Geração otimizada em tempo real pela IA</p>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:28px;
+                padding:28px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+                <span style="font-size:30px;flex-shrink:0;">🔋</span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.3px;">Bateria LFP modular</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:4px;">Módulos de 9 kWh — empilháveis, expande quando precisar</p>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:28px;
+                padding:28px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+                <span style="font-size:30px;flex-shrink:0;">⚡</span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.3px;">EV Charger 25 kW — integrado</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:4px;">150 km de autonomia por hora de carga. Sem carregador externo.</p>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:28px;
+                padding:28px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+                <span style="font-size:30px;flex-shrink:0;">🧠</span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.3px;">Inteligência Artificial nativa</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:4px;">Aprende seu consumo. Distribui energia para máxima economia.</p>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:28px;
+                padding:28px 0;">
+                <span style="font-size:30px;flex-shrink:0;">📱</span>
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;
+                        color:#F0F4F8;letter-spacing:.3px;">App mySigen</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;
+                        color:rgba(240,244,248,.45);margin-top:4px;">Monitoramento e controle total em tempo real</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot"></div><div class="dot on-teal"></div>
+        <div class="dot"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 4 — 25 dB / SILÊNCIO
+     Foto do bebê dormindo — emocional, diferenciador de produto
+════════════════════════════════════════ -->
+<div class="slide">
+
+    <!-- Foto de fundo: criança dormindo com gráfico 25 dB -->
+    <div style="position:absolute;inset:0;z-index:0;
+        background:url('../../SIGENERGY/Silencioso.png') center 30%/cover no-repeat;">
+    </div>
+
+    <!-- Overlay: topo escuro (logo lê), meio respira, base muito escura -->
+    <div style="position:absolute;inset:0;z-index:2;
+        background:linear-gradient(to bottom,
+            rgba(7,11,20,.72) 0%,
+            rgba(7,11,20,.20) 22%,
+            rgba(7,11,20,.08) 42%,
+            rgba(7,11,20,.65) 68%,
+            rgba(7,11,20,.96) 100%);">
+    </div>
+
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">04 / 05</div>
+    <div class="eyebrow white">&#9654; Design</div>
+
+    <div class="c bot-l">
+        <!-- Stat de impacto -->
+        <div style="display:inline-flex;flex-direction:column;align-items:flex-start;
+            background:rgba(0,180,216,.08);border:1px solid rgba(0,180,216,.25);
+            border-radius:12px;padding:16px 28px;margin-bottom:28px;">
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:58px;font-weight:900;
+                color:#00B4D8;line-height:1;letter-spacing:-2px;">25 dB</span>
+            <span style="font-family:'DM Sans',sans-serif;font-size:16px;
+                color:rgba(0,180,216,.70);letter-spacing:.3px;margin-top:4px;">Menor que um sussurro humano</span>
+        </div>
+
+        <h1 class="h1 lg" style="line-height:1.10;max-width:680px;">
+            Mais silencioso<br>que um <span class="tl">sussurro.</span>
+        </h1>
+
+        <div class="rule-teal" style="margin:24px 0;"></div>
+
+        <p class="body-txt" style="font-size:27px;color:rgba(240,244,248,.75);max-width:620px;">
+            Sem ventoinhas. Sem vibração. Sem desgaste mecânico.<br>
+            <span style="color:rgba(240,244,248,.50);">Instala no quarto, sala, garagem.<br>Você nem percebe que está lá.</span>
+        </p>
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot on-teal"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 5 — CTA LUMENGRID
+     A LumenGrid como porta de entrada para a Sigenergy
+     Aqui o laranja volta com força
+════════════════════════════════════════ -->
+<div class="slide">
+
+    <!-- Glow laranja na base + teal no topo — fusão das duas marcas -->
+    <div style="position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+        width:800px;height:600px;
+        background:radial-gradient(circle, rgba(0,180,216,.08) 0%, transparent 65%);
+        pointer-events:none;">
+    </div>
+    <div style="position:absolute;bottom:-100px;left:50%;transform:translateX(-50%);
+        width:800px;height:700px;
+        background:radial-gradient(circle, rgba(242,101,34,.11) 0%, transparent 65%);
+        pointer-events:none;">
+    </div>
+
+    <!-- Linha horizontal divisória sutil -->
+    <div style="position:absolute;top:50%;left:88px;right:88px;height:1px;
+        background:linear-gradient(to right, transparent, rgba(255,255,255,.08), transparent);
+        z-index:5;">
+    </div>
+
+    <!-- Logo LumenGrid — grande, protagonista neste slide -->
+    <div class="hdr-lg">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid"
+            style="height:58px;filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9));">
+        <div class="hdr-brand">
+            <div class="hdr-wm">
+                <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#F26522;letter-spacing:-.3px;text-shadow:0 2px 10px rgba(0,0,0,.95);">LUMEN</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:27px;text-transform:uppercase;color:#FAFAFA;letter-spacing:-.3px;text-shadow:0 2px 10px rgba(0,0,0,.95);">GRID</span>
+            </div>
+            <div style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:8px;text-transform:uppercase;letter-spacing:.3em;color:rgba(242,101,34,.90);text-shadow:0 2px 8px rgba(0,0,0,.95);">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">05 / 05</div>
+    <div class="eyebrow or">&#9654; Disponível na LumenGrid</div>
+
+    <div class="c mid" style="text-align:center;">
+
+        <!-- Linha de parceria -->
+        <div style="display:inline-flex;align-items:center;gap:20px;
+            background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+            border-radius:12px;padding:14px 32px;margin-bottom:44px;">
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;
+                color:#F26522;">LUMEN<span style="color:#FAFAFA;">GRID</span></span>
+            <span style="color:rgba(255,255,255,.20);font-size:22px;font-weight:300;">×</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;
+                color:#00B4D8;letter-spacing:.5px;">SIGENERGY</span>
+        </div>
+
+        <h1 class="h1 md" style="line-height:1.18;letter-spacing:-1px;">
+            A Sigenergy chegou<br>
+            <span class="or">onde o seu projeto</span><br>
+            está.
+        </h1>
+
+        <div class="rule-or" style="margin:36px auto;"></div>
+
+        <!-- Grad lines clímax crescente -->
+        <div style="margin-bottom:48px;">
+            <div class="grad-line" style="color:rgba(240,244,248,.32);">Tecnologia global.</div>
+            <div class="grad-line" style="color:rgba(240,244,248,.58);">Projeto personalizado.</div>
+            <div class="grad-line" style="color:#F0F4F8;">Resultado que você sente.</div>
+        </div>
+
+        <div class="cta-btn">Fale com a LumenGrid<br>e descubra o sistema ideal para você.</div>
+
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot on-or"></div>
+    </div>
+</div>
+
+
+<footer style="color:rgba(255,255,255,.12);font-family:'DM Sans',sans-serif;
+    font-size:12px;padding:16px 0 40px;letter-spacing:2px;text-align:center;">
+    Feito por Domani Consultoria
+</footer>
+
+</body>
+</html>

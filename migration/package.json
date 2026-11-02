@@ -1,0 +1,20 @@
+{
+  "name": "lumengrid-migration",
+  "version": "1.0.0",
+  "description": "Script de importação Google Sheets → Supabase (PostgreSQL) — LumenGrid",
+  "type": "module",
+  "scripts": {
+    "import": "node import-sheets.js",
+    "validate": "node validate.js",
+    "backup": "node import-sheets.js --backup-only"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5",
+    "googleapis": "^144.0.0",
+    "pg": "^8.23.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

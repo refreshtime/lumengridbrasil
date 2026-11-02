@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Bateria Inteligente — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: #060606;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    padding: 40px 20px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* ─── SLIDE BASE ─── */
+.slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    overflow: hidden;
+    background: #161616;
+    flex-shrink: 0;
+}
+
+/* ─── IMAGE PLACEHOLDER ─── */
+.img-ph {
+    position: absolute;
+    inset: 0;
+    background: #18201f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.img-ph-txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.10);
+    text-align: center;
+    padding: 0 80px;
+}
+
+/* ─── OVERLAYS ─── */
+.ov-photo {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+        rgba(0,0,0,.18) 0%,
+        rgba(0,0,0,.08) 30%,
+        rgba(0,0,0,.45) 60%,
+        rgba(0,0,0,.82) 100%);
+    z-index: 2;
+}
+.ov-base {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+        rgba(8,10,14,.95) 0%,
+        rgba(8,10,14,.75) 35%,
+        transparent 72%);
+    z-index: 3;
+}
+
+/* ─── RADIAL GLOW (solid slides) ─── */
+.glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(circle, rgba(242,101,34,.12) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+/* ─── ORANGE FRAME ─── */
+.frame {
+    position: absolute;
+    inset: 24px;
+    border: 4px solid rgba(242,101,34,.65);
+    pointer-events: none;
+    z-index: 6;
+}
+
+/* ─── HEADER ─── */
+.hdr {
+    position: absolute;
+    top: 72px;
+    left: 88px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    z-index: 20;
+}
+.hdr-logo {
+    height: 58px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px rgba(242,101,34,.80))
+            drop-shadow(0 0 7px rgba(242,101,34,.55))
+            drop-shadow(0 2px 10px rgba(0,0,0,.9));
+}
+.hdr-brand { display: flex; flex-direction: column; gap: 2px; }
+.hdr-wm { display: flex; align-items: baseline; line-height: 1; }
+.hdr-wm .l {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 27px;
+    text-transform: uppercase;
+    color: #F26522;
+    letter-spacing: -.3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.95);
+}
+.hdr-wm .g {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 27px;
+    text-transform: uppercase;
+    color: #FAFAFA;
+    letter-spacing: -.3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.95);
+}
+.hdr-tl {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: .3em;
+    color: rgba(242,101,34,.90);
+    text-shadow: 0 2px 8px rgba(0,0,0,.95);
+}
+
+/* ─── SLIDE NUMBER ─── */
+.snum {
+    position: absolute;
+    top: 88px;
+    right: 88px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,.18);
+    letter-spacing: 2px;
+    z-index: 20;
+}
+
+/* ─── EYEBROW ─── */
+.eyebrow {
+    position: absolute;
+    top: 160px;
+    left: 88px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(242,101,34,.95);
+    text-shadow: 0 2px 10px rgba(0,0,0,.90);
+    z-index: 20;
+}
+
+/* ─── PROGRESS DOTS ─── */
+.progress {
+    position: absolute;
+    bottom: 52px;
+    right: 88px;
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    z-index: 20;
+}
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.20);
+}
+.dot.on {
+    width: 24px;
+    height: 8px;
+    border-radius: 4px;
+    background: #F26522;
+}
+
+/* ─── CONTENT WRAPPER ─── */
+.c {
+    position: absolute;
+    left: 88px;
+    right: 88px;
+    z-index: 10;
+}
+.c.bot-c  { bottom: 110px; text-align: center; }
+.c.bot-l  { bottom: 88px; text-align: left; }
+.c.mid    { top: 50%; transform: translateY(-50%); text-align: center; }
+.c.top    { top: 228px; }
+
+/* ─── TYPOGRAPHY ─── */
+.h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: #FAFAFA;
+    line-height: 1.15;
+}
+.h1.xl { font-size: 72px; }
+.h1.lg { font-size: 60px; }
+.h1.md { font-size: 48px; }
+.h1.sm { font-size: 38px; }
+
+.body-txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: rgba(250,250,250,.95);
+    line-height: 1.65;
+    text-shadow: 0 2px 24px rgba(0,0,0,.99), 0 0 48px rgba(0,0,0,.80);
+}
+
+.or { color: #F26522; }
+.wh { color: #FAFAFA; }
+
+.div-h {
+    height: 3px;
+    background: #F26522;
+    border: none;
+    border-radius: 2px;
+    margin: 28px auto;
+    width: 48px;
+}
+
+/* ─── CHIPS ─── */
+.chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; justify-content: center; }
+.chip {
+    padding: 12px 26px;
+    border: 1px solid rgba(242,101,34,.42);
+    border-radius: 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: rgba(250,250,250,.85);
+    background: rgba(242,101,34,.07);
+    text-shadow: 0 1px 6px rgba(0,0,0,.60);
+}
+
+/* ─── FLOW SECTION LABEL ─── */
+.flow-slabel {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(242,101,34,.52);
+}
+
+/* ─── GRAD LINES (escalada de clímax) ─── */
+.grad-line {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1.55;
+    text-shadow: 0 2px 12px rgba(0,0,0,.80);
+}
+
+/* ─── TARIFF TABLE ─── */
+.tariff-hdr, .tariff-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr;
+    align-items: center;
+}
+.tariff-hdr {
+    padding: 10px 0 14px;
+    border-bottom: 1px solid rgba(242,101,34,.28);
+    margin-bottom: 4px;
+}
+.tariff-hdr span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(242,101,34,.85);
+}
+.tariff-row {
+    padding: 17px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.tariff-row.ponta {
+    border-left: 3px solid #F26522;
+    padding-left: 14px;
+    margin-left: -17px;
+}
+.t-hora {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 19px;
+    color: rgba(250,250,250,.85);
+}
+.tariff-row.ponta .t-hora { color: #FAFAFA; font-weight: 600; }
+.tbadge {
+    display: inline-block;
+    padding: 5px 13px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+}
+.tbadge.fp  { background: rgba(255,255,255,.10); color: rgba(255,255,255,.75); }
+.tbadge.int { background: rgba(255,200,50,.14);  color: rgba(255,190,60,.90); }
+.tbadge.pt  { background: rgba(242,101,34,.22);  color: #F26522; }
+.t-acao {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: rgba(250,250,250,.65);
+}
+.tariff-row.ponta .t-acao { color: rgba(250,250,250,.90); font-weight: 500; }
+
+/* ─── LEGENDA DE TARIFAS ─── */
+.tariff-legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-top: 28px;
+}
+.legend-card {
+    padding: 16px 18px;
+    border-radius: 6px;
+    background: rgba(255,255,255,.04);
+    border-top: 2px solid transparent;
+}
+.legend-card.lc-fp  { border-top-color: rgba(255,255,255,.35); }
+.legend-card.lc-int { border-top-color: rgba(255,190,60,.70); }
+.legend-card.lc-pt  { border-top-color: #F26522; }
+.legend-card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.lc-fp  .legend-card-title { color: rgba(255,255,255,.75); }
+.lc-int .legend-card-title { color: rgba(255,190,60,.90); }
+.lc-pt  .legend-card-title { color: #F26522; }
+.legend-card-body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: rgba(250,250,250,.62);
+    line-height: 1.6;
+}
+.tariff-footnote {
+    margin-top: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: rgba(250,250,250,.32);
+    letter-spacing: .5px;
+}
+
+/* ─── DEMAND CHART LEGEND ─── */
+.chart-legend { display: flex; gap: 32px; margin-bottom: 24px; }
+.cl-item { display: flex; align-items: center; gap: 10px; }
+.cl-line { width: 28px; height: 4px; border-radius: 2px; }
+.cl-gray { background: rgba(200,200,200,.38); }
+.cl-teal { background: #4CAF93; }
+.cl-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    color: rgba(250,250,250,.60);
+}
+
+/* ─── MONITOR LIST ─── */
+.mitem {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.mitem:last-child { border-bottom: none; }
+.micon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: rgba(242,101,34,.08);
+    border: 1px solid rgba(242,101,34,.20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+.mtxt { font-family: 'DM Sans', sans-serif; font-size: 22px; color: rgba(250,250,250,.72); }
+
+/* ─── TAGS + CTA (slide 7) ─── */
+.tag-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.tag-pill {
+    padding: 6px 18px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: rgba(250,250,250,.42);
+}
+.cta-btn {
+    display: inline-block;
+    padding: 22px 52px;
+    background: #F26522;
+    border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #FAFAFA;
+    letter-spacing: .3px;
+    text-align: center;
+    line-height: 1.4;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     SLIDE 1 — ABERTURA
+     Imagem: casa moderna a noite, paineis e bateria instalada
+════════════════════════════════════════ -->
+<div class="slide">
+    <div class="img-ph" style="background:url('../../imagens/NAO_UTILIZADAS/imagens_post16_bateria_inteligente/slide01_casa_solar_bateria.png') center/cover no-repeat;"></div>
+    <div class="ov-photo"></div>
+    <div class="ov-base"></div>
+
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">01 / 06</div>
+
+    <div class="eyebrow">&#9654; Bateria Inteligente</div>
+
+    <div class="c bot-c">
+        <h1 class="h1 xl"><span class="or">Backup</span> é só<br>o começo.</h1>
+        <hr class="div-h" style="margin-top:32px;margin-bottom:32px;">
+        <p class="body-txt">
+            Veja como uma bateria pode trabalhar<br>pela sua casa ou empresa todos os dias.
+        </p>
+    </div>
+
+    <div class="progress">
+        <div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 2 — APROVEITAMENTO DA ENERGIA SOLAR
+════════════════════════════════════════ -->
+<div class="slide">
+
+    <!-- FOTO: casa dia (esq) / noite (dir) -->
+    <div class="img-ph" style="background:url('../../imagens/NAO_UTILIZADAS/imagens_post16_bateria_inteligente/esquema funcionando.png') center/cover no-repeat;"></div>
+
+    <!-- Overlay topo (logo) -->
+    <div style="position:absolute;top:0;left:0;right:0;height:220px;z-index:2;background:linear-gradient(to bottom,rgba(0,0,0,.70) 0%,transparent 100%);"></div>
+    <!-- Overlay lateral esquerdo — escurece o lado DIA para legibilidade -->
+    <div style="position:absolute;inset:0;z-index:2;background:linear-gradient(to right,rgba(0,0,0,.55) 0%,rgba(0,0,0,.20) 50%,rgba(0,0,0,.05) 100%);"></div>
+    <!-- Overlay base -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:520px;z-index:2;background:linear-gradient(to top,rgba(0,0,0,.96) 0%,rgba(0,0,0,.80) 40%,transparent 100%);"></div>
+
+    <!-- Linha divisória central -->
+    <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.10);z-index:3;"></div>
+
+    <!-- LOGO -->
+    <div class="hdr" style="z-index:20;">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">02 / 06</div>
+
+    <div class="eyebrow" style="left:50%;transform:translateX(-50%);white-space:nowrap;">&#9654; Aproveitamento da Energia Solar</div>
+
+    <!-- HEADLINE -->
+    <div style="position:absolute;left:88px;right:88px;top:218px;text-align:center;z-index:10;">
+        <h1 class="h1 lg" style="text-shadow:0 4px 24px rgba(0,0,0,.99);">Produza durante o dia.<br>Use também <span class="or">à noite.</span></h1>
+    </div>
+
+    <!-- DOIS PAINÉIS EXPLICATIVOS -->
+    <div style="position:absolute;left:0;right:0;top:600px;z-index:10;display:flex;align-items:flex-start;">
+
+        <!-- Painel ESQUERDO — dia -->
+        <div style="flex:1;padding:40px 52px;background:rgba(0,0,0,.42);backdrop-filter:blur(2px);border-top:2px solid rgba(255,200,60,.55);text-align:center;">
+            <p style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,200,60,.95);margin:0 0 18px;text-shadow:0 2px 8px rgba(0,0,0,.99);">&#9728; Durante o dia</p>
+            <p style="font-family:'DM Sans',sans-serif;font-size:26px;font-weight:500;color:#FAFAFA;line-height:1.60;margin:0;text-shadow:0 2px 18px rgba(0,0,0,.99);">Solar abastece<br>o imóvel.<br>Excedente vai<br>para a bateria.</p>
+        </div>
+
+        <!-- Divisor -->
+        <div style="width:1px;background:rgba(255,255,255,.14);align-self:stretch;flex-shrink:0;"></div>
+
+        <!-- Painel DIREITO — noite -->
+        <div style="flex:1;padding:40px 52px;background:rgba(0,0,0,.42);backdrop-filter:blur(2px);border-top:2px solid rgba(242,101,34,.70);text-align:center;">
+            <p style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#F26522;margin:0 0 18px;text-shadow:0 2px 8px rgba(0,0,0,.99);">&#128267; Durante a noite</p>
+            <p style="font-family:'DM Sans',sans-serif;font-size:26px;font-weight:500;color:#FAFAFA;line-height:1.60;margin:0;text-shadow:0 2px 18px rgba(0,0,0,.99);">Bateria fornece<br>a energia<br>armazenada.<br><span style="color:rgba(250,250,250,.60);font-size:21px;">Rede complementa,<br>se necessário.</span></p>
+        </div>
+    </div>
+
+    <!-- GRAD LINES — base -->
+    <div style="position:absolute;left:88px;right:88px;bottom:108px;text-align:center;z-index:10;">
+        <div class="grad-line" style="color:rgba(250,250,250,.45);">Mais aproveitamento da geração solar.</div>
+        <div class="grad-line" style="color:#FAFAFA;">Mais independência energética.</div>
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot on"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 4 — ECONOMIA POR HORARIO
+════════════════════════════════════════ -->
+<div class="slide">
+    <div class="glow"></div>
+    <div class="frame"></div>
+
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">03 / 06</div>
+
+    <div class="eyebrow">&#9654; Economia por Horário</div>
+
+    <div class="c top">
+        <h1 class="h1 md" style="text-align:center;letter-spacing:-.5px;">A bateria pode reduzir<br>o consumo da rede<br>no horário mais caro.</h1>
+        <p class="body-txt" style="margin-top:18px;text-align:center;">
+            Em modalidades tarifárias, o sistema armazena energia<br>
+            nos períodos econômicos e utiliza quando a tarifa é mais alta.
+        </p>
+
+        <!-- ── FAIXAS TARIFÁRIAS ── -->
+        <div style="margin-top:40px;display:flex;flex-direction:column;gap:14px;">
+
+            <!-- FORA DE PONTA -->
+            <div style="padding:22px 28px;border-radius:8px;background:rgba(40,185,100,.07);border-left:5px solid rgba(40,185,100,.70);display:flex;align-items:center;justify-content:space-between;gap:20px;">
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(40,200,110,.90);margin:0 0 8px;display:flex;align-items:center;gap:9px;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:rgba(40,200,110,.90);flex-shrink:0;"></span>Fora de Ponta</p>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:#FAFAFA;margin:0 0 6px;line-height:1.1;">21h30 – 16h30</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:400;color:rgba(250,250,250,.65);margin:0;">Energia mais barata</p>
+                </div>
+                <div style="flex-shrink:0;padding:10px 20px;background:rgba(40,185,100,.12);border-radius:40px;border:1px solid rgba(40,200,110,.28);">
+                    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:rgba(40,210,110,.90);margin:0;white-space:nowrap;">🔋 Bateria carregando</p>
+                </div>
+            </div>
+
+            <!-- INTERMEDIÁRIO -->
+            <div style="padding:16px 28px;border-radius:8px;background:rgba(255,185,50,.05);border-left:5px solid rgba(255,185,50,.60);display:flex;align-items:center;justify-content:space-between;gap:20px;">
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,190,60,.88);margin:0 0 6px;display:flex;align-items:center;gap:9px;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:rgba(255,190,60,.88);flex-shrink:0;"></span>Intermediário</p>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:rgba(250,250,250,.82);margin:0;line-height:1.2;">16h30–17h30 &nbsp;·&nbsp; 20h30–21h30</p>
+                </div>
+                <p style="font-family:'DM Sans',sans-serif;font-size:17px;color:rgba(250,250,250,.45);margin:0;flex-shrink:0;white-space:nowrap;">Custo intermediário</p>
+            </div>
+
+            <!-- PONTA — destaque máximo -->
+            <div style="padding:26px 28px;border-radius:8px;background:rgba(242,101,34,.11);border-left:5px solid #F26522;border:1px solid rgba(242,101,34,.28);display:flex;align-items:center;justify-content:space-between;gap:20px;">
+                <div>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#F26522;margin:0 0 8px;display:flex;align-items:center;gap:9px;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#F26522;flex-shrink:0;"></span>Ponta</p>
+                    <p style="font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:800;color:#FAFAFA;margin:0 0 6px;line-height:1.1;letter-spacing:-.5px;">17h30 – 20h30</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:19px;font-weight:400;color:rgba(250,250,250,.72);margin:0;">Energia mais cara</p>
+                </div>
+                <div style="flex-shrink:0;padding:12px 22px;background:rgba(242,101,34,.18);border-radius:40px;border:1px solid rgba(242,101,34,.50);">
+                    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:#F26522;margin:0;white-space:nowrap;text-align:center;">⚡ Bateria alimentando<br>a casa</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="margin-top:24px;padding:16px 24px;border-radius:6px;background:rgba(255,255,255,.05);border-left:3px solid rgba(242,101,34,.45);">
+            <p style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:rgba(250,250,250,.68);margin:0;letter-spacing:.2px;line-height:1.6;text-align:left;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.70);display:block;margin-bottom:6px;">Referência</span>
+                Tarifa Branca — Enel SP, dias úteis.<br>Fins de semana e feriados: fora de ponta o dia todo.
+            </p>
+        </div>
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot"></div><div class="dot on"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 5 — CONTROLE DE DEMANDA
+════════════════════════════════════════ -->
+<div class="slide">
+    <div class="glow"></div>
+    <div class="frame"></div>
+
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">04 / 06</div>
+
+    <div class="eyebrow">&#9654; Controle de Demanda</div>
+
+    <div class="c top">
+        <h1 class="h1 md" style="text-align:center;letter-spacing:-.5px;line-height:1.18;">A bateria pode impedir que um pico de consumo vire um custo maior.</h1>
+        <p class="body-txt" style="margin-top:18px;text-align:center;">
+            Em empresas com cobrança de demanda, equipamentos ligados ao mesmo tempo
+            podem elevar a potência solicitada da rede.<br>
+            Quando o consumo ultrapassa o limite definido,<br>
+            a bateria fornece a diferença.
+        </p>
+
+        <img src="../../imagens/NAO_UTILIZADAS/imagens_post16_bateria_inteligente/esquema controle demanda.png"
+             style="display:block;width:100%;margin-top:28px;border-radius:8px;opacity:.94;">
+
+        <p class="body-txt" style="margin-top:24px;text-align:center;color:rgba(242,101,34,.85);">
+            Ideal para empresas e indústrias.
+        </p>
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 6 — MONITORAMENTO INTELIGENTE
+     Imagem: pessoa com celular, interface de monitoramento, casa ao fundo
+════════════════════════════════════════ -->
+<div class="slide">
+    <div class="img-ph" style="background:url('../../imagens/NAO_UTILIZADAS/imagens_post16_bateria_inteligente/slide06_monitoramento.png') center/cover no-repeat;"></div>
+    <div class="ov-photo"></div>
+    <div class="ov-base"></div>
+
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">05 / 06</div>
+
+    <div class="eyebrow">&#9654; Monitoramento Inteligente</div>
+
+    <div class="c bot-c">
+        <h1 class="h1 lg">Você acompanha.<br><span class="or">O sistema executa.</span></h1>
+        <p class="body-txt" style="margin-top:20px;">Pelo aplicativo, visualize em tempo real:</p>
+        <div class="chips" style="margin-top:16px;">
+            <span class="chip">Produção solar</span>
+            <span class="chip">Consumo do imóvel</span>
+            <span class="chip">Nível da bateria</span>
+            <span class="chip">Energia da rede</span>
+            <span class="chip">Energia da bateria</span>
+        </div>
+        <hr class="div-h" style="margin-top:28px;margin-bottom:28px;">
+        <p class="body-txt">
+            O verdadeiro valor está na <span class="wh">configuração</span>.<br>
+            Cada sistema é programado de acordo com a estratégia<br>e o perfil de consumo do cliente.
+        </p>
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot on"></div><div class="dot"></div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SLIDE 7 — ENCERRAMENTO / CTA
+════════════════════════════════════════ -->
+<div class="slide">
+    <div class="glow"></div>
+
+    <div class="hdr">
+        <img class="hdr-logo" src="../../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+        <div class="hdr-brand">
+            <div class="hdr-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+            <div class="hdr-tl">Energia Inteligente</div>
+        </div>
+    </div>
+    <div class="snum">06 / 06</div>
+
+    <div class="eyebrow">&#9654; LumenGrid</div>
+
+    <div class="c mid">
+        <h1 class="h1 md">Comprar uma bateria<br>é apenas o começo.<br><span class="or">O projeto é o que decide.</span></h1>
+
+        <div style="margin-top:40px;">
+            <div class="grad-line" style="color:rgba(250,250,250,.38);">Mais autonomia.</div>
+            <div class="grad-line" style="color:rgba(250,250,250,.65);">Mais segurança.</div>
+            <div class="grad-line" style="color:#FAFAFA;">Mais controle sobre sua energia.</div>
+        </div>
+
+        <div class="tag-row" style="margin-top:32px;">
+            <span class="tag-pill">Residências</span>
+            <span class="tag-pill">Empresas</span>
+            <span class="tag-pill">Indústrias</span>
+        </div>
+
+        <div style="text-align:center;margin-top:44px;">
+            <div class="cta-btn">Descubra qual estratégia faz sentido<br>para a sua casa ou negócio.</div>
+        </div>
+    </div>
+
+    <div class="progress">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot on"></div>
+    </div>
+</div>
+
+
+<footer style="color:rgba(255,255,255,.15);font-family:'DM Sans',sans-serif;font-size:12px;padding:16px 0 40px;letter-spacing:2px;text-align:center;">
+    Feito por Domani Consultoria
+</footer>
+
+</body>
+</html>

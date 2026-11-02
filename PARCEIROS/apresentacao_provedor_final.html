@@ -158,6 +158,13 @@ html,body{width:100%;height:100%;background:#000;font-family:'DM Sans',sans-seri
   color:rgba(242,101,34,.60);padding:6px 12px;border-radius:5px;
   border:1px solid rgba(242,101,34,.20);background:rgba(242,101,34,.05);
 }
+@media print{
+  @page{size:1280px 720px;margin:0;}
+  html,body{width:1280px;height:auto;overflow:visible;background:#08080d;}
+  .deck{width:1280px;height:auto;position:static;}
+  .slide{position:relative;width:1280px;height:720px;opacity:1!important;pointer-events:all;page-break-after:always;page-break-inside:avoid;display:flex!important;}
+  .nav,.counter{display:none!important;}
+}
 </style>
 </head>
 <body>

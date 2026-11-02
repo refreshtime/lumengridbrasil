@@ -5,7 +5,7 @@
 //  Executar como: Você · Quem acessa: Qualquer pessoa
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const SHEET_ID_FIN      = '1b5bp7uPF2jDsR2i9CvGVdyhfkyuqYm-FyKevn3o8foM';
+const SHEET_ID_FIN      = '1yCgNm9BMHjnrOFs9_txBpik3nnR4GVivs8F3m-QqiWw';
 const SHEET_ID_CONTRATOS = '145EgaXS8Jz1i5NEAWPhHJ9SoOE-Tzs9247vYsrxIR2o';
 
 // ── Token de autenticação (altere para um valor secreto) ──────
@@ -42,6 +42,19 @@ const HDR_BAIXAS = [
 ];
 const HDR_HISTORICO = [
   'ID','Entidade','Entidade ID','Campo','Valor Anterior','Valor Novo','Usuário','Data Hora'
+];
+
+// ── Cabeçalhos V2 (nova planilha) ─────────────────────────────
+const HDR_DESPESAS_V2 = [
+  'ID','Data Venc.','Mês Competência','Classificação','Categoria','Descrição',
+  'Detalhes','Pagador','Qtd Parcelas','Nº Parcela','Valor Parcela',
+  'Valor Total','Status','Comprovante','Criado em'
+];
+const HDR_RECEITAS_V2 = [
+  'ID','Código / Projeto','Mês Competência','Status',
+  'Valor Bruto','Custo Equip.','Instalação','Homologação','Ajustes','Comissão',
+  'CPV Total','Margem Bruta','Gestão Op (20%)','Reserva Dividendos','Margem Cash','Margem (%)',
+  'Valores Recebidos','A Receber','Criado em'
 ];
 
 // ── Plano de Contas ────────────────────────────────────────────
@@ -193,6 +206,8 @@ function doGet(e) {
     if (protegidas.includes(action) && !validateToken(e)) {
       result = { error: 'Acesso não autorizado' };
     } else if (action === 'get_data')                result = getData();
+    else if (action === 'get_data_v2')              result = getDataV2();
+    else if (action === 'get_reembolsos')            result = getReembolsos();
     else if (action === 'get_contratos')             result = getContratos();
     else if (action === 'get_catalogos')             result = getCatalogos();
     else if (action === 'get_lancamentos')           result = getLancamentos(e.parameter);
@@ -234,7 +249,9 @@ function doPost(e) {
     if (protegidas.includes(action) && !validateTokenPost(body)) {
       result = { error: 'Acesso não autorizado' };
     } else if (action === 'save_despesa')      result = saveDespesa(body);
+    else if (action === 'save_despesa_v2')     result = saveDespesaV2(body);
     else if (action === 'save_receita')        result = saveReceita(body);
+    else if (action === 'save_receita_v2')     result = saveReceitaV2(body);
     else if (action === 'vincular')            result = vincularDespesa(body);
     else if (action === 'replace_despesas' ||
              action === 'replace_receitas' ||
@@ -1492,6 +1509,154 @@ function _gerarRelatorioMigracao(ss, rel) {
   sheet.getRange(1,1,1,2).setFontWeight('bold').setBackground('#E8641A').setFontColor('#FFFFFF');
   sheet.getRange(3,1,1,2).setFontWeight('bold').setBackground('#333').setFontColor('#FFFFFF');
   sheet.autoResizeColumns(1,3);
+}
+
+// ─────────────────────────────────────────────────────────────
+// V2 — DESPESAS / RECEITAS / REEMBOLSOS (nova planilha)
+// ─────────────────────────────────────────────────────────────
+
+function getDespesasV2() {
+  const ss    = getSSCached();
+  const sheet = ss.getSheetByName('DespesasV2');
+  if (!sheet || sheet.getLastRow() < 2) return [];
+  const data  = sheet.getDataRange().getValues();
+  const hdrs  = data[0];
+  const idx   = {};
+  hdrs.forEach((h, i) => idx[String(h).trim()] = i);
+
+  return data.slice(1).filter(r => r[idx['ID']]).map(row => ({
+    id:            String(row[idx['ID']] || ''),
+    dataVenc:      fmtIsoDate(row[idx['Data Venc.']] || ''),
+    mesComp:       String(row[idx['Mês Competência']] || '').slice(0, 7),
+    classificacao: row[idx['Classificação']] || '',
+    categoria:     row[idx['Categoria']] || '',
+    descricao:     row[idx['Descrição']] || '',
+    detalhes:      row[idx['Detalhes']] || '',
+    pagador:       row[idx['Pagador']] || '',
+    qtdParcelas:   parseFloat(row[idx['Qtd Parcelas']]) || 1,
+    nParcela:      parseFloat(row[idx['Nº Parcela']]) || 1,
+    valorParcela:  parseFloat(row[idx['Valor Parcela']]) || 0,
+    valorTotal:    parseFloat(row[idx['Valor Total']]) || 0,
+    status:        row[idx['Status']] || '',
+    comprovante:   row[idx['Comprovante']] || '',
+  }));
+}
+
+function saveDespesaV2(body) {
+  const ss    = getSSCached();
+  const sheet = garantirAba(ss, 'DespesasV2', HDR_DESPESAS_V2);
+  const data  = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(body.id || '')) return { ok: true, skipped: true };
+  }
+  // Deriva mesComp de dataVenc se não informado
+  const mesComp = body.mesComp || (body.dataVenc || '').slice(0, 7);
+  sheet.appendRow([
+    body.id || Utilities.getUuid(),
+    body.dataVenc      || '',
+    mesComp,
+    body.classificacao || '',
+    body.categoria     || '',
+    body.descricao     || '',
+    body.detalhes      || '',
+    body.pagador       || '',
+    parseFloat(body.qtdParcelas) || 1,
+    parseFloat(body.nParcela)    || 1,
+    parseFloat(body.valorParcela) || 0,
+    parseFloat(body.valorTotal)   || 0,
+    body.status        || '',
+    body.comprovante   || '',
+    brTimestamp(),
+  ]);
+  return { ok: true, created: true };
+}
+
+function getReceitasV2() {
+  const ss    = getSSCached();
+  const sheet = ss.getSheetByName('ReceitasV2');
+  if (!sheet || sheet.getLastRow() < 2) return [];
+  const data  = sheet.getDataRange().getValues();
+  const hdrs  = data[0];
+  const idx   = {};
+  hdrs.forEach((h, i) => idx[String(h).trim()] = i);
+
+  return data.slice(1).filter(r => r[idx['ID']]).map(row => ({
+    id:             String(row[idx['ID']] || ''),
+    codigoProjeto:  row[idx['Código / Projeto']] || '',
+    mesComp:        String(row[idx['Mês Competência']] || '').slice(0, 7),
+    status:         row[idx['Status']] || '',
+    valorBruto:     parseFloat(row[idx['Valor Bruto']]) || 0,
+    custoEquip:     parseFloat(row[idx['Custo Equip.']]) || 0,
+    instalacao:     parseFloat(row[idx['Instalação']]) || 0,
+    homologacao:    parseFloat(row[idx['Homologação']]) || 0,
+    ajustes:        parseFloat(row[idx['Ajustes']]) || 0,
+    comissao:       parseFloat(row[idx['Comissão']]) || 0,
+    cpvTotal:       parseFloat(row[idx['CPV Total']]) || 0,
+    margemBruta:    parseFloat(row[idx['Margem Bruta']]) || 0,
+    gestaoOp:       parseFloat(row[idx['Gestão Op (20%)']]) || 0,
+    reservaDiv:     parseFloat(row[idx['Reserva Dividendos']]) || 0,
+    margemCash:     parseFloat(row[idx['Margem Cash']]) || 0,
+    margemPct:      parseFloat(row[idx['Margem (%)']]) || 0,
+    valRecebidos:   parseFloat(row[idx['Valores Recebidos']]) || 0,
+    aReceber:       parseFloat(row[idx['A Receber']]) || 0,
+  }));
+}
+
+function saveReceitaV2(body) {
+  const ss    = getSSCached();
+  const sheet = garantirAba(ss, 'ReceitasV2', HDR_RECEITAS_V2);
+  const data  = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(body.id || '')) return { ok: true, skipped: true };
+  }
+  const vb  = parseFloat(body.valorBruto)  || 0;
+  const cpv = parseFloat(body.cpvTotal)    || 0;
+  const mb  = parseFloat(body.margemBruta) || vb - cpv;
+  const go  = parseFloat(body.gestaoOp)    || mb * 0.20;
+  const rd  = parseFloat(body.reservaDiv)  || go * 0.05;
+  const mc  = parseFloat(body.margemCash)  || mb - go - rd;
+  const mp  = parseFloat(body.margemPct)   || (vb > 0 ? +(mc / vb * 100).toFixed(2) : 0);
+  const vr  = parseFloat(body.valRecebidos) || 0;
+  const ar  = parseFloat(body.aReceber)    || vb - vr;
+
+  sheet.appendRow([
+    body.id || Utilities.getUuid(),
+    body.codigoProjeto || '',
+    body.mesComp       || '',
+    body.status        || '',
+    vb,
+    parseFloat(body.custoEquip)  || 0,
+    parseFloat(body.instalacao)  || 0,
+    parseFloat(body.homologacao) || 0,
+    parseFloat(body.ajustes)     || 0,
+    parseFloat(body.comissao)    || 0,
+    cpv, mb, go, rd, mc, mp, vr, ar,
+    brTimestamp(),
+  ]);
+  return { ok: true, created: true };
+}
+
+function getReembolsos() {
+  const despesas = getDespesasV2();
+  const reemb = {};
+  despesas
+    .filter(d => d.pagador && d.pagador !== 'Empresa' && d.status === 'Pago')
+    .forEach(d => {
+      if (!reemb[d.pagador]) reemb[d.pagador] = { total: 0, items: [] };
+      reemb[d.pagador].total += d.valorTotal;
+      reemb[d.pagador].items.push({
+        descricao: d.descricao, dataVenc: d.dataVenc, valor: d.valorTotal,
+      });
+    });
+  return { reembolsos: reemb };
+}
+
+function getDataV2() {
+  return {
+    despesas:   getDespesasV2(),
+    receitas:   getReceitasV2(),
+    reembolsos: getReembolsos().reembolsos,
+  };
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

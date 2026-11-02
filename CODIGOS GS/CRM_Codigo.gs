@@ -38,6 +38,8 @@ function doGet(e) {
     else if (action === 'fin_data')      result = getFinData();
     else if (action === 'save_lead')     result = saveOneLead(JSON.parse(e.parameter.data));
     else if (action === 'save_proposta') result = saveProposta(JSON.parse(e.parameter.data));
+    else if (action === 'list_backups')  result = listBackups();
+    else if (action === 'restore_backup') result = restoreBackup(e.parameter.aba);
     else result = { error: 'Ação desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };
@@ -111,9 +113,11 @@ function getLeadsCRM() {
 // FUNÇÕES DE ESCRITA
 // ────────────────────────────────────────────────
 
-// Salva array completo de leads
+// Salva array completo de leads (faz backup automático antes de sobrescrever)
 function saveLeadsCRM(leads) {
   const ss = SpreadsheetApp.openById(SHEET_ID);
+  // Backup da versão anterior antes de sobrescrever
+  try { backupLeadsCRM(ss); } catch(e) { Logger.log('Aviso: backup falhou — ' + e.message); }
   let sheet = ss.getSheetByName(ABA_CRM);
   if (!sheet) sheet = ss.insertSheet(ABA_CRM);
   sheet.clearContents();
@@ -651,6 +655,83 @@ function saveFinJson(abaName, data) {
   // Linha legível de resumo na célula B1
   sheet.getRange(1, 2).setValue('Atualizado: ' + new Date().toLocaleString('pt-BR') + ' — ' + (data||[]).length + ' registros');
   return { ok: true, count: (data || []).length };
+}
+
+// ────────────────────────────────────────────────
+// BACKUP AUTOMÁTICO DE LEADS
+// Criado antes de cada saveLeadsCRM — mantém últimos 10 backups
+// ────────────────────────────────────────────────
+
+// Cria uma aba de backup com timestamp antes de sobrescrever os dados
+function backupLeadsCRM(ss) {
+  if (!ss) ss = SpreadsheetApp.openById(SHEET_ID);
+  const sheet = ss.getSheetByName(ABA_CRM);
+  if (!sheet) return; // sem dados para fazer backup
+  const raw = sheet.getRange(1, 1).getValue();
+  if (!raw) return; // aba vazia, nada a fazer
+
+  // Nome no formato CRM_Backup_YYYYMMDD_HHMM
+  const now    = new Date();
+  const pad    = n => String(n).padStart(2, '0');
+  const stamp  = now.getFullYear() + pad(now.getMonth()+1) + pad(now.getDate()) +
+                 '_' + pad(now.getHours()) + pad(now.getMinutes());
+  const abaBackup = 'CRM_Backup_' + stamp;
+
+  // Evita criar backup duplicado no mesmo minuto
+  if (ss.getSheetByName(abaBackup)) return;
+
+  const bk = ss.insertSheet(abaBackup);
+  bk.getRange(1, 1).setValue(raw);
+  bk.getRange(1, 2).setValue('Backup automático em ' + now.toLocaleString('pt-BR') +
+                             ' — ' + (() => { try { return JSON.parse(raw).length; } catch{return '?'} })() + ' leads');
+  bk.getRange(1, 1, 1, 2).setBackground('#1E293B').setFontColor('#F8FAFC');
+
+  // Apaga backups antigos — mantém apenas os 10 mais recentes
+  const allSheets = ss.getSheets();
+  const backups = allSheets
+    .filter(s => s.getName().startsWith('CRM_Backup_'))
+    .sort((a, b) => a.getName() < b.getName() ? -1 : 1); // ordem crescente (mais antigo primeiro)
+  while (backups.length > 10) {
+    ss.deleteSheet(backups.shift());
+  }
+}
+
+// Lista todos os backups disponíveis (para o painel admin no frontend)
+function listBackups() {
+  const ss      = SpreadsheetApp.openById(SHEET_ID);
+  const sheets  = ss.getSheets();
+  const backups = sheets
+    .filter(s => s.getName().startsWith('CRM_Backup_'))
+    .sort((a, b) => a.getName() > b.getName() ? -1 : 1) // mais recente primeiro
+    .map(s => {
+      const raw = s.getRange(1, 1).getValue();
+      let count = 0;
+      try { count = JSON.parse(raw).length; } catch(e) {}
+      return { aba: s.getName(), count: count, label: s.getName().replace('CRM_Backup_', '').replace('_', ' ') };
+    });
+  return backups;
+}
+
+// Restaura um backup específico (sobrescreve CRM_Dados com o backup)
+// ATENÇÃO: faz backup do estado atual antes de restaurar
+function restoreBackup(abaName) {
+  if (!abaName || !abaName.startsWith('CRM_Backup_')) return { error: 'Nome de aba inválido.' };
+  const ss    = SpreadsheetApp.openById(SHEET_ID);
+  const bkSh  = ss.getSheetByName(abaName);
+  if (!bkSh) return { error: 'Backup "' + abaName + '" não encontrado.' };
+  const raw = bkSh.getRange(1, 1).getValue();
+  if (!raw) return { error: 'Backup vazio.' };
+  let leads;
+  try { leads = JSON.parse(raw); } catch(e) { return { error: 'Backup corrompido: ' + e.message }; }
+  // Salva o estado atual como backup antes de restaurar
+  try { backupLeadsCRM(ss); } catch(e) {}
+  // Sobrescreve CRM_Dados com o backup
+  let sheet = ss.getSheetByName(ABA_CRM);
+  if (!sheet) sheet = ss.insertSheet(ABA_CRM);
+  sheet.clearContents();
+  sheet.getRange(1, 1).setValue(raw);
+  gravarTabelaLegivel(sheet, leads);
+  return { ok: true, count: leads.length, restored: abaName };
 }
 
 // ────────────────────────────────────────────────

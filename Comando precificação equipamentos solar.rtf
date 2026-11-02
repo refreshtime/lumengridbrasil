@@ -1,0 +1,167 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\froman\fcharset0 Times-Bold;\f2\fmodern\fcharset0 Courier;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Claro. Para o 
+\f1\b Claude Code
+\f0\b0 , eu deixaria muito mais enxuto e orientado \'e0 execu\'e7\'e3o:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs26 \cf0 Crie uma planilha Excel profissional de PRECIFICA\'c7\'c3O DE KITS FOTOVOLTAICOS, preparada para posteriormente virar base de um gerador de propostas.\
+\
+PRINC\'cdPIO:\
+A planilha precisa ser simples de entender e separar claramente:\
+1. Dados t\'e9cnicos\
+2. Custos\
+3. Precifica\'e7\'e3o\
+4. Negocia\'e7\'e3o\
+5. Comiss\'e3o\
+6. Backend\
+\
+REGRAS FINANCEIRAS:\
+- Imposto: 10% (PIS/COFINS j\'e1 inclu\'eddos)\
+- Gest\'e3o operacional: 20%\
+- Overload m\'e1ximo string inverter: 40%\
+- Margem bruta de refer\'eancia para kit pequeno: 24%\
+- Margem deve crescer conforme o tamanho do kit\
+- R$/kWp deve cair conforme o sistema aumenta\
+- CASH = (Pre\'e7o - Custo Direto - Imposto) \'d7 80%\
+\
+PRE\'c7O:\
+Pre\'e7o cheio = Custo Direto / (1 - Margem Bruta)\
+\
+Ter 3 pre\'e7os separados:\
+- Pre\'e7o cheio\
+- Pre\'e7o inicial/proposta\
+- Pre\'e7o promocional/mata-mata\
+\
+Reserva de negocia\'e7\'e3o:\
+8 placas 4%\
+10 4%\
+12 4,5%\
+14 4,5%\
+16 5%\
+18 5%\
+20 5,5%\
+22 5,5%\
+24 6%\
+\
+Pre\'e7o inicial = Pre\'e7o promocional / (1 - % negocia\'e7\'e3o)\
+\
+M\'d3DULOS:\
+620 Wp.\
+\
+KITS:\
+8, 10, 12, 14, 16, 18, 20, 22 e 24 placas.\
+\
+FOXESS MICRO:\
+- 2,5 kW por micro\
+- 1 micro para cada 4 placas\
+- Portanto somente 8, 12, 16, 20 e 24 placas\
+- Nunca permitir 10, 14, 18 ou 22 placas nessa configura\'e7\'e3o.\
+\
+STRING:\
+- Nunca aceitar string fracionada\
+- Validar MPPT, strings, tens\'e3o e corrente pelo datasheet do modelo\
+- N\'e3o inventar especifica\'e7\'f5es\
+- Overload = (kWp DC / kW AC) - 1\
+- Se >40%, marcar como INV\'c1LIDO.\
+\
+INSTALA\'c7\'c3O:\
+Criar tabela autom\'e1tica:\
+0\'963 kWp: R$0,84/Wp + R$500 homologa\'e7\'e3o\
+3\'966: R$0,60/Wp + R$500\
+6\'969: R$0,50/Wp + R$800\
+9\'9612: R$0,44/Wp + R$950\
+12\'9620: R$0,42/Wp + R$1.050\
+20\'9645: R$0,38/Wp + R$1.450\
+\
+Tamb\'e9m criar campo manual para instala\'e7\'e3o SEM NF.\
+Frete manual.\
+\
+DADOS REAIS \'97 N\'c3O ALTERAR:\
+\
+8 PLACAS / 4,96 kWp:\
+- FoxESS Micro + Jinko: equipamentos R$7.832 \uc0\u8594  pre\'e7o final R$14.880\
+- GoodWe + Jinko: equipamentos R$7.400 \uc0\u8594  pre\'e7o final R$14.380\
+- FoxESS Micro + Leapton: equipamentos R$7.356 \uc0\u8594  pre\'e7o final R$14.270\
+\
+16 PLACAS / 9,92 kWp:\
+- GoodWe 7,5 + Leapton: R$13.892 \uc0\u8594  R$27.800\
+- GoodWe 7,5 + Jinko: R$15.025 \uc0\u8594  R$28.990\
+- FoxESS + Jinko: R$16.000 \uc0\u8594  R$30.119\
+- FoxESS + Leapton: R$14.800 \uc0\u8594  R$28.799\
+\
+20 PLACAS / 12,40 kWp:\
+- GoodWe 10 + Leapton: R$16.300 \uc0\u8594  R$32.690\
+- GoodWe 10 + Jinko: R$17.900 \uc0\u8594  R$34.490\
+- FoxESS + Leapton: R$18.000 \uc0\u8594  R$34.590\
+- FoxESS + Jinko: R$19.500 \uc0\u8594  R$36.290\
+\
+Esses pre\'e7os s\'e3o PRE\'c7OS PROMOCIONAIS/MATA-MATA e devem servir como \'e2ncoras para criar os kits intermedi\'e1rios.\
+\
+N\'e3o inventar custos como se fossem reais. Custos estimados devem aparecer como ESTIMADOS.\
+\
+ABAS:\
+\
+1. PAR\'c2METROS\
+2. KITS / PRECIFICA\'c7\'c3O\
+3. INVERSORES\
+4. FAIXAS DE INSTALA\'c7\'c3O\
+5. COTA\'c7\'d5ES\
+6. COMISS\'d5ES\
+7. RESUMO COMERCIAL\
+8. BACKEND\
+9. VALIDA\'c7\'c3O T\'c9CNICA\
+10. FONTES\
+\
+ABA PRINCIPAL:\
+A ordem visual deve ser:\
+\
+DADOS DO KIT\
+\uc0\u8595 \
+EQUIPAMENTOS\
+\uc0\u8595 \
+CUSTOS\
+\uc0\u8595 \
+CUSTO DIRETO\
+\uc0\u8595 \
+MARGEM\
+\uc0\u8595 \
+PRE\'c7O CHEIO\
+\uc0\u8595 \
+PRE\'c7O INICIAL\
+\uc0\u8595 \
+PRE\'c7O PROMOCIONAL\
+\uc0\u8595 \
+IMPOSTO\
+\uc0\u8595 \
+GEST\'c3O\
+\uc0\u8595 \
+CASH\
+\
+COMISS\'c3O:\
+Aba separada. Selecionar o kit e puxar automaticamente pre\'e7o/custo/CASH. Informar comiss\'e3o % e calcular comiss\'e3o e CASH l\'edquido.\
+\
+BACKEND:\
+Tabela limpa, uma linha por kit, com todos os campos t\'e9cnicos, custos e pre\'e7os para futura integra\'e7\'e3o com gerador de propostas.\
+\
+IMPORTANTE:\
+Antes de gerar os kits intermedi\'e1rios, valide que a planilha reproduz os pre\'e7os reais de 8, 16 e 20 placas.\
+\
+Se houver conflito entre um pre\'e7o hist\'f3rico e a regra t\'e9cnica de overload, N\'c3O altere o pre\'e7o hist\'f3rico. Mantenha o pre\'e7o como refer\'eancia comercial e marque a configura\'e7\'e3o t\'e9cnica como "REVISAR".\
+\
+O resultado deve ser uma planilha did\'e1tica, profissional e funcional, n\'e3o uma tabela gigante.\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b\fs24 \cf0 Eu usaria essa vers\'e3o no Claude Code.
+\f0\b0  Ela d\'e1 liberdade para ele construir a estrutura, mas trava justamente os pontos que n\'e3o podem ser interpretados errado: 
+\f1\b 24% como refer\'eancia, curva crescente de margem, R$/kWp decrescente, 40% de overload, FoxESS em m\'faltiplos de 4 e os pre\'e7os reais como \'e2ncoras.
+\f0\b0 \
+}

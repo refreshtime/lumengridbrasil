@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Panfleto Consultor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  padding: 48px 24px 80px;
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════
+   A4  |  794 × 1123 px  (print: 210 × 297 mm)
+══════════════════════════════════════════ */
+.panfleto {
+  width: 794px;
+  height: 1123px;
+  position: relative;
+  overflow: hidden;
+  background: #08080d;
+}
+
+/* BARRA LARANJA */
+.barra {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: #F26522;
+  z-index: 30;
+}
+
+/* ══════════════════════════════════════════
+   ZONA FOTO  (0 → 440px)
+
+   Headline termina em ~108 + 3×(52×1.07) ≈ 275px
+   Eco começa em 295px, termina em ~385px
+   Foto vai até 440px cobrindo todo o conteúdo
+   que fica sobre ela.
+══════════════════════════════════════════ */
+.foto {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 440px;
+  background: url('imagens/PROJETOS/casa-moderna-solar.png') center 40% / cover no-repeat;
+  z-index: 0;
+}
+
+/* Overlay: escuro no topo (logo legível)
+            quase transparente no meio (foto respira)
+            escuro na base (transição para painel) */
+.ov {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 440px;
+  background: linear-gradient(
+    to bottom,
+    rgba(8,8,13,.90)  0%,
+    rgba(8,8,13,.68)  7%,
+    rgba(8,8,13,.18) 20%,    /* foto começa a aparecer */
+    rgba(8,8,13,.06) 42%,    /* foto no pico — máxima visibilidade */
+    rgba(8,8,13,.06) 58%,
+    rgba(8,8,13,.45) 75%,
+    rgba(8,8,13,.88) 90%,
+    rgba(8,8,13,.98) 100%
+  );
+  z-index: 1;
+}
+
+/* ── LOGO ── */
+.logo {
+  position: absolute;
+  top: 24px; left: 52px;
+  display: flex; align-items: center; gap: 11px;
+  z-index: 20;
+}
+.logo img {
+  height: 46px;
+  filter:
+    drop-shadow(0 0 16px rgba(242,101,34,.85))
+    drop-shadow(0 0 5px rgba(242,101,34,.55))
+    drop-shadow(0 2px 10px rgba(0,0,0,.95));
+}
+.logo-txt { display: flex; flex-direction: column; gap: 2px; }
+.logo-nome { display: flex; align-items: baseline; line-height: 1; }
+.logo-nome .l { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:22px; text-transform:uppercase; text-shadow:0 2px 10px rgba(0,0,0,.95); }
+.logo-nome .l.o { color:#F26522; }
+.logo-nome .l.w { color:#FAFAFA; }
+.logo-tag { font-family:'DM Sans',sans-serif; font-weight:600; font-size:7.5px; text-transform:uppercase; letter-spacing:.3em; color:rgba(242,101,34,.90); text-shadow:0 2px 8px rgba(0,0,0,.95); }
+
+/* ── EYEBROW ── */
+.eyebrow {
+  position: absolute;
+  top: 86px; left: 52px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(242,101,34,.88);
+  text-shadow: 0 2px 12px rgba(0,0,0,1);
+  z-index: 20;
+}
+
+/* ── HEADLINE ──
+   52px × 1.07 lh = 55.6px/linha  × 3 linhas = 167px
+   Começa em 104px → termina em ~271px              */
+.headline {
+  position: absolute;
+  top: 104px; left: 52px; right: 52px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 52px;
+  line-height: 1.07;
+  letter-spacing: -2px;
+  color: #FAFAFA;
+  text-shadow:
+    0 0 60px rgba(0,0,0,1),
+    0 0 30px rgba(0,0,0,1),
+    0 4px 20px rgba(0,0,0,1);
+  z-index: 20;
+}
+.headline em { color: #F26522; font-style: normal; }
+
+/* ── ECO 85% ──
+   Posicionado em 295px (24px após headline terminar em ~271px)
+   Eco-num: 80px de altura → bloco termina em ~375px            */
+.eco {
+  position: absolute;
+  top: 295px; left: 52px; right: 52px;
+  display: flex; align-items: center; gap: 16px;
+  z-index: 20;
+}
+.eco-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 80px;
+  line-height: 1;
+  letter-spacing: -3px;
+  color: #F26522;
+  text-shadow:
+    0 0 50px rgba(242,101,34,.55),
+    0 0 24px rgba(0,0,0,1),
+    0 4px 20px rgba(0,0,0,1);
+  flex-shrink: 0;
+}
+.eco-right {
+  display: flex; flex-direction: column; gap: 3px;
+  background: rgba(8,8,13,.65);
+  border-radius: 8px;
+  padding: 9px 14px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.eco-t1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px; font-weight: 700;
+  color: #FAFAFA; line-height: 1.2;
+}
+.eco-t2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px; font-weight: 400;
+  color: rgba(250,250,250,.75); line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════
+   PAINEL ESCURO  (top: 415px → fim)
+   Corte diagonal no topo: right=0, left=56px
+   Cria transição elegante com a foto.
+══════════════════════════════════════════ */
+.painel {
+  position: absolute;
+  top: 415px; left: 0; right: 0; bottom: 0;
+  background: #08080d;
+  clip-path: polygon(0 56px, 100% 0, 100% 100%, 0 100%);
+  z-index: 5;
+}
+
+/* Linha laranja fina no corte diagonal via SVG posicionado externamente */
+.diagonal-accent {
+  position: absolute;
+  top: 415px; left: 0; right: 0;
+  height: 60px;
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Conteúdo do painel:
+   top offset = 56px (diagonal) + 24px padding = 80px
+   altura útil = (1123-415) - 80 - 32 = 596px
+   justify-content: space-between distribui os 596px
+   entre os 5 blocos + 4 gaps automaticamente.    */
+.painel-inner {
+  position: absolute;
+  top: 80px; left: 52px; right: 52px; bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ── DIVISOR ── */
+.divisor {
+  display: flex; align-items: center; gap: 14px;
+  flex-shrink: 0;
+}
+.div-l { flex: 1; height: 1px; background: rgba(255,255,255,.09); }
+.div-t {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: rgba(242,101,34,.65); white-space: nowrap;
+}
+
+/* ── LISTA DE SOLUÇÕES ── */
+.solucoes { display: flex; flex-direction: column; }
+.sol {
+  display: flex; align-items: center; gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.sol:last-child { border-bottom: none; }
+.sol-icon { font-size: 24px; width: 32px; text-align: center; flex-shrink: 0; }
+.sol-corpo { display: flex; flex-direction: column; gap: 2px; }
+.sol-titulo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px; font-weight: 700;
+  color: #F26522; text-transform: uppercase; letter-spacing: .04em;
+}
+.sol-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px; font-weight: 400;
+  color: rgba(250,250,250,.70); line-height: 1.45;
+}
+
+/* ── INVESTIMENTO ── */
+.inv {
+  background: rgba(242,101,34,.07);
+  border: 1px solid rgba(242,101,34,.22);
+  border-left: 3px solid #F26522;
+  border-radius: 8px;
+  padding: 14px 18px;
+}
+.inv p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: rgba(250,250,250,.78); line-height: 1.65;
+}
+.inv p strong { color: #FAFAFA; font-weight: 600; }
+
+/* ── CTA ── */
+.cta {
+  background: #F26522;
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.cta-corpo { flex: 1; }
+.cta-titulo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: #08080d; text-transform: uppercase;
+  letter-spacing: .04em; line-height: 1.2;
+  margin-bottom: 5px;
+}
+.cta-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px; font-weight: 500;
+  color: rgba(8,8,13,.72); line-height: 1.5;
+}
+
+/* QR Code — placeholder visual (substituir pela img real) */
+.qr {
+  flex-shrink: 0; width: 84px; height: 84px;
+  background: #FAFAFA; border-radius: 7px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; padding: 7px;
+}
+.qr-pat {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  grid-template-rows: repeat(7,1fr);
+  gap: 1.5px; width: 60px; height: 60px;
+}
+.c  { background:#08080d; border-radius:1px; }
+.cw { background:#FAFAFA; border-radius:1px; }
+.qr-lbl {
+  font-family:'DM Sans',sans-serif;
+  font-size:6px; font-weight:700;
+  color:rgba(8,8,13,.40); letter-spacing:.12em; text-transform:uppercase;
+}
+
+/* ── RODAPÉ ── */
+.footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  flex-shrink: 0;
+}
+.footer-logo { display: flex; align-items: center; gap: 8px; }
+.footer-logo img { height: 26px; filter: drop-shadow(0 0 7px rgba(242,101,34,.60)); }
+.footer-nome { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:13px; color:#FAFAFA; }
+.footer-nome span { color:#F26522; }
+.footer-domani { font-family:'DM Sans',sans-serif; font-size:9px; color:rgba(255,255,255,.22); letter-spacing:.08em; }
+
+/* ══════════════════════════════════════════  PRINT */
+@media print {
+  body { background:none; padding:0; margin:0; }
+  .panfleto { width:210mm; height:297mm; }
+  @page { size:A4 portrait; margin:0; }
+}
+</style>
+</head>
+<body>
+<div class="panfleto">
+
+  <!-- FOTO + OVERLAY -->
+  <div class="foto"></div>
+  <div class="ov"></div>
+  <div class="barra"></div>
+
+  <!-- ACENTO DIAGONAL (SVG) -->
+  <svg class="diagonal-accent" viewBox="0 0 794 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="56" x2="794" y2="0" stroke="rgba(242,101,34,0.55)" stroke-width="1.5"/>
+  </svg>
+
+  <!-- LOGO -->
+  <div class="logo">
+    <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="logo-txt">
+      <div class="logo-nome">
+        <span class="l o">LUMEN</span><span class="l w">GRID</span>
+      </div>
+      <span class="logo-tag">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <!-- EYEBROW -->
+  <div class="eyebrow">▶ Para residências</div>
+
+  <!-- HEADLINE  (3 linhas × 52px × lh 1.07 = ~167px → termina em ~271px) -->
+  <div class="headline">
+    Não espere o <em>verão</em><br>
+    chegar para se assustar<br>
+    com a sua fatura.
+  </div>
+
+  <!-- 85%  (começa em 295px, 24px após o fim do headline) -->
+  <div class="eco">
+    <div class="eco-num">85%</div>
+    <div class="eco-right">
+      <div class="eco-t1">de economia na conta de energia.</div>
+      <div class="eco-t2">A LumenGrid analisa seu consumo e<br>mostra as opções certas para sua casa.</div>
+    </div>
+  </div>
+
+  <!-- PAINEL ESCURO -->
+  <div class="painel">
+    <div class="painel-inner">
+
+      <!-- DIVISOR -->
+      <div class="divisor">
+        <div class="div-l"></div>
+        <div class="div-t">Soluções disponíveis</div>
+        <div class="div-l"></div>
+      </div>
+
+      <!-- SOLUÇÕES -->
+      <div class="solucoes">
+        <div class="sol">
+          <div class="sol-icon">☀️</div>
+          <div class="sol-corpo">
+            <div class="sol-titulo">Energia Solar</div>
+            <div class="sol-desc">Economize produzindo sua própria eletricidade.</div>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="sol-icon">🔋</div>
+          <div class="sol-corpo">
+            <div class="sol-titulo">Bateria e Armazenamento</div>
+            <div class="sol-desc">Não fique sem energia quando a rede elétrica cair.</div>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="sol-icon">⚡</div>
+          <div class="sol-corpo">
+            <div class="sol-titulo">Sistema Híbrido e Backup</div>
+            <div class="sol-desc">Mais autonomia e segurança para a sua casa.</div>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="sol-icon">🚗</div>
+          <div class="sol-corpo">
+            <div class="sol-titulo">Carregamento Elétrico</div>
+            <div class="sol-desc">Estrutura ideal para carregar seu carro em casa.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INVESTIMENTO -->
+      <div class="inv">
+        <p>
+          <strong>E o investimento?</strong> Existem opções de parcelamento em que a economia gerada pelo sistema pode ajudar a pagar o próprio investimento.
+          <strong>Você não precisa decidir nada agora.</strong> Primeiro, descubra as possibilidades para a sua casa.
+        </p>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta">
+        <div class="cta-corpo">
+          <div class="cta-titulo">Fale com o especialista LumenGrid na sua região</div>
+          <div class="cta-sub">📲 Envie sua conta de energia pelo WhatsApp e receba uma análise personalizada e gratuita.</div>
+        </div>
+        <!-- Substituir pelo QR real: gere em wa.me/55SEUNUMERO -->
+        <div class="qr">
+          <div class="qr-pat">
+            <div class="c"></div><div class="c"></div><div class="c"></div><div class="cw"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+            <div class="c"></div><div class="cw"></div><div class="c"></div><div class="cw"></div><div class="c"></div><div class="cw"></div><div class="c"></div>
+            <div class="c"></div><div class="c"></div><div class="c"></div><div class="cw"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+            <div class="cw"></div><div class="c"></div><div class="cw"></div><div class="c"></div><div class="cw"></div><div class="c"></div><div class="cw"></div>
+            <div class="c"></div><div class="c"></div><div class="c"></div><div class="cw"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+            <div class="c"></div><div class="cw"></div><div class="c"></div><div class="cw"></div><div class="c"></div><div class="cw"></div><div class="c"></div>
+            <div class="c"></div><div class="c"></div><div class="c"></div><div class="cw"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+          </div>
+          <div class="qr-lbl">WhatsApp</div>
+        </div>
+      </div>
+
+      <!-- RODAPÉ -->
+      <div class="footer">
+        <div class="footer-logo">
+          <img src="imagens/LOGOS/logo-icone.png" alt="">
+          <div class="footer-nome"><span>Lumen</span>Grid | Energia Inteligente</div>
+        </div>
+        <div class="footer-domani">Feito por Domani Consultoria</div>
+      </div>
+
+    </div><!-- /painel-inner -->
+  </div><!-- /painel -->
+
+</div><!-- /panfleto -->
+</body>
+</html>

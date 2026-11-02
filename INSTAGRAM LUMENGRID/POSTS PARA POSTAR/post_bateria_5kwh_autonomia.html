@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Quanto tempo dura uma bateria de 5 kWh? — LumenGrid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#040406; display:flex; flex-direction:column; align-items:center; gap:44px; padding:44px 20px; font-family:'DM Sans',sans-serif; }
+.slide { width:1080px; height:1350px; position:relative; overflow:hidden; background:#08080d; flex-shrink:0; }
+.li { height:58px; width:auto; object-fit:contain; filter:drop-shadow(0 0 18px rgba(242,101,34,.80)) drop-shadow(0 0 7px rgba(242,101,34,.55)) drop-shadow(0 2px 10px rgba(0,0,0,.9)); }
+.lumen { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:27px; text-transform:uppercase; color:#F26522; letter-spacing:-.3px; text-shadow:0 2px 10px rgba(0,0,0,.95); }
+.grid  { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:27px; text-transform:uppercase; color:#FAFAFA; letter-spacing:-.3px; text-shadow:0 2px 10px rgba(0,0,0,.95); }
+.subtag { font-family:'DM Sans',sans-serif; font-weight:600; font-size:8px; text-transform:uppercase; letter-spacing:.3em; color:rgba(242,101,34,.90); text-shadow:0 2px 8px rgba(0,0,0,.95); }
+.dots { position:absolute; bottom:52px; right:88px; display:flex; gap:9px; align-items:center; z-index:20; }
+.d  { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.18); }
+.do { width:24px; height:8px; border-radius:4px; background:#F26522; }
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 1 — CAPA
+     Foto: bateria-residencial.png
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;inset:0;z-index:0;
+    background:url('../../imagens/TECNOLOGIA/bateria-residencial.png') center/cover no-repeat;"></div>
+  <div style="position:absolute;top:0;left:0;right:0;height:280px;z-index:1;
+    background:linear-gradient(to bottom,rgba(0,0,0,.68) 0%,rgba(0,0,0,.25) 65%,rgba(0,0,0,0) 100%);"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:950px;z-index:1;
+    background:linear-gradient(to top,rgba(4,4,8,.99) 0%,rgba(4,4,8,.94) 20%,rgba(4,4,8,.60) 46%,rgba(4,4,8,0) 100%);"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- CONTEÚDO: escalada de clímax -->
+  <div style="position:absolute;left:88px;right:88px;bottom:112px;z-index:20;text-align:center;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;
+       color:rgba(250,250,250,.22);line-height:1.06;letter-spacing:-1.5px;margin:0;">Quanto tempo</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:78px;font-weight:700;
+       color:rgba(250,250,250,.62);line-height:.97;letter-spacing:-2px;margin:6px 0 8px;">dura uma bateria</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:92px;font-weight:800;
+       color:#F26522;line-height:.94;letter-spacing:-2.5px;margin:0 0 36px;">de 5 kWh?</p>
+    <div style="width:44px;height:2px;background:rgba(242,101,34,.62);border-radius:2px;margin:0 auto 26px;"></div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:30px;font-weight:300;
+       color:rgba(250,250,250,.52);line-height:1.65;text-shadow:0 2px 18px rgba(0,0,0,.99);">
+      Com painéis solares,<br>a autonomia pode ser ainda maior.
+    </p>
+  </div>
+
+  <div class="dots">
+    <div class="do"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 2 — ESPECIFICAÇÕES · GoodWe Lynx A G3
+     Foto: inversor-bateria-goodwe.png (direita)
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;top:0;right:0;width:540px;bottom:0;z-index:0;
+    background:url('../../imagens/TECNOLOGIA/inversor-bateria-goodwe.png') center/cover no-repeat;"></div>
+  <div style="position:absolute;inset:0;z-index:1;
+    background:linear-gradient(to right,rgba(8,8,13,1) 0%,rgba(8,8,13,1) 36%,rgba(8,8,13,.88) 50%,rgba(8,8,13,.22) 68%,rgba(8,8,13,0) 100%);"></div>
+  <div style="position:absolute;top:0;left:0;right:0;height:230px;z-index:2;
+    background:linear-gradient(to bottom,rgba(0,0,0,.60) 0%,rgba(0,0,0,0) 100%);"></div>
+  <div style="position:absolute;inset:24px;z-index:25;border:4px solid rgba(242,101,34,.55);pointer-events:none;"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ GoodWe · Lynx A G3</p>
+  </div>
+
+  <!-- PAINEL ESQUERDO -->
+  <div style="position:absolute;left:88px;right:562px;top:226px;bottom:96px;z-index:20;display:flex;flex-direction:column;justify-content:center;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:700;
+       color:#FAFAFA;line-height:1.14;letter-spacing:-.4px;margin:0;">A bateria que<br>instalamos nos<br>nossos clientes</p>
+    <div style="width:36px;height:2px;background:#F26522;border-radius:2px;margin:24px 0 28px;"></div>
+    <div>
+      <div style="padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07);">
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.56);margin:0 0 4px;">Modelo</p>
+        <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:rgba(250,250,250,.70);margin:0;">LX A5.0-30</p>
+      </div>
+      <div style="padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07);">
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.56);margin:0 0 4px;">Capacidade nominal</p>
+        <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:#FAFAFA;margin:0;">5,12 kWh</p>
+      </div>
+      <div style="padding:15px 16px;border-bottom:1px solid rgba(242,101,34,.15);border-left:3px solid #F26522;margin-left:-16px;background:rgba(242,101,34,.07);">
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.92);margin:0 0 4px;">Energia utilizável</p>
+        <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:40px;color:#F26522;margin:0;letter-spacing:-.5px;">5 kWh</p>
+      </div>
+      <div style="padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07);">
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.56);margin:0 0 4px;">Tecnologia</p>
+        <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:#FAFAFA;margin:0;">LFP (LiFePO4)</p>
+      </div>
+      <div style="padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07);">
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.56);margin:0 0 4px;">Potência máx. descarga</p>
+        <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:#FAFAFA;margin:0;">7.200 W</p>
+      </div>
+      <div style="padding:13px 0;">
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.56);margin:0 0 4px;">Eficiência de ciclo</p>
+        <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:#FAFAFA;margin:0;">≥ 96%</p>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding:12px 16px;border-radius:6px;background:rgba(255,255,255,.04);border-left:2px solid rgba(242,101,34,.28);">
+      <p style="font-family:'DM Sans',sans-serif;font-size:15px;color:rgba(250,250,250,.40);line-height:1.6;margin:0;">Base de cálculo: <strong style="color:rgba(250,250,250,.60);">5.000 Wh</strong> utilizáveis.</p>
+    </div>
+  </div>
+
+  <div class="dots">
+    <div class="d"></div><div class="do"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 3 — TUDO LIGADO
+     Layout: headline → resposta (centro) → lista (base)
+     5.000 Wh ÷ 840 W = 6 horas
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:1000px;height:1000px;pointer-events:none;
+    background:radial-gradient(circle,rgba(242,101,34,.08) 0%,transparent 60%);"></div>
+  <div style="position:absolute;inset:24px;border:4px solid rgba(242,101,34,.52);pointer-events:none;z-index:6;"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ Autonomia total</p>
+  </div>
+
+  <!-- Headline -->
+  <div style="position:absolute;left:88px;right:88px;top:216px;z-index:10;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;
+       color:#FAFAFA;line-height:1.08;letter-spacing:-1px;margin:0;">Tudo ligado ao mesmo tempo</p>
+  </div>
+
+  <!-- Linha separadora 1 -->
+  <div style="position:absolute;left:88px;right:88px;top:344px;height:1px;z-index:5;
+    background:linear-gradient(to right,rgba(242,101,34,.45) 0%,rgba(242,101,34,.08) 80%,transparent 100%);"></div>
+
+  <!-- RESPOSTA: centro do slide — a grande revelação -->
+  <div style="position:absolute;left:88px;right:88px;top:360px;z-index:10;text-align:center;
+    background:radial-gradient(ellipse 70% 100% at 50% 50%,rgba(242,101,34,.07) 0%,transparent 70%);
+    padding:32px 0 28px;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;
+       letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.65);margin:0 0 12px;">com 840 W de consumo</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:270px;
+       color:#F26522;line-height:.80;letter-spacing:-8px;margin:0;
+       text-shadow:0 0 120px rgba(242,101,34,.35),0 0 60px rgba(242,101,34,.16),0 4px 40px rgba(0,0,0,.99);">6</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:48px;font-weight:400;
+       color:rgba(250,250,250,.65);letter-spacing:6px;text-transform:uppercase;margin:10px 0 0;">horas</p>
+  </div>
+
+  <!-- Linha separadora 2 -->
+  <div style="position:absolute;left:88px;right:88px;top:756px;height:1px;z-index:5;
+    background:linear-gradient(to right,rgba(242,101,34,.45) 0%,rgba(242,101,34,.08) 80%,transparent 100%);"></div>
+
+  <!-- LISTA: evidência abaixo da resposta -->
+  <div style="position:absolute;left:88px;right:88px;top:770px;z-index:10;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:14px;height:2px;background:rgba(242,101,34,.40);border-radius:2px;flex-shrink:0;"></div>
+        <span style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:rgba(250,250,250,.80);">2 Geladeiras</span>
+      </div>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:rgba(250,250,250,.40);">300 W</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:14px;height:2px;background:rgba(242,101,34,.40);border-radius:2px;flex-shrink:0;"></div>
+        <span style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:rgba(250,250,250,.80);">25 Lâmpadas LED</span>
+      </div>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:rgba(250,250,250,.40);">250 W</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:14px;height:2px;background:rgba(242,101,34,.40);border-radius:2px;flex-shrink:0;"></div>
+        <span style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:rgba(250,250,250,.80);">2 TVs + Notebook + Wi-Fi</span>
+      </div>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:rgba(250,250,250,.40);">290 W</span>
+    </div>
+    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;
+      padding:14px 20px;border-radius:8px;background:rgba(242,101,34,.09);border:1px solid rgba(242,101,34,.25);">
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.72);">Total estimado</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:26px;color:#F26522;">840 W</span>
+    </div>
+  </div>
+
+  <div class="dots">
+    <div class="d"></div><div class="d"></div><div class="do"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 4 — GELADEIRAS (dois cenários)
+     1 Geladeira 150 W → 33 h
+     2 Geladeiras 300 W → 17 h
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:1000px;height:1000px;pointer-events:none;
+    background:radial-gradient(circle,rgba(242,101,34,.08) 0%,transparent 60%);"></div>
+  <div style="position:absolute;inset:24px;border:4px solid rgba(242,101,34,.52);pointer-events:none;z-index:6;"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ Geladeiras</p>
+  </div>
+
+  <!-- CENÁRIO 1 — superior (210-720px, 510px de altura) -->
+  <div style="position:absolute;left:0;right:0;top:210px;height:510px;z-index:10;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:600;letter-spacing:4px;
+       text-transform:uppercase;color:rgba(250,250,250,.40);margin:0;">1 Geladeira &nbsp;·&nbsp; 150 W</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:190px;
+       color:#F26522;line-height:.80;letter-spacing:-5px;margin:16px 0 0;
+       text-shadow:0 0 100px rgba(242,101,34,.32),0 0 50px rgba(242,101,34,.16),0 4px 36px rgba(0,0,0,.99);">33</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:38px;font-weight:400;
+       color:rgba(250,250,250,.55);letter-spacing:5px;text-transform:uppercase;margin:14px 0 0;">horas</p>
+  </div>
+
+  <!-- DIVISOR CENTRAL -->
+  <div style="position:absolute;left:88px;right:88px;top:720px;height:1px;z-index:5;
+    background:rgba(242,101,34,.40);"></div>
+  <div style="position:absolute;left:88px;right:88px;top:720px;height:30px;z-index:4;
+    background:linear-gradient(to bottom,rgba(242,101,34,.06),transparent);"></div>
+
+  <!-- CENÁRIO 2 — inferior (720-1298px, 578px de altura) -->
+  <div style="position:absolute;left:0;right:0;top:720px;height:578px;z-index:10;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:600;letter-spacing:4px;
+       text-transform:uppercase;color:rgba(250,250,250,.40);margin:0;">2 Geladeiras &nbsp;·&nbsp; 300 W</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:190px;
+       color:#F26522;line-height:.80;letter-spacing:-5px;margin:16px 0 0;
+       text-shadow:0 0 100px rgba(242,101,34,.32),0 0 50px rgba(242,101,34,.16),0 4px 36px rgba(0,0,0,.99);">17</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:38px;font-weight:400;
+       color:rgba(250,250,250,.55);letter-spacing:5px;text-transform:uppercase;margin:14px 0 0;">horas</p>
+  </div>
+
+  <div class="dots">
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="do"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 5 — LÂMPADAS
+     5.000 Wh ÷ 250 W = 20 horas (exato)
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:1000px;height:1000px;pointer-events:none;
+    background:radial-gradient(circle,rgba(242,101,34,.08) 0%,transparent 60%);"></div>
+  <div style="position:absolute;inset:24px;border:4px solid rgba(242,101,34,.52);pointer-events:none;z-index:6;"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ Iluminação</p>
+  </div>
+
+  <!-- CENÁRIO: contexto ao centro-topo -->
+  <div style="position:absolute;left:88px;right:88px;top:216px;z-index:10;text-align:center;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;
+       color:#FAFAFA;line-height:1.08;letter-spacing:-.8px;margin:0;">25 Lâmpadas LED</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:300;
+       color:rgba(250,250,250,.38);letter-spacing:1px;margin:10px 0 0;">250 W no total</p>
+  </div>
+
+  <!-- SEPARADOR -->
+  <div style="position:absolute;left:88px;right:88px;top:360px;height:1px;z-index:5;
+    background:linear-gradient(to right,transparent 0%,rgba(242,101,34,.35) 20%,rgba(242,101,34,.35) 80%,transparent 100%);"></div>
+
+  <!-- RESPOSTA: número grande centralizado -->
+  <div style="position:absolute;left:0;right:0;top:376px;bottom:160px;z-index:10;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;letter-spacing:4px;
+       text-transform:uppercase;color:rgba(242,101,34,.55);margin:0 0 10px;">autonomia</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:300px;
+       color:#F26522;line-height:.80;letter-spacing:-8px;margin:0;
+       text-shadow:0 0 140px rgba(242,101,34,.35),0 0 70px rgba(242,101,34,.18),0 4px 48px rgba(0,0,0,.99);">20</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:52px;font-weight:400;
+       color:rgba(250,250,250,.60);letter-spacing:7px;text-transform:uppercase;margin:14px 0 0;">horas</p>
+  </div>
+
+  <!-- NOTA DE FECHAMENTO -->
+  <div style="position:absolute;left:88px;right:88px;bottom:112px;z-index:10;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:30px;font-weight:400;
+       color:rgba(250,250,250,.52);line-height:1.65;">
+      Casa inteira iluminada.<br>Uma noite completa. Sem a rede.
+    </p>
+  </div>
+
+  <div class="dots">
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="do"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 6 — TVs (dois cenários)
+     1 TV 100 W → 50 h (exato)
+     2 TVs 200 W → 25 h (exato)
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:1000px;height:1000px;pointer-events:none;
+    background:radial-gradient(circle,rgba(242,101,34,.08) 0%,transparent 60%);"></div>
+  <div style="position:absolute;inset:24px;border:4px solid rgba(242,101,34,.52);pointer-events:none;z-index:6;"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ Entretenimento</p>
+  </div>
+
+  <!-- CENÁRIO 1 — 1 TV (210-720px) -->
+  <div style="position:absolute;left:0;right:0;top:210px;height:510px;z-index:10;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:600;letter-spacing:4px;
+       text-transform:uppercase;color:rgba(250,250,250,.40);margin:0;">1 TV &nbsp;·&nbsp; 100 W</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:190px;
+       color:#F26522;line-height:.80;letter-spacing:-5px;margin:16px 0 0;
+       text-shadow:0 0 100px rgba(242,101,34,.32),0 0 50px rgba(242,101,34,.16),0 4px 36px rgba(0,0,0,.99);">50</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:38px;font-weight:400;
+       color:rgba(250,250,250,.55);letter-spacing:5px;text-transform:uppercase;margin:14px 0 0;">horas</p>
+  </div>
+
+  <!-- DIVISOR CENTRAL -->
+  <div style="position:absolute;left:88px;right:88px;top:720px;height:1px;z-index:5;
+    background:rgba(242,101,34,.40);"></div>
+  <div style="position:absolute;left:88px;right:88px;top:720px;height:30px;z-index:4;
+    background:linear-gradient(to bottom,rgba(242,101,34,.06),transparent);"></div>
+
+  <!-- CENÁRIO 2 — 2 TVs (720-1298px) -->
+  <div style="position:absolute;left:0;right:0;top:720px;height:578px;z-index:10;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:600;letter-spacing:4px;
+       text-transform:uppercase;color:rgba(250,250,250,.40);margin:0;">2 TVs &nbsp;·&nbsp; 200 W</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:190px;
+       color:#F26522;line-height:.80;letter-spacing:-5px;margin:16px 0 0;
+       text-shadow:0 0 100px rgba(242,101,34,.32),0 0 50px rgba(242,101,34,.16),0 4px 36px rgba(0,0,0,.99);">25</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:38px;font-weight:400;
+       color:rgba(250,250,250,.55);letter-spacing:5px;text-transform:uppercase;margin:14px 0 0;">horas</p>
+  </div>
+
+  <div class="dots">
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="do"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 7 — HOME OFFICE & SEGURANÇA
+     5.000 Wh ÷ 90 W = 55 horas
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:1000px;height:1000px;pointer-events:none;
+    background:radial-gradient(circle,rgba(242,101,34,.08) 0%,transparent 60%);"></div>
+  <div style="position:absolute;inset:24px;border:4px solid rgba(242,101,34,.52);pointer-events:none;z-index:6;"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ Home Office &amp; Segurança</p>
+  </div>
+
+  <!-- CENÁRIO: contexto -->
+  <div style="position:absolute;left:88px;right:88px;top:216px;z-index:10;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:50px;font-weight:700;
+       color:#FAFAFA;line-height:1.10;letter-spacing:-.6px;margin:0 0 24px;">
+      Notebook · Wi-Fi · Alarme
+    </p>
+    <div style="display:flex;flex-direction:column;gap:0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:14px;height:2px;background:rgba(242,101,34,.40);border-radius:2px;flex-shrink:0;"></div>
+          <span style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:rgba(250,250,250,.78);">Notebook</span>
+        </div>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:rgba(250,250,250,.38);">65 W</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:14px;height:2px;background:rgba(242,101,34,.40);border-radius:2px;flex-shrink:0;"></div>
+          <span style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:rgba(250,250,250,.78);">Roteador Wi-Fi</span>
+        </div>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:rgba(250,250,250,.38);">10 W</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:14px;height:2px;background:rgba(242,101,34,.40);border-radius:2px;flex-shrink:0;"></div>
+          <span style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:400;color:rgba(250,250,250,.78);">Alarme</span>
+        </div>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:rgba(250,250,250,.38);">15 W</span>
+      </div>
+    </div>
+    <div style="margin-top:12px;display:inline-flex;align-items:center;gap:18px;
+      padding:12px 20px;border-radius:6px;background:rgba(242,101,34,.09);border:1px solid rgba(242,101,34,.24);">
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,101,34,.70);">Total</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:24px;color:#F26522;">90 W</span>
+    </div>
+  </div>
+
+  <!-- SEPARADOR -->
+  <div style="position:absolute;left:88px;right:88px;top:596px;height:1px;z-index:5;
+    background:linear-gradient(to right,transparent 0%,rgba(242,101,34,.35) 20%,rgba(242,101,34,.35) 80%,transparent 100%);"></div>
+
+  <!-- RESPOSTA -->
+  <div style="position:absolute;left:0;right:0;top:612px;bottom:160px;z-index:10;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;letter-spacing:4px;
+       text-transform:uppercase;color:rgba(242,101,34,.55);margin:0 0 10px;">autonomia</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:250px;
+       color:#F26522;line-height:.80;letter-spacing:-7px;margin:0;
+       text-shadow:0 0 130px rgba(242,101,34,.35),0 0 65px rgba(242,101,34,.18),0 4px 44px rgba(0,0,0,.99);">55</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:48px;font-weight:400;
+       color:rgba(250,250,250,.60);letter-spacing:6px;text-transform:uppercase;margin:12px 0 0;">horas</p>
+  </div>
+
+  <!-- NOTA -->
+  <div style="position:absolute;left:88px;right:88px;bottom:112px;z-index:10;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:300;
+       color:rgba(250,250,250,.48);line-height:1.65;">
+      Trabalhe. Conecte. Proteja a casa.<br>Sem depender da rede elétrica.
+    </p>
+  </div>
+
+  <div class="dots">
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="do"></div><div class="d"></div><div class="d"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 8 — AR-CONDICIONADO
+     5.000 Wh ÷ 1.200 W = 4 horas
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:1000px;height:1000px;pointer-events:none;
+    background:radial-gradient(circle,rgba(242,101,34,.08) 0%,transparent 60%);"></div>
+  <div style="position:absolute;inset:24px;border:4px solid rgba(242,101,34,.52);pointer-events:none;z-index:6;"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- Eyebrow -->
+  <div style="position:absolute;top:168px;left:88px;z-index:30;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.90);margin:0;">▶ Ar-condicionado</p>
+  </div>
+
+  <!-- CENÁRIO -->
+  <div style="position:absolute;left:88px;right:88px;top:216px;z-index:10;text-align:center;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;
+       color:#FAFAFA;line-height:1.08;letter-spacing:-.8px;margin:0;">12.000 BTU</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:28px;font-weight:300;
+       color:rgba(250,250,250,.38);letter-spacing:1px;margin:10px 0 0;">1.200 W (compressor ciclando)</p>
+  </div>
+
+  <!-- SEPARADOR -->
+  <div style="position:absolute;left:88px;right:88px;top:360px;height:1px;z-index:5;
+    background:linear-gradient(to right,transparent 0%,rgba(242,101,34,.35) 20%,rgba(242,101,34,.35) 80%,transparent 100%);"></div>
+
+  <!-- RESPOSTA -->
+  <div style="position:absolute;left:0;right:0;top:376px;bottom:250px;z-index:10;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;letter-spacing:4px;
+       text-transform:uppercase;color:rgba(242,101,34,.55);margin:0 0 10px;">autonomia estimada</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:300px;
+       color:#F26522;line-height:.80;letter-spacing:-8px;margin:0;
+       text-shadow:0 0 140px rgba(242,101,34,.35),0 0 70px rgba(242,101,34,.18),0 4px 48px rgba(0,0,0,.99);">4</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:52px;font-weight:400;
+       color:rgba(250,250,250,.60);letter-spacing:7px;text-transform:uppercase;margin:14px 0 0;">horas</p>
+  </div>
+
+  <!-- NOTA: solar resolve -->
+  <div style="position:absolute;left:88px;right:88px;bottom:112px;z-index:10;">
+    <div style="padding:26px 28px;border-radius:10px;background:rgba(255,255,255,.04);border-left:3px solid rgba(242,101,34,.50);">
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;
+         text-transform:uppercase;color:rgba(242,101,34,.65);margin:0 0 8px;">Com painéis solares</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:26px;font-weight:400;
+         color:rgba(250,250,250,.70);line-height:1.60;margin:0;">
+        Durante o dia, os painéis absorvem o consumo do ar.<br>
+        A bateria entra como reserva à noite.
+      </p>
+    </div>
+  </div>
+
+  <div class="dots">
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="do"></div><div class="d"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 9 — FECHAMENTO / CTA
+     Foto: casa-placas-bateria.png
+══════════════════════════════════════════════ -->
+<div class="slide">
+
+  <div style="position:absolute;inset:0;z-index:0;
+    background:url('../../imagens/PROJETOS/casa-placas-bateria.png') center/cover no-repeat;"></div>
+  <div style="position:absolute;top:0;left:0;right:0;height:280px;z-index:1;
+    background:linear-gradient(to bottom,rgba(0,0,0,.68) 0%,rgba(0,0,0,.25) 65%,rgba(0,0,0,0) 100%);"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1020px;z-index:1;
+    background:linear-gradient(to top,rgba(4,4,8,.99) 0%,rgba(4,4,8,.95) 18%,rgba(4,4,8,.70) 42%,rgba(4,4,8,0) 100%);"></div>
+
+  <!-- HEADER -->
+  <div style="position:absolute;top:72px;left:88px;right:88px;display:flex;align-items:center;justify-content:space-between;z-index:30;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="../../imagens/LOGOS/logo-icone.png" alt="" class="li">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:baseline;line-height:1;"><span class="lumen">LUMEN</span><span class="grid">GRID</span></div>
+        <span class="subtag">Energia Inteligente</span>
+      </div>
+    </div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(242,101,34,.85);margin:0;">▶ bateria residencial</p>
+  </div>
+
+  <!-- CONTEÚDO: base do slide -->
+  <div style="position:absolute;left:88px;right:88px;bottom:112px;z-index:20;text-align:center;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:58px;font-weight:700;
+       color:rgba(250,250,250,.20);line-height:1.06;letter-spacing:-1.5px;margin:0;">Com painéis solares,</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:76px;font-weight:700;
+       color:rgba(250,250,250,.60);line-height:.97;letter-spacing:-2px;margin:6px 0 8px;">a autonomia</p>
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:86px;font-weight:800;
+       color:#FAFAFA;line-height:.94;letter-spacing:-2.5px;margin:0 0 38px;">não tem limite.</p>
+    <div style="width:44px;height:2px;background:rgba(242,101,34,.62);border-radius:2px;margin:0 auto 28px;"></div>
+    <p style="font-family:'DM Sans',sans-serif;font-size:30px;font-weight:400;
+       color:rgba(250,250,250,.58);line-height:1.65;text-shadow:0 2px 18px rgba(0,0,0,.99);margin:0 0 34px;">
+      Os painéis produzem durante o dia.<br>
+      A bateria reserva para quando você mais precisa.
+    </p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:30px;font-weight:500;
+       color:#F26522;line-height:1.50;">
+      Fale com a LumenGrid e descubra<br>o sistema ideal para a sua casa.
+    </p>
+  </div>
+
+  <div class="dots">
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="d"></div>
+    <div class="d"></div><div class="d"></div><div class="do"></div>
+  </div>
+</div>
+
+
+<footer style="color:rgba(255,255,255,.12);font-family:'DM Sans',sans-serif;font-size:12px;padding:16px 0 44px;letter-spacing:2px;text-align:center;">
+  Feito por Domani Consultoria
+</footer>
+</body>
+</html>

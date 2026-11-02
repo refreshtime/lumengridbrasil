@@ -1,68 +1,75 @@
 # Planejamento Estratégico do Feed — LumenGrid
 
-## Conceito da marca
+---
 
-A LumenGrid não deve ser apresentada como uma empresa nova, mas como **a evolução de uma trajetória construída ao longo de oito anos**.
+## SEQUÊNCIA DE PUBLICAÇÃO — siga esta ordem
 
-O objetivo da comunicação é transmitir que a marca nasce para representar uma nova fase do mercado de energia, reunindo em um único posicionamento toda a experiência adquirida ao longo desse período.
+> Os arquivos finais estão em **PUBLICACOES/**. Abra o HTML, tire print em tela cheia e exporte como imagem.
+> Para simular o feed antes de publicar, abra **PUBLICACOES/_feed_preview.html**
+> Publique um post por dia, na ordem abaixo. Nunca pule a ordem — ela é estratégica.
 
-A história não é sobre a criação de uma empresa.
-É sobre a evolução de uma equipe que sempre acreditou que energia vai muito além da instalação de painéis solares.
+| # | Status | Layout | Arquivo | Tema |
+|---:|:---:|---|---|---|
+| **01** | ✅ Pronto | Tipografia · Pesado | `post01_manifesto.html` | Manifesto — "Não vendemos placas solares" |
+| **02** | ✅ Pronto | Carrossel · Leve | `post02_nossa_historia.html` | Nossa história — +8 anos |
+| **03** | ⚠️ A criar | Grid · Pesado | `post03_confianca.html` | Confiança — +8 anos · +700 projetos · Atendimento consultivo |
+| **04** | ✅ Pronto | Editorial · Leve | `post04_solucoes.html` | Soluções — Solar · Híbrido · Lítio · Wallbox |
+| **05** | ✅ Pronto | Carrossel · Pesado | `Post03_ApagaALuz.dc. - imagem html.html` | Apaga a luz! (nostalgia anos 90/2000) |
+| **06** | ✅ Pronto | Hero · Pesado | `post06_apagao OK.html` | Apagão — você só percebe o valor quando acaba |
+| **07** | ✅ Pronto | Carrossel · Leve | `post04_on_grid_vs_hibrido OK.html` | On-Grid ou Híbrido? — comparativo educativo |
+| **08** | ✅ Pronto | Carrossel · Pesado | `post05_carro_eletrico_bateria_litio - fazer carrossel html.html` | Por que montadoras escolheram o lítio? |
+| **09** | ✅ Pronto | Hero · Leve | `post07_energia_solar OK.html` | Energia Solar — melhor investimento no telhado |
+| **10** | ✅ Pronto | Editorial · Pesado | `post08_sistema_hibrido- OK.html` | Sistema Híbrido — sua casa não precisa ficar no escuro |
+| **11** | ✅ Pronto | Hero · Leve | `post09_independencia_energetica ok. html.html` | Independência energética — quanto depende da concessionária? |
+| **12** | ✅ Pronto | Tipografia · Pesado | `post10_bateria_residencial - MUDAR OVERLAY.html` | Bateria residencial — energia vale quando continua disponível |
+| **13** | ✅ Pronto | Hero · Leve | `post11_wallbox OK.html` | Wallbox Solar — dirija com a energia do seu telhado |
+| **14** | ✅ Pronto | Tipografia · Pesado | `post12_casa_inteligente - TROCAR FOTO.html` | Casa inteligente — não economiza, administra energia |
+| **15** | ✅ Pronto | Carrossel · Leve | `post15_como_trabalhamos.html` | Como trabalhamos — 5 etapas do diagnóstico ao pós-venda |
 
-**Mensagem central:**
-> A experiência nos trouxe até aqui. A inovação nos leva adiante.
+### Atenção: Post 03 está faltando
+
+O arquivo `post03_confianca.html` ainda não existe. Estratégia sugerida:
+- Publique 01 → 02 → **pule para 04** → crie o 03 e intercale assim que ficar pronto
+- Conteúdo do post 03: Grid com números grandes. Copy: "+8 anos de experiência · +700 projetos homologados · Atendimento consultivo · Projetos personalizados"
 
 ---
 
-## Objetivo dos primeiros 15 posts
+## Por que esta ordem?
 
-Os primeiros posts não devem vender. Eles devem fazer o visitante responder três perguntas naturalmente.
+### Capítulo 1 — Quem somos (posts 01–04)
+O visitante precisa entender **quem é a LumenGrid** antes de qualquer produto.
+- Post 01: Posicionamento. O que acreditamos.
+- Post 02: Trajetória. De onde viemos.
+- Post 03: Prova social. Por que confiar.
+- Post 04: Portfólio. O que fazemos.
 
-**1. Quem é a LumenGrid?** — Uma empresa especializada em soluções inteligentes de energia.
-**2. Por que devo confiar?** — +8 anos · +700 projetos · Atendimento consultivo · Projetos personalizados
-**3. O que ela faz?** — Solar · Baterias · Híbridos · Carregadores · Projetos completos
+### Capítulo 2 — O futuro da energia (posts 05–08)
+Criar desejo e educação antes de apresentar soluções.
+- Post 05: Nostalgia — cria conexão emocional
+- Post 06: Problema — apagão como gatilho
+- Post 07: Educação — On-Grid vs Híbrido
+- Post 08: Tendência — lítio como referência
+
+### Capítulo 3 — As soluções (posts 09–15)
+Apresentar cada tecnologia sem parecer catálogo.
+- Post 09: Solar (entrada)
+- Post 10: Híbrido (upgrade)
+- Post 11: Independência (resultado)
+- Post 12: Bateria (tecnologia)
+- Post 13: Wallbox (inovação)
+- Post 14: Casa inteligente (visão de futuro)
+- Post 15: Processo (como viramos realidade)
 
 ---
 
-## Linha narrativa
+## Regras do feed — nunca quebrar
 
-| Capítulo | Posts | Objetivo |
-|---|---|---|
-| 1 — Quem somos | 01–04 | Criar autoridade, mostrar experiência, explicar a visão |
-| 2 — O futuro da energia | 05–08 | Educar, mostrar tendências, criar desejo |
-| 3 — As soluções | 09–15 | Apresentar cada tecnologia sem parecer catálogo |
+1. **Nunca repetir o mesmo layout em posts consecutivos**
+2. **Sempre alternar o peso visual** — pesado → leve → pesado → leve
+3. **Variar posição do texto** — nunca dois posts seguidos com headline no mesmo lugar
+4. **Carrosseis interrompem sequências** — funciona como respiro na grade
 
----
-
-## Sistema de Layout
-
-### Vocabulário visual
-
-| Tipo | Descrição | Quando usar |
-|---|---|---|
-| **TIPOGRAFIA** | Tipo é o herói. Fundo quase vazio. Composição pura. | Manifesto, conceitos poderosos, frases de impacto |
-| **HERO** | Foto full-bleed + gradiente + texto ancorado | Narrativa emocional com imagem forte |
-| **EDITORIAL** | Dois campos visuais. Divisão geométrica. Texto numa zona. | Conteúdo educativo, comparações, estrutura clara |
-| **GRID** | Conteúdo organizado em grelha. Números, ícones, lista visual. | Soluções, stats, features |
-| **CARROSSEL** | Multi-slide, narrativa progressiva | Histórias longas, tutoriais, educação passo a passo |
-
-### Peso visual
-
-| Peso | Características |
-|---|---|
-| **PESADO** | Fundo escuro, alto contraste, headline grande, denso |
-| **LEVE** | Respiro, pouco texto, tipografia menor, elegante |
-
-### Regras obrigatórias
-
-1. **Nunca repetir o mesmo layout em posts consecutivos.**
-2. **Sempre alternar o peso visual** — pesado → leve → pesado → leve.
-3. **Variar posição do texto** — nunca dois posts seguidos com headline no mesmo lugar.
-   - Posições disponíveis: centro, topo, base, dividido, alinhado à direita
-4. **Carrosseis interrompem sequências** — funciona como respiro na grade.
-
-### Sequência de layouts (15 posts)
-
+### Sequência de layouts (validada)
 ```
 TIPOGRAFIA pesado → CARROSSEL leve → GRID pesado → EDITORIAL leve
 → CARROSSEL pesado → HERO pesado → CARROSSEL leve → CARROSSEL pesado
@@ -72,94 +79,25 @@ TIPOGRAFIA pesado → CARROSSEL leve → GRID pesado → EDITORIAL leve
 
 ---
 
-## Calendário do Feed
+## Vocabulário visual
 
-| # | Status | Tipo | Layout | Peso | Texto | Tema | Arquivo |
-|---:|:---:|---|---|---|---|---|---|
-| **01** | 🆕 | Post único | TIPOGRAFIA | Pesado | Centro | **Manifesto da marca** | `post01_manifesto.html` |
-| **02** | 🆕 | Carrossel | CARROSSEL | Leve | Por card | **Nossa história** | `post02_nossa_historia.html` |
-| **03** | 🆕 | Post único | GRID | Pesado | Esquerda + números | **Confiança com resultados** | `post03_confianca.html` |
-| **04** | 🆕 | Post único | EDITORIAL | Leve | Centro | **Tudo o que sua energia precisa** | `post04_solucoes.html` |
-| **05** | ✅ | Carrossel | CARROSSEL | Pesado | Base-esq | **Apaga a luz! (anos 90)** | `Post03_ApagaALuz.dc.html` |
-| **06** | ✅ | Post único | HERO | Pesado | Base-esq | **Você só percebe o valor...** | `post06_apagao.html` |
-| **07** | ✅ | Carrossel | CARROSSEL | Leve | Centro | **On-Grid ou Híbrido?** | `post04_on_grid_vs_hibrido.html` |
-| **08** | ✅ | Carrossel | CARROSSEL | Pesado | Base-esq | **Por que as montadoras escolheram o lítio?** | `post05_carro_eletrico_bateria_litio.html` |
-| **09** | ✅ | Post único | HERO | Leve | Topo-dir | **O melhor investimento...** | `post07_energia_solar.html` |
-| **10** | ✅ | Post único | EDITORIAL | Pesado | Dividido | **Quando a rua fica sem energia...** | `post08_sistema_hibrido.html` |
-| **11** | ✅ | Post único | HERO | Leve | Base-esq | **Quanto da sua vida...** | `post09_independencia_energetica.html` |
-| **12** | ✅ | Post único | TIPOGRAFIA | Pesado | Dividido | **Energia não vale apenas...** | `post10_bateria_residencial.html` |
-| **13** | ✅ | Post único | HERO | Leve | Base-esq | **Imagine dirigir...** | `post11_wallbox.html` |
-| **14** | ✅ | Post único | TIPOGRAFIA | Pesado | Centro | **Casas inteligentes...** | `post12_casa_inteligente.html` |
-| **15** | 🆕 | Carrossel | CARROSSEL | Leve | Centro | **Como nasce um projeto LumenGrid** | `post15_como_trabalhamos.html` |
-
-**Legenda:** ✅ Criado · 🆕 A produzir
+| Tipo | Quando usar |
+|---|---|
+| **TIPOGRAFIA** | Manifesto, frases de impacto, conceitos poderosos |
+| **HERO** | Foto full-bleed + narrativa emocional |
+| **EDITORIAL** | Conteúdo educativo, comparações, dois campos visuais |
+| **GRID** | Stats, soluções, features em grelha |
+| **CARROSSEL** | Histórias longas, educação passo a passo |
 
 ---
 
-## Copies aprovadas
+## Padrão de texto — obrigatório em todos os posts
 
-### POST 01 — Manifesto (TIPOGRAFIA · Pesado · Centro)
-
-> Não vendemos placas solares.
->
-> Projetamos independência energética.
->
-> A energia mudou. Ela deixou de ser apenas consumo e passou a ser estratégia, segurança e patrimônio.
->
-> Porque acreditamos que o futuro não está apenas em gerar energia. Está em saber utilizá-la da melhor forma.
-
-*Tagline de rodapé:* "A experiência nos trouxe até aqui. A inovação nos leva adiante."
-
----
-
-### POST 02 — Nossa história (CARROSSEL · Leve · Centro por card)
-
-**Card 1:** Toda história evolui. A nossa também.
-
-**Card 2:** Durante mais de oito anos, ajudamos centenas de clientes a transformar a forma como consomem energia. Mais de 700 projetos homologados. Muito aprendizado. Muita confiança conquistada.
-
-**Card 3:** O mercado evoluiu. Hoje falamos de geração solar. Mas também de armazenamento. Mobilidade elétrica. Sistemas híbridos. Inteligência energética.
-
-**Card 4:** Por isso, toda essa experiência passa a caminhar sob uma única marca. **LumenGrid.** Preparada para o futuro da energia.
-
----
-
-### POST 03 — Confiança (GRID · Pesado · Esquerda + números grandes)
-
-> Confiança se constrói com resultados.
->
-> +8 anos de experiência.
-> +700 projetos homologados.
-> Atendimento consultivo.
-> Projetos personalizados.
->
-> Uma equipe comprometida em encontrar a melhor solução para cada cliente.
-
----
-
-### POST 04 — Soluções (EDITORIAL · Leve · Centro)
-
-**Headline:** Tudo o que sua energia precisa.
-
-- Energia Solar
-- Sistemas Híbridos
-- Baterias de Lítio
-- Carregadores Veiculares
-- Projetos personalizados
-
-**Rodapé:** Uma única empresa. Todas as soluções.
-
-*(Ícones em CSS/SVG — nunca emojis)*
-
----
-
-### POST 15 — Como trabalhamos (CARROSSEL · Leve · Centro)
-
-**Card 1:** Cada projeto começa muito antes da instalação.
-**Card 2:** Entendemos como você consome energia.
-**Card 3:** Projetamos uma solução personalizada.
-**Card 4:** Executamos com qualidade.
-**Card 5:** Seguimos ao seu lado no pós-venda.
+| Elemento | Tamanho | Fonte | Peso |
+|---|---|---|---|
+| Eyebrow (label) | 16px | DM Sans | 600 · uppercase · letter-spacing 3px |
+| Headline (h1) | 52–76px | Space Grotesk | 700–800 |
+| Body / subtítulo | 24px | DM Sans | 300 · max-width 560px · line-height 1.70 |
 
 ---
 
@@ -167,8 +105,7 @@ TIPOGRAFIA pesado → CARROSSEL leve → GRID pesado → EDITORIAL leve
 
 - Template A (posts ímpares): sem moldura, narrativo/emocional
 - Template B (posts pares): moldura laranja `inset:24px; border:4px solid rgba(242,101,34,0.65)`
-- Logo padrão: `height:58px` + solar glow (ver `logo_estilo_aprovado.html`)
-- Fontes: Space Grotesk (headlines 700–800) · DM Sans (corpo 300–500)
+- Logo padrão: `height:58px` + solar glow
+- Fontes: Space Grotesk (headlines) · DM Sans (corpo)
 - Cores: `#F26522` laranja · `#0a0a10` fundo · `#FAFAFA` branco
 - Ícones: sempre CSS/SVG — nunca emojis
-- Imagens placeholder: marcadas com `<!-- PLACEHOLDER: ... -->`

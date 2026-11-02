@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LumenGrid — Panfleto Frente e Verso</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0a0a10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px 80px;
+  gap: 0;
+}
+.sep {
+  width: 794px;
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.sep-line { flex: 1; height: 1px; background: rgba(242,101,34,.25); }
+.sep-txt {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(242,101,34,.50);
+}
+@media print { .sep { display: none; } }
+
+/* ══════════════════════════════════════════
+   A4  |  794 × 1123 px  (print → 210×297mm)
+══════════════════════════════════════════ */
+.pf {
+  width: 794px;
+  height: 1123px;
+  position: relative;
+  overflow: hidden;
+  background: #0a0a10;
+  flex-shrink: 0;
+}
+
+/* ══ ELEMENTOS COMUNS ══ */
+
+/* Barra laranja topo */
+.barra {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 5px;
+  background: #F26522;
+  z-index: 30;
+}
+
+/* Logo */
+.logo {
+  position: absolute;
+  top: 22px; left: 48px;
+  display: flex; align-items: center; gap: 11px;
+  z-index: 20;
+}
+.logo img {
+  height: 52px;
+  filter: drop-shadow(0 0 18px rgba(242,101,34,.85))
+          drop-shadow(0 0 7px rgba(242,101,34,.55))
+          drop-shadow(0 2px 10px rgba(0,0,0,.99));
+}
+.logo-txt { display: flex; flex-direction: column; gap: 2px; }
+.logo-r   { display: flex; align-items: baseline; line-height: 1; }
+.la { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:26px; text-transform:uppercase; text-shadow:0 2px 12px rgba(0,0,0,.99); }
+.la.o { color:#F26522; }
+.la.w { color:#FAFAFA; }
+.lt { font-family:'DM Sans',sans-serif; font-weight:600; font-size:8px; text-transform:uppercase; letter-spacing:.3em; color:rgba(242,101,34,.90); text-shadow:0 2px 8px rgba(0,0,0,.99); }
+
+/* Rodapé */
+.ft {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.ft-l { display: flex; align-items: center; gap: 8px; }
+.ft-l img { height: 24px; filter: drop-shadow(0 0 6px rgba(242,101,34,.55)); }
+.ft-n { font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:12px; color:#FAFAFA; }
+.ft-n span { color:#F26522; }
+.ft-d { font-family:'DM Sans',sans-serif; font-size:9px; color:rgba(255,255,255,.25); letter-spacing:.08em; }
+
+/* ══════════════════════════════════════════
+   FRENTE
+══════════════════════════════════════════ */
+
+.foto {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 580px;
+  background: url('../ENERTUR/Instalador.png')
+              center top / cover no-repeat;
+  z-index: 0;
+}
+.ov {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 580px;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,10,16,.98)  0%,
+    rgba(10,10,16,.90)  7%,
+    rgba(10,10,16,.45) 17%,
+    rgba(10,10,16,.03) 32%,
+    rgba(10,10,16,.02) 52%,
+    rgba(10,10,16,.04) 60%,
+    rgba(10,10,16,.40) 72%,
+    rgba(10,10,16,.82) 86%,
+    rgba(10,10,16,.98) 100%
+  );
+  z-index: 1;
+}
+
+.ey {
+  position: absolute;
+  top: 422px; left: 48px;
+  font-family:'DM Sans',sans-serif;
+  font-size: 14px; font-weight: 600;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(242,101,34,1);
+  background: rgba(10,10,16,.72);
+  padding: 4px 10px;
+  border-radius: 4px;
+  z-index: 20;
+}
+
+.hl {
+  position: absolute;
+  top: 448px; left: 48px; right: 48px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 46px;
+  line-height: 1.07;
+  letter-spacing: -1.2px;
+  color: #FAFAFA;
+  text-shadow:
+    0 4px 28px rgba(0,0,0,.98),
+    0 0  60px rgba(0,0,0,.80),
+    0 2px  8px rgba(0,0,0,1);
+  z-index: 20;
+}
+.hl em { color: #F26522; font-style: normal; }
+
+.dn {
+  position: absolute;
+  top: 580px; left: 0; right: 0; bottom: 0;
+  background: #0a0a10;
+  z-index: 5;
+}
+.dn-in {
+  position: absolute;
+  inset: 12px 48px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eco {
+  background: rgba(242,101,34,.08);
+  border: 1.5px solid rgba(242,101,34,.40);
+  border-radius: 10px;
+  padding: 12px 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.eco-n {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800; font-size: 72px;
+  line-height: 1; letter-spacing: -3px;
+  color: #F26522;
+  text-shadow: 0 0 32px rgba(242,101,34,.55), 0 0 8px rgba(242,101,34,.30);
+  flex-shrink: 0;
+}
+.eco-r { display: flex; flex-direction: column; gap: 7px; }
+.eco-t1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px; font-weight: 700;
+  color: #FAFAFA; line-height: 1.25; letter-spacing: -.3px;
+}
+.eco-t2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px; font-weight: 400;
+  color: rgba(250,250,250,.86); line-height: 1.5;
+}
+
+.sol-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.sol-cell {
+  padding: 10px 16px;
+  border-left: 3px solid rgba(242,101,34,.65);
+  background: rgba(255,255,255,.04);
+  border-radius: 0 8px 8px 0;
+}
+.sol-icon { font-size: 22px; margin-bottom: 4px; }
+.sol-t {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px; font-weight: 700;
+  color: #F26522;
+  text-transform: uppercase; letter-spacing: .03em;
+  margin-bottom: 5px;
+}
+.sol-d {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 400;
+  color: rgba(250,250,250,.84); line-height: 1.55;
+}
+
+.inv {
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.04);
+  flex-shrink: 0;
+  text-align: center;
+}
+.inv-l1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 19px; font-weight: 700;
+  color: #FAFAFA; line-height: 1.3; margin-bottom: 6px;
+}
+.inv-l2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 400;
+  color: #F26522; line-height: 1.5;
+}
+
+.cta {
+  background: rgba(242,101,34,.10);
+  border: 1.5px solid rgba(242,101,34,.55);
+  border-radius: 10px;
+  padding: 20px 22px;
+  display: flex; align-items: center; gap: 20px;
+  flex-shrink: 0;
+}
+.cta-c { flex: 1; }
+.cta-t {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 23px; font-weight: 800;
+  color: #F26522;
+  text-transform: uppercase; letter-spacing: .04em;
+  line-height: 1.15; margin-bottom: 8px;
+}
+.cta-s {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 400;
+  color: rgba(250,250,250,.84); line-height: 1.60;
+}
+.qr {
+  flex-shrink: 0; width: 82px; height: 82px;
+  background: #FAFAFA; border-radius: 7px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; padding: 8px;
+}
+.qr-inner {
+  width: 58px; height: 58px;
+  background:
+    linear-gradient(#0a0a10,#0a0a10) 0 0 / 18px 18px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 100% 0 / 18px 18px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 0 100% / 18px 18px no-repeat,
+    linear-gradient(#FAFAFA,#FAFAFA) 3px 3px / 12px 12px no-repeat,
+    linear-gradient(#FAFAFA,#FAFAFA) calc(100% - 3px) 3px / 12px 12px no-repeat,
+    linear-gradient(#FAFAFA,#FAFAFA) 3px calc(100% - 3px) / 12px 12px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 6px 6px / 6px 6px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) calc(100% - 6px) 6px / 6px 6px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 6px calc(100% - 6px) / 6px 6px no-repeat,
+    repeating-linear-gradient(0deg, #0a0a10 0, #0a0a10 2px, transparent 2px, transparent 5px) 22px 4px / 14px 50px no-repeat,
+    repeating-linear-gradient(90deg, #0a0a10 0, #0a0a10 2px, transparent 2px, transparent 5px) 4px 22px / 50px 14px no-repeat,
+    #FAFAFA;
+}
+.ql { font-family:'DM Sans',sans-serif; font-size:6px; font-weight:700; color:rgba(10,10,16,.40); letter-spacing:.1em; text-transform:uppercase; }
+
+/* Gancho para o verso */
+.hook {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.hook-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(242,101,34,.40), transparent);
+}
+.hook-txt {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 500;
+  color: rgba(250,250,250,.55);
+  white-space: nowrap;
+  letter-spacing: .03em;
+}
+.hook-txt em {
+  color: rgba(242,101,34,.80);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════
+   VERSO
+══════════════════════════════════════════ */
+
+/* Glow laranja de fundo sutil */
+.verso-glow {
+  position: absolute;
+  top: -200px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 700px;
+  background: radial-gradient(ellipse, rgba(242,101,34,.07) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Conteúdo do verso */
+.verso-in {
+  position: absolute;
+  inset: 88px 48px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  z-index: 10;
+}
+
+/* Eyebrow verso */
+.v-ey {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(242,101,34,.90);
+  margin-bottom: 10px;
+}
+
+/* Título verso */
+.v-hl {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800; font-size: 36px;
+  line-height: 1.10; letter-spacing: -1px;
+  color: #FAFAFA;
+  margin-bottom: 28px;
+}
+.v-hl em { color: #F26522; font-style: normal; }
+
+/* Divisor */
+.v-div {
+  height: 1px;
+  background: linear-gradient(to right, rgba(242,101,34,.50), rgba(242,101,34,.08), transparent);
+  margin: 22px 0;
+  flex-shrink: 0;
+}
+
+/* Subtítulo de seção */
+.v-sec {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .18em;
+  color: rgba(242,101,34,.80);
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+/* PASSOS — 3 colunas */
+.v-steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.v-step {
+  background: rgba(255,255,255,.04);
+  border-radius: 10px;
+  padding: 16px 14px;
+  border-top: 2px solid rgba(242,101,34,.55);
+}
+.v-step-n {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px; font-weight: 800;
+  color: rgba(242,101,34,.22);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -2px;
+}
+.v-step-t {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: #FAFAFA;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.v-step-d {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 400;
+  color: rgba(250,250,250,.70);
+  line-height: 1.55;
+}
+
+/* DIFERENCIAIS — 2×2 */
+.v-dif-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.v-dif {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,.04);
+  border-radius: 8px;
+  border-left: 3px solid rgba(242,101,34,.50);
+}
+.v-dif-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.v-dif-body {}
+.v-dif-t {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px; font-weight: 700;
+  color: #FAFAFA;
+  margin-bottom: 3px;
+}
+.v-dif-d {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 400;
+  color: rgba(250,250,250,.65);
+  line-height: 1.5;
+}
+
+/* CTA VERSO — destaque total */
+.v-cta {
+  background: rgba(242,101,34,.10);
+  border: 2px solid rgba(242,101,34,.70);
+  border-radius: 14px;
+  padding: 30px 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-shrink: 0;
+}
+.v-cta-txt { flex: 1; }
+.v-cta-pre {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .25em;
+  color: rgba(242,101,34,.75);
+  margin-bottom: 10px;
+}
+.v-cta-t {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px; font-weight: 800;
+  color: #FAFAFA;
+  line-height: 1.1; margin-bottom: 12px;
+  letter-spacing: -.5px;
+}
+.v-cta-t em { color: #F26522; font-style: normal; }
+.v-cta-s {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 400;
+  color: rgba(250,250,250,.80);
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+.v-cta-phone {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px; font-weight: 800;
+  color: #FAFAFA;
+  letter-spacing: .02em;
+  margin-bottom: 4px;
+}
+.v-cta-site {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: rgba(242,101,34,.65);
+  letter-spacing: .04em;
+}
+/* QR grande no verso */
+.qr-lg {
+  flex-shrink: 0; width: 110px; height: 110px;
+  background: #FAFAFA; border-radius: 10px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 5px; padding: 10px;
+}
+.qr-lg-inner {
+  width: 78px; height: 78px;
+  background:
+    linear-gradient(#0a0a10,#0a0a10) 0 0 / 24px 24px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 100% 0 / 24px 24px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 0 100% / 24px 24px no-repeat,
+    linear-gradient(#FAFAFA,#FAFAFA) 4px 4px / 16px 16px no-repeat,
+    linear-gradient(#FAFAFA,#FAFAFA) calc(100% - 4px) 4px / 16px 16px no-repeat,
+    linear-gradient(#FAFAFA,#FAFAFA) 4px calc(100% - 4px) / 16px 16px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 8px 8px / 8px 8px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) calc(100% - 8px) 8px / 8px 8px no-repeat,
+    linear-gradient(#0a0a10,#0a0a10) 8px calc(100% - 8px) / 8px 8px no-repeat,
+    repeating-linear-gradient(0deg, #0a0a10 0, #0a0a10 3px, transparent 3px, transparent 7px) 30px 5px / 18px 68px no-repeat,
+    repeating-linear-gradient(90deg, #0a0a10 0, #0a0a10 3px, transparent 3px, transparent 7px) 5px 30px / 68px 18px no-repeat,
+    #FAFAFA;
+}
+.ql-lg { font-family:'DM Sans',sans-serif; font-size:7px; font-weight:700; color:rgba(10,10,16,.40); letter-spacing:.12em; text-transform:uppercase; }
+
+/* ══ PRINT ══ */
+@media print {
+  body { background: none; padding: 0; margin: 0; gap: 0; }
+  .pf  { width: 210mm; height: 297mm; break-after: page; }
+  @page { size: A4 portrait; margin: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     FRENTE
+══════════════════════════════════════ -->
+<div class="pf">
+
+  <div class="foto"></div>
+  <div class="ov"></div>
+  <div class="barra"></div>
+
+  <div class="logo">
+    <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="logo-txt">
+      <div class="logo-r"><span class="la o">LUMEN</span><span class="la w">GRID</span></div>
+      <span class="lt">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <div class="ey">ECONOMIZE ▶ Garanta sua independência energética</div>
+
+  <div class="hl">
+    Não espere o <em>verão</em><br>
+    chegar para se assustar<br>
+    com a sua fatura de energia.
+  </div>
+
+  <div class="dn">
+    <div class="dn-in">
+
+      <div class="eco">
+        <div class="eco-n">85%</div>
+        <div class="eco-r">
+          <div class="eco-t1">de economia na conta de energia</div>
+          <div class="eco-t2">Isso é possível para a sua casa. Descubra como.</div>
+        </div>
+      </div>
+
+      <div class="sol-grid">
+        <div class="sol-cell">
+          <div class="sol-icon">☀️</div>
+          <div class="sol-t">Energia Solar</div>
+          <div class="sol-d">Gere energia limpa e reduza sua conta.</div>
+        </div>
+        <div class="sol-cell">
+          <div class="sol-icon">⚡</div>
+          <div class="sol-t">Solar + Bateria</div>
+          <div class="sol-d">Continue com energia quando a luz acaba.</div>
+        </div>
+        <div class="sol-cell">
+          <div class="sol-icon">🚗</div>
+          <div class="sol-t">Carregamento Elétrico</div>
+          <div class="sol-d">Carregue seu carro em casa com segurança.</div>
+        </div>
+        <div class="sol-cell">
+          <div class="sol-icon">💳</div>
+          <div class="sol-t">Financiamento EV</div>
+          <div class="sol-d">Acesse as melhores condições para adquirir seu Carro Elétrico.</div>
+        </div>
+      </div>
+
+      <div class="inv">
+        <div class="inv-l1">Você não precisa decidir nada agora.</div>
+        <div class="inv-l2">Primeiro, descubra as possibilidades para você.</div>
+      </div>
+
+      <div class="ft">
+        <div class="ft-l">
+          <img src="imagens/LOGOS/logo-icone.png" alt="">
+          <div class="ft-n"><span>Lumen</span>Grid | Energia Inteligente</div>
+        </div>
+        <div class="ft-d">Feito por Domani Consultoria</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="sep">
+  <div class="sep-line"></div>
+  <div class="sep-txt">↑ frente &nbsp;·&nbsp; verso ↓</div>
+  <div class="sep-line"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VERSO
+══════════════════════════════════════ -->
+<div class="pf">
+
+  <div class="barra"></div>
+
+  <div class="logo">
+    <img src="imagens/LOGOS/logo-icone.png" alt="LumenGrid">
+    <div class="logo-txt">
+      <div class="logo-r"><span class="la o">LUMEN</span><span class="la w">GRID</span></div>
+      <span class="lt">Energia Inteligente</span>
+    </div>
+  </div>
+
+  <div class="verso-in">
+
+    <!-- Título -->
+    <div class="v-ey">▶ Do diagnóstico à economia</div>
+    <div class="v-hl">Simples, rápido e<br><em>sem burocracia.</em></div>
+
+    <!-- Passos -->
+    <div class="v-sec">Como funciona</div>
+    <div class="v-steps">
+      <div class="v-step">
+        <div class="v-step-n">01</div>
+        <div class="v-step-t">Diagnóstico gratuito</div>
+        <div class="v-step-d">Analisamos sua conta de energia e o perfil do seu consumo.</div>
+      </div>
+      <div class="v-step">
+        <div class="v-step-n">02</div>
+        <div class="v-step-t">Projeto personalizado</div>
+        <div class="v-step-d">Dimensionamos o sistema ideal para a sua realidade.</div>
+      </div>
+      <div class="v-step">
+        <div class="v-step-n">03</div>
+        <div class="v-step-t">Instalação certificada</div>
+        <div class="v-step-d">Equipe com mais de 8 anos de experiência, com garantia total.</div>
+      </div>
+    </div>
+
+    <div class="v-div"></div>
+
+    <!-- CTA verso — destaque total -->
+    <div class="v-cta">
+      <div class="v-cta-txt">
+        <div class="v-cta-pre">Avaliação gratuita · Sem compromisso</div>
+        <div class="v-cta-t">Fale agora com o consultor<br>LumenGrid da sua região.</div>
+        <div class="v-cta-s">Escaneie o QR code ao lado e inicie sua avaliação.<br>Do diagnóstico à economia, sem burocracia.</div>
+        <div class="v-cta-phone">+55 16 99645-9253</div>
+        <div class="v-cta-site">lumengridbrasil.com.br</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
+        <div class="qr-lg">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fwa.me%2F5516996459253%3Ftext%3DOl%C3%A1!+Vi+o+material+da+LumenGrid+e+quero+fazer+minha+avalia%C3%A7%C3%A3o+gratuita.&color=0a0a10&bgcolor=FAFAFA&margin=2" width="90" height="90" alt="QR WhatsApp LumenGrid" style="border-radius:4px;">
+          <div class="ql-lg">Escanear</div>
+        </div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:rgba(242,101,34,.70);letter-spacing:.05em;text-align:center;">WhatsApp</div>
+      </div>
+    </div>
+
+    <div class="ft">
+      <div class="ft-l">
+        <img src="imagens/LOGOS/logo-icone.png" alt="">
+        <div class="ft-n"><span>Lumen</span>Grid | Energia Inteligente</div>
+      </div>
+      <div class="ft-d">Feito por Domani Consultoria</div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
