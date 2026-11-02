@@ -783,6 +783,18 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
     else el.style.borderColor = '';
   });
 
+  const emailEl = document.getElementById('email');
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (emailEl.value.trim() && !emailRegex.test(emailEl.value.trim())) {
+    emailEl.style.borderColor = '#ef4444';
+    valid = false;
+    msg.style.display = 'block';
+    msg.style.background = '#fef2f2';
+    msg.style.color = '#dc2626';
+    msg.textContent = 'Digite um e-mail válido (ex: joao@gmail.com).';
+    return;
+  }
+
   if (!document.getElementById('lgpd').checked) {
     valid = false;
     msg.style.display = 'block';
