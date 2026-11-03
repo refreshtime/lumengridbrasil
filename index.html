@@ -2232,5 +2232,20 @@ document.addEventListener('keydown',function(e){
   </div>
 </div>
 
+<!-- UTM forwarder: repassa params da landing para todos os links /orcamento/ -->
+<script>
+(function(){
+  var keys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','gbraid','wbraid'];
+  var params = new URLSearchParams(window.location.search);
+  var pairs = [];
+  keys.forEach(function(k){ var v = params.get(k); if(v) pairs.push(k+'='+encodeURIComponent(v)); });
+  if(!pairs.length) return;
+  var qs = pairs.join('&');
+  document.querySelectorAll('a[href^="/orcamento/"]').forEach(function(a){
+    a.href = '/orcamento/?' + qs;
+  });
+})();
+</script>
+
 </body>
 </html>
