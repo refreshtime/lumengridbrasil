@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sistema de Identidade Visual — LumenGrid</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"></noscript>
+<style>
+:root{
+  --or:#F26522;--or-dim:rgba(242,101,34,.45);--or-ghost:rgba(242,101,34,.12);
+  --s0:#060608;--s1:#0a0a10;--s2:#111118;--s3:#181820;
+  --b1:rgba(241,241,245,.07);--b2:rgba(241,241,245,.13);
+  --t1:#FAFAFA;--t2:rgba(241,241,245,.68);--t3:rgba(241,241,245,.36);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--s1);color:var(--t1);font-family:'Raleway',sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+.g-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,16,.9);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--b1);
+  padding:0 5vw;display:flex;align-items:center;height:58px;gap:14px;
+}
+.g-nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none}
+.g-nav-ico{width:28px;height:28px;flex-shrink:0}
+.g-nav-wm{font-weight:700;font-size:15px;letter-spacing:-.3px;line-height:1}
+.g-nav-wm .lg{color:var(--or)}.g-nav-wm .gr{color:rgba(241,241,245,.82)}
+.g-nav-sub{font-size:7px;font-weight:500;letter-spacing:.32em;text-transform:uppercase;color:rgba(242,101,34,.7);margin-top:2px}
+.g-nav-sep{width:1px;height:20px;background:var(--b2);margin:0 6px}
+.g-nav-label{font-size:10px;font-weight:400;letter-spacing:2.2px;text-transform:uppercase;color:var(--t3)}
+
+/* ── LAYOUT ── */
+.g-page{max-width:1120px;margin:0 auto;padding:64px 5vw 120px}
+.g-sec{margin-top:88px}
+.g-sec:first-child{margin-top:0}
+.g-eyebrow{font-size:9px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:var(--or);opacity:.75;margin-bottom:10px}
+.g-title{font-size:clamp(26px,3vw,38px);font-weight:300;letter-spacing:-.6px;color:var(--t1);line-height:1.2;margin-bottom:6px}
+.g-desc{font-size:14px;font-weight:300;color:var(--t2);line-height:1.75;max-width:600px;margin-bottom:36px}
+.g-rule{height:1px;background:var(--b1);margin:32px 0}
+
+/* ── CARD ── */
+.g-card{background:var(--s2);border:1px solid var(--b1);border-radius:16px;padding:36px;position:relative;margin-bottom:16px}
+.g-card-tag{position:absolute;top:14px;left:18px;font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--t3)}
+.g-btn-dl{
+  font-family:'Raleway',sans-serif;cursor:pointer;
+  background:transparent;color:rgba(242,101,34,.8);
+  border:1px solid var(--or-dim);border-radius:4px;
+  font-size:9px;font-weight:500;letter-spacing:1.4px;text-transform:uppercase;
+  padding:6px 14px;transition:all .18s;
+}
+.g-btn-dl:hover{background:var(--or-ghost);border-color:rgba(242,101,34,.7);color:var(--or)}
+
+/* ── LOGO GRID ── */
+.logo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.logo-slot{
+  background:var(--s2);border:1px solid var(--b1);border-radius:12px;
+  overflow:hidden;
+}
+.logo-slot.light{background:#EFEFEA}
+.logo-slot.dark{background:#060608}
+.logo-slot-preview{
+  padding:48px 32px;display:flex;align-items:center;justify-content:center;
+  min-height:140px;
+}
+.logo-slot-footer{
+  border-top:1px solid var(--b1);padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo-slot.light .logo-slot-footer{border-color:rgba(0,0,0,.08)}
+.logo-slot-name{font-size:9px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3)}
+.logo-slot.light .logo-slot-name{color:rgba(0,0,0,.35)}
+
+/* ── TOKENS ── */
+.tokens-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px}
+.swatch{display:flex;flex-direction:column;gap:7px}
+.swatch-c{width:72px;height:44px;border-radius:6px;border:1px solid rgba(255,255,255,.06)}
+.swatch-hex{font-size:9px;font-family:monospace;color:var(--t3)}
+.swatch-name{font-size:9px;font-weight:500;color:var(--t2);letter-spacing:.3px}
+
+.type-grid{display:flex;flex-direction:column;gap:0}
+.type-row{
+  display:flex;align-items:baseline;gap:24px;
+  padding:14px 0;border-bottom:1px solid var(--b1);
+}
+.type-meta{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);width:120px;flex-shrink:0;line-height:1.6}
+
+/* ── BOLINHAS ── */
+.bolinhas-wrap{display:flex;flex-wrap:wrap;gap:28px;margin-top:4px}
+.bolinha-item{display:flex;flex-direction:column;align-items:center;gap:9px}
+.bolinha-ring{
+  width:148px;height:148px;border-radius:50%;overflow:hidden;
+  border:2px solid rgba(242,101,34,.22);
+  transition:border-color .2s,box-shadow .2s;cursor:pointer;
+  position:relative;
+}
+.bolinha-ring:hover{border-color:rgba(242,101,34,.65);box-shadow:0 0 24px rgba(242,101,34,.16)}
+.bolinha-ring svg{display:block;width:100%;height:100%}
+.bolinha-name{font-size:8px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--t3);text-align:center}
+.bolinha-dl{
+  font-family:'Raleway',sans-serif;cursor:pointer;
+  background:transparent;border:1px solid rgba(242,101,34,.18);
+  color:rgba(242,101,34,.55);border-radius:3px;
+  font-size:8px;letter-spacing:1.2px;text-transform:uppercase;
+  padding:4px 10px;transition:all .15s;
+}
+.bolinha-dl:hover{border-color:rgba(242,101,34,.55);color:rgba(242,101,34,.95)}
+
+/* ── VIDEO COVERS ── */
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:720px){.video-grid{grid-template-columns:1fr}}
+.video-slot{background:var(--s2);border:1px solid var(--b1);border-radius:12px;overflow:hidden}
+.video-inner{position:relative;overflow:hidden}
+.video-inner.ratio-16-9{aspect-ratio:16/9}
+.video-inner.ratio-9-16{aspect-ratio:9/16;max-height:380px}
+.video-slot-footer{border-top:1px solid var(--b1);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.video-slot-name{font-size:9px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3)}
+
+/* ── POST TEMPLATES ── */
+.post-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.post-slot{background:var(--s2);border:1px solid var(--b1);border-radius:12px;overflow:hidden}
+.post-inner{position:relative;overflow:hidden}
+.post-inner.ratio-4-5{aspect-ratio:4/5}
+.post-inner.ratio-1-1{aspect-ratio:1/1}
+.post-slot-footer{border-top:1px solid var(--b1);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.post-slot-name{font-size:9px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3)}
+
+/* ── RULES ── */
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+@media(max-width:600px){.rules-grid{grid-template-columns:1fr}}
+.rule-card{background:rgba(255,255,255,.025);border:1px solid var(--b1);border-radius:10px;padding:20px}
+.rule-ok{color:#4ade80}.rule-no{color:#f87171}
+.rule-title{font-size:11px;font-weight:600;letter-spacing:.3px;margin-bottom:8px}
+.rule-body{font-size:12px;font-weight:300;color:var(--t2);line-height:1.65}
+
+/* ── FOOTER ── */
+.g-footer{text-align:center;padding:56px 0 40px;font-size:9px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:var(--t3)}
+
+@media(max-width:600px){
+  .logo-grid{grid-template-columns:1fr}
+  .bolinhas-wrap{gap:18px}
+  .bolinha-ring{width:116px;height:116px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="g-nav">
+  <a href="#" class="g-nav-brand">
+    <svg class="g-nav-ico" viewBox="0 0 100 100" fill="none">
+      <path d="M 56 14 A 36 36 0 1 1 38 16" stroke="#F26522" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="56" cy="14" r="10" fill="rgba(242,101,34,.13)"/>
+      <circle cx="56" cy="14" r="6" fill="rgba(242,101,34,.32)"/>
+      <circle cx="56" cy="14" r="3.5" fill="#F26522"/>
+    </svg>
+    <div>
+      <div class="g-nav-wm"><span class="lg">LUMEN</span><span class="gr">GRID</span></div>
+      <div class="g-nav-sub">Energia Inteligente</div>
+    </div>
+  </a>
+  <div class="g-nav-sep"></div>
+  <span class="g-nav-label">Sistema de Identidade Visual</span>
+</nav>
+
+<div class="g-page">
+
+<!-- ── TOKENS ── -->
+<section class="g-sec" id="tokens">
+  <div class="g-eyebrow">00 — Tokens</div>
+  <h2 class="g-title">Cores e Tipografia</h2>
+  <p class="g-desc">Fundação do sistema. Todos os ativos — logo, stories, posts e capas — usam esses valores sem exceção.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div class="g-card">
+      <div class="g-card-tag">Paleta</div>
+      <div style="margin-top:24px">
+        <div class="tokens-row">
+          <div class="swatch">
+            <div class="swatch-c" style="background:#F26522"></div>
+            <div class="swatch-name">Laranja Marca</div>
+            <div class="swatch-hex">#F26522</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-c" style="background:#F57832"></div>
+            <div class="swatch-name">Laranja Quente</div>
+            <div class="swatch-hex">#F57832</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-c" style="background:#0a0a10;border-color:var(--b2)"></div>
+            <div class="swatch-name">Fundo Base</div>
+            <div class="swatch-hex">#0A0A10</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-c" style="background:#111118;border-color:var(--b2)"></div>
+            <div class="swatch-name">Card</div>
+            <div class="swatch-hex">#111118</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-c" style="background:#FAFAFA"></div>
+            <div class="swatch-name">Texto Primário</div>
+            <div class="swatch-hex">#FAFAFA</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-c" style="background:rgba(241,241,245,.68)"></div>
+            <div class="swatch-name">Texto Apoio</div>
+            <div class="swatch-hex">rgba(241,241,245,.68)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-card">
+      <div class="g-card-tag">Tipografia — Raleway</div>
+      <div class="type-grid" style="margin-top:24px">
+        <div class="type-row">
+          <div class="type-meta">800 · Marca<br>20px</div>
+          <div style="font-size:20px;font-weight:800;letter-spacing:-.5px"><span style="color:#F26522">LUMEN</span><span style="color:#FAFAFA">GRID</span></div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">300 · Título<br>32px</div>
+          <div style="font-size:32px;font-weight:300;letter-spacing:-.6px;color:#FAFAFA">Energia Solar</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">500 · Subtítulo<br>16px</div>
+          <div style="font-size:16px;font-weight:500;letter-spacing:.1px;color:rgba(241,241,245,.7)">Sistema híbrido inteligente</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">500 · Eyebrow<br>10px · 3.5px ls</div>
+          <div style="font-size:10px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:#F26522">ENERGIA SOLAR</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">300 · Corpo<br>15px</div>
+          <div style="font-size:15px;font-weight:300;color:rgba(241,241,245,.68);line-height:1.7">Silencioso, compacto e inteligente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LOGO SVG ── -->
+<section class="g-sec" id="logo">
+  <div class="g-eyebrow">01 — Logo</div>
+  <h2 class="g-title">Logo SVG</h2>
+  <p class="g-desc">Quatro variações do logo para diferentes contextos. Clique em "Baixar SVG" para salvar o arquivo vetorial pronto para uso.</p>
+
+  <div class="logo-grid">
+
+    <!-- Horizontal Dark -->
+    <div class="logo-slot dark">
+      <div class="logo-slot-preview">
+        <svg id="logo-h-dark" viewBox="0 0 260 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:220px;height:auto">
+          <path d="M 33 13 A 17 17 0 1 1 24 14" stroke="#F26522" stroke-width="2.6" stroke-linecap="round"/>
+          <circle cx="33" cy="13" r="5" fill="rgba(242,101,34,0.12)"/>
+          <circle cx="33" cy="13" r="3" fill="rgba(242,101,34,0.35)"/>
+          <circle cx="33" cy="13" r="1.8" fill="#F26522"/>
+          <text x="60" y="35" font-family="Raleway,sans-serif" font-weight="700" font-size="22" letter-spacing="-0.3"><tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan></text>
+          <text x="61" y="48" font-family="Raleway,sans-serif" font-weight="500" font-size="7.2" letter-spacing="3.2" fill="rgba(242,101,34,0.78)">ENERGIA INTELIGENTE</text>
+        </svg>
+      </div>
+      <div class="logo-slot-footer">
+        <span class="logo-slot-name">Horizontal · Fundo Escuro</span>
+        <button class="g-btn-dl" onclick="downloadSVG('logo-h-dark','lumengrid-logo-horizontal-dark.svg',260,60)">Baixar SVG</button>
+      </div>
+    </div>
+
+    <!-- Horizontal Light -->
+    <div class="logo-slot light">
+      <div class="logo-slot-preview">
+        <svg id="logo-h-light" viewBox="0 0 260 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:220px;height:auto">
+          <path d="M 33 13 A 17 17 0 1 1 24 14" stroke="#F26522" stroke-width="2.6" stroke-linecap="round"/>
+          <circle cx="33" cy="13" r="5" fill="rgba(242,101,34,0.15)"/>
+          <circle cx="33" cy="13" r="3" fill="rgba(242,101,34,0.4)"/>
+          <circle cx="33" cy="13" r="1.8" fill="#F26522"/>
+          <text x="60" y="35" font-family="Raleway,sans-serif" font-weight="700" font-size="22" letter-spacing="-0.3"><tspan fill="#F26522">LUMEN</tspan><tspan fill="#1A1A1A">GRID</tspan></text>
+          <text x="61" y="48" font-family="Raleway,sans-serif" font-weight="500" font-size="7.2" letter-spacing="3.2" fill="rgba(200,80,20,0.75)">ENERGIA INTELIGENTE</text>
+        </svg>
+      </div>
+      <div class="logo-slot-footer" style="border-color:rgba(0,0,0,.08)">
+        <span class="logo-slot-name" style="color:rgba(0,0,0,.35)">Horizontal · Fundo Claro</span>
+        <button class="g-btn-dl" onclick="downloadSVG('logo-h-light','lumengrid-logo-horizontal-light.svg',260,60)">Baixar SVG</button>
+      </div>
+    </div>
+
+    <!-- Ícone solo -->
+    <div class="logo-slot dark">
+      <div class="logo-slot-preview">
+        <svg id="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:96px;height:96px">
+          <path d="M 56 14 A 36 36 0 1 1 38 16" stroke="#F26522" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="56" cy="14" r="11" fill="rgba(242,101,34,0.1)"/>
+          <circle cx="56" cy="14" r="7" fill="rgba(242,101,34,0.28)"/>
+          <circle cx="56" cy="14" r="4" fill="#F26522"/>
+        </svg>
+      </div>
+      <div class="logo-slot-footer">
+        <span class="logo-slot-name">Ícone Solo</span>
+        <button class="g-btn-dl" onclick="downloadSVG('logo-icon','lumengrid-icone.svg',400,400)">Baixar SVG</button>
+      </div>
+    </div>
+
+    <!-- Ícone solo com glow (para fundo escuro premium) -->
+    <div class="logo-slot" style="background:#08080f">
+      <div class="logo-slot-preview">
+        <svg id="logo-icon-glow" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:96px;height:96px;filter:drop-shadow(0 0 14px rgba(242,101,34,.55)) drop-shadow(0 0 4px rgba(242,101,34,.3))">
+          <path d="M 56 14 A 36 36 0 1 1 38 16" stroke="#F26522" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="56" cy="14" r="11" fill="rgba(242,101,34,0.1)"/>
+          <circle cx="56" cy="14" r="7" fill="rgba(242,101,34,0.28)"/>
+          <circle cx="56" cy="14" r="4" fill="#F26522"/>
+        </svg>
+      </div>
+      <div class="logo-slot-footer">
+        <span class="logo-slot-name">Ícone com Glow</span>
+        <button class="g-btn-dl" onclick="downloadSVG('logo-icon-glow','lumengrid-icone-glow.svg',400,400)">Baixar SVG</button>
+      </div>
+    </div>
+
+    <!-- Vertical (ícone + wordmark empilhados) -->
+    <div class="logo-slot dark" style="grid-column:span 2">
+      <div class="logo-slot-preview" style="gap:0">
+        <svg id="logo-vertical" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:200px;height:auto">
+          <!-- Icon centered -->
+          <path d="M 67 10 A 27 27 0 1 1 48 12" stroke="#F26522" stroke-width="3.2" stroke-linecap="round" transform="translate(0,0)"/>
+          <circle cx="67" cy="10" r="8" fill="rgba(242,101,34,0.12)"/>
+          <circle cx="67" cy="10" r="5" fill="rgba(242,101,34,0.3)"/>
+          <circle cx="67" cy="10" r="3" fill="#F26522"/>
+          <!-- Wordmark below -->
+          <text x="60" y="68" font-family="Raleway,sans-serif" font-weight="700" font-size="18" letter-spacing="-0.3" text-anchor="middle"><tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan></text>
+          <text x="60" y="81" font-family="Raleway,sans-serif" font-weight="500" font-size="6" letter-spacing="2.8" text-anchor="middle" fill="rgba(242,101,34,0.75)">ENERGIA INTELIGENTE</text>
+        </svg>
+      </div>
+      <div class="logo-slot-footer">
+        <span class="logo-slot-name">Vertical (empilhado)</span>
+        <button class="g-btn-dl" onclick="downloadSVG('logo-vertical','lumengrid-logo-vertical.svg',480,400)">Baixar SVG</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-title rule-ok">Uso correto</div>
+        <div class="rule-body">Fundo escuro com laranja pleno. Fundo branco com laranja pleno. Escala proporcional mantida. Glow apenas em fundos escuros digitais.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-title rule-no">Nunca fazer</div>
+        <div class="rule-body">Alterar as cores do logo. Usar o ícone com outra cor. Adicionar sombra drop-shadow em fundo claro. Rotacionar ou distorcer o ícone. Usar sobre fotos sem overlay adequado.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BOLINHAS STORIES ── -->
+<section class="g-sec" id="stories">
+  <div class="g-eyebrow">02 — Destaques Stories</div>
+  <h2 class="g-title">Bolinhas para Story</h2>
+  <p class="g-desc">Capas para os Destaques do Instagram. Cada bolinha é um SVG 1080×1080 — o Instagram recorta em círculo automaticamente. O conteúdo foi centralizado para não ser cortado.</p>
+
+  <div class="bolinhas-wrap">
+
+    <!-- SOLAR -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-solar','lumengrid-story-solar.svg')">
+        <svg id="b-solar" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-sol" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/>
+              <stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+            <radialGradient id="gw-sol" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(242,101,34,0.22)"/>
+              <stop offset="100%" stop-color="rgba(242,101,34,0)"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-sol)"/>
+          <rect width="200" height="200" fill="url(#gw-sol)"/>
+          <!-- Orbital arc -->
+          <path d="M 113 38 A 52 52 0 1 1 80 41" stroke="#F26522" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <circle cx="113" cy="38" r="14" fill="rgba(242,101,34,0.12)"/>
+          <circle cx="113" cy="38" r="9" fill="rgba(242,101,34,0.30)"/>
+          <circle cx="113" cy="38" r="5.5" fill="#F26522"/>
+          <!-- Label -->
+          <text x="100" y="163" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">SOLAR</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Solar</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-solar','lumengrid-story-solar.svg')">Baixar</button>
+    </div>
+
+    <!-- HÍBRIDO -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-hibrido','lumengrid-story-hibrido.svg')">
+        <svg id="b-hibrido" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-hib" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+            <radialGradient id="gw-hib" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(242,101,34,0.18)"/><stop offset="100%" stop-color="rgba(242,101,34,0)"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-hib)"/>
+          <rect width="200" height="200" fill="url(#gw-hib)"/>
+          <!-- Small orbital (top) -->
+          <path d="M 112 50 A 38 38 0 1 1 82 53" stroke="rgba(242,101,34,0.85)" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <circle cx="112" cy="50" r="5" fill="#F26522"/>
+          <!-- Battery (bottom) -->
+          <rect x="76" y="122" width="48" height="30" rx="5" fill="none" stroke="white" stroke-width="3.5"/>
+          <rect x="90" y="114" width="20" height="10" rx="3" fill="none" stroke="white" stroke-width="3"/>
+          <!-- Lightning inside battery -->
+          <path d="M 103 128 L 95 141 L 101 141 L 98 149 L 109 137 L 103 137 Z" fill="#F26522"/>
+          <!-- Label -->
+          <text x="100" y="168" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">HÍBRIDO</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Híbrido</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-hibrido','lumengrid-story-hibrido.svg')">Baixar</button>
+    </div>
+
+    <!-- BATERIA -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-bateria','lumengrid-story-bateria.svg')">
+        <svg id="b-bateria" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-bat" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+            <radialGradient id="gw-bat" cx="50%" cy="50%" r="40%">
+              <stop offset="0%" stop-color="rgba(242,101,34,0.2)"/><stop offset="100%" stop-color="rgba(242,101,34,0)"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-bat)"/>
+          <rect width="200" height="200" fill="url(#gw-bat)"/>
+          <!-- Battery terminal -->
+          <rect x="84" y="46" width="32" height="13" rx="5" fill="none" stroke="white" stroke-width="3.5" opacity="0.8"/>
+          <!-- Battery body -->
+          <rect x="66" y="59" width="68" height="96" rx="8" fill="none" stroke="white" stroke-width="3.5"/>
+          <!-- Fill level -->
+          <rect x="70" y="111" width="60" height="40" rx="5" fill="rgba(242,101,34,0.18)"/>
+          <!-- Lightning bolt -->
+          <path d="M 107 72 L 94 100 L 102 100 L 96 126 L 114 96 L 106 96 Z" fill="#F26522"/>
+          <!-- Label -->
+          <text x="100" y="172" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">BATERIA</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Bateria</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-bateria','lumengrid-story-bateria.svg')">Baixar</button>
+    </div>
+
+    <!-- PROJETOS -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-projetos','lumengrid-story-projetos.svg')">
+        <svg id="b-projetos" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-prj" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-prj)"/>
+          <!-- House outline -->
+          <polygon points="100,46 148,82 52,82" fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/>
+          <rect x="64" y="82" width="72" height="60" fill="none" stroke="white" stroke-width="3.5" rx="2"/>
+          <!-- Door -->
+          <rect x="87" y="110" width="26" height="32" fill="none" stroke="white" stroke-width="2.5" rx="2"/>
+          <!-- Solar panels on roof (3 lines parallel to left roof face) -->
+          <line x1="72" y1="78" x2="83" y2="62" stroke="#F26522" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="84" y1="82" x2="95" y2="66" stroke="#F26522" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="96" y1="82" x2="107" y2="66" stroke="#F26522" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Label -->
+          <text x="100" y="161" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">PROJETOS</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Projetos</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-projetos','lumengrid-story-projetos.svg')">Baixar</button>
+    </div>
+
+    <!-- PARCEIROS -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-parceiros','lumengrid-story-parceiros.svg')">
+        <svg id="b-parceiros" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-par" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-par)"/>
+          <!-- Person 1 -->
+          <circle cx="68" cy="76" r="18" fill="none" stroke="white" stroke-width="3.5"/>
+          <path d="M 40 124 Q 40 100 68 100 Q 96 100 96 124" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Person 2 (highlighted in orange) -->
+          <circle cx="132" cy="76" r="18" fill="none" stroke="#F26522" stroke-width="3.5"/>
+          <path d="M 104 124 Q 104 100 132 100 Q 160 100 160 124" fill="none" stroke="#F26522" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Connection arrow between -->
+          <path d="M 96 88 Q 100 82 104 88" fill="none" stroke="rgba(242,101,34,0.55)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Label -->
+          <text x="100" y="148" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">PARCEIROS</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Parceiros</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-parceiros','lumengrid-story-parceiros.svg')">Baixar</button>
+    </div>
+
+    <!-- PROCESSO -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-processo','lumengrid-story-processo.svg')">
+        <svg id="b-processo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-pro" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-pro)"/>
+          <!-- Step 1 (done) -->
+          <circle cx="62" cy="68" r="13" fill="none" stroke="#F26522" stroke-width="3"/>
+          <path d="M 56 68 L 60 73 L 69 63" fill="none" stroke="#F26522" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="62" y1="81" x2="62" y2="93" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="3 3"/>
+          <line x1="80" y1="68" x2="140" y2="68" stroke="rgba(255,255,255,0.3)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Step 2 (active) -->
+          <circle cx="62" cy="100" r="13" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="62" cy="100" r="5" fill="#F26522"/>
+          <line x1="62" y1="113" x2="62" y2="125" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="3 3"/>
+          <line x1="80" y1="100" x2="140" y2="100" stroke="rgba(255,255,255,0.22)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Step 3 (future) -->
+          <circle cx="62" cy="132" r="13" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <line x1="80" y1="132" x2="140" y2="132" stroke="rgba(255,255,255,0.12)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Label -->
+          <text x="100" y="162" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">PROCESSO</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Processo</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-processo','lumengrid-story-processo.svg')">Baixar</button>
+    </div>
+
+    <!-- INDICAÇÃO -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-indicacao','lumengrid-story-indicacao.svg')">
+        <svg id="b-indicacao" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-ind" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-ind)"/>
+          <!-- Person 1 (sender) -->
+          <circle cx="62" cy="74" r="14" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="3"/>
+          <path d="M 38 116 Q 38 96 62 96 Q 86 96 86 116" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="round"/>
+          <!-- Arrow -->
+          <line x1="89" y1="99" x2="109" y2="99" stroke="#F26522" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 105 93 L 112 99 L 105 105" fill="none" stroke="#F26522" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Star burst from arrow (gains) -->
+          <circle cx="100" cy="74" r="4" fill="rgba(242,101,34,0.5)"/>
+          <!-- Person 2 (receiver, highlighted) -->
+          <circle cx="138" cy="74" r="17" fill="none" stroke="#F26522" stroke-width="3.5"/>
+          <path d="M 112 116 Q 112 94 138 94 Q 164 94 164 116" fill="none" stroke="#F26522" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Small coin/reward -->
+          <circle cx="138" cy="56" r="8" fill="rgba(242,101,34,0.2)"/>
+          <text x="138" y="60" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="700" font-size="9" fill="#F26522">R$</text>
+          <!-- Label -->
+          <text x="100" y="143" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">INDICAÇÃO</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Indicação</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-indicacao','lumengrid-story-indicacao.svg')">Baixar</button>
+    </div>
+
+    <!-- WALLBOX -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-wallbox','lumengrid-story-wallbox.svg')">
+        <svg id="b-wallbox" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-wb" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-wb)"/>
+          <!-- Lightning bolt (main icon) -->
+          <path d="M 108 46 L 88 100 L 100 100 L 91 148 L 118 94 L 106 94 Z" fill="none" stroke="#F26522" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M 108 46 L 88 100 L 100 100 L 91 148 L 118 94 L 106 94 Z" fill="rgba(242,101,34,0.1)"/>
+          <!-- EV plug symbol (small, left) -->
+          <circle cx="52" cy="97" r="16" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5"/>
+          <line x1="47" y1="92" x2="47" y2="98" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="54" y1="92" x2="54" y2="98" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="47" y1="101" x2="56" y2="101" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+          <!-- Label -->
+          <text x="100" y="168" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">WALLBOX</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Wallbox</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-wallbox','lumengrid-story-wallbox.svg')">Baixar</button>
+    </div>
+
+    <!-- EMPRESA -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-empresa','lumengrid-story-empresa.svg')">
+        <svg id="b-empresa" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-emp" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-emp)"/>
+          <!-- Building -->
+          <rect x="56" y="52" width="88" height="100" fill="none" stroke="white" stroke-width="3.5" rx="3"/>
+          <!-- Entrance -->
+          <rect x="82" y="120" width="36" height="32" fill="none" stroke="white" stroke-width="2.5" rx="2"/>
+          <!-- Windows row 1 (lit orange) -->
+          <rect x="66" y="64" width="22" height="16" rx="2" fill="rgba(242,101,34,0.6)"/>
+          <rect x="96" y="64" width="22" height="16" rx="2" fill="rgba(242,101,34,0.6)"/>
+          <!-- Windows row 2 -->
+          <rect x="66" y="86" width="22" height="16" rx="2" fill="rgba(242,101,34,0.28)"/>
+          <rect x="96" y="86" width="22" height="16" rx="2" fill="rgba(242,101,34,0.28)"/>
+          <!-- Windows row 3 -->
+          <rect x="66" y="108" width="22" height="10" rx="2" fill="rgba(255,255,255,0.1)"/>
+          <rect x="96" y="108" width="22" height="10" rx="2" fill="rgba(255,255,255,0.1)"/>
+          <!-- Label -->
+          <text x="100" y="163" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="11" letter-spacing="3.5" fill="rgba(242,101,34,0.72)">EMPRESA</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Empresa</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-empresa','lumengrid-story-empresa.svg')">Baixar</button>
+    </div>
+
+    <!-- SOBRE -->
+    <div class="bolinha-item">
+      <div class="bolinha-ring" onclick="downloadBolinha('b-sobre','lumengrid-story-sobre.svg')">
+        <svg id="b-sobre" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bg-sob" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#14141f"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+            <radialGradient id="gw-sob" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(242,101,34,0.20)"/><stop offset="100%" stop-color="rgba(242,101,34,0)"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#bg-sob)"/>
+          <rect width="200" height="200" fill="url(#gw-sob)"/>
+          <!-- Orbital (same as logo icon, centered slightly above) -->
+          <path d="M 111 46 A 42 42 0 1 1 80 49" stroke="#F26522" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <circle cx="111" cy="46" r="12" fill="rgba(242,101,34,0.12)"/>
+          <circle cx="111" cy="46" r="7.5" fill="rgba(242,101,34,0.30)"/>
+          <circle cx="111" cy="46" r="4.5" fill="#F26522"/>
+          <!-- Wordmark -->
+          <text x="100" y="140" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="700" font-size="22" letter-spacing="-0.4"><tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan></text>
+          <text x="100" y="154" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="500" font-size="7.5" letter-spacing="3.2" fill="rgba(242,101,34,0.7)">ENERGIA INTELIGENTE</text>
+        </svg>
+      </div>
+      <div class="bolinha-name">Sobre</div>
+      <button class="bolinha-dl" onclick="downloadBolinha('b-sobre','lumengrid-story-sobre.svg')">Baixar</button>
+    </div>
+
+  </div>
+
+  <p style="margin-top:24px;font-size:11px;font-weight:300;color:var(--t3);line-height:1.7">
+    Clique em qualquer bolinha para baixar o SVG em 1000×1000px. Para usar no Instagram: vá em Destaques → Editar Capa → enviar a imagem. O Instagram recorta em círculo automaticamente.
+  </p>
+</section>
+
+<!-- ── CAPAS DE VÍDEO ── -->
+<section class="g-sec" id="video">
+  <div class="g-eyebrow">03 — Capas de Vídeo</div>
+  <h2 class="g-title">Templates de Capa</h2>
+  <p class="g-desc">Templates base para thumbnails YouTube (16:9) e capas de Reels/Stories (9:16). Use como ponto de partida — troque o fundo por uma foto de instalação.</p>
+
+  <div class="video-grid">
+
+    <!-- YouTube 16:9 -->
+    <div class="video-slot">
+      <div class="video-inner ratio-16-9">
+        <svg id="tmpl-yt" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <linearGradient id="yt-bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#060610"/><stop offset="100%" stop-color="#0d0d18"/>
+            </linearGradient>
+            <radialGradient id="yt-glow" cx="30%" cy="55%" r="55%">
+              <stop offset="0%" stop-color="rgba(242,101,34,0.28)"/><stop offset="100%" stop-color="rgba(242,101,34,0)"/>
+            </radialGradient>
+            <linearGradient id="yt-or-line" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#F26522"/><stop offset="100%" stop-color="rgba(242,101,34,0)"/>
+            </linearGradient>
+          </defs>
+          <!-- BG -->
+          <rect width="1280" height="720" fill="url(#yt-bg)"/>
+          <rect width="1280" height="720" fill="url(#yt-glow)"/>
+          <!-- Photo placeholder -->
+          <rect x="640" y="0" width="640" height="720" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <text x="960" y="370" text-anchor="middle" font-family="Raleway,sans-serif" font-size="18" fill="rgba(255,255,255,0.18)" letter-spacing="2">FOTO AQUI</text>
+          <!-- Orange line accent -->
+          <rect x="60" y="66" width="380" height="3" fill="url(#yt-or-line)" rx="2"/>
+          <!-- Eyebrow -->
+          <text x="60" y="56" font-family="Raleway,sans-serif" font-weight="500" font-size="22" letter-spacing="5" fill="rgba(242,101,34,0.82)">ENERGIA SOLAR</text>
+          <!-- Title -->
+          <text x="58" y="200" font-family="Raleway,sans-serif" font-weight="300" font-size="88" letter-spacing="-3" fill="#FAFAFA">SISTEMA</text>
+          <text x="58" y="298" font-family="Raleway,sans-serif" font-weight="700" font-size="88" letter-spacing="-3" fill="#F26522">HÍBRIDO</text>
+          <!-- Subtitle -->
+          <text x="60" y="370" font-family="Raleway,sans-serif" font-weight="300" font-size="28" fill="rgba(241,241,245,0.65)" letter-spacing="0.5">Bateria · Inversor · Wallbox em um sistema só</text>
+          <!-- Logo (bottom-left) -->
+          <g transform="translate(60,636)">
+            <path d="M 16 6 A 14 14 0 1 1 8 7" stroke="#F26522" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="16" cy="6" r="4" fill="rgba(242,101,34,0.15)"/>
+            <circle cx="16" cy="6" r="2.5" fill="rgba(242,101,34,0.4)"/>
+            <circle cx="16" cy="6" r="1.5" fill="#F26522"/>
+            <text x="36" y="16" font-family="Raleway,sans-serif" font-weight="700" font-size="17" letter-spacing="-0.3"><tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan></text>
+            <text x="37" y="26" font-family="Raleway,sans-serif" font-weight="500" font-size="6" letter-spacing="2.5" fill="rgba(242,101,34,0.7)">ENERGIA INTELIGENTE</text>
+          </g>
+          <!-- Duration badge (top-right corner as YouTube style) -->
+          <rect x="1170" y="672" width="82" height="28" rx="4" fill="rgba(0,0,0,0.72)"/>
+          <text x="1211" y="690" text-anchor="middle" font-family="Raleway,sans-serif" font-size="15" font-weight="500" fill="white">2:48</text>
+        </svg>
+      </div>
+      <div class="video-slot-footer">
+        <span class="video-slot-name">YouTube · 1280×720</span>
+        <button class="g-btn-dl" onclick="downloadSVG('tmpl-yt','lumengrid-capa-youtube.svg',1280,720)">Baixar SVG</button>
+      </div>
+    </div>
+
+    <!-- Reels 9:16 -->
+    <div class="video-slot">
+      <div class="video-inner ratio-9-16">
+        <svg id="tmpl-reels" viewBox="0 0 1080 1920" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <linearGradient id="rl-bg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#080810"/><stop offset="100%" stop-color="#0d0d18"/>
+            </linearGradient>
+            <radialGradient id="rl-glow" cx="50%" cy="55%" r="60%">
+              <stop offset="0%" stop-color="rgba(242,101,34,0.22)"/><stop offset="100%" stop-color="rgba(242,101,34,0)"/>
+            </radialGradient>
+          </defs>
+          <!-- BG -->
+          <rect width="1080" height="1920" fill="url(#rl-bg)"/>
+          <rect width="1080" height="1920" fill="url(#rl-glow)"/>
+          <!-- Photo placeholder (top half) -->
+          <rect x="0" y="0" width="1080" height="960" fill="rgba(255,255,255,0.025)"/>
+          <text x="540" y="500" text-anchor="middle" font-family="Raleway,sans-serif" font-size="28" fill="rgba(255,255,255,0.14)" letter-spacing="3">FOTO AQUI</text>
+          <!-- Gradient overlay -->
+          <rect x="0" y="600" width="1080" height="360" fill="url(#rl-fade)"/>
+          <!-- Eyebrow -->
+          <text x="80" y="1040" font-family="Raleway,sans-serif" font-weight="500" font-size="32" letter-spacing="6" fill="rgba(242,101,34,0.82)">HÍBRIDO</text>
+          <!-- Accent line -->
+          <rect x="80" y="1058" width="240" height="3" rx="2" fill="#F26522" opacity="0.6"/>
+          <!-- Title -->
+          <text x="80" y="1180" font-family="Raleway,sans-serif" font-weight="300" font-size="118" letter-spacing="-4" fill="#FAFAFA">ENERGIA</text>
+          <text x="80" y="1306" font-family="Raleway,sans-serif" font-weight="700" font-size="118" letter-spacing="-4" fill="#F26522">SEM</text>
+          <text x="80" y="1432" font-family="Raleway,sans-serif" font-weight="300" font-size="118" letter-spacing="-4" fill="#FAFAFA">LIMITE</text>
+          <!-- Subtitle -->
+          <text x="80" y="1520" font-family="Raleway,sans-serif" font-weight="300" font-size="38" fill="rgba(241,241,245,0.60)" letter-spacing="0.5">Sigenergy · GoodWe · Leapton</text>
+          <!-- Logo (bottom) -->
+          <g transform="translate(80,1820)">
+            <path d="M 20 8 A 18 18 0 1 1 10 9" stroke="#F26522" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="20" cy="8" r="5" fill="rgba(242,101,34,0.12)"/>
+            <circle cx="20" cy="8" r="3" fill="rgba(242,101,34,0.38)"/>
+            <circle cx="20" cy="8" r="2" fill="#F26522"/>
+            <text x="48" y="21" font-family="Raleway,sans-serif" font-weight="700" font-size="22" letter-spacing="-0.3"><tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan></text>
+          </g>
+        </svg>
+      </div>
+      <div class="video-slot-footer">
+        <span class="video-slot-name">Reels · 1080×1920</span>
+        <button class="g-btn-dl" onclick="downloadSVG('tmpl-reels','lumengrid-capa-reels.svg',1080,1920)">Baixar SVG</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── TEMPLATES DE POST ── -->
+<section class="g-sec" id="posts">
+  <div class="g-eyebrow">04 — Posts Instagram</div>
+  <h2 class="g-title">Templates de Post</h2>
+  <p class="g-desc">Template base para posts 4:5 e carrossel. Todos os elementos estão posicionados conforme o guia de design — substitua apenas o conteúdo e a foto de fundo.</p>
+
+  <div class="post-grid">
+
+    <!-- Post 4:5 Hero -->
+    <div class="post-slot">
+      <div class="post-inner ratio-4-5">
+        <svg id="tmpl-post" viewBox="0 0 1080 1350" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <linearGradient id="pt-bg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0a0a12"/>
+              <stop offset="100%" stop-color="#060608"/>
+            </linearGradient>
+            <linearGradient id="pt-ov" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(0,0,0,0.18)"/>
+              <stop offset="30%" stop-color="rgba(0,0,0,0.10)"/>
+              <stop offset="65%" stop-color="rgba(0,0,0,0.55)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0.88)"/>
+            </linearGradient>
+          </defs>
+          <!-- Background photo placeholder -->
+          <rect width="1080" height="1350" fill="url(#pt-bg)"/>
+          <rect x="200" y="300" width="680" height="600" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.05)" stroke-width="1" rx="4"/>
+          <text x="540" y="620" text-anchor="middle" font-family="Raleway,sans-serif" font-size="24" fill="rgba(255,255,255,0.14)" letter-spacing="3">FOTO DE FUNDO</text>
+          <!-- Gradient overlay -->
+          <rect width="1080" height="1350" fill="url(#pt-ov)"/>
+          <!-- Header: logo (top-left, 88px margin, 72px from top) -->
+          <g transform="translate(88,72)">
+            <path d="M 20 6 A 16 16 0 1 1 10 7" stroke="#F26522" stroke-width="2.8" stroke-linecap="round"/>
+            <circle cx="20" cy="6" r="5" fill="rgba(242,101,34,0.12)"/>
+            <circle cx="20" cy="6" r="3" fill="rgba(242,101,34,0.35)"/>
+            <circle cx="20" cy="6" r="1.8" fill="#F26522"/>
+            <text x="44" y="22" font-family="Raleway,sans-serif" font-weight="700" font-size="20" letter-spacing="-0.3"><tspan fill="#F26522">LUMEN</tspan><tspan fill="rgba(250,250,250,0.82)">GRID</tspan></text>
+            <text x="45" y="34" font-family="Raleway,sans-serif" font-weight="500" font-size="7" letter-spacing="2.8" fill="rgba(242,101,34,0.7)">ENERGIA INTELIGENTE</text>
+          </g>
+          <!-- Category tag (top-right) -->
+          <text x="992" y="100" text-anchor="end" font-family="Raleway,sans-serif" font-weight="500" font-size="20" letter-spacing="3.5" fill="rgba(242,101,34,0.85)">SOLAR</text>
+          <!-- Eyebrow (155px from top, 88px from left) -->
+          <text x="88" y="978" font-family="Raleway,sans-serif" font-weight="500" font-size="26" letter-spacing="5" fill="rgba(242,101,34,0.88)">ENERGIA SOLAR</text>
+          <!-- Headline -->
+          <text x="88" y="1090" font-family="Raleway,sans-serif" font-weight="300" font-size="92" letter-spacing="-3" fill="#FAFAFA">O melhor</text>
+          <text x="88" y="1196" font-family="Raleway,sans-serif" font-weight="700" font-size="92" letter-spacing="-3" fill="#F26522">investimento</text>
+          <!-- Body -->
+          <text x="88" y="1278" font-family="Raleway,sans-serif" font-weight="300" font-size="36" fill="rgba(241,241,245,0.65)" letter-spacing="0.3">Retorno em 3 anos. Geração por 30.</text>
+          <!-- Progress dots (bottom-right) -->
+          <circle cx="924" cy="1310" r="7" fill="#F26522"/>
+          <circle cx="948" cy="1310" r="5" fill="rgba(255,255,255,0.25)"/>
+          <circle cx="968" cy="1310" r="5" fill="rgba(255,255,255,0.25)"/>
+          <circle cx="988" cy="1310" r="5" fill="rgba(255,255,255,0.25)"/>
+        </svg>
+      </div>
+      <div class="post-slot-footer">
+        <span class="post-slot-name">Post · 1080×1350</span>
+        <button class="g-btn-dl" onclick="downloadSVG('tmpl-post','lumengrid-template-post.svg',1080,1350)">Baixar SVG</button>
+      </div>
+    </div>
+
+    <!-- Slide carrossel interno (fundo sólido, sem foto) -->
+    <div class="post-slot">
+      <div class="post-inner ratio-4-5">
+        <svg id="tmpl-slide" viewBox="0 0 1080 1350" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <radialGradient id="sl-bg" cx="50%" cy="45%" r="65%">
+              <stop offset="0%" stop-color="#141420"/><stop offset="100%" stop-color="#060608"/>
+            </radialGradient>
+            <radialGradient id="sl-glow" cx="50%" cy="45%" r="45%">
+              <stop offset="0%" stop-color="rgba(242,101,34,0.14)"/><stop offset="100%" stop-color="rgba(242,101,34,0)"/>
+            </radialGradient>
+          </defs>
+          <rect width="1080" height="1350" fill="url(#sl-bg)"/>
+          <rect width="1080" height="1350" fill="url(#sl-glow)"/>
+          <!-- Frame accent (optional border) -->
+          <rect x="32" y="32" width="1016" height="1286" rx="12" fill="none" stroke="rgba(242,101,34,0.18)" stroke-width="2"/>
+          <!-- Logo -->
+          <g transform="translate(88,72)">
+            <path d="M 20 6 A 16 16 0 1 1 10 7" stroke="#F26522" stroke-width="2.8" stroke-linecap="round"/>
+            <circle cx="20" cy="6" r="5" fill="rgba(242,101,34,0.12)"/>
+            <circle cx="20" cy="6" r="3" fill="rgba(242,101,34,0.35)"/>
+            <circle cx="20" cy="6" r="1.8" fill="#F26522"/>
+            <text x="44" y="22" font-family="Raleway,sans-serif" font-weight="700" font-size="20" letter-spacing="-0.3"><tspan fill="#F26522">LUMEN</tspan><tspan fill="rgba(250,250,250,0.82)">GRID</tspan></text>
+            <text x="45" y="34" font-family="Raleway,sans-serif" font-weight="500" font-size="7" letter-spacing="2.8" fill="rgba(242,101,34,0.7)">ENERGIA INTELIGENTE</text>
+          </g>
+          <!-- Large quote / insight -->
+          <text x="540" y="600" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="300" font-size="52" fill="rgba(241,241,245,0.55)">A energia deixou de</text>
+          <text x="540" y="670" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="300" font-size="52" fill="rgba(241,241,245,0.55)">ser consumo.</text>
+          <text x="540" y="800" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="700" font-size="80" letter-spacing="-2" fill="#FAFAFA">Virou</text>
+          <text x="540" y="900" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="700" font-size="80" letter-spacing="-2" fill="#F26522">patrimônio.</text>
+          <!-- Divider line -->
+          <line x1="480" y1="988" x2="600" y2="988" stroke="rgba(242,101,34,0.4)" stroke-width="1.5"/>
+          <!-- CTA -->
+          <text x="540" y="1060" text-anchor="middle" font-family="Raleway,sans-serif" font-weight="400" font-size="32" fill="rgba(241,241,245,0.55)">Solicite seu projeto →</text>
+          <!-- Progress dots -->
+          <circle cx="924" cy="1310" r="5" fill="rgba(255,255,255,0.25)"/>
+          <circle cx="948" cy="1310" r="5" fill="rgba(255,255,255,0.25)"/>
+          <circle cx="968" cy="1310" r="7" fill="#F26522"/>
+          <circle cx="988" cy="1310" r="5" fill="rgba(255,255,255,0.25)"/>
+        </svg>
+      </div>
+      <div class="post-slot-footer">
+        <span class="post-slot-name">Slide Carrossel · Fundo Sólido</span>
+        <button class="g-btn-dl" onclick="downloadSVG('tmpl-slide','lumengrid-template-slide.svg',1080,1350)">Baixar SVG</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</div><!-- /g-page -->
+
+<footer class="g-footer">
+  Feito por Domani Consultoria
+</footer>
+
+<script>
+/* ── DOWNLOAD SVG ── */
+function downloadSVG(svgId, filename, w, h) {
+  const orig = document.getElementById(svgId);
+  if (!orig) return;
+  const clone = orig.cloneNode(true);
+  // set explicit dimensions for the downloaded file
+  if (w) clone.setAttribute('width', w);
+  if (h) clone.setAttribute('height', h);
+  // embed font import so SVG renders correctly when opened standalone
+  const style = document.createElementNS('http://www.w3.org/2000/svg','style');
+  style.textContent = "@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');";
+  clone.insertBefore(style, clone.firstChild);
+  const data = new XMLSerializer().serializeToString(clone);
+  const blob = new Blob([data], {type:'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ── DOWNLOAD BOLINHA (1000×1000) ── */
+function downloadBolinha(svgId, filename) {
+  downloadSVG(svgId, filename, 1000, 1000);
+}
+</script>
+</body>
+</html>
