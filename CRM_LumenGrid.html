@@ -794,6 +794,10 @@ tbody tr td:first-child{font-weight:700}
       <div class="lg-avatar" style="background:linear-gradient(135deg,#FCD34D,#D97706)">B</div>
       <div class="lg-uname">Bruno</div>
     </div>
+    <div class="lg-user" onclick="selectUser('Giovani')">
+      <div class="lg-avatar" style="background:linear-gradient(135deg,#34D399,#059669)">G</div>
+      <div class="lg-uname">Giovani</div>
+    </div>
   </div>
   <!-- Painel de senha -->
   <div id="pw-area" style="display:none;flex-direction:column;align-items:center;gap:14px;min-width:280px">
@@ -905,6 +909,7 @@ tbody tr td:first-child{font-weight:700}
         <button class="kf kf-g" onclick="filterKanban('Kelly',this)">Kelly</button>
         <button class="kf kf-h" onclick="filterKanban('Hingrid',this)">Hingrid</button>
         <button class="kf kf-a" onclick="filterKanban('Ana',this)">Ana</button>
+        <button class="kf" style="--kf-c:#22C55E" onclick="filterKanban('Giovani',this)">Giovani</button>
       </div>
     </div>
     <div class="kb-board" id="kanbanBoard"></div>
@@ -1073,7 +1078,7 @@ tbody tr td:first-child{font-weight:700}
         </div>
         <div class="fg"><div class="fg-lbl">Responsável</div>
           <select class="fg-sel" id="af-resp">
-            <option>Comercial Lumen</option><option>Lucas</option><option>Kelly</option><option>Hingrid</option><option>Ana</option>
+            <option>Comercial Lumen</option><option>Lucas</option><option>Kelly</option><option>Hingrid</option><option>Ana</option><option>Giovani</option>
           </select>
         </div>
         <div class="fg"><div class="fg-lbl">Valor Estimado (R$)</div><input class="fg-inp" id="af-valor" type="number" placeholder="25000"></div>
@@ -1154,7 +1159,7 @@ tbody tr td:first-child{font-weight:700}
         <div class="fg"><div class="fg-lbl">Data Desejada</div><input class="fg-inp" id="srv-data" type="date"></div>
         <div class="fg"><div class="fg-lbl">Responsável</div>
           <select class="fg-sel" id="srv-resp">
-            <option>Comercial Lumen</option><option>Lucas</option><option>Kelly</option><option>Hingrid</option><option>Ana</option>
+            <option>Comercial Lumen</option><option>Lucas</option><option>Kelly</option><option>Hingrid</option><option>Ana</option><option>Giovani</option>
           </select>
         </div>
         <div class="fg af-full"><div class="fg-lbl">Observações</div><textarea class="fg-inp" id="srv-obs" rows="2" placeholder="Detalhes do serviço..."></textarea></div>
@@ -1379,10 +1384,10 @@ const SERVICE_SUBTASKS = {
   3: ['Relatório de serviço gerado','Pagamento recebido','NF emitida','Registro atualizado no sistema'],
 };
 
-const USERS = ['Comercial Lumen','Lucas','Kelly','Hingrid','Ana','Bruno'];
+const USERS = ['Comercial Lumen','Lucas','Kelly','Hingrid','Ana','Bruno','Giovani'];
 const ADMINS = ['Comercial Lumen'];
-const PASSWORDS = {'Comercial Lumen':'Lumen@2026','Lucas':'Lucas@2026','Kelly':'Kelly@2026','Hingrid':'Lumen@2026','Ana':'Ana@2026','Bruno':'BRUNOCOMERCIAL2026'};
-const USER_COLORS = {'Comercial Lumen':'#F26522','Lucas':'#0D9488','Kelly':'#3B82F6','Hingrid':'#8B5CF6','Ana':'#EC4899','Bruno':'#D97706'};
+const PASSWORDS = {'Comercial Lumen':'Lumen@2026','Lucas':'Lucas@2026','Kelly':'Kelly@2026','Hingrid':'Lumen@2026','Ana':'Ana@2026','Bruno':'BRUNOCOMERCIAL2026','Giovani':'Giovani@2026'};
+const USER_COLORS = {'Comercial Lumen':'#F26522','Lucas':'#0D9488','Kelly':'#3B82F6','Hingrid':'#8B5CF6','Ana':'#EC4899','Bruno':'#D97706','Giovani':'#22C55E'};
 const USER_GRADIENTS = {
   'Comercial Lumen':'linear-gradient(135deg,#F47A3A,#C94E0F)',
   'Lucas':'linear-gradient(135deg,#34D399,#059669)',
@@ -1390,8 +1395,9 @@ const USER_GRADIENTS = {
   'Hingrid':'linear-gradient(135deg,#A78BFA,#7C3AED)',
   'Ana':'linear-gradient(135deg,#F9A8D4,#EC4899)',
   'Bruno':'linear-gradient(135deg,#FCD34D,#D97706)',
+  'Giovani':'linear-gradient(135deg,#34D399,#059669)',
 };
-const USER_INITIALS = {'Comercial Lumen':'C','Lucas':'L','Kelly':'K','Hingrid':'H','Ana':'A','Bruno':'B'};
+const USER_INITIALS = {'Comercial Lumen':'C','Lucas':'L','Kelly':'K','Hingrid':'H','Ana':'A','Bruno':'B','Giovani':'G'};
 
 let currentUser = null;
 let kanbanFilter = 'all';
@@ -1415,8 +1421,8 @@ function getAllLeadsRaw() {
 function getLeads() {
   const all = getAllLeadsRaw();
   if (ADMINS.includes(currentUser)) return all;
-  if (currentUser === 'Kelly' || currentUser === 'Ana' || currentUser === 'Bruno') {
-    // Kelly, Ana e Bruno veem só os próprios leads
+  if (currentUser === 'Kelly' || currentUser === 'Ana' || currentUser === 'Bruno' || currentUser === 'Giovani') {
+    // Kelly, Ana, Bruno e Giovani veem só os próprios leads
     return all.filter(l => l.resp === currentUser);
   }
   // Lucas: próprios + pós-venda de todos + Visita Comercial de todos (sem pre-venda da Kelly)
