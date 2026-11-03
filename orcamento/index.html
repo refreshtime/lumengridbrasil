@@ -105,7 +105,7 @@ nav{
 .hs-trust-item svg{color:var(--or);flex-shrink:0}
 
 /* ── FORM SECTION ── */
-.form-section{padding:80px 6vw 100px;background:var(--s1)}
+.form-section{padding:80px 6vw 100px;background:var(--s2)}
 .form-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:72px;align-items:start}
 .form-left h2{
   font-family:'Raleway',sans-serif;font-weight:300;
@@ -130,7 +130,7 @@ nav{
 
 /* ── FORM CARD ── */
 .form-card{
-  background:var(--s2);border:1px solid var(--b1);
+  background:var(--s1);border:1px solid var(--b1);
   border-radius:12px;padding:36px;
 }
 .form-card-title{
@@ -874,8 +874,8 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
     }
   }
 
-  // Sempre redirecionar para obrigado.html
-  window.location.href = '/obrigado/';
+  // Sempre redirecionar para obrigado — passa objetivo via param
+  window.location.href = '/obrigado/?t=' + encodeURIComponent(data.objetivo || '');
 });
 
 /* ── FAQ ── */

@@ -848,8 +848,8 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
     }
   }
 
-  // Sempre redirecionar para obrigado.html
-  window.location.href = 'obrigado.html';
+  // Sempre redirecionar para obrigado — passa objetivo via param
+  window.location.href = '/obrigado/?t=' + encodeURIComponent(data.objetivo || '');
 });
 
 /* ── FAQ ── */
