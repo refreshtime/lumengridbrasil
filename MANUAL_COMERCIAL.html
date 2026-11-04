@@ -1099,6 +1099,23 @@
       </table>
     </div>
 
+    <h3 style="margin-top:40px">Solar On-Grid — Ronma 620W</h3>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Placas</th>
+            <th>kWp</th>
+            <th>Inversor</th>
+            <th>Módulo</th>
+            <th>Preço Cheio</th>
+            <th>Preço Mínimo</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-og-ronma"></tbody>
+      </table>
+    </div>
+
     <h3 style="margin-top:40px">Híbrido (com bateria)</h3>
     <div style="overflow-x:auto">
       <table>
@@ -1164,6 +1181,29 @@
         <td>${R(c.minimo)}</td>
       `;
       tbOG.appendChild(tr);
+    });
+
+    // ── Tabela On-Grid — Ronma 620W / GoodWe ─────────────────────────────
+    const seenR = new Set();
+    const KITS_OG_RONMA = (window.LG_KITS_OG || []).filter(k => {
+      if (!k.mod.includes('Ronma') || !k.inv.includes('GoodWe')) return false;
+      if (seenR.has(k.placas)) return false;
+      seenR.add(k.placas);
+      return true;
+    });
+    const tbOGR = document.getElementById('tbody-og-ronma');
+    KITS_OG_RONMA.forEach(k => {
+      const c = calcOG(k);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${k.placas}</td>
+        <td>${c.kwp.toFixed(2)}</td>
+        <td>${k.inv}</td>
+        <td>Ronma 620W</td>
+        <td style="color:#F26522;font-weight:700">${R(c.cheio)}</td>
+        <td>${R(c.minimo)}</td>
+      `;
+      tbOGR.appendChild(tr);
     });
 
     // ── Tabela Híbrido — Jinko 620W (referência de vendas) ───────────────
