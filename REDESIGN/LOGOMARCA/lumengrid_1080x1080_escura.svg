@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc">
-  <title id="title">Lumengrid — Aplicação quadrada escura 1080x1080</title>
-  <desc id="desc">Lumengrid, Energia Inteligente</desc>
-  <rect width="1080" height="1080" fill="#111111"/><g transform="translate(115 420) scale(1.42)">
-  <path d="M 135.1 37.7 A 70 70 0 1 0 135.1 152.3" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
-  <circle cx="145" cy="27" r="17" fill="#F57832"/>
-</g><g transform="translate(405 512) scale(1.45)" fill="#FFFFFF">
-  <text x="0" y="0" text-anchor="start" font-family="Montserrat, Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="56" font-weight="300" letter-spacing="8">LUMENGRID</text>
-  <text x="0" y="39" text-anchor="start" font-family="Montserrat, Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="400" letter-spacing="7">ENERGIA INTELIGENTE</text>
-  
-</g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-label="LumenGrid — Energia Inteligente">
+  <rect width="1080" height="1080" fill="#111111"/>
+  <g transform="translate(336,180) scale(4)" fill="none">
+    <path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="68" cy="19" r="6" fill="#F57832"/>
+  </g>
+  <text x="540" y="580" text-anchor="middle" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="90" letter-spacing="18">
+    <tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan>
+  </text>
+  <text x="540" y="640" text-anchor="middle" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="26" letter-spacing="8" fill="#F26522">ENERGIA INTELIGENTE</text>
 </svg>

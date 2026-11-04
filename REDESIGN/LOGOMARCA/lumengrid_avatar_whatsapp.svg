@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc">
-  <title id="title">Lumengrid — Avatar WhatsApp</title>
-  <desc id="desc">Lumengrid, Energia Inteligente</desc>
-  <rect width="1080" height="1080" rx="220" fill="#F57832"/><g transform="translate(340 145) scale(2.1)">
-  <path d="M 135.1 37.7 A 70 70 0 1 0 135.1 152.3" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
-  <circle cx="145" cy="27" r="17" fill="#F57832"/>
-</g><g transform="translate(540 665) scale(1.45)" fill="#FFFFFF">
-  <text x="0" y="0" text-anchor="middle" font-family="Montserrat, Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="56" font-weight="300" letter-spacing="8">LUMENGRID</text>
-  <text x="0" y="39" text-anchor="middle" font-family="Montserrat, Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="400" letter-spacing="7">ENERGIA INTELIGENTE</text>
-  
-</g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-label="LumenGrid avatar WhatsApp">
+  <rect width="1080" height="1080" fill="#F26522"/>
+  <g transform="translate(183,190) scale(7)" fill="none">
+    <path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="68" cy="19" r="6" fill="#111111"/>
+  </g>
 </svg>
