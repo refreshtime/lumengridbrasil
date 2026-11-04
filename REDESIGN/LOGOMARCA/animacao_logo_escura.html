@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LumenGrid — Animação Logo (Escura)</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&family=Inter:wght@300&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&family=Inter:wght@300&display=swap"></noscript>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#080808;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;flex-direction:column;
+  font-family:sans-serif;
+}
+
+/* ── SPLASH (cópia fiel do site) ── */
+#splash{
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  position:relative;
+}
+#splash::before{
+  content:'';
+  position:absolute;
+  width:clamp(340px,50vw,600px);
+  height:clamp(340px,50vw,600px);
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(200,80,15,.22) 0%,rgba(245,120,50,.07) 40%,transparent 70%);
+  opacity:0;
+  animation:splash-bloom .8s ease 1.6s forwards;
+  pointer-events:none;
+}
+@keyframes splash-bloom{
+  from{opacity:0;transform:scale(.6)}
+  to{opacity:1;transform:scale(1)}
+}
+#splash-content{
+  display:flex;flex-direction:column;align-items:center;gap:36px;
+  position:relative;z-index:1;
+}
+#splash-orbital{
+  overflow:visible;
+  filter:drop-shadow(0 0 0 rgba(245,120,50,0));
+  animation:splash-orbital-glow 1.4s ease 1.8s forwards;
+}
+@keyframes splash-orbital-glow{
+  0%{filter:drop-shadow(0 0 4px rgba(245,120,50,.2))}
+  100%{filter:drop-shadow(0 0 18px rgba(245,120,50,.7)) drop-shadow(0 0 48px rgba(245,120,50,.25))}
+}
+#splash-arc{
+  stroke-dasharray:220;stroke-dashoffset:220;
+  stroke:rgba(245,120,50,.08);
+  animation:splash-arc-draw 2s cubic-bezier(.2,.05,.3,1) .4s forwards;
+}
+@keyframes splash-arc-draw{
+  0%{stroke-dashoffset:220;stroke:rgba(245,120,50,.08)}
+  35%{stroke:rgba(245,120,50,.5)}
+  100%{stroke-dashoffset:0;stroke:rgba(245,120,50,1)}
+}
+#splash-dot{
+  opacity:0;
+  animation:splash-dot-ignite 1.1s ease .15s forwards;
+}
+@keyframes splash-dot-ignite{
+  0%{opacity:0;filter:drop-shadow(0 0 0 transparent)}
+  45%{opacity:.5;filter:drop-shadow(0 0 10px rgba(245,120,50,.45))}
+  100%{opacity:1;filter:drop-shadow(0 0 22px rgba(245,120,50,.9)) drop-shadow(0 0 8px rgba(255,180,80,.6))}
+}
+.splash-wave{
+  transform-origin:50px 50px;
+  opacity:0;
+  fill:none;stroke:rgba(245,120,50,.5);stroke-width:1;
+  animation:splash-wave-expand 1.4s cubic-bezier(.1,.6,.3,1) 2.1s forwards;
+}
+.splash-wave.w2{animation-delay:2.35s;stroke:rgba(245,120,50,.3)}
+.splash-wave.w3{animation-delay:2.6s;stroke:rgba(245,120,50,.18)}
+@keyframes splash-wave-expand{
+  0%{transform:scale(.3);opacity:.8}
+  60%{opacity:.4}
+  100%{transform:scale(4);opacity:0}
+}
+#splash-wordmark{
+  text-align:center;
+  opacity:0;
+  animation:splash-text-in .8s ease 2.55s forwards;
+}
+@keyframes splash-text-in{
+  0%{opacity:0;letter-spacing:2px;transform:translateY(6px)}
+  100%{opacity:1;letter-spacing:10px;transform:translateY(0)}
+}
+#splash-tagline{
+  opacity:0;
+  animation:splash-tag-in .7s ease 2.95s forwards;
+}
+@keyframes splash-tag-in{
+  from{opacity:0;transform:translateY(5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+#splash-name{
+  font-family:'Raleway',sans-serif;font-weight:300;
+  font-size:clamp(20px,2.4vw,28px);text-transform:uppercase;
+  color:#f4f4f4;line-height:1;
+}
+#splash-tagline{
+  font-family:'Inter',sans-serif;font-weight:300;
+  font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(245,120,50,.8);margin-top:10px;
+}
+
+/* ── Replay ── */
+#replay-btn{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  background:transparent;border:1px solid rgba(245,120,50,.35);
+  color:rgba(245,120,50,.8);padding:9px 22px;border-radius:4px;
+  font-family:'Inter',sans-serif;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;transition:all .2s;
+  opacity:0;
+}
+#replay-btn.visible{opacity:1}
+#replay-btn:hover{background:rgba(245,120,50,.12);border-color:rgba(245,120,50,.7);color:#F57832}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div id="splash-content">
+    <svg id="splash-orbital" viewBox="0 0 100 100" fill="none" style="width:clamp(160px,20vw,220px);height:clamp(160px,20vw,220px)">
+      <circle class="splash-wave"    cx="50" cy="50" r="36"/>
+      <circle class="splash-wave w2" cx="50" cy="50" r="36"/>
+      <circle class="splash-wave w3" cx="50" cy="50" r="36"/>
+      <path id="splash-arc" d="M59 15 A36 36 0 1 1 25 25" stroke-width="3.5" stroke-linecap="round"/>
+      <g id="splash-dot">
+        <circle cx="68" cy="19" r="10" fill="rgba(245,120,50,.15)"/>
+        <circle cx="68" cy="19" r="6"  fill="rgba(245,120,50,.35)"/>
+        <circle cx="68" cy="19" r="3.5" fill="#F57832"/>
+      </g>
+    </svg>
+    <div id="splash-wordmark">
+      <div id="splash-name">LUMENGRID</div>
+      <div id="splash-tagline">Energia Inteligente</div>
+    </div>
+  </div>
+</div>
+
+<button id="replay-btn">↺ Replay</button>
+
+<script>
+var btn = document.getElementById('replay-btn');
+
+// Mostra botão após a animação terminar (~3.8s)
+setTimeout(function(){ btn.classList.add('visible'); }, 3800);
+
+btn.addEventListener('click', function(){
+  btn.classList.remove('visible');
+  // Reinicia clonando o splash
+  var splash = document.getElementById('splash');
+  var clone = splash.cloneNode(true);
+  splash.parentNode.replaceChild(clone, splash);
+  // Reaponta variáveis
+  var newBtn = document.getElementById('replay-btn');
+  newBtn.classList.remove('visible');
+  setTimeout(function(){ newBtn.classList.add('visible'); }, 3800);
+  newBtn.addEventListener('click', arguments.callee);
+});
+</script>
+</body>
+</html>
