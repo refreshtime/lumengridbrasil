@@ -481,7 +481,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
       <label class="frl"><input type="radio" name="vend" value="hingrid">Hingrid Oliveira</label>
       <label class="frl"><input type="radio" name="vend" value="kelly">Kelly</label>
       <label class="frl"><input type="radio" name="vend" value="bruno">Bruno Romualdo</label>
-      <label class="frl"><input type="radio" name="vend" value="giovani">Giovani</label>
+      <label class="frl"><input type="radio" name="vend" value="giovani">Giovani Rosa</label>
       <label class="frl"><input type="radio" name="vend" value="custom">Personalizado</label>
     </div>
     <div id="vendCustom" style="display:none">
@@ -1177,7 +1177,7 @@ function generateProposal(criarCard){
     else if(vendRad.value==='hingrid'){vendNome='Hingrid Oliveira';vendFone='(11) 99817-9824';}
     else if(vendRad.value==='kelly'){vendNome='Kelly';vendFone='';}
     else if(vendRad.value==='bruno'){vendNome='Bruno Romualdo';vendFone='(11) 91342-5959';}
-    else if(vendRad.value==='giovani'){vendNome='Giovani';vendFone='';}
+    else if(vendRad.value==='giovani'){vendNome='Giovani Rosa';vendFone='(11) 95129-2206';}
     else{vendNome=get('vendNomeCustom')||'Consultor';vendFone=get('vendFoneCustom')||'';}
   }
   const parceiroRad=document.querySelector('input[name=parceiro]:checked');
@@ -1757,7 +1757,7 @@ function getSBHib(){
 
 async function syncPropostaHibToSB(dados){
   const sb=getSBHib();if(!sb)return;
-  const RESP_MAP={'lucas':'Lucas','hingrid':'Hingrid','kelly':'Kelly','bruno':'Bruno','giovani':'Giovani'};
+  const RESP_MAP={'lucas':'Lucas','hingrid':'Hingrid','kelly':'Kelly','bruno':'Bruno','giovani':'Giovani Rosa'};
   const resp=RESP_MAP[dados.consultorKey]||dados.consultor||null;
   try{
     const tel=String(dados.telefone||'');

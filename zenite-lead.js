@@ -30,7 +30,8 @@
         { email: d.email, phone: d.phone, first_name: d.name ? d.name.split(" ")[0] : undefined });
       fetch(ENDPOINT, {
         method: "POST", keepalive: true,
-        headers: { "Content-Type": "application/json" },
+        // text/plain evita o preflight de CORS, que o endpoint não responde.
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
         body: JSON.stringify(Object.assign({}, d, readAttribution(), { _source_url: location.href }))
       }).catch(function(){});
     } catch(e) {}

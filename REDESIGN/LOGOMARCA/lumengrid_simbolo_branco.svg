@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300" role="img" aria-labelledby="title desc">
+  <title id="title">Lumengrid — Símbolo branco</title>
+  <desc id="desc">Lumengrid, Energia Inteligente</desc>
+  <g transform="translate(55 55) scale(1.0)">
+  <path d="M 135.1 37.7 A 70 70 0 1 0 135.1 152.3" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="145" cy="27" r="17" fill="#F57832"/>
+</g>
+</svg>

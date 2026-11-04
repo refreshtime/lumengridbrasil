@@ -9,6 +9,7 @@
     "backup": "node import-sheets.js --backup-only"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.4.0",
     "@supabase/supabase-js": "^2.45.0",
     "dotenv": "^16.4.5",
     "googleapis": "^144.0.0",

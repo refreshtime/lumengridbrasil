@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
+  <title id="title">Lumengrid — Horizontal branca transparente</title>
+  <desc id="desc">Lumengrid, Energia Inteligente</desc>
+  <g transform="translate(55 105) scale(1.0)">
+  <path d="M 135.1 37.7 A 70 70 0 1 0 135.1 152.3" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="145" cy="27" r="17" fill="#F57832"/>
+</g><g transform="translate(285 178) scale(1)" fill="#FFFFFF">
+  <text x="0" y="0" text-anchor="start" font-family="Montserrat, Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="56" font-weight="300" letter-spacing="8">LUMENGRID</text>
+  <text x="0" y="39" text-anchor="start" font-family="Montserrat, Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="400" letter-spacing="7">ENERGIA INTELIGENTE</text>
+  
+</g>
+</svg>

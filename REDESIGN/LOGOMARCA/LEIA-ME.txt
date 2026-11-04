@@ -1,0 +1,22 @@
+# Lumengrid — variações SVG
+
+Pacote de variações vetoriais baseado na referência enviada.
+
+## Arquivos
+- `lumengrid_horizontal_clara.svg` — uso em fundo claro.
+- `lumengrid_horizontal_escura.svg` — uso em fundo preto/grafite.
+- `lumengrid_horizontal_transparente.svg` — tinta preta, sem fundo.
+- `lumengrid_horizontal_branca_transparente.svg` — versão branca, sem fundo.
+- `lumengrid_simbolo_preto.svg` / `lumengrid_simbolo_branco.svg` — símbolo isolado.
+- `lumengrid_empilhada_transparente.svg` — composição vertical.
+- `lumengrid_avatar_instagram.svg` — avatar quadrado de alto contraste.
+- `lumengrid_avatar_whatsapp.svg` — avatar quadrado em laranja da paleta.
+- `lumengrid_icone_app.svg` — aplicação reduzida / ícone.
+
+## Paleta
+- Preto: `#111111`
+- Branco: `#FFFFFF`
+- Laranja: `#F57832`
+- Laranja queimado: `#C65D2D`
+
+As versões transparentes não possuem retângulo de fundo. O lettering está como texto SVG para permitir ajuste de fonte/kerning no editor vetorial; para produção gráfica final, recomenda-se converter o texto em curvas no Illustrator, Figma ou Inkscape após escolher a fonte geométrica definitiva.
