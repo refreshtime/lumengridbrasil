@@ -14,6 +14,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-NC2ZVM48');</script>
 <!-- End Google Tag Manager -->
+
+<!-- Zenite Pulse -->
+<script async src="https://ratwnpugnptmfplezgve.supabase.co/functions/v1/mkt-pixel/p.js?k=6165ecb0028f1d87c3ee40f297bc0ca1"></script>
+<script src="/zenite-lead.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){captureAttribution();});</script>
+
 <style>
 /* ══ DESIGN SYSTEM — mesmo do site principal ══ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -859,6 +865,9 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
     utm_medium: data.utm_medium,
     utm_campaign: data.utm_campaign
   });
+
+  // Zenite — cópia em paralelo, não bloqueia nada
+  if (typeof sendLeadToZenite === 'function') sendLeadToZenite({ name: data.nome, email: data.email, phone: data.telefone });
 
   // Envia para GAS somente se a URL foi configurada
   if (GAS_URL && GAS_URL !== 'URL_DO_WEB_APP_AQUI') {
