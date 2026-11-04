@@ -5,7 +5,7 @@
 // gerador-solar.html, gerador-hibrido.html e MANUAL_COMERCIAL.html carregam
 // automaticamente os dados atualizados.
 //
-// Última atualização: Nov/2026
+// Última atualização: Nov/2026 — cotações Solfacil (8pl/12pl Jinko/Ronma GoodWe/FoxESS)
 // =============================================================================
 
 // ── FAIXAS DE INSTALAÇÃO ON-GRID ────────────────────────────────────────────
@@ -60,13 +60,13 @@ window.LG_KITS_OG = [
   {placas:5,  inv:'GoodWe 3kW',   mod:'Jinko 620W', equip:6140,  promo:null},
   {placas:6,  inv:'GoodWe 3kW',   mod:'Jinko 620W', equip:7000,  promo:null},
   {placas:7,  inv:'GoodWe 5kW',   mod:'Jinko 620W', equip:8570,  promo:null},
-  {placas:8,  inv:'FoxESS Micro', mod:'Jinko 620W', equip:9190,  promo:null},
-  {placas:8,  inv:'GoodWe 3.3kW', mod:'Jinko 620W', equip:8925,  promo:null},
+  {placas:8,  inv:'FoxESS Micro', mod:'Jinko 620W', equip:9366,  promo:null},
   {placas:8,  inv:'GoodWe 5kW',   mod:'Jinko 620W', equip:9440,  promo:null},
   {placas:9,  inv:'GoodWe 5kW',   mod:'Jinko 620W', equip:10300, promo:null},
   {placas:10, inv:'GoodWe 5kW',   mod:'Jinko 620W', equip:11170, promo:null},
   {placas:11, inv:'GoodWe 7.5kW', mod:'Jinko 620W', equip:13160, promo:null},
   {placas:12, inv:'FoxESS Micro', mod:'Jinko 620W', equip:14415, promo:null},
+  {placas:12, inv:'GoodWe 7.5kW', mod:'Jinko 620W', equip:14173, promo:null},
   {placas:12, inv:'GoodWe 6kW',   mod:'Jinko 620W', equip:12700, promo:null},
   {placas:13, inv:'GoodWe 7.5kW', mod:'Jinko 620W', equip:14890, promo:null},
   {placas:14, inv:'GoodWe 7.5kW', mod:'Jinko 620W', equip:15760, promo:null},
@@ -165,10 +165,12 @@ window.LG_KITS_OG = [
   {placas:5,  inv:'GoodWe 3kW',   mod:'Ronma 620W', equip:5500,  promo:null},
   {placas:6,  inv:'GoodWe 3kW',   mod:'Ronma 620W', equip:6240,  promo:null},
   {placas:7,  inv:'GoodWe 5kW',   mod:'Ronma 620W', equip:7680,  promo:null},
-  {placas:8,  inv:'FoxESS Micro', mod:'Ronma 620W', equip:7901,  promo:null},
-  {placas:8,  inv:'GoodWe 5kW',   mod:'Ronma 620W', equip:8420,  promo:null},
+  {placas:8,  inv:'FoxESS Micro', mod:'Ronma 620W', equip:8273,  promo:null},
+  {placas:8,  inv:'GoodWe 5kW',   mod:'Ronma 620W', equip:8720,  promo:null},
   {placas:9,  inv:'GoodWe 5kW',   mod:'Ronma 620W', equip:9160,  promo:null},
-  {placas:12, inv:'FoxESS Micro', mod:'Ronma 620W', equip:11820, promo:null},
+  {placas:12, inv:'FoxESS Micro', mod:'Ronma 620W', equip:12407, promo:null},
+  {placas:12, inv:'GoodWe 7.5kW', mod:'Ronma 620W', equip:12458, promo:null},
+  {placas:12, inv:'GoodWe 7kW',   mod:'Ronma 620W', equip:12073, promo:null},
   {placas:12, inv:'GoodWe 6kW',   mod:'Ronma 620W', equip:11180, promo:null},
   {placas:16, inv:'FoxESS Micro', mod:'Ronma 620W', equip:15740, promo:null},
   {placas:16, inv:'GoodWe 7.5kW', mod:'Ronma 620W', equip:15460, promo:null},

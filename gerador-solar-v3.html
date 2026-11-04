@@ -286,15 +286,18 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Módulo <span class="req-star">*</span></label>
     <select class="fsel" id="modModelSel" onchange="onModModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)" data-power="620" data-modkey="Jinko 620W" selected>Jinko Bifacial 620W — JKM620N-66HL4M BDV ★ padrão</option>
-      <option value="Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)" data-power="600" data-modkey="Leapton 600W">Leapton Bifacial 600W — LP182-M-72 (23.22%)</option>
-      <option value="Leapton LP182-182-M-72-NB Bifacial 630W Frame Composto" data-power="630" data-modkey="Leapton 630W">Leapton Bifacial 630W — LP182-M-72</option>
-      <option value="Ronma Solar N-Type 620W" data-power="620" data-modkey="Ronma 620W">Ronma N-Type 620W</option>
-      <option value="DMEGC Solar 625W Bifacial N-Type" data-power="625" data-modkey="DMEGC 625W">DMEGC Bifacial 625W N-Type</option>
-      <option value="OSDA Solar 710W Bifacial N-Type" data-power="710" data-modkey="OSDA 710W">OSDA Bifacial 710W N-Type</option>
+      <option value="JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)" data-power="620" data-modkey="Jinko 620W" selected>Jinko 620W (Premium)</option>
+      <option value="Ronma Solar N-Type 620W" data-power="620" data-modkey="Ronma 620W">Ronma 620W</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="modModel" placeholder="Modelo personalizado" style="display:none">
+    <div id="customModFields" style="display:none;margin-top:4px">
+      <input class="fi" id="customModNome" placeholder="Nome do módulo (ex: Canadian 615W)" style="margin-bottom:4px">
+      <div class="frow">
+        <div><label class="fl">Wp do módulo</label><input class="fi" type="number" id="customModWp" placeholder="Ex: 620" min="1" oninput="autoCalc()"></div>
+        <div><label class="fl">Custo equip. (R$)</label><input class="fi" type="number" id="customModEquip" placeholder="Ex: 12000" min="0" oninput="autoCalc()"></div>
+      </div>
+    </div>
     <div class="frow">
       <div><label class="fl">Qtd Inversores</label><input class="fi" type="number" id="invQty" placeholder="1" min="0"></div>
       <div><label class="fl">Potência (kW)</label><input class="fi" type="number" id="invPower" placeholder="Ex: 8" min="0"></div>
@@ -307,6 +310,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
         <option value="GoodWe Premium On-Grid 3.3kW" data-power="3.3">GoodWe Premium On-Grid 3.3kW</option>
         <option value="GoodWe Premium On-Grid 5kW" data-power="5">GoodWe Premium On-Grid 5kW</option>
         <option value="GoodWe Premium On-Grid 6kW" data-power="6">GoodWe Premium On-Grid 6kW</option>
+        <option value="GoodWe Premium On-Grid 7kW" data-power="7">GoodWe Premium On-Grid 7kW</option>
         <option value="GoodWe Premium On-Grid 8kW" data-power="8">GoodWe Premium On-Grid 8kW</option>
         <option value="GoodWe Premium On-Grid 10kW" data-power="10">GoodWe Premium On-Grid 10kW</option>
         <option value="GoodWe Premium On-Grid 12kW" data-power="12">GoodWe Premium On-Grid 12kW</option>
@@ -531,22 +535,25 @@ const KIT_MARGEM=window.LG_KIT_MARGEM||{};
 const KIT_NEG=window.LG_KIT_NEG||{};
 const KITS_OG_FALLBACK=window.LG_KITS_OG||[];
 let KITS_OG = KITS_OG_FALLBACK;
-// modKey ex: 'Jinko 620W', 'Leapton 600W', 'DMEGC 625W', etc.
-function getKitPrecos(placas,modKey,isMicro){
-  const [brand,watt]=(modKey||'Jinko 620W').split(' ');
+// modKey ex: 'Jinko 620W', 'Ronma 620W', 'Outro', etc.
+function getKitPrecos(placas,modKey,isMicro,customEquip){
+  const wpUnit=modKey==='Outro'?620:getWpFromModKey(modKey);
+  const [brand,watt]=(modKey==='Outro'?'Jinko 620W':modKey||'Jinko 620W').split(' ');
   const invKey=isMicro?'FoxESS':'GoodWe';
-  const wpUnit=getWpFromModKey(modKey);
   const kwp=placas*wpUnit/1000;
   const faixa=KIT_FAIXAS.find(f=>kwp>f.min&&kwp<=f.max)||KIT_FAIXAS[KIT_FAIXAS.length-1];
   const instal=faixa.rwp*placas*wpUnit+faixa.homo;
   const margem=KIT_MARGEM[placas]||0.33;
   const neg=KIT_NEG[placas]||0.06;
 
+  let equip,promo=null;
+  if(customEquip){
+    equip=customEquip;
+  } else {
   // Pool: same module family + inverter brand (all kW sizes)
   const pool=KITS_OG.filter(k=>k.mod.includes(brand)&&k.mod.includes(watt)&&k.inv.includes(invKey));
   const exact=pool.find(k=>k.placas===placas);
 
-  let equip,promo=null;
   if(exact){
     equip=exact.equip;
     promo=exact.promo;
@@ -568,6 +575,7 @@ function getKitPrecos(placas,modKey,isMicro){
       equip=placas*870+3500;
     }
   }
+  } // end else (not customEquip)
 
   const direto=equip+instal;
   const formulaMin=direto/(1-margem);
@@ -584,6 +592,7 @@ const INV_AUTO=[
   {v:'GoodWe Premium On-Grid 3.3kW', kw:3.3},
   {v:'GoodWe Premium On-Grid 5kW',   kw:5},
   {v:'GoodWe Premium On-Grid 6kW',   kw:6},
+  {v:'GoodWe Premium On-Grid 7kW',   kw:7},
   {v:'GoodWe Premium On-Grid 8kW',   kw:8},
   {v:'GoodWe Premium On-Grid 10kW',  kw:10},
   {v:'GoodWe Premium On-Grid 12kW',  kw:12},
@@ -607,19 +616,29 @@ function autoSelectInverter(kVp){
   document.querySelector('input[name=invTipo][value="string"]').checked=true;
 }
 function _getModFlags(){
-  const opt=$('modModelSel')?.options[$('modModelSel')?.selectedIndex];
+  const sel=$('modModelSel');
+  if(sel?.value==='custom'){
+    const customWp=getN('customModWp')||620;
+    const customEquip=getN('customModEquip')||0;
+    const customNome=$('customModNome')?.value||'Outro';
+    const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
+    return{modKey:'Outro',isMicro,customWp,customEquip,customNome};
+  }
+  const opt=sel?.options[sel?.selectedIndex];
   const modKey=(opt?.dataset?.modkey)||'Jinko 620W';
   const isMicro=document.querySelector('input[name=invTipo]:checked')?.value==='micro';
   return{modKey,isMicro};
 }
 function autoCalc(){
-  const{modKey,isMicro}=_getModFlags();
-  const qty=getN('modQty'),pwr=getN('modPower');
+  const flags=_getModFlags();
+  const{modKey,isMicro}=flags;
+  let qty=getN('modQty'),pwr=getN('modPower');
+  if(modKey==='Outro'&&flags.customWp){pwr=flags.customWp;$('modPower').value=pwr;}
   const kVp=qty&&pwr?qty*pwr/1000:0;
   $('totalPower').value=kVp>0?kVp.toFixed(2)+' kVp':'';
   if(!$('monthlyGen').dataset.manual&&qty>0)$('monthlyGen').value=Math.round(qty*65);
   if(qty>0){
-    const kp=getKitPrecos(qty,modKey,isMicro);
+    const kp=getKitPrecos(qty,modKey,isMicro,flags.customEquip||0);
     $('projectValue').value=kp.cheio;
   }
   // Micro: 1 microinversor a cada 4 placas
@@ -631,12 +650,13 @@ function autoCalc(){
 }
 
 function updateNivelSolarStrip(){
-  const{modKey,isMicro}=_getModFlags();
+  const flags=_getModFlags();
+  const{modKey,isMicro}=flags;
   const qty=getN('modQty');
   const strip=$('nivelPrecoStrip');
   if(!strip)return;
   if(!qty){strip.style.display='none';return;}
-  const kp=getKitPrecos(qty,modKey,isMicro);
+  const kp=getKitPrecos(qty,modKey,isMicro,flags.customEquip||0);
   const fmtBR=v=>'R$\u00a0'+v.toLocaleString('pt-BR');
   strip.style.display='block';
   const lblC=$('lblCheio');const lblM=$('lblMinimo');
@@ -650,10 +670,11 @@ function updateNivelSolarStrip(){
 }
 
 function setNivelSolar(nivel){
-  const{modKey,isMicro}=_getModFlags();
+  const flags=_getModFlags();
+  const{modKey,isMicro}=flags;
   const qty=getN('modQty');
   if(!qty)return;
-  const kp=getKitPrecos(qty,modKey,isMicro);
+  const kp=getKitPrecos(qty,modKey,isMicro,flags.customEquip||0);
   $('projectValue').value=nivel==='cheio'?kp.cheio:kp.minimo;
   updateNivelSolarStrip();
 }
@@ -668,9 +689,14 @@ $('invPower').addEventListener('input',calcOverload);
 // ── DROPDOWN HANDLERS ──
 function onModModelChange(sel){
   const inp=$('modModel');
-  if(sel.value==='custom'){inp.style.display='block';inp.value='';inp.focus();}
-  else{
+  const customDiv=$('customModFields');
+  if(sel.value==='custom'){
+    inp.style.display='block';inp.value='';
+    customDiv.style.display='block';
+    $('customModNome').focus();
+  } else {
     inp.style.display='none';inp.value=sel.value;
+    customDiv.style.display='none';
     const pw=sel.options[sel.selectedIndex].dataset.power;
     if(pw){$('modPower').value=pw;autoCalc();}
     // Garantia automática por modelo
@@ -712,6 +738,10 @@ function resetForm(){
   const _is=$('invModelSel');if(_is){_is.value='';delete _is.dataset.manual;}
   $('invModel').value='';$('invModel').style.display='none';
   const _ms=$('modModelSel');if(_ms){_ms.value='JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)';onModModelChange(_ms);}
+  if($('customModNome'))$('customModNome').value='';
+  if($('customModWp'))$('customModWp').value='';
+  if($('customModEquip'))$('customModEquip').value='';
+  if($('customModFields'))$('customModFields').style.display='none';
   document.querySelector('input[name=installType][value="Residencial"]').checked=true;
   document.querySelector('input[name=vend][value="lucas"]').checked=true;
   $('vendCustom').style.display='none';
@@ -851,6 +881,8 @@ function generateProposal(criarCard=true){
   if(!getN('modQty'))erros.push('Quantidade de módulos (placas)');
   // Sincroniza modModel com o select se estiver vazio
   if(!get('modModel')){const ms=$('modModelSel');if(ms&&ms.value&&ms.value!=='custom')onModModelChange(ms);}
+  // Para "Outro": usar o nome digitado como modModel
+  if(!get('modModel')&&$('modModelSel')?.value==='custom'){const nome=$('customModNome')?.value;if(nome)$('modModel').value=nome;}
   if(!get('modModel'))erros.push('Modelo do módulo (placa)');
   // Sincroniza invModel com o select se estiver vazio
   if(!get('invModel')){const is=$('invModelSel');if(is&&is.value&&is.value!=='custom')onInvModelChange(is,true);}
@@ -865,8 +897,9 @@ function generateProposal(criarCard=true){
   const _kVp=_qty&&_pwr?_qty*_pwr/1000:0;
   const _pv=getN('projectValue');
   if(_qty>0&&_pv>0){
-    const{modKey:_mk,isMicro:_isM}=_getModFlags();
-    const _kp=getKitPrecos(_qty,_mk,_isM);
+    const _flags=_getModFlags();
+    const{modKey:_mk,isMicro:_isM}=_flags;
+    const _kp=getKitPrecos(_qty,_mk,_isM,_flags.customEquip||0);
     if(_pv<_kp.minimo-50){
       alert('⚠ ATENÇÃO: PREÇO ABAIXO DO MÍNIMO PERMITIDO\n\nO valor informado ('+fmtBRL(_pv)+') está abaixo do Preço Mínimo para este sistema ('+fmtBRL(_kp.minimo)+').\n\nAjuste o valor antes de gerar a proposta.');
       return;
