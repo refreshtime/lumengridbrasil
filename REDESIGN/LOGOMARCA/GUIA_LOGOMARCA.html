@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Logomarca — LumenGrid</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;600;700&display=swap"></noscript>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0D0D0D;
+    --s1:#111111;
+    --s2:#1A1A1A;
+    --border:rgba(255,255,255,0.08);
+    --or:#F26522;
+    --or2:#F57832;
+    --white:#FAFAFA;
+    --muted:rgba(250,250,250,0.55);
+    --font:'Inter',sans-serif;
+  }
+  body{background:var(--bg);color:var(--white);font-family:var(--font);line-height:1.6;padding:60px 40px}
+  h1,h2,h3{font-family:'Space Grotesk',var(--font);font-weight:700}
+
+  /* Header */
+  .page-header{max-width:1100px;margin:0 auto 72px;border-bottom:1px solid var(--border);padding-bottom:48px}
+  .page-header .eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:16px}
+  .page-header h1{font-size:clamp(32px,4vw,56px);letter-spacing:-1px;margin-bottom:12px}
+  .page-header p{font-size:16px;color:var(--muted);max-width:520px}
+
+  /* Sections */
+  section{max-width:1100px;margin:0 auto 72px}
+  .section-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+  h2{font-size:22px;margin-bottom:8px;letter-spacing:-0.3px}
+  .section-desc{font-size:14px;color:var(--muted);margin-bottom:32px}
+
+  /* Logo grid */
+  .logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+  .logo-card{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .logo-card .preview{height:200px;display:flex;align-items:center;justify-content:center;padding:32px}
+  .logo-card .preview img,.logo-card .preview object{max-width:100%;max-height:100%;object-fit:contain}
+  .logo-card .preview svg{max-width:100%;max-height:100%}
+  .logo-card .info{background:var(--s2);border-top:1px solid var(--border);padding:16px 20px}
+  .logo-card .info .name{font-size:13px;font-weight:500;color:var(--white);margin-bottom:4px}
+  .logo-card .info .use{font-size:12px;color:var(--muted)}
+  .logo-card .info .filename{font-size:11px;font-family:monospace;color:rgba(242,101,34,.7);margin-top:6px}
+
+  /* Specific preview backgrounds */
+  .bg-dark{background:#111111}
+  .bg-light{background:#F5F4F0}
+  .bg-orange{background:linear-gradient(135deg,#c65d2d,#F57832)}
+  .bg-photo{background:linear-gradient(135deg,#1a2535,#0a1a2a)}
+  .bg-transparent{background:repeating-conic-gradient(#1e1e1e 0% 25%,#2a2a2a 0% 50%) 0 0/20px 20px}
+
+  /* Palette */
+  .palette{display:flex;flex-wrap:wrap;gap:16px}
+  .swatch{border-radius:10px;overflow:hidden;width:160px}
+  .swatch .color{height:80px}
+  .swatch .label{background:var(--s2);border:1px solid var(--border);border-top:none;padding:12px 14px}
+  .swatch .label .hex{font-family:monospace;font-size:13px;color:var(--white);display:block}
+  .swatch .label .role{font-size:11px;color:var(--muted);margin-top:2px}
+
+  /* Typography */
+  .type-row{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:28px 32px;margin-bottom:12px;display:flex;align-items:baseline;gap:32px}
+  .type-row .specimen{flex:1}
+  .type-row .meta{flex:0 0 220px;font-size:12px;color:var(--muted);line-height:1.8}
+  .type-row .meta strong{color:var(--white);display:block;margin-bottom:4px}
+
+  /* Rules */
+  .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .rule-card{border-radius:12px;padding:24px;border:1px solid var(--border)}
+  .rule-card.ok{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.04)}
+  .rule-card.no{border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.04)}
+  .rule-card .badge{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:12px;display:inline-block;padding:3px 8px;border-radius:4px}
+  .rule-card.ok .badge{background:rgba(34,197,94,.15);color:#4ade80}
+  .rule-card.no .badge{background:rgba(239,68,68,.15);color:#f87171}
+  .rule-card p{font-size:13px;color:var(--muted);line-height:1.7}
+
+  /* Zone */
+  .zone-demo{border:1px solid var(--border);border-radius:12px;padding:40px;display:flex;align-items:center;justify-content:center;position:relative;background:var(--s1)}
+  .zone-inner{position:relative;display:inline-block}
+  .zone-inner img{height:60px}
+  .zone-box{position:absolute;inset:-24px;border:2px dashed rgba(242,101,34,.4);border-radius:4px;pointer-events:none}
+  .zone-label{position:absolute;top:-36px;left:0;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--or)}
+
+  /* Responsive */
+  @media(max-width:700px){
+    body{padding:32px 20px}
+    .rules-grid{grid-template-columns:1fr}
+    .type-row{flex-direction:column;gap:12px}
+    .type-row .meta{flex:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="eyebrow">▶ Identidade Visual</div>
+  <h1>Guia de Logomarca<br><span style="color:var(--or)">LumenGrid</span></h1>
+  <p>Referência oficial de uso da marca — variações de cor, tipografia, paleta e regras de aplicação.</p>
+</header>
+
+<!-- ═══ SÍMBOLO ═══ -->
+<section>
+  <div class="section-label">Símbolo</div>
+  <h2>Ícone orbital</h2>
+  <p class="section-desc">Arco quase completo com ponto laranja — representa a órbita solar. Base de todos os aplicativos da marca.</p>
+  <div class="logo-grid">
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_simbolo_branco.svg" alt="Símbolo branco"></div>
+      <div class="info"><div class="name">Símbolo — versão branca</div><div class="use">Para fundos escuros</div><div class="filename">lumengrid_simbolo_branco.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-light"><img src="lumengrid_simbolo_preto.svg" alt="Símbolo preto"></div>
+      <div class="info"><div class="name">Símbolo — versão preta</div><div class="use">Para fundos claros</div><div class="filename">lumengrid_simbolo_preto.svg</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VERSÃO PRINCIPAL (ESCURA) ═══ -->
+<section>
+  <div class="section-label">Versão principal — fundo escuro</div>
+  <h2>LUMEN laranja · GRID branco</h2>
+  <p class="section-desc">Versão padrão da marca. Usar sempre que o fundo for escuro (#111 ou similar).</p>
+  <div class="logo-grid">
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_horizontal_escura.svg" alt="Horizontal escura"></div>
+      <div class="info"><div class="name">Horizontal — escura</div><div class="use">Versão primária para fundos #111</div><div class="filename">lumengrid_horizontal_escura.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-transparent"><img src="lumengrid_horizontal_transparente.svg" alt="Horizontal transparente"></div>
+      <div class="info"><div class="name">Horizontal — transparente (tinta escura)</div><div class="use">Para aplicação sobre fotos e fundos variados</div><div class="filename">lumengrid_horizontal_transparente.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_logo_completa_escura_personalizada.svg" alt="Logo completa escura personalizada"></div>
+      <div class="info"><div class="name">Logo completa — escura com linha</div><div class="use">Apresentações, identidade em destaque</div><div class="filename">lumengrid_logo_completa_escura_personalizada.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_logo_completa_escura_tradicional.svg" alt="Logo completa escura tradicional"></div>
+      <div class="info"><div class="name">Logo completa — escura limpa</div><div class="use">Versão sem linha separadora</div><div class="filename">lumengrid_logo_completa_escura_tradicional.svg</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VERSÃO CLARA ═══ -->
+<section>
+  <div class="section-label">Versão para fundo claro</div>
+  <h2>LUMEN laranja · GRID preto</h2>
+  <p class="section-desc">Para uso em fundos brancos, beges ou claros (#F5F4F0 padrão).</p>
+  <div class="logo-grid">
+    <div class="logo-card">
+      <div class="preview bg-light"><img src="lumengrid_horizontal_clara.svg" alt="Horizontal clara"></div>
+      <div class="info"><div class="name">Horizontal — clara</div><div class="use">Fundos claros e documentos impressos</div><div class="filename">lumengrid_horizontal_clara.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-light"><img src="lumengrid_logo_completa_clara_personalizada.svg" alt="Logo completa clara personalizada"></div>
+      <div class="info"><div class="name">Logo completa — clara com linha</div><div class="use">Apresentações em modo claro</div><div class="filename">lumengrid_logo_completa_clara_personalizada.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-light"><img src="lumengrid_logo_completa_clara_tradicional.svg" alt="Logo completa clara tradicional"></div>
+      <div class="info"><div class="name">Logo completa — clara limpa</div><div class="use">Versão sem linha separadora</div><div class="filename">lumengrid_logo_completa_clara_tradicional.svg</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VERSÕES TODO BRANCO ═══ -->
+<section>
+  <div class="section-label">Versão monocromática — todo branco</div>
+  <h2>LUMEN branco · GRID branco</h2>
+  <p class="section-desc">Para aplicação sobre fundos coloridos, fotos de fundo, gradientes ou situações onde o laranja não contrasta bem o suficiente.</p>
+  <div class="logo-grid">
+    <div class="logo-card">
+      <div class="preview bg-photo"><img src="lumengrid_horizontal_todo_branco_transparente.svg" alt="Todo branco transparente"></div>
+      <div class="info"><div class="name">Horizontal — todo branco (transparente)</div><div class="use">Sobre fotos, gradientes, fundos coloridos</div><div class="filename">lumengrid_horizontal_todo_branco_transparente.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_horizontal_todo_branco_escura.svg" alt="Todo branco escura"></div>
+      <div class="info"><div class="name">Horizontal — todo branco (fundo preto)</div><div class="use">Versão monocromática minimalista</div><div class="filename">lumengrid_horizontal_todo_branco_escura.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_logo_completa_todo_branco_escura.svg" alt="Logo completa todo branco"></div>
+      <div class="info"><div class="name">Logo completa — todo branco</div><div class="use">Versão completa monocromática</div><div class="filename">lumengrid_logo_completa_todo_branco_escura.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-orange"><img src="lumengrid_horizontal_branca_transparente.svg" alt="Branca transparente"></div>
+      <div class="info"><div class="name">Horizontal — branca (versão legada)</div><div class="use">Sobre fundo laranja ou colorido</div><div class="filename">lumengrid_horizontal_branca_transparente.svg</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VERSÃO GRID LARANJA ═══ -->
+<section>
+  <div class="section-label">Versão invertida — LUMEN branco · GRID laranja</div>
+  <h2>LUMEN branco · GRID laranja</h2>
+  <p class="section-desc">Variação com destaque no "GRID". Transmite tecnologia e contraste — ideal para materiais onde a palavra GRID precisa de peso visual extra.</p>
+  <div class="logo-grid">
+    <div class="logo-card">
+      <div class="preview bg-photo"><img src="lumengrid_horizontal_grid_laranja_transparente.svg" alt="Grid laranja transparente"></div>
+      <div class="info"><div class="name">Horizontal — GRID laranja (transparente)</div><div class="use">Sobre fotos escuras e gradientes premium</div><div class="filename">lumengrid_horizontal_grid_laranja_transparente.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_horizontal_grid_laranja_escura.svg" alt="Grid laranja escura"></div>
+      <div class="info"><div class="name">Horizontal — GRID laranja (fundo preto)</div><div class="use">Materiais exclusivos e identidade reforçada</div><div class="filename">lumengrid_horizontal_grid_laranja_escura.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_logo_completa_grid_laranja_escura.svg" alt="Logo completa grid laranja"></div>
+      <div class="info"><div class="name">Logo completa — GRID laranja</div><div class="use">Versão completa com destaque no GRID</div><div class="filename">lumengrid_logo_completa_grid_laranja_escura.svg</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AVATARES E ÍCONES ═══ -->
+<section>
+  <div class="section-label">Avatares e aplicações reduzidas</div>
+  <h2>Ícones e redes sociais</h2>
+  <p class="section-desc">Para uso em tamanhos pequenos onde a tipografia perde legibilidade.</p>
+  <div class="logo-grid">
+    <div class="logo-card">
+      <div class="preview bg-dark" style="height:160px"><img src="lumengrid_avatar_instagram.svg" alt="Avatar Instagram" style="height:100px"></div>
+      <div class="info"><div class="name">Avatar Instagram</div><div class="use">Perfil e stories — 1080×1080 ideal</div><div class="filename">lumengrid_avatar_instagram.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-orange" style="height:160px"><img src="lumengrid_avatar_whatsapp.svg" alt="Avatar WhatsApp" style="height:100px"></div>
+      <div class="info"><div class="name">Avatar WhatsApp</div><div class="use">Perfil de número comercial</div><div class="filename">lumengrid_avatar_whatsapp.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark" style="height:160px"><img src="lumengrid_icone_app.svg" alt="Ícone app" style="height:80px"></div>
+      <div class="info"><div class="name">Ícone app / favicon</div><div class="use">Favicon, app icon, watermark reduzido</div><div class="filename">lumengrid_icone_app.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_empilhada_transparente.svg" alt="Empilhada transparente"></div>
+      <div class="info"><div class="name">Empilhada — transparente</div><div class="use">Composição vertical centralizada</div><div class="filename">lumengrid_empilhada_transparente.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-dark"><img src="lumengrid_1080x1080_escura.svg" alt="1080 escura"></div>
+      <div class="info"><div class="name">1080×1080 — escura</div><div class="use">Post quadrado, apresentação, wallpaper</div><div class="filename">lumengrid_1080x1080_escura.svg</div></div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-transparent"><img src="lumengrid_1080x1080_transparente.svg" alt="1080 transparente"></div>
+      <div class="info"><div class="name">1080×1080 — transparente</div><div class="use">Overlay sobre fotos, tinta escura</div><div class="filename">lumengrid_1080x1080_transparente.svg</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ANIMAÇÃO ═══ -->
+<section>
+  <div class="section-label">Animação</div>
+  <h2>Logo animada — splash de entrada</h2>
+  <p class="section-desc">Versão CSS animada do símbolo para uso em vídeo, apresentações e abertura de site.</p>
+  <div class="logo-grid">
+    <div class="logo-card">
+      <div class="preview bg-dark" style="height:120px;flex-direction:column;gap:12px">
+        <div style="font-size:40px">▶</div>
+        <span style="font-size:12px;color:var(--muted)">Abrir no navegador</span>
+      </div>
+      <div class="info">
+        <div class="name">Animação — versão escura</div>
+        <div class="use">Fundo #080808 — padrão do site</div>
+        <div class="filename"><a href="animacao_logo_escura.html" style="color:var(--or);text-decoration:none">animacao_logo_escura.html ↗</a></div>
+      </div>
+    </div>
+    <div class="logo-card">
+      <div class="preview bg-light" style="height:120px;flex-direction:column;gap:12px">
+        <div style="font-size:40px;color:#111">▶</div>
+        <span style="font-size:12px;color:#555">Abrir no navegador</span>
+      </div>
+      <div class="info">
+        <div class="name">Animação — versão clara</div>
+        <div class="use">Fundo #F5F4F0 — para slides claros</div>
+        <div class="filename"><a href="animacao_logo_branca.html" style="color:var(--or);text-decoration:none">animacao_logo_branca.html ↗</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PALETA ═══ -->
+<section>
+  <div class="section-label">Paleta de cores</div>
+  <h2>Cores oficiais</h2>
+  <p class="section-desc">Usar apenas estas cores nas aplicações da marca.</p>
+  <div class="palette">
+    <div class="swatch">
+      <div class="color" style="background:#F26522"></div>
+      <div class="label"><span class="hex">#F26522</span><span class="role">Laranja — LUMEN, destaques</span></div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#F57832"></div>
+      <div class="label"><span class="hex">#F57832</span><span class="role">Laranja claro — ponto orbital, glow</span></div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#C65D2D"></div>
+      <div class="label"><span class="hex">#C65D2D</span><span class="role">Laranja escuro — versões impressas</span></div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#FAFAFA;border:1px solid #333"></div>
+      <div class="label"><span class="hex">#FAFAFA</span><span class="role">Branco quente — GRID, texto principal</span></div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#111111"></div>
+      <div class="label"><span class="hex">#111111</span><span class="role">Preto grafite — fundo padrão</span></div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#F5F4F0;border:1px solid #ddd"></div>
+      <div class="label"><span class="hex">#F5F4F0</span><span class="role">Creme — fundo versão clara</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TIPOGRAFIA ═══ -->
+<section>
+  <div class="section-label">Tipografia</div>
+  <h2>Fontes da marca</h2>
+  <p class="section-desc">Space Grotesk para o logotipo. Inter para tagline e corpo. Nunca usar outras fontes nas aplicações oficiais da marca.</p>
+
+  <div class="type-row">
+    <div class="specimen"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:8px;color:var(--white)"><span style="color:var(--or)">LUMEN</span>GRID</span></div>
+    <div class="meta"><strong>Space Grotesk 700</strong>Logotipo / Wordmark<br>letter-spacing: 8–18px<br>uppercase obrigatório</div>
+  </div>
+  <div class="type-row">
+    <div class="specimen"><span style="font-family:'Inter',sans-serif;font-weight:400;font-size:18px;letter-spacing:5px;color:rgba(250,250,250,.7);text-transform:uppercase">ENERGIA INTELIGENTE</span></div>
+    <div class="meta"><strong>Inter 400</strong>Tagline<br>letter-spacing: 5–8px<br>opacity: 0.65–0.75</div>
+  </div>
+  <div class="type-row">
+    <div class="specimen"><span style="font-family:'Inter',sans-serif;font-weight:300;font-size:28px;color:var(--white)">Energia solar que trabalha por você.</span></div>
+    <div class="meta"><strong>Inter 300–400</strong>Texto de apoio / body<br>font-size: 14–32px<br>sem uppercase</div>
+  </div>
+</section>
+
+<!-- ═══ ZONA DE PROTEÇÃO ═══ -->
+<section>
+  <div class="section-label">Zona de proteção</div>
+  <h2>Espaço mínimo ao redor da logo</h2>
+  <p class="section-desc">A logo deve ter um espaço livre ao redor equivalente à altura do símbolo. Nenhum elemento pode invadir esse espaço.</p>
+  <div class="zone-demo">
+    <div class="zone-inner">
+      <img src="lumengrid_horizontal_escura.svg" alt="Logo com zona de proteção" style="height:60px;display:block">
+      <div class="zone-box"></div>
+      <div class="zone-label">Zona de proteção ≥ altura do símbolo</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REGRAS ═══ -->
+<section>
+  <div class="section-label">Regras de uso</div>
+  <h2>O que fazer e o que evitar</h2>
+  <p class="section-desc"></p>
+  <div class="rules-grid">
+    <div class="rule-card ok">
+      <span class="badge">✓ Permitido</span>
+      <p>Usar as versões de arquivo fornecidas neste pacote sem alteração de proporção ou cor.</p>
+    </div>
+    <div class="rule-card no">
+      <span class="badge">✗ Proibido</span>
+      <p>Distorcer, esticar ou comprimir a logo em qualquer direção.</p>
+    </div>
+    <div class="rule-card ok">
+      <span class="badge">✓ Permitido</span>
+      <p>Usar a versão todo-branco sobre fotos escuras ou gradientes onde o laranja perde contraste.</p>
+    </div>
+    <div class="rule-card no">
+      <span class="badge">✗ Proibido</span>
+      <p>Alterar as cores — incluindo trocar o laranja por qualquer outra cor "parecida".</p>
+    </div>
+    <div class="rule-card ok">
+      <span class="badge">✓ Permitido</span>
+      <p>Usar o símbolo isolado (ícone) em tamanhos pequenos onde o wordmark seria ilegível (abaixo de 120px de largura).</p>
+    </div>
+    <div class="rule-card no">
+      <span class="badge">✗ Proibido</span>
+      <p>Adicionar sombra drop-shadow, contorno, brilho ou qualquer efeito externo à logo — exceto o glow laranja já embutido nos arquivos de animação.</p>
+    </div>
+    <div class="rule-card ok">
+      <span class="badge">✓ Permitido</span>
+      <p>Escalar uniformemente para qualquer tamanho (SVG é vetorial — sem perda de qualidade).</p>
+    </div>
+    <div class="rule-card no">
+      <span class="badge">✗ Proibido</span>
+      <p>Usar a logo sobre fundos de cor semelhante ao laranja (#F26522) sem a versão todo-branco.</p>
+    </div>
+    <div class="rule-card ok">
+      <span class="badge">✓ Permitido</span>
+      <p>Usar a versão com fundo transparente sobre qualquer foto, contanto que haja contraste suficiente.</p>
+    </div>
+    <div class="rule-card no">
+      <span class="badge">✗ Proibido</span>
+      <p>Recriar a logo a partir de outras fontes, templates ou interpretar o design livremente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ÍNDICE ═══ -->
+<section>
+  <div class="section-label">Índice de arquivos</div>
+  <h2>Todos os arquivos do pacote</h2>
+  <p class="section-desc"></p>
+  <table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead>
+      <tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:10px 12px;color:var(--muted);font-weight:400;width:50%">Arquivo</th>
+        <th style="text-align:left;padding:10px 12px;color:var(--muted);font-weight:400">Formato</th>
+        <th style="text-align:left;padding:10px 12px;color:var(--muted);font-weight:400">Uso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_simbolo_branco.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG</td><td style="padding:10px 12px;color:var(--muted)">Símbolo isolado — fundo escuro</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_simbolo_preto.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG</td><td style="padding:10px 12px;color:var(--muted)">Símbolo isolado — fundo claro</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)" style="background:rgba(255,255,255,0.02)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_horizontal_escura.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×400</td><td style="padding:10px 12px;color:var(--muted)">Versão primária — fundo #111</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_horizontal_clara.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×400</td><td style="padding:10px 12px;color:var(--muted)">Versão primária — fundo claro</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_horizontal_transparente.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×400</td><td style="padding:10px 12px;color:var(--muted)">Tinta escura — sem fundo</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_horizontal_branca_transparente.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×400</td><td style="padding:10px 12px;color:var(--muted)">Tinta branca — sem fundo (legada)</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)" style="background:rgba(242,101,34,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_horizontal_todo_branco_transparente.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×400</td><td style="padding:10px 12px;color:var(--muted)">Todo branco — sem fundo</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)" style="background:rgba(242,101,34,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_horizontal_todo_branco_escura.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×400</td><td style="padding:10px 12px;color:var(--muted)">Todo branco — fundo #111</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)" style="background:rgba(242,101,34,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_horizontal_grid_laranja_transparente.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×400</td><td style="padding:10px 12px;color:var(--muted)">LUMEN branco · GRID laranja — sem fundo</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)" style="background:rgba(242,101,34,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_horizontal_grid_laranja_escura.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×400</td><td style="padding:10px 12px;color:var(--muted)">LUMEN branco · GRID laranja — fundo #111</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_empilhada_transparente.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1200×520</td><td style="padding:10px 12px;color:var(--muted)">Layout vertical centralizado</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_1080x1080_escura.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1080×1080</td><td style="padding:10px 12px;color:var(--muted)">Post quadrado, wallpaper — fundo escuro</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_1080x1080_transparente.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1080×1080</td><td style="padding:10px 12px;color:var(--muted)">Post quadrado — sem fundo</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_logo_completa_escura_personalizada.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1080×1080</td><td style="padding:10px 12px;color:var(--muted)">Horizontal completa — escura com linha</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_logo_completa_escura_tradicional.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1080×1080</td><td style="padding:10px 12px;color:var(--muted)">Horizontal completa — escura limpa</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_logo_completa_clara_personalizada.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1080×1080</td><td style="padding:10px 12px;color:var(--muted)">Horizontal completa — clara com linha</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_logo_completa_clara_tradicional.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1080×1080</td><td style="padding:10px 12px;color:var(--muted)">Horizontal completa — clara limpa</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)" style="background:rgba(242,101,34,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_logo_completa_todo_branco_escura.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1080×1080</td><td style="padding:10px 12px;color:var(--muted)">Completa monocromática — todo branco</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)" style="background:rgba(242,101,34,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_logo_completa_grid_laranja_escura.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG 1080×1080</td><td style="padding:10px 12px;color:var(--muted)">Completa LUMEN branco · GRID laranja</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_avatar_instagram.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG quadrado</td><td style="padding:10px 12px;color:var(--muted)">Avatar Instagram</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_avatar_whatsapp.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG quadrado</td><td style="padding:10px 12px;color:var(--muted)">Avatar WhatsApp comercial</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)"><td style="padding:10px 12px;font-family:monospace;color:var(--or)">lumengrid_icone_app.svg</td><td style="padding:10px 12px;color:var(--muted)">SVG quadrado</td><td style="padding:10px 12px;color:var(--muted)">Favicon / ícone app</td></tr>
+      <tr><td style="padding:10px 12px;font-family:monospace;color:rgba(242,101,34,.5)">animacao_logo_escura.html / _branca.html</td><td style="padding:10px 12px;color:var(--muted)">HTML/CSS</td><td style="padding:10px 12px;color:var(--muted)">Logo animada — splash de entrada</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:16px;font-size:12px;color:var(--muted)">Linhas destacadas em laranja = variações novas adicionadas nesta versão do pacote.</p>
+</section>
+
+<footer style="max-width:1100px;margin:40px auto 0;border-top:1px solid var(--border);padding-top:32px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)">
+  <span>LumenGrid — Guia de Logomarca · v2.0</span>
+  <span>Feito por Domani Consultoria</span>
+</footer>
+
+</body>
+</html>

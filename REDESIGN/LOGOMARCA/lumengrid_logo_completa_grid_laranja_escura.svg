@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-label="LumenGrid — Energia Inteligente"><defs><style><![CDATA[@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&family=Inter:wght@300;400&display=swap');]]></style></defs>
+  <rect width="1080" height="1080" fill="#111111"/>
+  <g transform="translate(140,418) scale(2)" fill="none">
+    <path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="68" cy="19" r="6" fill="#F57832"/>
+  </g>
+  <text x="370" y="510" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="70" letter-spacing="10">
+    <tspan fill="#FAFAFA">LUMEN</tspan><tspan fill="#F26522">GRID</tspan>
+  </text>
+  <text x="372" y="556" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="20" letter-spacing="6" fill="#FAFAFA" fill-opacity="0.70">ENERGIA INTELIGENTE</text>
+</svg>
