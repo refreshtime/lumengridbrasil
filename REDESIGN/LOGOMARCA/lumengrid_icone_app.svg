@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="LumenGrid ícone">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="LumenGrid ícone"><defs><style>@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&family=Inter:wght@300;400&display=swap');</style></defs>
   <rect width="512" height="512" fill="#111111" rx="96"/>
   <g transform="translate(27,31) scale(4.5)" fill="none">
     <path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/>

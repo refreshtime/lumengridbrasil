@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-label="LumenGrid — Energia Inteligente">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-label="LumenGrid — Energia Inteligente"><defs><style>@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&family=Inter:wght@300;400&display=swap');</style></defs>
   <rect width="1080" height="1080" fill="#111111"/>
-  <g transform="translate(140,390) scale(3)" fill="none">
+  <g transform="translate(140,418) scale(2)" fill="none">
     <path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/>
     <circle cx="68" cy="19" r="6" fill="#F57832"/>
   </g>
-  <line x1="465" y1="530" x2="1000" y2="530" stroke="#F26522" stroke-width="2" opacity="0.4"/>
-  <text x="465" y="515" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+  <line x1="370" y1="529" x2="960" y2="529" stroke="#F26522" stroke-width="2" opacity="0.4"/>
+  <text x="370" y="510" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="70" letter-spacing="10">
     <tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan>
   </text>
-  <text x="468" y="565" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="22" letter-spacing="7" fill="#F26522">ENERGIA INTELIGENTE</text>
+  <text x="372" y="556" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="20" letter-spacing="6" fill="#F26522">ENERGIA INTELIGENTE</text>
 </svg>
