@@ -837,7 +837,14 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   });
 
   // Zenite — cópia em paralelo, não bloqueia nada
-  if (typeof sendLeadToZenite === 'function') sendLeadToZenite({ name: data.nome, email: data.email, phone: data.telefone });
+  if (typeof sendLeadToZenite === 'function') sendLeadToZenite({
+    name: data.nome,
+    email: data.email,
+    phone: data.telefone,
+    sobrenome: data.sobrenome,
+    tipo_imovel: data.tipo_imovel,
+    faixa_conta: data.faixa_conta
+  });
 
   // Envia para GAS somente se a URL foi configurada
   if (GAS_URL && GAS_URL !== 'URL_DO_WEB_APP_AQUI') {
