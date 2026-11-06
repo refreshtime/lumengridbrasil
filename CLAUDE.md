@@ -173,40 +173,70 @@ Preço de Venda (Cheio)          = 100%
 ## Design
 
 - Posts Instagram: consultar `INSTAGRAM LUMENGRID/GUIA_DESIGN_POSTS.md`
-- Logo: `logo-icone.png` com glow filter laranja + HTML "LUMEN"(#F26522) + "GRID"(#FAFAFA) + "Energia Inteligente" (8px laranja)
 
-## Performance Web — Aprendizados PageSpeed (Mobile, out/2026)
+### Logo nova (nov/2026)
+- Arquivos SVG em `REDESIGN/LOGOMARCA/`. Referência de uso: `lumengrid_horizontal_escura.svg`
+- **Símbolo**: arc path `M59 15 A36 36 0 1 1 25 25` (stroke #FAFAFA, stroke-width 4) + círculo `cx=68 cy=19 r=6` fill #F57832
+- **Texto**: "LUMEN"(#F26522) + "GRID"(#FAFAFA), font Raleway 600, font-size 80, letter-spacing 16
+- **Tagline**: "ENERGIA INTELIGENTE", font Inter 400, font-size 22, letter-spacing 7, fill rgba(242,101,34,.90)
+- **Transform do símbolo**: `translate(50,50) scale(3)` dentro de viewBox `0 0 1200 400`
+- **Paleta**: laranja símbolo=#F57832, laranja texto=#F26522, branco=#FAFAFA, preto=#111111
+- **Em posts dark (overlay foto)**: inlinear o SVG sem o `<rect>` de fundo. Adicionar glow filters no símbolo e dot.
+- Fonts a importar: `Raleway:wght@600` e `Inter:wght@400` (além de Space Grotesk + DM Sans para conteúdo)
 
-Score inicial: **69 mobile** | FCP 3,2s | LCP **27s** | TBT 10ms | CLS 0
+## Performance Web — Regras de Entrega (nov/2026)
 
-### Regras obrigatórias para qualquer edição do site
+Score atual: **69 mobile** | LCP **25,4s→alvo <4s** | FCP 1,0s | TBT 0ms | CLS 0
 
-**Imagens:**
-- Nunca subir PNG acima de 200KB. Sempre redimensionar com `sips -Z <px> arquivo.png` antes do commit
-- Logo `logo-icone.png` exibida em 59px → manter em no máximo 120px (2x retina)
-- Fotos de cards (sol-photo-card): exibidas em ~630px → manter em no máximo 900px
-- Usar `.webp` sempre que possível (melhor compressão). `.jpg` para fotos, `.png` só para logos/ícones com transparência
-- Backups originais ficam como `arquivo.ORIG.png` — não commitar no git
-- Adicionar sempre `width` e `height` explícitos em `<img>` para evitar CLS
+### CHECKLIST OBRIGATÓRIO — rodar antes de qualquer commit no site
 
-**Google Fonts:**
-- NUNCA usar `<link rel="stylesheet" href="https://fonts.googleapis.com/...">` diretamente — bloqueia render
-- Usar sempre o padrão não-bloqueante:
-  ```html
-  <link rel="preload" as="style" href="URL_FONTS" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="URL_FONTS"></noscript>
-  ```
+```
+[ ] Imagens novas: formato WebP, max 900px, max 200KB
+[ ] <img> tem width e height explícitos
+[ ] Google Fonts: padrão preload não-bloqueante
+[ ] Imagem hero (LCP): preload no <head> com fetchpriority="high"
+[ ] Script novo: tem async ou defer? Se não, adicionar
+[ ] Payload total: verificar que não aumentou muito (baseline 4.755 KiB)
+```
 
-**Imagem LCP (hero):**
-- A imagem acima da dobra deve ter `fetchpriority="high"` e `<link rel="preload" as="image">` no `<head>`
-- Arquivo atual: `imagens/PROJETOS/casa-noturna.webp` — já configurado
+### Imagens — regras obrigatórias
 
-**Cache (GitHub Pages não permite controle de headers):**
-- Para cache longo, migrar para CDN (Cloudflare) quando possível
-- Evitar atualizar imagens sem mudar nome de arquivo (cache busting manual se necessário)
+- **Formato**: sempre `.webp` para fotos e ilustrações. `.png` só para logos com transparência. `.jpg` apenas para fotos antigas já existentes
+- **Tamanho máximo**: 200KB. Logo: 120px. Cards sol-photo: 900px. Hero: 900px
+- **Conversão PNG→WebP**: `python3 -c "from PIL import Image; img=Image.open('a.png').convert('RGBA'); img.save('a.webp','WEBP',quality=82)"`
+- **Redimensionar**: `sips -Z 900 arquivo.png`
+- **width/height obrigatório** em todo `<img>` — evita CLS (layout shift)
+- **Backup**: salvar original como `arquivo.ORIG.png` — nunca commitar o ORIG
+- **Exemplo de ganho**: split-escuro-claro.png 1,9MB → .webp 56KB (97% menor)
 
-**Checklist antes de qualquer deploy do site:**
-1. `sips -g pixelWidth arquivo.png` — checar dimensões reais vs exibidas
-2. Imagens novas: redimensionar para max 900px antes de commitar
-3. Google Fonts: confirmar padrão non-blocking
-4. `<img>` sem `width`/`height`: adicionar para evitar CLS
+### Google Fonts — padrão obrigatório
+
+NUNCA: `<link rel="stylesheet" href="https://fonts.googleapis.com/...">`
+
+SEMPRE:
+```html
+<link rel="preload" as="style" href="URL_FONTS" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="URL_FONTS"></noscript>
+```
+
+### Imagem LCP (hero do site)
+
+- Arquivo: `imagens/PROJETOS/split-escuro-claro.webp`
+- Deve ter no `<head>`: `<link rel="preload" as="image" href="..." fetchpriority="high" type="image/webp">`
+- CSS background usa a mesma URL webp
+
+### Scripts de terceiros
+
+- Todo `<script src="...">` externo deve ter `async` ou `defer` — sem exceções
+- Scripts de rastreamento (GTM, Zenite, Meta Pixel): `async` sempre
+
+### Vídeos no site
+
+- Hospedar no YouTube e embedar com `<iframe>` lazy: `loading="lazy"`
+- Nunca subir arquivo de vídeo direto no repositório (pesa demais)
+- Poster image: WebP, max 100KB
+
+### Cache (GitHub Pages não controla headers)
+
+- Para cache longo: migrar para Cloudflare CDN
+- Atualizar imagem existente: mudar nome do arquivo (cache busting)
