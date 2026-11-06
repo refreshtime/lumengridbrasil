@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LumenGrid — Energia Inteligente</title>
-<!-- DEPLOY: trocar "imagens/" por "imagens/" ao aplicar no root -->
+<meta name="description" content="Energia solar residencial e comercial em São Paulo. Sistemas On-Grid, Híbridos e Wallbox. Orçamento gratuito, instalação em 20 dias.">
 
 <!-- Fonts: Raleway + Inter (non-blocking) -->
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600&family=Inter:wght@300;400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600&family=Inter:wght@300;400;500&display=swap"></noscript>
 
-<!-- LCP preload -->
-<link rel="preload" as="image" href="imagens/PROJETOS/split-escuro-claro.png" fetchpriority="high">
+<!-- LCP preload (WebP) -->
+<link rel="preload" as="image" href="imagens/PROJETOS/split-escuro-claro.webp" fetchpriority="high" type="image/webp">
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NC2ZVM48');</script>
@@ -261,7 +261,7 @@ nav{
 }
 .hero-photo{
   position:absolute;right:0;top:0;bottom:0;width:55%;
-  background:url('imagens/PROJETOS/split-escuro-claro.png') center center/cover no-repeat;
+  background:url('imagens/PROJETOS/split-escuro-claro.webp') center center/cover no-repeat;
   z-index:0;
   /* Só apaga a borda esquerda — direita e topo/base ficam íntegros */
   -webkit-mask-image:linear-gradient(to right,transparent 0%,black 20%);
@@ -1236,7 +1236,7 @@ footer{
     <div class="sol-photo-grid" style="margin-top:48px">
 
       <div class="sol-photo-card reveal-left" onclick="openSolModal('ongrid')">
-        <img class="sol-photo-card-img" src="imagens/PROJETOS/instalacao-solar-ceu-azul.jpeg" alt="Sistema On-Grid — instalação solar" loading="lazy">
+        <img class="sol-photo-card-img" src="imagens/PROJETOS/instalacao-solar-ceu-azul.jpeg" alt="Sistema On-Grid — instalação solar" loading="lazy" width="630" height="420">
         <div class="sol-photo-overlay">
           <div class="sol-photo-cat">Sistema Solar</div>
           <div class="sol-photo-title">On-Grid</div>
@@ -1247,7 +1247,7 @@ footer{
       </div>
 
       <div class="sol-photo-card reveal" onclick="openSolModal('hibrido')">
-        <img class="sol-photo-card-img" src="imagens/PROJETOS/sistema-hibrido-premium.png" alt="Sistema Híbrido com baterias" loading="lazy">
+        <img class="sol-photo-card-img" src="imagens/PROJETOS/sistema-hibrido-premium.webp" alt="Sistema Híbrido com baterias" loading="lazy" width="630" height="420">
         <div class="sol-photo-overlay">
           <div class="sol-photo-cat">Mais Completo · Recomendado</div>
           <div class="sol-photo-title">Híbrido</div>
@@ -1258,7 +1258,7 @@ footer{
       </div>
 
       <div class="sol-photo-card reveal-right" onclick="openSolModal('wallbox')">
-        <img class="sol-photo-card-img" src="imagens/TECNOLOGIA/wallbox-solar-premium.png" alt="Wallbox para veículo elétrico" loading="lazy">
+        <img class="sol-photo-card-img" src="imagens/TECNOLOGIA/wallbox-solar-premium.webp" alt="Wallbox para veículo elétrico" loading="lazy" width="630" height="420">
         <div class="sol-photo-overlay">
           <div class="sol-photo-cat">Carregadores EV</div>
           <div class="sol-photo-title">Wallbox</div>
