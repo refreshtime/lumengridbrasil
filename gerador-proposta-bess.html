@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Gerador de Proposta BESS — LumenGrid</title>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Inter:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -14,7 +14,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100vh;overflow:hidden;display:flex;flex-direction:column}
 .gen-top{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;background:#1E293B;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
-.gen-top-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700}
+.gen-top-brand{display:flex;align-items:center;gap:10px;font-family:'Raleway',sans-serif;font-size:14px;font-weight:700}
 .gen-top-brand .l{color:#F26522}.gen-top-brand .g{color:#F1F5F9}
 .gen-top-label{font-size:11px;color:rgba(241,245,249,.4);letter-spacing:.5px}
 .gen-top-actions{display:flex;gap:10px;align-items:center}
@@ -40,7 +40,7 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .calc-box{background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.2);border-radius:8px;padding:12px 14px;margin-top:4px}
 .calc-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0}
 .calc-key{font-size:11px;color:#94A3B8}
-.calc-val{font-size:12px;font-weight:700;color:#F26522;font-family:'Space Grotesk',sans-serif}
+.calc-val{font-size:12px;font-weight:700;color:#F26522;font-family:'Raleway',sans-serif}
 .opco-toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
 .opco-btn{padding:7px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#94A3B8;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
 .opco-btn.active{background:rgba(242,101,34,.12);border-color:rgba(242,101,34,.4);color:#F26522}
@@ -67,35 +67,35 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .cover-top-bar{position:absolute;top:0;left:0;right:0;height:3px;background:#F26522}
 .cover-logo{position:absolute;top:52px;left:52px;display:flex;align-items:center;gap:14px}
 .cover-logo-mark{width:36px;height:36px;position:relative}
-.cover-wordmark{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;line-height:1;letter-spacing:-.5px}
+.cover-wordmark{font-family:'Raleway',sans-serif;font-size:22px;font-weight:800;line-height:1;letter-spacing:-.5px}
 .cover-wordmark .l{color:#F26522}.cover-wordmark .g{color:#FFFFFF}
 .cover-tagline-sm{font-family:'Inter',sans-serif;font-size:8px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.8);margin-top:3px}
 .cover-doc-label{position:absolute;top:52px;right:52px;text-align:right}
-.cover-doc-label .num{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px}
+.cover-doc-label .num{font-family:'Raleway',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px}
 .cover-doc-label .conf{font-size:9px;color:rgba(255,255,255,.25);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
 .cover-main{position:absolute;top:50%;left:52px;right:52px;transform:translateY(-58%)}
 .cover-type{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:#F26522;margin-bottom:20px;display:flex;align-items:center;gap:12px}
 .cover-type::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(242,101,34,.4),transparent)}
-.cover-title{font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:800;color:#FFFFFF;line-height:1.1;letter-spacing:-1px;margin-bottom:10px}
+.cover-title{font-family:'Raleway',sans-serif;font-size:38px;font-weight:800;color:#FFFFFF;line-height:1.1;letter-spacing:-1px;margin-bottom:10px}
 .cover-subtitle{font-family:'Inter',sans-serif;font-size:16px;font-weight:300;color:rgba(255,255,255,.55);letter-spacing:.5px;margin-bottom:48px}
 .cover-client-block{border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);padding:28px 0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px}
 .cover-client-label{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
-.cover-client-name{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:#FFFFFF;line-height:1.2}
+.cover-client-name{font-family:'Raleway',sans-serif;font-size:28px;font-weight:700;color:#FFFFFF;line-height:1.2}
 .cover-client-loc{font-size:13px;color:rgba(255,255,255,.45);margin-top:6px;display:flex;align-items:center;gap:6px}
 .cover-dates{text-align:right}
 .cover-date-row{margin-bottom:12px}
 .cover-date-label{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)}
-.cover-date-val{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.8)}
+.cover-date-val{font-family:'Raleway',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.8)}
 .cover-kpis{position:absolute;bottom:0;left:0;right:0;background:rgba(242,101,34,1);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;height:88px}
 .cover-kpi{display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.2);padding:0 20px}
 .cover-kpi:last-child{border-right:none}
-.cover-kpi-num{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#FFFFFF;letter-spacing:-1px;line-height:1}
+.cover-kpi-num{font-family:'Raleway',sans-serif;font-size:22px;font-weight:800;color:#FFFFFF;letter-spacing:-1px;line-height:1}
 .cover-kpi-label{font-size:9px;font-weight:600;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;text-align:center;line-height:1.3}
 
 /* CONTENT PAGE TEMPLATE */
 .content-page{background:#FFFFFF}
 .page-header{position:absolute;top:0;left:0;right:0;height:48px;border-bottom:1px solid #E5E7EB;padding:0 44px;display:flex;align-items:center;justify-content:space-between}
-.page-header-brand{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:-.2px}
+.page-header-brand{font-family:'Raleway',sans-serif;font-size:11px;font-weight:700;letter-spacing:-.2px}
 .page-header-brand .l{color:#F26522}.page-header-brand .g{color:#374151}
 .page-header-meta{font-size:9px;color:#9CA3AF;letter-spacing:.5px}
 .page-header-line{position:absolute;top:0;left:0;right:0;height:3px;background:#F26522}
@@ -107,8 +107,8 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 /* ─── DOC TYPOGRAPHY ─── */
 .doc-section-label{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#F26522;margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .doc-section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,#F2652230,transparent)}
-.doc-h2{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:#0C1A2E;letter-spacing:-.5px;line-height:1.1;margin-bottom:4px}
-.doc-h3{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#0C1A2E;letter-spacing:-.2px;margin-bottom:10px}
+.doc-h2{font-family:'Raleway',sans-serif;font-size:20px;font-weight:800;color:#0C1A2E;letter-spacing:-.5px;line-height:1.1;margin-bottom:4px}
+.doc-h3{font-family:'Raleway',sans-serif;font-size:14px;font-weight:700;color:#0C1A2E;letter-spacing:-.2px;margin-bottom:10px}
 .doc-lead{font-size:12px;color:#6B7280;line-height:1.65;margin-bottom:20px}
 .doc-p{font-size:11.5px;color:#4B5563;line-height:1.65;margin-bottom:10px}
 
@@ -117,7 +117,7 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .kpi-card{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:16px 14px;position:relative;overflow:hidden}
 .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#F26522}
 .kpi-label{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;margin-bottom:5px}
-.kpi-num{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#F26522;letter-spacing:-1px;line-height:1}
+.kpi-num{font-family:'Raleway',sans-serif;font-size:22px;font-weight:800;color:#F26522;letter-spacing:-1px;line-height:1}
 .kpi-unit{font-size:10px;font-weight:600;color:#9CA3AF;margin-top:3px}
 
 /* ─── DOC TABLE ─── */
@@ -127,8 +127,8 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .doc-table tr:last-child td{border-bottom:none}
 .doc-table tr:nth-child(even) td{background:#FAFAFA}
 .doc-table td strong{color:#1F2937;font-weight:600}
-.doc-table .or{color:#F26522;font-weight:700;font-family:'Space Grotesk',sans-serif}
-.doc-table .gr{color:#059669;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.doc-table .or{color:#F26522;font-weight:700;font-family:'Raleway',sans-serif}
+.doc-table .gr{color:#059669;font-weight:700;font-family:'Raleway',sans-serif}
 .tag{display:inline-flex;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.3px}
 .tag-or{background:#FFF7ED;color:#C2410C;border:1px solid #FDBA74}
 .tag-gr{background:#F0FDF4;color:#15803D;border:1px solid #86EFAC}
@@ -142,8 +142,8 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .option-rec-badge{position:absolute;top:-1px;right:20px;background:#F26522;color:#fff;font-size:8px;font-weight:800;letter-spacing:2px;padding:3px 10px;border-radius:0 0 6px 6px;text-transform:uppercase}
 .option-label{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;margin-bottom:4px}
 .option-label.or{color:#F26522}
-.option-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800;color:#0C1A2E;margin-bottom:14px}
-.option-price{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:2px}
+.option-name{font-family:'Raleway',sans-serif;font-size:16px;font-weight:800;color:#0C1A2E;margin-bottom:14px}
+.option-price{font-family:'Raleway',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:2px}
 .option-price.base-price{color:#1F2937}
 .option-price.rec-price{color:#F26522}
 .option-price-sub{font-size:10px;color:#9CA3AF;margin-bottom:16px}
@@ -158,7 +158,7 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .roi-card.green{background:#F0FDF4;border:1px solid #A7F3D0}
 .roi-card.blue{background:#EFF6FF;border:1px solid #BFDBFE}
 .roi-card.orange{background:#FFF7ED;border:1px solid #FED7AA}
-.roi-card .num{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px}
+.roi-card .num{font-family:'Raleway',sans-serif;font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px}
 .roi-card.green .num{color:#059669}
 .roi-card.blue .num{color:#2563EB}
 .roi-card.orange .num{color:#D97706}
@@ -190,13 +190,13 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .diff-card{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:14px}
 .diff-icon{font-size:20px;margin-bottom:8px}
-.diff-title{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:#0C1A2E;margin-bottom:4px}
+.diff-title{font-family:'Raleway',sans-serif;font-size:12px;font-weight:700;color:#0C1A2E;margin-bottom:4px}
 .diff-desc{font-size:10.5px;color:#6B7280;line-height:1.5}
 
 /* ─── CTA BOX ─── */
 .cta-doc{background:#0C1A2E;border-radius:10px;padding:28px 32px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;margin-bottom:16px}
 .cta-doc-label{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#F26522;margin-bottom:8px}
-.cta-doc-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:#FFFFFF;line-height:1.2;margin-bottom:6px}
+.cta-doc-title{font-family:'Raleway',sans-serif;font-size:18px;font-weight:800;color:#FFFFFF;line-height:1.2;margin-bottom:6px}
 .cta-doc-sub{font-size:11px;color:rgba(255,255,255,.5);line-height:1.5}
 .cta-doc-contacts{display:flex;flex-direction:column;gap:8px}
 .cta-contact-item{text-align:right}
@@ -215,7 +215,7 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .sys-node{background:#FFFFFF;border:1.5px solid #E5E7EB;border-radius:8px;padding:12px 14px;text-align:center;min-width:110px;position:relative}
 .sys-node.accent{border-color:#F26522;background:#FFF7ED}
 .sys-node-icon{font-size:20px;margin-bottom:4px}
-.sys-node-name{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#0C1A2E}
+.sys-node-name{font-family:'Raleway',sans-serif;font-size:11px;font-weight:700;color:#0C1A2E}
 .sys-node-desc{font-size:9px;color:#9CA3AF;margin-top:2px;line-height:1.3}
 .sys-arrow{color:#D1D5DB;font-size:16px;padding:0 6px;flex-shrink:0}
 
@@ -242,7 +242,7 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
 .import-result-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 .import-result-row:last-child{border:none}
 .import-result-key{font-size:10px;color:#64748B}
-.import-result-val{font-size:10px;font-weight:600;color:#F26522;font-family:'Space Grotesk',sans-serif}
+.import-result-val{font-size:10px;font-weight:600;color:#F26522;font-family:'Raleway',sans-serif}
 </style>
 </head>
 <body>
@@ -632,19 +632,19 @@ body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100v
               <div style="border-top:1px solid #FED7AA;padding-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
                 <div>
                   <div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;margin-bottom:3px">Stacks</div>
-                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E" id="op_a_stacks">8×</div>
+                  <div style="font-family:'Raleway',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E" id="op_a_stacks">8×</div>
                 </div>
                 <div>
                   <div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;margin-bottom:3px">Capacidade</div>
-                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E" id="op_a_kwh">128,56 kWh</div>
+                  <div style="font-family:'Raleway',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E" id="op_a_kwh">128,56 kWh</div>
                 </div>
                 <div>
                   <div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;margin-bottom:3px">R$/kWh</div>
-                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#F26522" id="op_a_kwh_preco">R$ 1.708</div>
+                  <div style="font-family:'Raleway',sans-serif;font-size:16px;font-weight:700;color:#F26522" id="op_a_kwh_preco">R$ 1.708</div>
                 </div>
                 <div>
                   <div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;margin-bottom:3px">Garantia</div>
-                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E">10 anos</div>
+                  <div style="font-family:'Raleway',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E">10 anos</div>
                 </div>
               </div>
             </div>
