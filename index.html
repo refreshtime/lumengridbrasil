@@ -162,7 +162,7 @@ nav{
 /* Nav brand */
 .nav-brand{display:flex;align-items:center;gap:13px;text-decoration:none;flex-shrink:0}
 .nav-orbital{width:36px;height:36px;flex-shrink:0;overflow:visible}
-.nav-dot-group{animation:nav-glow 3s ease-in-out infinite}
+.nav-dot-group{animation:nav-glow 3s ease-in-out infinite;will-change:filter}
 .nav-wname{
   font-family:'Raleway',sans-serif;font-weight:600;
   font-size:15px;letter-spacing:6px;text-transform:uppercase;
@@ -290,6 +290,7 @@ nav{
   opacity:0;
   transform-origin:68px 19px;
   animation:dot-appear .6s ease 2.4s forwards, dot-glow-pulse 3s ease-in-out 3s infinite;
+  will-change:filter;
 }
 
 /* Text area */
@@ -1210,6 +1211,7 @@ footer{
 </div>
 
 <!-- ══ HERO ════════════════════════════ -->
+<main>
 <section class="hero">
   <div class="hero-photo"></div>
 
@@ -1238,7 +1240,7 @@ footer{
     <div class="sol-photo-grid" style="margin-top:48px">
 
       <div class="sol-photo-card reveal-left" onclick="openSolModal('ongrid')">
-        <img class="sol-photo-card-img" src="imagens/PROJETOS/instalacao-solar-ceu-azul.jpeg" alt="Sistema On-Grid — instalação solar" loading="lazy" width="630" height="420">
+        <img class="sol-photo-card-img" src="imagens/PROJETOS/instalacao-solar-ceu-azul.webp" alt="Sistema On-Grid — instalação solar" loading="lazy" width="736" height="1104">
         <div class="sol-photo-overlay">
           <div class="sol-photo-cat">Sistema Solar</div>
           <div class="sol-photo-title">On-Grid</div>
@@ -1483,61 +1485,61 @@ footer{
     <div class="proj-grid" id="galleryGrid">
 
       <div class="proj-card proj-wide reveal" onclick="lbOpen(this)" data-title="Residencial" data-sub="Sistema On-Grid" data-full="FOTOS PARA SITE/casa3.webp" data-before="1200" data-after="95">
-        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/casa3.webp" alt="Sistema solar residencial" loading="lazy"></div>
-        <div class="proj-type-tag">On-Grid</div>
+        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/casa3.webp" alt="Sistema solar residencial" loading="lazy" width="900" height="506"></div>
+<div class="proj-type-tag">On-Grid</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Residencial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
       <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Sistema Híbrido Residencial" data-sub="Inversor híbrido + bateria" data-full="FOTOS PARA SITE/hibrido-residencial.webp" data-type="hibrido" data-before="1800" data-after="120">
-        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/hibrido-residencial.webp" alt="Sistema híbrido residencial" loading="lazy" style="object-position:center top"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/hibrido-residencial.webp" alt="Sistema híbrido residencial" loading="lazy" width="941" height="1672" style="object-position:center top"></div>
         <div class="proj-type-tag tag-hibrido">Híbrido</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Sistema Híbrido Residencial</div><div class="proj-info-sub">Inversor híbrido + bateria</div></div></div>
       </div>
 
       <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Industrial" data-sub="Sistema On-Grid" data-full="FOTOS PARA SITE/industrial.webp" data-before="4200" data-after="320">
-        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/industrial.webp" alt="Sistema solar industrial" loading="lazy"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/industrial.webp" alt="Sistema solar industrial" loading="lazy" width="720" height="900"></div>
         <div class="proj-type-tag">On-Grid</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Industrial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
       <div class="proj-card proj-wide reveal" onclick="lbOpen(this)" data-title="Sistema Híbrido Comercial" data-sub="Inversor híbrido + baterias" data-full="FOTOS PARA SITE/hibrido-comercial.webp" data-type="hibrido" data-before="2800" data-after="180">
-        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/hibrido-comercial.webp" alt="Sistema híbrido comercial" loading="lazy"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/hibrido-comercial.webp" alt="Sistema híbrido comercial" loading="lazy" width="941" height="1672"></div>
         <div class="proj-type-tag tag-hibrido">Híbrido</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Sistema Híbrido Comercial</div><div class="proj-info-sub">Inversor híbrido + baterias</div></div></div>
       </div>
 
       <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Residencial" data-sub="Sistema On-Grid" data-full="FOTOS PARA SITE/casa4.webp" data-before="950" data-after="75">
-        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/casa4.webp" alt="Sistema solar residencial" loading="lazy"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/casa4.webp" alt="Sistema solar residencial" loading="lazy" width="720" height="900"></div>
         <div class="proj-type-tag">On-Grid</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Residencial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
       <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Condomínio" data-sub="On-Grid — áreas comuns" data-full="FOTOS PARA SITE/condominio.webp" data-before="3500" data-after="280">
-        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/condominio.webp" alt="Sistema solar em condomínio" loading="lazy"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="FOTOS PARA SITE/condominio.webp" alt="Sistema solar em condomínio" loading="lazy" width="720" height="900"></div>
         <div class="proj-type-tag">On-Grid</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Condomínio</div><div class="proj-info-sub">On-Grid — áreas comuns</div></div></div>
       </div>
 
       <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Vista Aérea — Residencial" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-drone-residencial.webp" data-before="1100" data-after="85">
-        <div class="proj-card-inner"><img class="proj-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-drone-residencial.webp" alt="Instalação drone residencial" loading="lazy"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-drone-residencial.webp" alt="Instalação drone residencial" loading="lazy" width="900" height="506"></div>
         <div class="proj-type-tag">On-Grid</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Vista Aérea — Residencial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
       <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Vista Aérea — Telhado Comercial" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-campo-solar.jpg" data-before="2800" data-after="210">
-        <div class="proj-card-inner"><img class="proj-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-campo-solar.jpg" alt="Instalação solar vista aérea telhado comercial" loading="lazy" style="object-position:center top"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="imagens/INSTALAÇÕES/instalacao-campo-solar.webp" alt="Instalação solar vista aérea telhado comercial" loading="lazy" width="900" height="506" style="object-position:center top"></div>
         <div class="proj-type-tag">On-Grid</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Vista Aérea — Comercial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
       <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Vista Aérea — Residencial com Piscina" data-sub="Sistema On-Grid" data-full="imagens/INSTALA%C3%87%C3%95ES/instalacao-residencial-nova.jpg" data-before="1300" data-after="100">
-        <div class="proj-card-inner"><img class="proj-img" src="imagens/INSTALA%C3%87%C3%95ES/instalacao-residencial-nova.jpg" alt="Instalação solar residencial vista aérea" loading="lazy"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="imagens/INSTALAÇÕES/instalacao-residencial-nova.webp" alt="Instalação solar residencial vista aérea" loading="lazy" width="900" height="506"></div>
         <div class="proj-type-tag">On-Grid</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Vista Aérea — Residencial</div><div class="proj-info-sub">Sistema On-Grid</div></div></div>
       </div>
 
       <div class="proj-card reveal" onclick="lbOpen(this)" data-title="Sistema Híbrido + Wallbox Sigenergy" data-sub="Bateria + carregador integrado" data-full="imagens/INSTALA%C3%87%C3%95ES/sigenergy-hibrido.jpg" data-type="hibrido" data-before="1600" data-after="0">
-        <div class="proj-card-inner"><img class="proj-img" src="imagens/INSTALA%C3%87%C3%95ES/sigenergy-hibrido.jpg" alt="Sistema híbrido Sigenergy com Wallbox" loading="lazy" style="object-position:center center"></div>
+        <div class="proj-card-inner"><img class="proj-img" src="imagens/INSTALAÇÕES/sigenergy-hibrido.webp" alt="Sistema híbrido Sigenergy com Wallbox" loading="lazy" width="675" height="900" style="object-position:center center"></div>
         <div class="proj-type-tag tag-hibrido">Híbrido</div>
         <div class="proj-overlay"><div><div class="proj-info-title">Híbrido + Wallbox</div><div class="proj-info-sub">Sigenergy — bateria + carregador</div></div></div>
       </div>
@@ -1606,8 +1608,9 @@ footer{
       <!-- DIREITA: imagem -->
       <div class="reveal-right" style="position:relative">
         <div style="position:absolute;inset:-40px;background:radial-gradient(ellipse at center,rgba(245,120,50,.12) 0%,transparent 70%);pointer-events:none;z-index:0"></div>
-        <img src="imagens/TECNOLOGIA/infografico-sistema-hibrido.png"
+        <img src="imagens/TECNOLOGIA/infografico-sistema-hibrido.webp"
              alt="Como funciona o sistema híbrido LumenGrid"
+             width="533" height="800" loading="lazy"
              style="width:100%;border-radius:16px;display:block;position:relative;z-index:1;box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05)">
       </div>
 
@@ -1853,6 +1856,7 @@ footer{
 </section>
 
 <!-- ══ FOOTER ═════════════════════════ -->
+</main>
 <footer>
   <div class="footer-inner">
     <div>
@@ -2138,7 +2142,7 @@ function closeModal(e){
   <div class="sol-modal">
     <button class="sol-modal-close" onclick="closeSolModalById('modal-ongrid')">✕</button>
     <div class="sol-modal-img">
-      <img src="imagens/PROJETOS/instalacao-solar-ceu-azul.jpeg" alt="Sistema On-Grid">
+      <img src="imagens/PROJETOS/instalacao-solar-ceu-azul.webp" alt="Sistema On-Grid" width="736" height="1104" loading="lazy">
       <div class="sol-modal-img-overlay"></div>
       <div class="sol-modal-img-tag">Sistema Solar</div>
     </div>
@@ -2167,7 +2171,7 @@ function closeModal(e){
   <div class="sol-modal">
     <button class="sol-modal-close" onclick="closeSolModalById('modal-hibrido')">✕</button>
     <div class="sol-modal-img">
-      <img src="imagens/PROJETOS/sistema-hibrido-premium.png" alt="Sistema Híbrido">
+      <img src="imagens/PROJETOS/sistema-hibrido-premium.webp" alt="Sistema Híbrido" width="630" height="420" loading="lazy">
       <div class="sol-modal-img-overlay"></div>
       <div class="sol-modal-img-tag">Recomendado</div>
     </div>
@@ -2196,7 +2200,7 @@ function closeModal(e){
   <div class="sol-modal">
     <button class="sol-modal-close" onclick="closeSolModalById('modal-wallbox')">✕</button>
     <div class="sol-modal-img">
-      <img src="imagens/TECNOLOGIA/wallbox-solar-premium.png" alt="Wallbox EV">
+      <img src="imagens/TECNOLOGIA/wallbox-solar-premium.webp" alt="Wallbox EV" width="630" height="420" loading="lazy">
       <div class="sol-modal-img-overlay"></div>
       <div class="sol-modal-img-tag">Carregadores EV</div>
     </div>
