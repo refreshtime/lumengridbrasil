@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Proposta BESS Evercore — CT Fazenda da Grama · LumenGrid</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&family=Inter:wght@300;400;500;600&family=Raleway:wght@600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&family=Inter:wght@300;400;500;600&family=Raleway:wght@600&display=swap"></noscript>
+<style>
+/* ═══════════════════════════════════════
+   RESET + VARIABLES
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0C1A2E;--navy2:#132236;
+  --orange:#F26522;--orange-d:#E05515;
+  --white:#fff;
+  --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;
+  --g400:#94A3B8;--g500:#64748B;--g600:#475569;--g800:#1E293B;
+  --green:#059669;--blue:#2563EB;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'DM Sans','Inter',sans-serif;color:var(--g800);background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+img{max-width:100%;height:auto}
+
+/* ═══════════════════════════════════════
+   PRINT BUTTON
+═══════════════════════════════════════ */
+.fab{
+  position:fixed;bottom:28px;right:28px;z-index:9999;
+  background:var(--orange);color:#fff;border:none;border-radius:50px;
+  padding:14px 24px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;box-shadow:0 8px 32px rgba(242,101,34,.5);
+  display:flex;align-items:center;gap:8px;transition:all .2s;letter-spacing:.3px
+}
+.fab:hover{background:var(--orange-d);transform:translateY(-2px)}
+@media print{.fab{display:none!important}}
+
+/* ═══════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════ */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:11px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--orange)
+}
+.eyebrow::before{content:'';width:24px;height:2px;background:var(--orange);flex-shrink:0}
+h2{font-family:'Space Grotesk',sans-serif;font-weight:700;line-height:1.1;letter-spacing:-.5px;color:var(--navy)}
+h3{font-family:'Space Grotesk',sans-serif;font-weight:600;line-height:1.2;color:var(--navy)}
+p{line-height:1.65;color:var(--g500)}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+.wrap{max-width:1100px;margin:0 auto;padding:0 36px}
+section{padding:72px 0}
+section.gray{background:var(--g50)}
+section.dark{background:var(--navy)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.sec-top{margin-bottom:44px}
+
+/* ═══════════════════════════════════════
+   CARDS
+═══════════════════════════════════════ */
+.card{background:#fff;border:1.5px solid var(--g200);border-radius:12px;padding:24px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--orange)}
+.card-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g400);margin-bottom:8px}
+.card-num{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:800;color:var(--orange);line-height:1;letter-spacing:-1px;margin-bottom:4px}
+.card-desc{font-size:13px;color:var(--g400);line-height:1.4}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero{
+  min-height:100vh;position:relative;background:var(--navy);
+  display:flex;flex-direction:column
+}
+.hero-photo{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1600&q=85') center/cover;opacity:.16}
+.hero-vignette{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,26,46,.2) 0%,rgba(12,26,46,.55) 60%,var(--navy) 100%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(242,101,34,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(242,101,34,.05) 1px,transparent 1px);background-size:40px 40px}
+.hero-top-line{position:absolute;top:0;left:0;right:0;height:4px;background:var(--orange)}
+
+.hero-nav{position:relative;z-index:2;padding:32px 40px;display:flex;align-items:center;justify-content:space-between}
+.hero-ref{text-align:right}
+.hero-ref-num{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.hero-ref-tag{font-size:10px;color:rgba(255,255,255,.18);letter-spacing:3px;text-transform:uppercase;margin-top:3px}
+
+.hero-body{flex:1;position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:0 40px 24px}
+.hero-h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:clamp(32px,5vw,58px);color:#fff;letter-spacing:-2px;line-height:1.02;margin-bottom:16px}
+.hero-h1 strong{color:var(--orange)}
+.hero-sub{font-size:17px;font-weight:300;color:rgba(255,255,255,.45);line-height:1.65;max-width:600px;margin-bottom:40px}
+.hero-client{display:inline-flex;flex-direction:column;gap:4px;border-left:3px solid var(--orange);padding-left:16px}
+.hero-client-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.28)}
+.hero-client-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:1.2}
+.hero-client-loc{font-size:13px;color:rgba(255,255,255,.32);margin-top:3px}
+
+.hero-kpis{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);background:var(--orange)}
+.hero-kpi{padding:20px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.18)}
+.hero-kpi:last-child{border:none}
+.hero-kpi-num{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1}
+.hero-kpi-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:1.5px;margin-top:5px;line-height:1.3}
+
+/* ═══════════════════════════════════════
+   EMPRESA
+═══════════════════════════════════════ */
+.etag{padding:5px 12px;border-radius:20px;border:1.5px solid var(--g200);font-size:12px;font-weight:600;color:var(--g500);letter-spacing:.2px}
+.etag.or{border-color:rgba(242,101,34,.4);color:var(--orange);background:rgba(242,101,34,.05)}
+.estat{background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;padding:20px;position:relative;overflow:hidden}
+.estat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange)}
+.estat-num{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;color:var(--navy);letter-spacing:-1px;line-height:1}
+.estat-desc{font-size:13px;color:var(--g400);margin-top:4px;line-height:1.4}
+
+/* ═══════════════════════════════════════
+   SPEC CARDS
+═══════════════════════════════════════ */
+.spec-card{background:#fff;border:1.5px solid var(--g200);border-radius:12px;overflow:hidden}
+.spec-head{padding:16px 20px;background:var(--navy);display:flex;align-items:center;gap:12px}
+.spec-head-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.spec-head-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+.spec-table{width:100%;border-collapse:collapse;font-size:13px}
+.spec-table td{padding:9px 16px;border-bottom:1px solid var(--g100);vertical-align:middle}
+.spec-table tr:last-child td{border-bottom:none}
+.spec-table td:first-child{color:var(--g400);font-size:12px;width:46%}
+.spec-table td.val{font-weight:600;color:var(--g800)}
+.spec-table td.or{font-weight:700;color:var(--orange)}
+
+/* ═══════════════════════════════════════
+   BESS VISUAL
+═══════════════════════════════════════ */
+.bess-wrap{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(242,101,34,.05));border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:32px 28px;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden}
+.bess-wrap::before{content:'';position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(242,101,34,.12),transparent 70%)}
+.bess-stacks{display:flex;flex-direction:column;gap:5px;position:relative;z-index:1}
+.bess-unit{width:120px;height:16px;border-radius:3px;background:linear-gradient(135deg,#1a3d6b,#0d2444);border:1px solid rgba(242,101,34,.35);display:flex;align-items:center;justify-content:space-between;padding:0 8px}
+.bess-unit::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px rgba(242,101,34,.8)}
+.bess-unit-lbl{font-size:7px;color:rgba(255,255,255,.4);letter-spacing:.5px;font-weight:600}
+.bess-total{margin-top:16px;text-align:center;position:relative;z-index:1}
+.bess-kwh{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:var(--orange);letter-spacing:-1px;line-height:1}
+.bess-kwh-label{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:2px;margin-top:3px}
+.bess-brand{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,.55);margin-top:8px;letter-spacing:2px}
+
+/* ═══════════════════════════════════════
+   BESS SPEC LIST
+═══════════════════════════════════════ */
+.bspec-list{display:flex;flex-direction:column;gap:14px}
+.bspec{display:flex;align-items:flex-start;gap:12px}
+.bspec-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:5px}
+.bspec-label{font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.bspec-val{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#fff;line-height:1.3}
+.bspec-note{font-size:12px;color:rgba(255,255,255,.3);margin-top:1px}
+
+/* ═══════════════════════════════════════
+   FINANCIAL — SCENARIOS
+═══════════════════════════════════════ */
+.scenarios{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;margin-bottom:36px}
+.scenario{border-radius:14px;overflow:hidden;border:2px solid var(--g200)}
+.scenario.recom{border-color:var(--orange)}
+.sc-head{padding:16px 20px;background:var(--g100);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.scenario.recom .sc-head{background:var(--orange)}
+.sc-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--navy)}
+.scenario.recom .sc-title{color:#fff}
+.sc-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:12px;background:rgba(255,255,255,.2);color:#fff;white-space:nowrap}
+.sc-body{padding:22px}
+.sc-payback{font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:800;color:var(--orange);line-height:1;letter-spacing:-2px}
+.scenario:not(.recom) .sc-payback{color:var(--g500);font-size:36px}
+.sc-payback-lbl{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-top:2px;margin-bottom:16px}
+.sc-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--g100);font-size:13px}
+.sc-row:last-of-type{border:none}
+.sc-k{color:var(--g400)}
+.sc-v{font-weight:700;color:var(--g800)}
+.sc-v.or{color:var(--orange)}
+.sc-v.gr{color:var(--green)}
+.sc-v.bl{color:var(--blue)}
+.sc-v.dim{color:var(--g400);font-weight:400}
+.sc-note{font-size:11px;color:var(--g400);margin-top:12px;font-style:italic;line-height:1.55;border-top:1px dashed var(--g200);padding-top:12px}
+
+/* ═══════════════════════════════════════
+   METRIC CARDS
+═══════════════════════════════════════ */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:36px}
+.metric{background:var(--g50);border:1.5px solid var(--g200);border-radius:12px;padding:20px;text-align:center;position:relative;overflow:hidden}
+.metric::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.metric.m-or::before{background:var(--orange)}
+.metric.m-bl::before{background:var(--blue)}
+.metric.m-gr::before{background:var(--green)}
+.metric.m-nv::before{background:var(--navy)}
+.m-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g400);margin-bottom:8px}
+.m-num{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;line-height:1;letter-spacing:-1px;margin-bottom:3px}
+.metric.m-or .m-num{color:var(--orange)}
+.metric.m-bl .m-num{color:var(--blue)}
+.metric.m-gr .m-num{color:var(--green)}
+.metric.m-nv .m-num{color:var(--navy)}
+.m-sub{font-size:11px;color:var(--g400);line-height:1.4}
+
+/* ═══════════════════════════════════════
+   CASH FLOW TABLE
+═══════════════════════════════════════ */
+.cf-wrap{background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden}
+.cf-top{padding:18px 24px;border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.cf-legend{display:flex;gap:16px;font-size:12px;color:var(--g500);flex-shrink:0}
+.cf-legend span{display:flex;align-items:center;gap:5px}
+.cf-legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.cf-table{width:100%;border-collapse:collapse;font-size:14px}
+.cf-table th{background:var(--navy);color:rgba(255,255,255,.75);padding:11px 16px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.cf-table td{padding:11px 16px;border-bottom:1px solid var(--g100);vertical-align:middle}
+.cf-table tr:hover td{background:#fff}
+.cf-table tr:last-child td{border-bottom:none;font-weight:700}
+.cf-table .or{color:var(--orange);font-weight:700}
+.cf-table .hi{background:rgba(242,101,34,.04)}
+.cf-foot{padding:12px 20px;background:#fff;border-top:1px solid var(--g100);font-size:12px;color:var(--g400);line-height:1.6}
+
+/* ═══════════════════════════════════════
+   DIFFERENTIALS
+═══════════════════════════════════════ */
+.diff-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.diff-card{background:#fff;border:1.5px solid var(--g200);border-radius:12px;padding:24px;transition:box-shadow .2s;position:relative;overflow:hidden}
+.diff-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.07)}
+.diff-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.diff-card:hover::before{transform:scaleX(1)}
+.diff-icon{width:44px;height:44px;border-radius:10px;background:rgba(242,101,34,.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.diff-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.diff-desc{font-size:13px;color:var(--g500);line-height:1.6}
+
+/* ═══════════════════════════════════════
+   INVESTMENT / CTA
+═══════════════════════════════════════ */
+.price-block{background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(242,101,34,.05));border:1.5px solid rgba(242,101,34,.4);border-radius:16px;padding:32px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:start;margin-bottom:40px}
+.price-label{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px}
+.price-main{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:800;color:#fff;letter-spacing:-2px;line-height:1}
+.price-main sup{font-size:22px;font-weight:700;vertical-align:super;margin-right:4px;letter-spacing:0}
+.price-main .cents{font-size:24px;color:rgba(255,255,255,.45);font-weight:700}
+.price-sub{font-size:13px;color:rgba(255,255,255,.32);margin-top:8px;line-height:1.5}
+.price-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.price-tag{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.5)}
+.scope-list{display:flex;flex-direction:column;gap:11px;min-width:260px}
+.scope-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(255,255,255,.6);line-height:1.4}
+.scope-check{width:18px;height:18px;border-radius:50%;background:rgba(5,150,105,.18);border:1.5px solid rgba(5,150,105,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* ═══════════════════════════════════════
+   PAYMENT OPTIONS
+═══════════════════════════════════════ */
+.pay-opt{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pay-opt:last-child{margin-bottom:0}
+.pay-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#fff}
+.pay-sub{font-size:12px;color:rgba(255,255,255,.32);margin-top:2px}
+.pay-badge{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:800;color:var(--orange)}
+
+/* ═══════════════════════════════════════
+   TIMELINE
+═══════════════════════════════════════ */
+.tl{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:16px;position:relative}
+.tl-item:not(:last-child)::before{content:'';position:absolute;left:17px;top:34px;bottom:-4px;width:2px;background:rgba(255,255,255,.08)}
+.tl-dot{width:36px;height:36px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:800;color:#fff;z-index:1}
+.tl-content{padding:6px 0 20px}
+.tl-week{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:3px}
+.tl-task{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#fff}
+.tl-desc{font-size:12px;color:rgba(255,255,255,.35);margin-top:2px}
+
+/* ═══════════════════════════════════════
+   CTA BAR
+═══════════════════════════════════════ */
+.cta-bar{background:var(--orange);border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:40px}
+.cta-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:6px}
+.cta-title{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:4px}
+.cta-sub{font-size:14px;color:rgba(255,255,255,.75)}
+
+/* ═══════════════════════════════════════
+   SIGNATURE
+═══════════════════════════════════════ */
+.sign-row{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+.sign-block{border-top:1px solid rgba(255,255,255,.12);padding-top:12px}
+.s-label{font-size:11px;color:rgba(255,255,255,.28);letter-spacing:.4px;margin-bottom:5px}
+.s-name{font-size:14px;font-weight:600;color:rgba(255,255,255,.75)}
+.s-role{font-size:12px;color:rgba(255,255,255,.32);margin-top:2px}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{background:var(--navy);border-top:1px solid rgba(255,255,255,.07);padding:22px 40px;display:flex;align-items:center;justify-content:space-between}
+.ft{font-size:12px;color:rgba(255,255,255,.22)}
+
+/* ═══════════════════════════════════════
+   INFO BOXES
+═══════════════════════════════════════ */
+.info{border-radius:8px;padding:14px 16px;font-size:13px;line-height:1.55}
+.info-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.info.green{background:rgba(5,150,105,.07);border:1.5px solid rgba(5,150,105,.2)}
+.info.green .info-label{color:#065F46}
+.info.green p{color:#166534}
+.info.blue{background:rgba(37,99,235,.07);border:1.5px solid rgba(37,99,235,.2)}
+.info.blue .info-label{color:#1E3A8A}
+.info.blue p{color:#1E40AF}
+.info.orange{background:rgba(242,101,34,.06);border:1.5px solid rgba(242,101,34,.2)}
+.info.orange .info-label{color:var(--orange-d)}
+.info.orange p{color:#92400E}
+
+/* ═══════════════════════════════════════
+   PRINT
+═══════════════════════════════════════ */
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .fab{display:none!important}
+  #hero{min-height:297mm;page-break-after:always;break-after:page}
+  #empresa{page-break-after:always;break-after:page}
+  #resumo{page-break-after:always;break-after:page}
+  #sistema{page-break-after:always;break-after:page}
+  #bess{page-break-after:always;break-after:page}
+  #financeiro{page-break-after:always;break-after:page}
+  #diferenciais{page-break-after:always;break-after:page}
+  section{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hero-photo{opacity:.10}
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:900px){
+  .grid2,.grid3,.grid4,.diff-cards,.metrics,.scenarios,.hero-kpis{grid-template-columns:1fr}
+  .wrap{padding:0 20px}
+  section{padding:52px 0}
+  .hero-body{padding:0 24px 24px}
+  .hero-nav{padding:24px}
+  .hero-h1{font-size:32px}
+  .price-block{grid-template-columns:1fr}
+  .price-main{font-size:36px}
+  .sign-row{grid-template-columns:1fr;gap:24px}
+}
+</style>
+</head>
+<body>
+
+<button class="fab" onclick="window.print()">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+  Salvar como PDF
+</button>
+
+<!-- ════════════════════════════
+     HERO
+════════════════════════════ -->
+<section id="hero">
+  <div class="hero-top-line"></div>
+  <div class="hero-photo"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-vignette"></div>
+
+  <nav class="hero-nav">
+    <svg width="200" height="55" viewBox="40 85 870 240" preserveAspectRatio="xMinYMid meet" xmlns="http://www.w3.org/2000/svg" aria-label="LumenGrid">
+      <g transform="translate(50,50) scale(3)" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="6" fill="#F57832"/>
+      </g>
+      <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+        <tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan>
+      </text>
+    </svg>
+    <div class="hero-ref">
+      <div class="hero-ref-num">LG-BESS-958-A</div>
+      <div class="hero-ref-tag">Proposta Confidencial</div>
+    </div>
+  </nav>
+
+  <div class="hero-body">
+    <div style="margin-bottom:20px">
+      <span class="eyebrow" style="color:rgba(242,101,34,.9)">Proposta Técnica Comercial · Novembro 2026</span>
+    </div>
+    <h1 class="hero-h1">Sistema Híbrido Solar<br>+ <strong>Armazenamento BESS</strong><br>Evercore LFP</h1>
+    <p class="hero-sub">Solução integrada de geração fotovoltaica 40,30 kWp com banco de energia de 120 kWh — independência operacional, proteção contra interrupções e retorno financeiro superior.</p>
+    <div class="hero-client">
+      <span class="hero-client-label">Proposta elaborada para</span>
+      <span class="hero-client-name">CT Fazenda da Grama · Garbin Arquitetos</span>
+      <span class="hero-client-loc">Itupeva / São Paulo &nbsp;·&nbsp; Emitida em 06/11/2026 &nbsp;·&nbsp; Válida até 20/11/2026</span>
+    </div>
+  </div>
+
+  <div class="hero-kpis">
+    <div class="hero-kpi">
+      <div class="hero-kpi-num">40,30 kWp</div>
+      <div class="hero-kpi-label">Potência instalada</div>
+    </div>
+    <div class="hero-kpi">
+      <div class="hero-kpi-num">120 kWh</div>
+      <div class="hero-kpi-label">Armazenamento BESS</div>
+    </div>
+    <div class="hero-kpi">
+      <div class="hero-kpi-num">~4 anos</div>
+      <div class="hero-kpi-label">Payback estimado</div>
+    </div>
+    <div class="hero-kpi">
+      <div class="hero-kpi-num">~24% a.a.</div>
+      <div class="hero-kpi-label">TIR do projeto</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     EMPRESA
+════════════════════════════ -->
+<section id="empresa">
+  <div class="wrap">
+    <div class="grid2" style="gap:64px;align-items:center">
+      <div>
+        <div style="margin-bottom:24px">
+          <svg width="210" height="58" viewBox="40 85 870 240" preserveAspectRatio="xMinYMid meet" xmlns="http://www.w3.org/2000/svg" aria-label="LumenGrid">
+            <g transform="translate(50,50) scale(3)" fill="none">
+              <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="68" cy="19" r="6" fill="#F57832"/>
+            </g>
+            <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+              <tspan fill="#F26522">LUMEN</tspan><tspan fill="#111111">GRID</tspan>
+            </text>
+          </svg>
+        </div>
+        <div class="eyebrow" style="margin-bottom:12px">Sobre a empresa</div>
+        <h2 style="font-size:30px;margin-bottom:16px">Especialistas em energia solar e armazenamento</h2>
+        <p style="font-size:15px;margin-bottom:12px">A LumenGrid desenvolve soluções para que residências e empresas tenham mais controle sobre a energia, os gastos e a continuidade de suas atividades.</p>
+        <p style="font-size:15px;margin-bottom:12px">Nosso time reúne profissionais com <strong>8 anos de experiência</strong> em projetos de energia solar, sistemas híbridos com baterias e carregadores para veículos elétricos.</p>
+        <p style="font-size:15px;margin-bottom:24px">Cada projeto começa com uma análise da necessidade do cliente e considera consumo, características do imóvel, prioridades e possibilidades de expansão.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span class="etag or">Energia Solar</span>
+          <span class="etag or">BESS / Armazenamento</span>
+          <span class="etag or">Monitoramento 24/7</span>
+          <span class="etag">On-Grid e Híbrido</span>
+          <span class="etag">Homologação CPFL/Enel</span>
+          <span class="etag">Peak Shaving</span>
+        </div>
+      </div>
+      <div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+          <div class="estat">
+            <div class="estat-num">8+</div>
+            <div class="estat-desc">Anos de experiência em energia solar e BESS</div>
+          </div>
+          <div class="estat">
+            <div class="estat-num">100%</div>
+            <div class="estat-desc">Equipe técnica própria · sem terceirização</div>
+          </div>
+          <div class="estat">
+            <div class="estat-num">4,2h</div>
+            <div class="estat-desc">Autonomia estimada nas cargas essenciais</div>
+          </div>
+          <div class="estat">
+            <div class="estat-num">120</div>
+            <div class="estat-desc">kWh · Evercore LFP Air Cooled</div>
+          </div>
+        </div>
+        <div style="background:var(--g50);border:1.5px solid var(--g200);border-radius:12px;padding:20px">
+          <p style="font-size:13px;color:var(--g500);line-height:1.65"><strong style="color:var(--navy)">Monitoramento ativo.</strong> Todos os projetos LumenGrid são acompanhados por dashboard em tempo real com alertas automáticos e relatórios mensais de performance — do primeiro ao vigésimo quinto ano de operação.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     RESUMO EXECUTIVO
+════════════════════════════ -->
+<section id="resumo" class="gray">
+  <div class="wrap">
+    <div style="text-align:center;max-width:640px;margin:0 auto 40px">
+      <div class="eyebrow" style="justify-content:center;margin-bottom:12px">Resumo Executivo</div>
+      <h2 style="font-size:34px;margin-bottom:12px">Visão geral do projeto</h2>
+      <p>Sistema fotovoltaico híbrido de <strong>40,30 kWp</strong> integrado a banco BESS Evercore de <strong>120 kWh</strong> (tecnologia LFP Air Cooled) para CT Fazenda da Grama — Garbin Arquitetos (Itupeva/SP).</p>
+    </div>
+
+    <div class="grid4" style="margin-bottom:36px">
+      <div class="card">
+        <div class="card-label">Potência FV</div>
+        <div class="card-num">40,30</div>
+        <div class="card-desc">kWp instalados · 65 módulos Gokin 620W</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Armazenamento</div>
+        <div class="card-num">120</div>
+        <div class="card-desc">kWh BESS Evercore · 1 unidade LFP Air Cooled</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Geração estimada</div>
+        <div class="card-num">4.225</div>
+        <div class="card-desc">kWh / mês · 65 módulos × 65 kWh</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Área de módulos</div>
+        <div class="card-num">~172</div>
+        <div class="card-desc">m² de painéis (66 × 2,6 m² / módulo)</div>
+      </div>
+    </div>
+
+    <!-- DIAGRAMA -->
+    <div style="background:#fff;border:1.5px solid var(--g200);border-radius:14px;padding:28px">
+      <div class="eyebrow" style="margin-bottom:20px">Arquitetura do sistema</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;overflow-x:auto">
+
+        <div style="background:rgba(242,101,34,.07);border:2px solid rgba(242,101,34,.3);border-radius:10px;padding:14px 18px;text-align:center;min-width:130px;flex-shrink:0">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.5" stroke-linecap="round" style="margin:0 auto 6px;display:block"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--navy)">Módulos FV</div>
+          <div style="font-size:11px;color:var(--g400);margin-top:3px;line-height:1.3">65× Gokin 620W<br>40,30 kWp · N-Type</div>
+        </div>
+
+        <div style="color:#D1D5DB;font-size:20px;padding:0 10px;font-weight:300">→</div>
+
+        <div style="background:rgba(242,101,34,.07);border:2px solid rgba(242,101,34,.3);border-radius:10px;padding:14px 18px;text-align:center;min-width:130px;flex-shrink:0">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.5" stroke-linecap="round" style="margin:0 auto 6px;display:block"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--navy)">Inversores</div>
+          <div style="font-size:11px;color:var(--g400);margin-top:3px;line-height:1.3">1× Solis 35kW LV<br>35 kVA trifásico</div>
+        </div>
+
+        <div style="color:#D1D5DB;font-size:20px;padding:0 10px;font-weight:300">⇄</div>
+
+        <div style="background:rgba(242,101,34,.07);border:2px solid rgba(242,101,34,.3);border-radius:10px;padding:14px 18px;text-align:center;min-width:130px;flex-shrink:0">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.5" stroke-linecap="round" style="margin:0 auto 6px;display:block"><rect x="2" y="7" width="16" height="11" rx="2"/><path d="M22 11v2"/><line x1="6" y1="11" x2="6" y2="13"/><line x1="10" y1="11" x2="10" y2="13"/></svg>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--navy)">BESS Evercore</div>
+          <div style="font-size:11px;color:var(--g400);margin-top:3px;line-height:1.3">1 unidade LFP Air Cooled<br>120 kWh</div>
+        </div>
+
+        <div style="color:#D1D5DB;font-size:20px;padding:0 10px;font-weight:300">→</div>
+
+        <div style="background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;padding:14px 18px;text-align:center;min-width:130px;flex-shrink:0">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" style="margin:0 auto 6px;display:block"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--navy)">Instalação</div>
+          <div style="font-size:11px;color:var(--g400);margin-top:3px;line-height:1.3">Cargas prioritárias<br>+ rede (backup)</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px">
+        <div class="info green">
+          <div class="info-label">Autonomia estimada — cargas essenciais (26,6 kW)</div>
+          <p>Com 111,4 kWh úteis (92,8% da capacidade nominal), o sistema garante <strong>≈ 4,2 horas</strong> de operação contínua nas cargas prioritárias do CT.</p>
+        </div>
+        <div class="info blue">
+          <div class="info-label">Cargas não atendidas pelo backup</div>
+          <p><strong>Sauna, SPA</strong> (hidromassagem e acessórios) e <strong>chuveiros elétricos</strong> (aquecimento) ficam fora do escopo do backup por demanda elevada.</p>
+        </div>
+      </div>
+      <div style="margin-top:16px;background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:12px;padding:20px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#059669;margin-bottom:12px">Cargas atendidas pelo backup (26,6 kW)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #BBF7D0;border-radius:6px;padding:5px 11px;font-size:12px;color:#065F46;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0"></span>Iluminação</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #BBF7D0;border-radius:6px;padding:5px 11px;font-size:12px;color:#065F46;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0"></span>Climatização</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #BBF7D0;border-radius:6px;padding:5px 11px;font-size:12px;color:#065F46;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0"></span>Refrigeração</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #BBF7D0;border-radius:6px;padding:5px 11px;font-size:12px;color:#065F46;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0"></span>Cozinha (essenciais)</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #BBF7D0;border-radius:6px;padding:5px 11px;font-size:12px;color:#065F46;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0"></span>Academia (essenciais)</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #BBF7D0;border-radius:6px;padding:5px 11px;font-size:12px;color:#065F46;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0"></span>Segurança / CFTV</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #BBF7D0;border-radius:6px;padding:5px 11px;font-size:12px;color:#065F46;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0"></span>Bombeamento (água)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     ESPECIFICAÇÕES
+════════════════════════════ -->
+<section id="sistema">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:12px">Especificações Técnicas</div>
+    <h2 style="font-size:34px;margin-bottom:8px">Componentes do sistema</h2>
+    <p style="margin-bottom:36px;max-width:560px">Equipamentos selecionados por desempenho, durabilidade e suporte técnico consolidado no mercado brasileiro.</p>
+
+    <div class="grid3">
+      <div class="spec-card">
+        <div class="spec-head">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+          <div>
+            <div class="spec-head-title">Módulos Fotovoltaicos</div>
+            <div class="spec-head-sub">Gokin · N-Type Bifacial</div>
+          </div>
+        </div>
+        <table class="spec-table">
+          <tr><td>Modelo</td><td class="val">Gokin 66HTBD-620F</td></tr>
+          <tr><td>Tecnologia</td><td class="val">Bifacial N-Type</td></tr>
+          <tr><td>Quantidade</td><td class="or">65 módulos</td></tr>
+          <tr><td>Potência / módulo</td><td class="or">620 Wp</td></tr>
+          <tr><td>Potência total</td><td class="or">40,30 kWp</td></tr>
+          <tr><td>Geração estimada</td><td class="val">4.225 kWh/mês</td></tr>
+          <tr><td>Área total</td><td class="val">~169 m²</td></tr>
+        </table>
+      </div>
+
+      <div class="spec-card">
+        <div class="spec-head">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+          <div>
+            <div class="spec-head-title">Inversor Híbrido</div>
+            <div class="spec-head-sub">Solis · Trifásico LV</div>
+          </div>
+        </div>
+        <table class="spec-table">
+          <tr><td>Modelo</td><td class="val">Solis S6-EH3P35K LV</td></tr>
+          <tr><td>Quantidade</td><td class="or">1 unidade</td></tr>
+          <tr><td>Potência</td><td class="or">35 kVA</td></tr>
+          <tr><td>Alimentação</td><td class="val">Trifásico 220V</td></tr>
+          <tr><td>Modo backup</td><td class="val">Off-grid UPS automático</td></tr>
+          <tr><td>Monitoramento</td><td class="val">Solis Cloud (app + web)</td></tr>
+          <tr><td>Frete</td><td class="val">CIF — entrega na obra</td></tr>
+        </table>
+      </div>
+
+      <div class="spec-card">
+        <div class="spec-head">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="1.5"><rect x="2" y="7" width="16" height="11" rx="2"/><path d="M22 11v2"/></svg>
+          <div>
+            <div class="spec-head-title">Banco BESS</div>
+            <div class="spec-head-sub">Evercore · LFP Alta Tensão HV</div>
+          </div>
+        </div>
+        <table class="spec-table">
+          <tr><td>Modelo</td><td class="or">EVERCORE120</td></tr>
+          <tr><td>Configuração</td><td class="val">1 unidade · Air Cooled</td></tr>
+          <tr><td>Capacidade nominal</td><td class="or">120 kWh</td></tr>
+          <tr><td>Química</td><td class="val">LFP · sem risco de combustão</td></tr>
+          <tr><td>Capacidade útil estimada</td><td class="val">119,3 kWh (92,8% nominal)</td></tr>
+          <tr><td>Autonomia — cargas essenciais</td><td class="or">≈ 4,5 horas (26,6 kW)</td></tr>
+          <tr><td>Ciclos de vida</td><td class="val">&gt; 6.000 ciclos</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     EVERCORE — FEATURE
+════════════════════════════ -->
+<section id="bess" class="dark">
+  <div class="wrap">
+    <div class="grid2" style="gap:60px;align-items:center">
+      <div>
+        <div class="eyebrow" style="margin-bottom:12px">Tecnologia BESS</div>
+        <h2 style="font-size:34px;color:#fff;margin-bottom:16px">Evercore LFP — a escolha de maior segurança</h2>
+        <p style="color:rgba(255,255,255,.45);font-size:15px;margin-bottom:28px">A tecnologia LFP (Lítio Ferro Fosfato) é a mais segura disponível. Sem risco de combustão espontânea, vida útil superior a 6.000 ciclos e operação estável em ambientes com variação de temperatura.</p>
+
+        <div class="bspec-list">
+          <div class="bspec">
+            <div class="bspec-dot"></div>
+            <div>
+              <div class="bspec-label">Capacidade total</div>
+              <div class="bspec-val">120 kWh · 1 unidade Air Cooled</div>
+            </div>
+          </div>
+          <div class="bspec">
+            <div class="bspec-dot"></div>
+            <div>
+              <div class="bspec-label">Química · Segurança</div>
+              <div class="bspec-val">LFP — Lítio Ferro Fosfato · Alta Tensão HV</div>
+              <div class="bspec-note">Sem risco de combustão espontânea. Estável em temperatura.</div>
+            </div>
+          </div>
+          <div class="bspec">
+            <div class="bspec-dot"></div>
+            <div>
+              <div class="bspec-label">Vida útil</div>
+              <div class="bspec-val">&gt; 6.000 ciclos LFP</div>
+            </div>
+          </div>
+          <div class="bspec">
+            <div class="bspec-dot"></div>
+            <div>
+              <div class="bspec-label">Autonomia operacional</div>
+              <div class="bspec-val">≈ 4,2h com cargas essenciais do CT (26,6 kW · 111,4 kWh úteis)</div>
+            </div>
+          </div>
+          <div class="bspec">
+            <div class="bspec-dot"></div>
+            <div>
+              <div class="bspec-label">Peak shaving</div>
+              <div class="bspec-val">40 kW de descarga nos horários de ponta</div>
+              <div class="bspec-note">Reduz demanda contratada e tarifas horo-sazonais</div>
+            </div>
+          </div>
+          <div class="bspec">
+            <div class="bspec-dot"></div>
+            <div>
+              <div class="bspec-label">Logística</div>
+              <div class="bspec-val">Frete CIF · previsão de entrega 15/11/2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center">
+        <div class="bess-wrap">
+          <div class="bess-stacks" style="justify-content:center">
+            <div class="bess-unit" style="height:120px;width:72px"><span class="bess-unit-lbl">EVERCORE<br>120</span></div>
+          </div>
+          <div class="bess-total">
+            <div class="bess-kwh">120 kWh</div>
+            <div class="bess-kwh-label">armazenamento nominal</div>
+            <div class="bess-brand">EVERCORE · LFP · AIR COOLED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     ANÁLISE FINANCEIRA
+════════════════════════════ -->
+<section id="financeiro">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:12px">Análise Financeira</div>
+    <h2 style="font-size:34px;margin-bottom:8px">Viabilidade econômica</h2>
+    <p style="margin-bottom:32px;max-width:640px">Dois cenários de retorno. O Cenário Recomendado considera o pleno uso do BESS com peak shaving — aderente ao perfil de uma propriedade comercial com tarifação horo-sazonal. Tarifa de referência: R$ 0,95/kWh.</p>
+
+    <!-- SCENARIOS -->
+    <div class="scenarios">
+
+      <div class="scenario recom">
+        <div class="sc-head">
+          <div class="sc-title">Cenário Recomendado — BESS Completo</div>
+          <span class="sc-badge">Principal</span>
+        </div>
+        <div class="sc-body">
+          <div class="sc-payback">4,1 anos</div>
+          <div class="sc-payback-lbl">Payback Simples</div>
+          <div class="sc-row"><span class="sc-k">Economia geração solar / mês</span><span class="sc-v">R$ 4.013,75</span></div>
+          <div class="sc-row"><span class="sc-k">Redução de demanda via peak shaving*</span><span class="sc-v or">+ R$ 4.500,00</span></div>
+          <div class="sc-row"><span class="sc-k">Economia total / mês</span><span class="sc-v gr">R$ 8.513,75</span></div>
+          <div class="sc-row"><span class="sc-k">Economia anual</span><span class="sc-v gr">R$ 102.165</span></div>
+          <div class="sc-row"><span class="sc-k">Payback com reajuste histórico +10%/a</span><span class="sc-v or">~3,5 anos</span></div>
+          <div class="sc-row"><span class="sc-k">TIR (sem reajuste tarifário)</span><span class="sc-v bl">~24% a.a.</span></div>
+          <div class="sc-row"><span class="sc-k">TIR (com reajuste histórico)</span><span class="sc-v bl">~34% a.a.</span></div>
+          <div class="sc-row"><span class="sc-k">VPL (TMA 12% a.a.)</span><span class="sc-v gr">+ R$ 389.000</span></div>
+          <div class="sc-row"><span class="sc-k">ROI bruto em 25 anos</span><span class="sc-v or">515%</span></div>
+          <div class="sc-note">*Redução de demanda estimada com base em tarifação horo-sazonal verde/amarela, descarga de 40 kW nos horários de ponta (18–21h). Valor exato depende do perfil de demanda e tarifa contratada. Solicitar fatura de energia para cálculo preciso.</div>
+        </div>
+      </div>
+
+      <div class="scenario">
+        <div class="sc-head">
+          <div class="sc-title">Cenário Conservador — Apenas Geração Solar</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-payback">8,5 anos</div>
+          <div class="sc-payback-lbl">Payback Simples</div>
+          <div class="sc-row"><span class="sc-k">Economia geração solar / mês</span><span class="sc-v">R$ 4.013,75</span></div>
+          <div class="sc-row"><span class="sc-k">Redução de demanda</span><span class="sc-v dim">Não inclusa</span></div>
+          <div class="sc-row"><span class="sc-k">Economia anual</span><span class="sc-v">R$ 48.165</span></div>
+          <div class="sc-row"><span class="sc-k">Payback com reajuste histórico</span><span class="sc-v">~6,5 anos</span></div>
+          <div class="sc-row"><span class="sc-k">TIR (com reajuste histórico)</span><span class="sc-v">~20% a.a.</span></div>
+          <div class="sc-row"><span class="sc-k">VPL (TMA 8% a.a.)</span><span class="sc-v">+ R$ 103.857</span></div>
+          <div class="sc-row"><span class="sc-k">ROI bruto em 25 anos</span><span class="sc-v">192%</span></div>
+          <div class="sc-note">Projeção mínima sem ativação das funcionalidades BESS. Recomendamos sempre a análise com o perfil tarifário real do cliente para capturar o retorno completo do investimento.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- METRIC CARDS -->
+    <div class="metrics">
+      <div class="metric m-or">
+        <div class="m-label">Payback (Recomendado)</div>
+        <div class="m-num">4,1 anos</div>
+        <div class="m-sub">com peak shaving estimado</div>
+      </div>
+      <div class="metric m-bl">
+        <div class="m-label">TIR com reajuste histórico</div>
+        <div class="m-num">~34% a.a.</div>
+        <div class="m-sub">supera CDI · sem risco de crédito</div>
+      </div>
+      <div class="metric m-gr">
+        <div class="m-label">VPL (TMA 12% a.a.)</div>
+        <div class="m-num">+ R$ 389k</div>
+        <div class="m-sub">positivo · investimento viável</div>
+      </div>
+      <div class="metric m-nv">
+        <div class="m-label">CO₂ evitado</div>
+        <div class="m-num">24,2 t/ano</div>
+        <div class="m-sub">604 toneladas em 25 anos</div>
+      </div>
+    </div>
+
+    <!-- FLUXO DE CAIXA -->
+    <div class="cf-wrap">
+      <div class="cf-top">
+        <div>
+          <h3 style="font-size:16px;margin-bottom:3px">Fluxo de Caixa Acumulado — Cenário Recomendado</h3>
+          <p style="font-size:13px;color:var(--g400);margin:0">Base: R$ 102.906/ano · investimento: R$ 418.143</p>
+        </div>
+        <div class="cf-legend">
+          <span><i style="background:var(--g300)"></i> Sem reajuste</span>
+          <span><i style="background:var(--orange)"></i> Com +10%/ano</span>
+        </div>
+      </div>
+      <table class="cf-table">
+        <thead>
+          <tr>
+            <th>Ano</th>
+            <th>Economia anual (base)</th>
+            <th>Acumulado sem reajuste</th>
+            <th style="color:var(--orange)">Acumulado com reajuste +10%/a</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>R$ 102.906</td>
+            <td>R$ 102.906</td>
+            <td class="or">R$ 102.906</td>
+          </tr>
+          <tr class="hi">
+            <td><strong>4</strong> <span style="font-size:11px;color:var(--green)">payback</span></td>
+            <td>R$ 102.906</td>
+            <td><strong>R$ 411.624</strong></td>
+            <td class="or"><strong>R$ 476.000</strong> <span style="font-size:11px;color:var(--green)">(c/ reajuste)</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>R$ 102.906</td>
+            <td>R$ 514.530</td>
+            <td class="or">R$ 628.600</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>R$ 102.906</td>
+            <td>R$ 1.029.060</td>
+            <td class="or">R$ 1.639.000</td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>R$ 102.906</td>
+            <td>R$ 1.543.590</td>
+            <td class="or">R$ 3.270.000</td>
+          </tr>
+          <tr>
+            <td>20</td>
+            <td>R$ 102.906</td>
+            <td>R$ 2.058.120</td>
+            <td class="or">R$ 5.895.000</td>
+          </tr>
+          <tr>
+            <td><strong>25</strong></td>
+            <td><strong>R$ 102.906</strong></td>
+            <td><strong>R$ 2.572.650</strong></td>
+            <td class="or"><strong>R$ 10.122.000</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="cf-foot">
+        Valores nominais, sem desconto por inflação. VPL a TMA 12% = <strong>+ R$ 389.000</strong>. Com reajuste histórico ANEEL +10%/ano: TIR = <strong>~34% a.a.</strong>, superando CDI e demais alternativas de renda fixa. Sistema evita <strong>24,2 toneladas de CO₂/ano</strong> (604 t em 25 anos) — elegível para créditos de carbono e programas ESG.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     DIFERENCIAIS
+════════════════════════════ -->
+<section id="diferenciais" class="gray">
+  <div class="wrap">
+    <div style="text-align:center;max-width:560px;margin:0 auto 40px">
+      <div class="eyebrow" style="justify-content:center;margin-bottom:12px">Por que LumenGrid</div>
+      <h2 style="font-size:34px;margin-bottom:12px">Mais do que equipamentos</h2>
+      <p>A diferença está no que acontece depois da instalação. Suporte real, equipe própria e comprometimento de longo prazo.</p>
+    </div>
+
+    <div class="diff-cards">
+      <div class="diff-card">
+        <div class="diff-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="2" stroke-linecap="round"><path d="M1 6s4-6 11-6 11 6 11 6"/><path d="M5 10s2.5-4 7-4 7 4 7 4"/><path d="M9 14s1-2 3-2 3 2 3 2"/><circle cx="12" cy="20" r="1" fill="#F26522"/></svg>
+        </div>
+        <div class="diff-title">Monitoramento 24/7</div>
+        <div class="diff-desc">Dashboard em tempo real com geração, consumo e status do BESS. Alertas automáticos e relatórios mensais de performance entregues ao cliente.</div>
+      </div>
+      <div class="diff-card">
+        <div class="diff-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="diff-title">Garantias sólidas</div>
+        <div class="diff-desc">25 anos nos módulos · 10 anos nas baterias Evercore · 5 anos nos inversores Solis. Suporte LumenGrid durante todo o período de garantia.</div>
+      </div>
+      <div class="diff-card">
+        <div class="diff-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="diff-title">Equipe própria</div>
+        <div class="diff-desc">Sem terceirização. Técnicos LumenGrid certificados em até 24h para atendimento em falhas críticas — instalação, comissionamento e manutenção com responsabilidade total.</div>
+      </div>
+      <div class="diff-card">
+        <div class="diff-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="diff-title">Consultor dedicado</div>
+        <div class="diff-desc">Um ponto de contato único do orçamento até a operação plena. Sem call center — pessoa real, decisão rápida, compromisso direto do início ao fim.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     INVESTIMENTO + CTA
+════════════════════════════ -->
+<section id="investimento" class="dark">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:12px">Proposta Comercial</div>
+    <h2 style="font-size:34px;color:#fff;margin-bottom:32px">Investimento e próximos passos</h2>
+
+    <div class="price-block">
+      <div>
+        <div class="price-label">Investimento Total do Projeto</div>
+        <div class="price-main"><sup>R$</sup>418.143<span class="cents">,29</span></div>
+        <div class="price-sub">Equipamentos + instalação + homologação + projeto elétrico + frete CIF</div>
+        <div class="price-tags">
+          <span class="price-tag">R$ 1.708/kWh</span>
+          <span class="price-tag">R$ 10.218/kWp</span>
+          <span class="price-tag">8 stacks Evercore</span>
+          <span class="price-tag">Frete CIF incluso</span>
+        </div>
+      </div>
+      <div>
+        <div class="scope-list">
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Projeto elétrico completo e memorial descritivo</div>
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Instalação por equipe técnica própria certificada</div>
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Homologação junto à distribuidora</div>
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Comissionamento e testes de performance</div>
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Monitoramento Solis Cloud configurado</div>
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Treinamento operacional para equipe local</div>
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Assistência técnica pós-instalação</div>
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Garantia de equipamentos e instalação</div>
+          <div class="scope-item"><div class="scope-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Suporte técnico nacional</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2" style="gap:48px;margin-bottom:48px">
+      <div>
+        <h3 style="color:#fff;font-size:18px;margin-bottom:20px">Marco de pagamento</h3>
+        <div class="pay-opt">
+          <div><div class="pay-title">70%</div><div class="pay-sub">Na assinatura do contrato</div></div>
+          <div class="pay-badge">R$ 292.700,30</div>
+        </div>
+        <div class="pay-opt">
+          <div><div class="pay-title">15%</div><div class="pay-sub">Na entrega dos equipamentos</div></div>
+          <div class="pay-badge">R$ 62.721,49</div>
+        </div>
+        <div class="pay-opt">
+          <div><div class="pay-title">15%</div><div class="pay-sub">Na conclusão da instalação</div></div>
+          <div class="pay-badge">R$ 62.721,49</div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="color:#fff;font-size:18px;margin-bottom:20px">Da assinatura à operação</h3>
+        <div class="tl">
+          <div class="tl-item">
+            <div class="tl-dot">1</div>
+            <div class="tl-content">
+              <div class="tl-task">Assinatura do contrato</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot">2</div>
+            <div class="tl-content">
+              <div class="tl-task">Pedido JNG + projeto elétrico</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot">3</div>
+            <div class="tl-content">
+              <div class="tl-task">Entrega dos equipamentos</div>
+              <div class="tl-desc">Previsão JNG: 15/11/2026</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot">4</div>
+            <div class="tl-content">
+              <div class="tl-task">Instalação e cabeamento</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--green)">5</div>
+            <div class="tl-content">
+              <div class="tl-task">Comissionamento + homologação</div>
+              <div class="tl-desc">Sistema em operação plena</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <div>
+        <div class="cta-label">Próximos Passos</div>
+        <div class="cta-title">Pronto para a sua independência energética?</div>
+        <div class="cta-sub">Esta proposta é válida até <strong>20 de novembro de 2026</strong>. Fale com seu consultor LumenGrid.</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.65);margin-bottom:4px">Site</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#fff">lumengridbrasil.com.br</div>
+      </div>
+    </div>
+
+    <div class="sign-row">
+      <div class="sign-block">
+        <div class="s-label">Assinatura do cliente / aprovação</div>
+        <div class="s-name">CT Fazenda da Grama – Garbin Arquitetos</div>
+        <div class="s-role">Itupeva / SP &nbsp;·&nbsp; Data: _____ / _____ / _____</div>
+      </div>
+      <div class="sign-block">
+        <div class="s-label">LumenGrid Brasil Ltda · Consultor responsável</div>
+        <div class="s-name">___________________________</div>
+        <div class="s-role">Proposta LG-BESS-958-A &nbsp;·&nbsp; 06/11/2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">LumenGrid Brasil Ltda &nbsp;·&nbsp; lumengridbrasil.com.br</div>
+  <div class="ft">Proposta LG-BESS-958-A &nbsp;·&nbsp; Feito por Domani Consultoria</div>
+</footer>
+
+</body>
+</html>

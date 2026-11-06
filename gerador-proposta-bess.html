@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gerador de Proposta BESS — LumenGrid</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+/* ─── GENERATOR UI ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0F172A;color:#F1F5F9;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.gen-top{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;background:#1E293B;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.gen-top-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700}
+.gen-top-brand .l{color:#F26522}.gen-top-brand .g{color:#F1F5F9}
+.gen-top-label{font-size:11px;color:rgba(241,245,249,.4);letter-spacing:.5px}
+.gen-top-actions{display:flex;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.3px}
+.btn-primary{background:#F26522;color:#fff}.btn-primary:hover{background:#E05515;box-shadow:0 4px 16px rgba(242,101,34,.4)}
+.btn-ghost{background:rgba(255,255,255,.06);color:#94A3B8;border:1px solid rgba(255,255,255,.1)}.btn-ghost:hover{background:rgba(255,255,255,.1);color:#F1F5F9}
+.btn-sm{padding:6px 14px;font-size:11px}
+.gen-body{display:flex;flex:1;overflow:hidden}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:340px;flex-shrink:0;background:#1E293B;border-right:1px solid rgba(255,255,255,.07);overflow-y:auto;padding:0}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:#F26522;border-radius:2px}.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar-section{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-section-title{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#F26522;margin-bottom:14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:500;color:#94A3B8;margin-bottom:5px;letter-spacing:.3px}
+.field input,.field select,.field textarea{width:100%;background:#0F172A;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:8px 11px;color:#F1F5F9;font-size:12px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(242,101,34,.5)}
+.field input::placeholder{color:#475569}
+.field textarea{resize:vertical;min-height:60px}
+.field select option{background:#1E293B}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.calc-box{background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.2);border-radius:8px;padding:12px 14px;margin-top:4px}
+.calc-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0}
+.calc-key{font-size:11px;color:#94A3B8}
+.calc-val{font-size:12px;font-weight:700;color:#F26522;font-family:'Space Grotesk',sans-serif}
+.opco-toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.opco-btn{padding:7px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#94A3B8;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.opco-btn.active{background:rgba(242,101,34,.12);border-color:rgba(242,101,34,.4);color:#F26522}
+
+/* ─── PREVIEW AREA ─── */
+.preview-wrap{flex:1;overflow:auto;background:#334155;display:flex;flex-direction:column;align-items:center;padding:24px}
+.preview-wrap::-webkit-scrollbar{width:6px;height:6px}.preview-wrap::-webkit-scrollbar-thumb{background:#F26522;border-radius:3px}.preview-wrap::-webkit-scrollbar-track{background:rgba(0,0,0,.2)}
+.preview-hint{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:16px;letter-spacing:.5px}
+.page-gap{height:16px}
+
+/* ─── PROPOSAL PAGES ─── */
+/* Each page: 794px × 1123px (A4 at 96dpi) */
+.proposal-page{
+  width:794px;height:1123px;
+  background:#fff;position:relative;
+  overflow:hidden;flex-shrink:0;
+  box-shadow:0 8px 40px rgba(0,0,0,.35);
+}
+
+/* PAGE 1 — COVER */
+.page-cover{background:#0C1A2E}
+.cover-bg-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(242,101,34,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,101,34,.04) 1px,transparent 1px);background-size:40px 40px}
+.cover-accent-bar{position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,#F26522,rgba(242,101,34,.2))}
+.cover-top-bar{position:absolute;top:0;left:0;right:0;height:3px;background:#F26522}
+.cover-logo{position:absolute;top:52px;left:52px;display:flex;align-items:center;gap:14px}
+.cover-logo-mark{width:36px;height:36px;position:relative}
+.cover-wordmark{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;line-height:1;letter-spacing:-.5px}
+.cover-wordmark .l{color:#F26522}.cover-wordmark .g{color:#FFFFFF}
+.cover-tagline-sm{font-family:'Inter',sans-serif;font-size:8px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(242,101,34,.8);margin-top:3px}
+.cover-doc-label{position:absolute;top:52px;right:52px;text-align:right}
+.cover-doc-label .num{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px}
+.cover-doc-label .conf{font-size:9px;color:rgba(255,255,255,.25);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.cover-main{position:absolute;top:50%;left:52px;right:52px;transform:translateY(-58%)}
+.cover-type{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:#F26522;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.cover-type::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(242,101,34,.4),transparent)}
+.cover-title{font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:800;color:#FFFFFF;line-height:1.1;letter-spacing:-1px;margin-bottom:10px}
+.cover-subtitle{font-family:'Inter',sans-serif;font-size:16px;font-weight:300;color:rgba(255,255,255,.55);letter-spacing:.5px;margin-bottom:48px}
+.cover-client-block{border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);padding:28px 0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px}
+.cover-client-label{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
+.cover-client-name{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:#FFFFFF;line-height:1.2}
+.cover-client-loc{font-size:13px;color:rgba(255,255,255,.45);margin-top:6px;display:flex;align-items:center;gap:6px}
+.cover-dates{text-align:right}
+.cover-date-row{margin-bottom:12px}
+.cover-date-label{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.cover-date-val{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.8)}
+.cover-kpis{position:absolute;bottom:0;left:0;right:0;background:rgba(242,101,34,1);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;height:88px}
+.cover-kpi{display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.2);padding:0 20px}
+.cover-kpi:last-child{border-right:none}
+.cover-kpi-num{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#FFFFFF;letter-spacing:-1px;line-height:1}
+.cover-kpi-label{font-size:9px;font-weight:600;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;text-align:center;line-height:1.3}
+
+/* CONTENT PAGE TEMPLATE */
+.content-page{background:#FFFFFF}
+.page-header{position:absolute;top:0;left:0;right:0;height:48px;border-bottom:1px solid #E5E7EB;padding:0 44px;display:flex;align-items:center;justify-content:space-between}
+.page-header-brand{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:-.2px}
+.page-header-brand .l{color:#F26522}.page-header-brand .g{color:#374151}
+.page-header-meta{font-size:9px;color:#9CA3AF;letter-spacing:.5px}
+.page-header-line{position:absolute;top:0;left:0;right:0;height:3px;background:#F26522}
+.page-content{position:absolute;top:48px;left:0;right:0;bottom:36px;padding:36px 44px 28px;overflow:hidden}
+.page-footer{position:absolute;bottom:0;left:0;right:0;height:36px;border-top:1px solid #E5E7EB;padding:0 44px;display:flex;align-items:center;justify-content:space-between}
+.page-footer-left{font-size:8px;color:#9CA3AF;letter-spacing:.3px}
+.page-footer-right{font-size:8px;color:#9CA3AF;letter-spacing:.3px}
+
+/* ─── DOC TYPOGRAPHY ─── */
+.doc-section-label{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#F26522;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.doc-section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,#F2652230,transparent)}
+.doc-h2{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;color:#0C1A2E;letter-spacing:-.5px;line-height:1.1;margin-bottom:4px}
+.doc-h3{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#0C1A2E;letter-spacing:-.2px;margin-bottom:10px}
+.doc-lead{font-size:12px;color:#6B7280;line-height:1.65;margin-bottom:20px}
+.doc-p{font-size:11.5px;color:#4B5563;line-height:1.65;margin-bottom:10px}
+
+/* ─── KPI CARDS (in doc) ─── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.kpi-card{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:16px 14px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#F26522}
+.kpi-label{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;margin-bottom:5px}
+.kpi-num{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#F26522;letter-spacing:-1px;line-height:1}
+.kpi-unit{font-size:10px;font-weight:600;color:#9CA3AF;margin-top:3px}
+
+/* ─── DOC TABLE ─── */
+.doc-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px}
+.doc-table th{background:#F1F5F9;color:#374151;font-weight:700;padding:9px 12px;text-align:left;border-bottom:2px solid #E5E7EB;font-size:9.5px;letter-spacing:.5px;text-transform:uppercase}
+.doc-table td{padding:9px 12px;color:#4B5563;border-bottom:1px solid #F3F4F6;vertical-align:top}
+.doc-table tr:last-child td{border-bottom:none}
+.doc-table tr:nth-child(even) td{background:#FAFAFA}
+.doc-table td strong{color:#1F2937;font-weight:600}
+.doc-table .or{color:#F26522;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.doc-table .gr{color:#059669;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.tag{display:inline-flex;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.3px}
+.tag-or{background:#FFF7ED;color:#C2410C;border:1px solid #FDBA74}
+.tag-gr{background:#F0FDF4;color:#15803D;border:1px solid #86EFAC}
+.tag-bl{background:#EFF6FF;color:#1D4ED8;border:1px solid #93C5FD}
+.tag-pu{background:#FAF5FF;color:#7C3AED;border:1px solid #C4B5FD}
+
+/* ─── OPTION CARDS (in doc) ─── */
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}
+.option-card{border:1.5px solid #E5E7EB;border-radius:10px;padding:20px;position:relative}
+.option-card.recommended{border-color:#F26522;background:linear-gradient(135deg,#FFF7F0,#FFFFFF)}
+.option-rec-badge{position:absolute;top:-1px;right:20px;background:#F26522;color:#fff;font-size:8px;font-weight:800;letter-spacing:2px;padding:3px 10px;border-radius:0 0 6px 6px;text-transform:uppercase}
+.option-label{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;margin-bottom:4px}
+.option-label.or{color:#F26522}
+.option-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800;color:#0C1A2E;margin-bottom:14px}
+.option-price{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:2px}
+.option-price.base-price{color:#1F2937}
+.option-price.rec-price{color:#F26522}
+.option-price-sub{font-size:10px;color:#9CA3AF;margin-bottom:16px}
+.option-items{display:flex;flex-direction:column;gap:7px;border-top:1px solid #E5E7EB;padding-top:14px}
+.option-item{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#4B5563}
+.option-item::before{content:'▸';color:#F26522;flex-shrink:0;margin-top:1px;font-size:9px}
+.option-item strong{color:#1F2937}
+
+/* ─── ROI SECTION ─── */
+.roi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.roi-card{border-radius:8px;padding:18px 16px;text-align:center}
+.roi-card.green{background:#F0FDF4;border:1px solid #A7F3D0}
+.roi-card.blue{background:#EFF6FF;border:1px solid #BFDBFE}
+.roi-card.orange{background:#FFF7ED;border:1px solid #FED7AA}
+.roi-card .num{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px}
+.roi-card.green .num{color:#059669}
+.roi-card.blue .num{color:#2563EB}
+.roi-card.orange .num{color:#D97706}
+.roi-card .lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:5px}
+.roi-card.green .lbl{color:#065F46}
+.roi-card.blue .lbl{color:#1E3A8A}
+.roi-card.orange .lbl{color:#92400E}
+
+/* ─── HIGHLIGHT BOX ─── */
+.hl-box{background:#FFF7ED;border:1px solid #FED7AA;border-left:3px solid #F26522;border-radius:6px;padding:12px 14px;margin-bottom:14px}
+.hl-box-label{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9A3412;margin-bottom:5px}
+.hl-box p{font-size:11px;color:#57534E;line-height:1.6}
+.hl-box p strong{color:#1C1917}
+.hl-box-blue{background:#EFF6FF;border-color:#93C5FD;border-left-color:#2563EB}
+.hl-box-blue .hl-box-label{color:#1E3A8A}
+.hl-box-blue p{color:#334155}
+.hl-box-green{background:#F0FDF4;border-color:#86EFAC;border-left-color:#059669}
+.hl-box-green .hl-box-label{color:#065F46}
+.hl-box-green p{color:#166534}
+
+/* ─── SCOPE LIST ─── */
+.scope-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.scope-list{display:flex;flex-direction:column;gap:7px}
+.scope-item{display:flex;align-items:flex-start;gap:9px;font-size:11px;color:#4B5563;line-height:1.4}
+.scope-check{width:16px;height:16px;border-radius:50%;background:#F0FDF4;border:1.5px solid #86EFAC;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;color:#059669;margin-top:1px}
+.scope-item strong{color:#1F2937}
+
+/* ─── DIFFERENTIALS ─── */
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.diff-card{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:14px}
+.diff-icon{font-size:20px;margin-bottom:8px}
+.diff-title{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:#0C1A2E;margin-bottom:4px}
+.diff-desc{font-size:10.5px;color:#6B7280;line-height:1.5}
+
+/* ─── CTA BOX ─── */
+.cta-doc{background:#0C1A2E;border-radius:10px;padding:28px 32px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;margin-bottom:16px}
+.cta-doc-label{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#F26522;margin-bottom:8px}
+.cta-doc-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:#FFFFFF;line-height:1.2;margin-bottom:6px}
+.cta-doc-sub{font-size:11px;color:rgba(255,255,255,.5);line-height:1.5}
+.cta-doc-contacts{display:flex;flex-direction:column;gap:8px}
+.cta-contact-item{text-align:right}
+.cta-contact-item .c-label{font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
+.cta-contact-item .c-val{font-size:12px;font-weight:600;color:#F26522}
+
+/* ─── SIGNATURE ─── */
+.sign-row{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:16px}
+.sign-block{border-top:1px solid #D1D5DB;padding-top:10px}
+.sign-block .s-label{font-size:9px;color:#9CA3AF;letter-spacing:.5px}
+.sign-block .s-name{font-size:11px;font-weight:600;color:#374151;margin-top:4px}
+.sign-block .s-role{font-size:10px;color:#9CA3AF}
+
+/* ─── SYSTEM DIAGRAM ─── */
+.sys-diagram{display:flex;align-items:center;justify-content:center;gap:0;margin:14px 0 20px;padding:20px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px}
+.sys-node{background:#FFFFFF;border:1.5px solid #E5E7EB;border-radius:8px;padding:12px 14px;text-align:center;min-width:110px;position:relative}
+.sys-node.accent{border-color:#F26522;background:#FFF7ED}
+.sys-node-icon{font-size:20px;margin-bottom:4px}
+.sys-node-name{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#0C1A2E}
+.sys-node-desc{font-size:9px;color:#9CA3AF;margin-top:2px;line-height:1.3}
+.sys-arrow{color:#D1D5DB;font-size:16px;padding:0 6px;flex-shrink:0}
+
+/* ─── LOADING ─── */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.85);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.loading-overlay.show{display:flex}
+.loading-spinner{width:40px;height:40px;border:3px solid rgba(242,101,34,.2);border-top-color:#F26522;border-radius:50%;animation:spin .8s linear infinite}
+.loading-text{font-size:13px;color:#94A3B8}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ─── PDF IMPORT ─── */
+.import-zone{border:2px dashed rgba(242,101,34,.35);border-radius:8px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(242,101,34,.04);position:relative}
+.import-zone:hover,.import-zone.drag{border-color:#F26522;background:rgba(242,101,34,.1)}
+.import-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.import-zone-icon{font-size:22px;margin-bottom:6px}
+.import-zone-text{font-size:11px;font-weight:600;color:#F26522;margin-bottom:3px}
+.import-zone-sub{font-size:10px;color:#64748B}
+.import-status{margin-top:10px;padding:8px 10px;border-radius:6px;font-size:11px;display:none}
+.import-status.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#22C55E;display:block}
+.import-status.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#F87171;display:block}
+.import-status.loading{background:rgba(242,101,34,.08);border:1px solid rgba(242,101,34,.2);color:#F26522;display:block}
+.import-result{margin-top:10px;background:#0F172A;border-radius:6px;padding:10px 12px;display:none}
+.import-result.show{display:block}
+.import-result-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.import-result-row:last-child{border:none}
+.import-result-key{font-size:10px;color:#64748B}
+.import-result-val{font-size:10px;font-weight:600;color:#F26522;font-family:'Space Grotesk',sans-serif}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="gen-top">
+  <div class="gen-top-brand">
+    <svg width="68" height="22" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <g transform="translate(50,50) scale(3)" fill="none">
+        <path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="68" cy="19" r="6" fill="#F57832"/>
+      </g>
+      <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+        <tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan>
+      </text>
+    </svg>
+    <span class="gen-top-label">/ Gerador de Proposta BESS</span>
+  </div>
+  <div class="gen-top-actions">
+    <button class="btn btn-ghost btn-sm" onclick="resetForm()">↺ Resetar</button>
+    <button class="btn btn-primary" onclick="gerarPDF()">⬇ Gerar PDF</button>
+  </div>
+</div>
+
+<div class="gen-body">
+  <!-- SIDEBAR FORM -->
+  <div class="sidebar">
+
+    <!-- IMPORTAR PDF JNG -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Importar Orçamento JNG</div>
+      <div class="import-zone" id="importZone"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <input type="file" accept=".pdf" onchange="handleFileInput(this)">
+        <div class="import-zone-icon">📄</div>
+        <div class="import-zone-text">Arraste o PDF do orçamento JNG</div>
+        <div class="import-zone-sub">ou clique para selecionar</div>
+      </div>
+      <div class="import-status" id="importStatus"></div>
+      <div class="import-result" id="importResult"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Cliente</div>
+      <div class="field"><label>Empresa / Nome do Cliente</label><input type="text" id="f_cliente" placeholder="CT Fazenda da Grama – Garbin" oninput="atualizar()"></div>
+      <div class="field"><label>Responsável / Contato</label><input type="text" id="f_responsavel" placeholder="Nome do responsável" oninput="atualizar()"></div>
+      <div class="field-row">
+        <div class="field"><label>Cargo</label><input type="text" id="f_cargo" placeholder="Diretor, CEO…" oninput="atualizar()"></div>
+        <div class="field"><label>Cidade / UF</label><input type="text" id="f_local" placeholder="Itupeva / SP" oninput="atualizar()"></div>
+      </div>
+      <div class="field"><label>E-mail do cliente</label><input type="text" id="f_email_cliente" placeholder="contato@empresa.com.br" oninput="atualizar()"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Proposta</div>
+      <div class="field-row">
+        <div class="field"><label>Nº da Proposta</label><input type="text" id="f_num" placeholder="LG-BESS-958" oninput="atualizar()"></div>
+        <div class="field"><label>Data</label><input type="date" id="f_data" oninput="atualizar()"></div>
+      </div>
+      <div class="field"><label>Válido até</label><input type="date" id="f_validade" oninput="atualizar()"></div>
+      <div class="field"><label>Consumo mensal atual do cliente (kWh/mês)</label><input type="number" id="f_consumo" placeholder="8000" oninput="atualizar()"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Sistema Solar</div>
+      <div class="field-row">
+        <div class="field"><label>Nº de Módulos</label><input type="number" id="f_mods" placeholder="66" value="66" oninput="atualizar()"></div>
+        <div class="field"><label>Potência (Wp)</label><input type="number" id="f_wp" placeholder="620" value="620" oninput="atualizar()"></div>
+      </div>
+      <div class="field"><label>Modelo do módulo</label><input type="text" id="f_mod_modelo" placeholder="Gokin 66HTBD-620F Bifacial N-Type" oninput="atualizar()"></div>
+      <div class="field"><label>Inversor(es)</label><input type="text" id="f_inversor" placeholder="2× Solis S6-EH3P20K LV (20kW, 220V)" oninput="atualizar()"></div>
+      <div class="calc-box">
+        <div class="calc-row"><span class="calc-key">Potência instalada</span><span class="calc-val" id="c_kwp">40,92 kWp</span></div>
+        <div class="calc-row"><span class="calc-key">Geração / mês</span><span class="calc-val" id="c_kwh_mes">4.290 kWh</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Armazenamento BESS</div>
+      <div class="field-row">
+        <div class="field"><label>Nº de Stacks</label><input type="number" id="f_stacks" placeholder="8" value="8" oninput="atualizar()"></div>
+        <div class="field"><label>kWh / Stack</label><input type="number" id="f_kwh_stack" placeholder="16.07" value="16.07" step="0.01" oninput="atualizar()"></div>
+      </div>
+      <div class="calc-box">
+        <div class="calc-row"><span class="calc-key">Armazenamento total</span><span class="calc-val" id="c_kwh_total">128,56 kWh</span></div>
+        <div class="calc-row"><span class="calc-key">Autonomia (carga plena 40kW)</span><span class="calc-val" id="c_auto_full">3,2 h</span></div>
+        <div class="calc-row"><span class="calc-key">Autonomia (carga parcial 10kW)</span><span class="calc-val" id="c_auto_part">12,9 h</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Fornecimento — Bateria</div>
+      <div class="field"><label>Marca / Modelo da bateria</label><input type="text" id="f_a_marca" placeholder="Evercore" oninput="atualizar()"></div>
+      <div class="field"><label>Preço total do projeto — R$</label><input type="number" id="f_a_preco" placeholder="418143.29" value="418143.29" step="0.01" oninput="atualizar()"></div>
+      <div class="calc-box" style="margin-top:4px">
+        <div class="calc-row"><span class="calc-key">R$/kWh armazenado</span><span class="calc-val" id="c_preco_kwh">R$ 1.708</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Análise Financeira</div>
+      <div class="field"><label>Tarifa de energia (R$/kWh)</label><input type="number" id="f_tarifa" placeholder="0.95" value="0.95" step="0.01" oninput="atualizar()"></div>
+      <div class="field"><label>Redução de demanda estimada (R$/mês)</label><input type="number" id="f_demanda" placeholder="1500" value="1500" oninput="atualizar()"></div>
+      <div class="calc-box">
+        <div class="calc-row"><span class="calc-key">Economia geração / mês</span><span class="calc-val" id="c_eco_ger">R$ 4.075,50</span></div>
+        <div class="calc-row"><span class="calc-key">Economia total / mês</span><span class="calc-val" id="c_eco_total">R$ 5.575,50</span></div>
+        <div class="calc-row"><span class="calc-key">Economia anual</span><span class="calc-val" id="c_eco_ano">R$ 66.906</span></div>
+        <div class="calc-row"><span class="calc-key">Payback simples</span><span class="calc-val" id="c_payback">6,2 anos</span></div>
+        <div class="calc-row"><span class="calc-key">Retorno 25 anos</span><span class="calc-val" id="c_ret25">R$ 1,67M</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Contato LumenGrid</div>
+      <div class="field"><label>Consultor responsável</label><input type="text" id="f_consultor" placeholder="Nome do consultor" oninput="atualizar()"></div>
+      <div class="field"><label>Telefone / WhatsApp</label><input type="text" id="f_tel" placeholder="(11) 9 XXXX-XXXX" oninput="atualizar()"></div>
+      <div class="field"><label>E-mail</label><input type="text" id="f_email" placeholder="contato@lumengridbrasil.com.br" oninput="atualizar()"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Observações (opcional)</div>
+      <div class="field"><textarea id="f_obs" placeholder="Notas adicionais para o cliente, condições específicas…" oninput="atualizar()"></textarea></div>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview-wrap" id="previewWrap">
+    <div class="preview-hint">PRÉVIA DA PROPOSTA — ESCALA REDUZIDA · Clique em "Gerar PDF" para exportar em alta resolução</div>
+    <div id="proposal-pages">
+
+      <!-- ─── PAGE 1: COVER ─── -->
+      <div class="proposal-page page-cover" id="pg1">
+        <div class="cover-bg-pattern"></div>
+        <div class="cover-accent-bar"></div>
+        <div class="cover-top-bar"></div>
+
+        <div class="cover-logo">
+          <!-- Logo oficial — versão escura, sem rect de fundo -->
+          <svg width="210" height="70" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" aria-label="LumenGrid — Energia Inteligente">
+            <defs><style>@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&family=Inter:wght@400&display=swap');</style></defs>
+            <g transform="translate(50,50) scale(3)" fill="none">
+              <path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="68" cy="19" r="6" fill="#F57832"/>
+            </g>
+            <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+              <tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan>
+            </text>
+            <text x="378" y="265" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="22" letter-spacing="7" fill="#F26522">ENERGIA INTELIGENTE</text>
+          </svg>
+        </div>
+
+        <div class="cover-doc-label">
+          <div class="num" id="cv_num">LG-BESS-958</div>
+          <div class="conf">Confidencial</div>
+        </div>
+
+        <div class="cover-main">
+          <div class="cover-type">Proposta Técnica Comercial</div>
+          <div class="cover-title">Sistema Híbrido Solar<br>+ Armazenamento BESS</div>
+          <div class="cover-subtitle">Geração fotovoltaica de alta eficiência integrada a banco de baterias LFP</div>
+
+          <div class="cover-client-block">
+            <div>
+              <div class="cover-client-label">Proposta elaborada para</div>
+              <div class="cover-client-name" id="cv_cliente">CT Fazenda da Grama</div>
+              <div class="cover-client-loc">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,.4)" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                <span id="cv_local" style="color:rgba(255,255,255,.45)">Itupeva / SP</span>
+              </div>
+            </div>
+            <div class="cover-dates">
+              <div class="cover-date-row">
+                <div class="cover-date-label">Data de emissão</div>
+                <div class="cover-date-val" id="cv_data">06/11/2026</div>
+              </div>
+              <div class="cover-date-row" style="margin-bottom:0">
+                <div class="cover-date-label">Válida até</div>
+                <div class="cover-date-val" id="cv_validade">20/11/2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cover-kpis">
+          <div class="cover-kpi"><div class="cover-kpi-num" id="cv_kwp">40,92</div><div class="cover-kpi-label">kWp instalados</div></div>
+          <div class="cover-kpi"><div class="cover-kpi-num" id="cv_kwh">128,56</div><div class="cover-kpi-label">kWh armazenados</div></div>
+          <div class="cover-kpi"><div class="cover-kpi-num" id="cv_kwh_mes">4.290</div><div class="cover-kpi-label">kWh / mês gerados</div></div>
+          <div class="cover-kpi"><div class="cover-kpi-num" id="cv_payback_cover">~6 anos</div><div class="cover-kpi-label">payback estimado</div></div>
+        </div>
+      </div>
+
+      <div class="page-gap"></div>
+
+      <!-- ─── PAGE 2: RESUMO + DADOS ─── -->
+      <div class="proposal-page content-page" id="pg2">
+        <div class="page-header-line"></div>
+        <div class="page-header">
+          <!-- Logo oficial — versão clara, sem rect de fundo -->
+          <svg width="108" height="36" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" aria-label="LumenGrid">
+            <defs><style>@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&family=Inter:wght@400&display=swap');</style></defs>
+            <g transform="translate(50,50) scale(3)" fill="none">
+              <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="68" cy="19" r="6" fill="#F57832"/>
+            </g>
+            <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+              <tspan fill="#F26522">LUMEN</tspan><tspan fill="#111111">GRID</tspan>
+            </text>
+            <text x="378" y="265" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="22" letter-spacing="7" fill="#F26522">ENERGIA INTELIGENTE</text>
+          </svg>
+          <div class="page-header-meta" id="pg2_meta">Proposta LG-BESS-958 · CT Fazenda da Grama · Confidencial</div>
+        </div>
+        <div class="page-content">
+          <div class="doc-section-label">01 — Resumo Executivo</div>
+          <div class="doc-h2" style="margin-bottom:10px">Visão geral do projeto</div>
+          <p class="doc-lead" id="pg2_intro">O presente projeto propõe a implantação de um sistema fotovoltaico híbrido de 40,92 kWp com banco de armazenamento de energia de 128,56 kWh para CT Fazenda da Grama – Garbin Arquitetos (Itupeva/SP). A solução combina geração solar de alta eficiência com baterias LFP (Lítio Ferro Fosfato), garantindo autoprodução de energia, continuidade operacional em caso de falha da rede e redução significativa na fatura de energia elétrica.</p>
+
+          <div class="kpi-row">
+            <div class="kpi-card"><div class="kpi-label">Potência Instalada</div><div class="kpi-num" id="pg2_kwp">40,92</div><div class="kpi-unit">kWp</div></div>
+            <div class="kpi-card"><div class="kpi-label">Armazenamento</div><div class="kpi-num" id="pg2_kwh">128,56</div><div class="kpi-unit">kWh</div></div>
+            <div class="kpi-card"><div class="kpi-label">Geração / Mês</div><div class="kpi-num" id="pg2_kwh_mes">4.290</div><div class="kpi-unit">kWh/mês</div></div>
+            <div class="kpi-card"><div class="kpi-label">Payback</div><div class="kpi-num" id="pg2_payback">~6,2 a</div><div class="kpi-unit">anos (simples)</div></div>
+          </div>
+
+          <div style="height:14px"></div>
+          <div class="doc-section-label">02 — Dados do Projeto</div>
+          <div class="doc-h2" style="margin-bottom:12px">Identificação</div>
+          <table class="doc-table">
+            <tbody>
+              <tr><td style="width:36%">Empresa / Cliente</td><td><strong id="pg2_cliente">CT Fazenda da Grama – Garbin Arquitetos</strong></td></tr>
+              <tr><td>Responsável</td><td><strong id="pg2_responsavel">—</strong> <span id="pg2_cargo" style="color:#9CA3AF;font-size:10px"></span></td></tr>
+              <tr><td>Localização</td><td><strong id="pg2_local">Itupeva / SP</strong></td></tr>
+              <tr><td>Nº da Proposta</td><td><strong id="pg2_num">LG-BESS-958</strong></td></tr>
+              <tr><td>Data de Emissão</td><td><strong id="pg2_data">06/11/2026</strong></td></tr>
+              <tr><td>Validade</td><td><strong id="pg2_validade">20/11/2026</strong></td></tr>
+              <tr><td>Consumo Mensal Atual</td><td><strong id="pg2_consumo">—</strong></td></tr>
+            </tbody>
+          </table>
+
+          <div class="hl-box">
+            <div class="hl-box-label">Por que armazenar energia agora?</div>
+            <p>O Brasil registrou aumento médio de <strong>+10% ao ano</strong> nas tarifas de energia nos últimos 10 anos. Com um sistema BESS, a CT Fazenda da Grama elimina a dependência da rede em horário de ponta, protege operações críticas contra apagões e garante energia limpa gerada localmente. O resultado é <strong>previsibilidade financeira e operacional</strong> pelo próximo quarto de século.</p>
+          </div>
+        </div>
+        <div class="page-footer">
+          <div class="page-footer-left">LumenGrid Brasil Ltda · lumengridbrasil.com.br · Feito por Domani Consultoria</div>
+          <div class="page-footer-right">Página 2 de 6</div>
+        </div>
+      </div>
+
+      <div class="page-gap"></div>
+
+      <!-- ─── PAGE 3: ESPECIFICAÇÕES TÉCNICAS ─── -->
+      <div class="proposal-page content-page" id="pg3">
+        <div class="page-header-line"></div>
+        <div class="page-header">
+          <!-- Logo oficial — versão clara, sem rect de fundo -->
+          <svg width="108" height="36" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" aria-label="LumenGrid">
+            <defs><style>@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&family=Inter:wght@400&display=swap');</style></defs>
+            <g transform="translate(50,50) scale(3)" fill="none">
+              <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="68" cy="19" r="6" fill="#F57832"/>
+            </g>
+            <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+              <tspan fill="#F26522">LUMEN</tspan><tspan fill="#111111">GRID</tspan>
+            </text>
+            <text x="378" y="265" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="22" letter-spacing="7" fill="#F26522">ENERGIA INTELIGENTE</text>
+          </svg>
+          <div class="page-header-meta" id="pg3_meta">Proposta LG-BESS-958 · Especificações Técnicas</div>
+        </div>
+        <div class="page-content">
+          <div class="doc-section-label">03 — Especificações Técnicas</div>
+          <div class="doc-h2" style="margin-bottom:4px">Arquitetura do sistema</div>
+          <p class="doc-lead" style="margin-bottom:12px">Sistema híbrido trifásico de geração distribuída com inversores em paralelo e banco de baterias LFP dedicado.</p>
+
+          <div class="sys-diagram">
+            <div class="sys-node accent">
+              <div class="sys-node-icon">☀️</div>
+              <div class="sys-node-name">Módulos FV</div>
+              <div class="sys-node-desc" id="dg_mods">66× 620W<br>40,92 kWp</div>
+            </div>
+            <div class="sys-arrow">→</div>
+            <div class="sys-node accent">
+              <div class="sys-node-icon">⚙️</div>
+              <div class="sys-node-name">Inversores</div>
+              <div class="sys-node-desc">2× Solis 20kW<br>40 kVA trifásico</div>
+            </div>
+            <div class="sys-arrow">⇄</div>
+            <div class="sys-node accent">
+              <div class="sys-node-icon">🔋</div>
+              <div class="sys-node-name">Banco BESS</div>
+              <div class="sys-node-desc" id="dg_bess">8× Stacks LFP<br>128,56 kWh</div>
+            </div>
+            <div class="sys-arrow">→</div>
+            <div class="sys-node">
+              <div class="sys-node-icon">🏭</div>
+              <div class="sys-node-name">Instalação</div>
+              <div class="sys-node-desc">Carga prioritária<br>+ rede (backup)</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <div>
+              <div class="doc-h3">Geração Solar</div>
+              <table class="doc-table">
+                <tbody>
+                  <tr><td>Módulos</td><td><strong id="spec_mod_modelo">Gokin 66HTBD-620F</strong></td></tr>
+                  <tr><td>Tecnologia</td><td><strong>Bifacial N-Type, Frame Composto</strong></td></tr>
+                  <tr><td>Quantidade</td><td><strong id="spec_mods">66 módulos</strong></td></tr>
+                  <tr><td>Potência / módulo</td><td><strong id="spec_wp">620 Wp</strong></td></tr>
+                  <tr><td>Potência total</td><td><strong class="or" id="spec_kwp">40,92 kWp</strong></td></tr>
+                  <tr><td>Geração estimada</td><td><strong id="spec_kwh_mes">4.290 kWh/mês</strong></td></tr>
+                  <tr><td>Fator de geração</td><td>65 kWh / módulo / mês</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <div class="doc-h3">Inversores e Controle</div>
+              <table class="doc-table">
+                <tbody>
+                  <tr><td>Modelo</td><td><strong id="spec_inversor">Solis S6-EH3P20K LV</strong></td></tr>
+                  <tr><td>Quantidade</td><td><strong>2 unidades (paralelo)</strong></td></tr>
+                  <tr><td>Potência total</td><td><strong class="or">40 kVA</strong></td></tr>
+                  <tr><td>Alimentação</td><td>Trifásico 220V</td></tr>
+                  <tr><td>Modo backup</td><td><strong>Off-grid automático (UPS)</strong></td></tr>
+                  <tr><td>Monitoramento</td><td>Solis Cloud (app + web)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="doc-h3">Armazenamento BESS — Banco de Baterias</div>
+          <table class="doc-table">
+            <thead><tr><th>Parâmetro</th><th>Especificação</th><th>Observação</th></tr></thead>
+            <tbody>
+              <tr><td>Quantidade de stacks</td><td><strong id="spec_stacks">8 unidades</strong></td><td>Configuração modular expansível</td></tr>
+              <tr><td>Capacidade por stack</td><td><strong id="spec_kwh_stack">16,07 kWh</strong></td><td>51,2V · 200 Ah</td></tr>
+              <tr><td>Capacidade total</td><td><strong class="or" id="spec_kwh_total">128,56 kWh</strong></td><td>Alta tensão (HV)</td></tr>
+              <tr><td>Química</td><td><strong>LFP (Lítio Ferro Fosfato)</strong></td><td>Sem risco de combustão espontânea</td></tr>
+              <tr><td>Taxa de descarga</td><td>0,64C-Rate</td><td>Adequado para carga industrial</td></tr>
+              <tr><td>Autonomia — carga plena (40 kW)</td><td><strong id="spec_auto_full">~3,2 horas</strong></td><td></td></tr>
+              <tr><td>Autonomia — carga parcial (10 kW)</td><td><strong id="spec_auto_part">~12,9 horas</strong></td><td>Cargas críticas</td></tr>
+              <tr><td>Garantia de fábrica</td><td><strong>10 anos</strong></td><td>Performance e funcionamento</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="page-footer">
+          <div class="page-footer-left">LumenGrid Brasil Ltda · lumengridbrasil.com.br · Feito por Domani Consultoria</div>
+          <div class="page-footer-right">Página 3 de 6</div>
+        </div>
+      </div>
+
+      <div class="page-gap"></div>
+
+      <!-- ─── PAGE 4: OPÇÕES COMERCIAIS ─── -->
+      <div class="proposal-page content-page" id="pg4">
+        <div class="page-header-line"></div>
+        <div class="page-header">
+          <!-- Logo oficial — versão clara, sem rect de fundo -->
+          <svg width="108" height="36" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" aria-label="LumenGrid">
+            <defs><style>@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&family=Inter:wght@400&display=swap');</style></defs>
+            <g transform="translate(50,50) scale(3)" fill="none">
+              <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="68" cy="19" r="6" fill="#F57832"/>
+            </g>
+            <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+              <tspan fill="#F26522">LUMEN</tspan><tspan fill="#111111">GRID</tspan>
+            </text>
+            <text x="378" y="265" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="22" letter-spacing="7" fill="#F26522">ENERGIA INTELIGENTE</text>
+          </svg>
+          <div class="page-header-meta">Proposta LG-BESS-958 · Opções Comerciais</div>
+        </div>
+        <div class="page-content">
+          <div class="doc-section-label">04 — Proposta Comercial</div>
+          <div class="doc-h2" style="margin-bottom:4px">Investimento e escopo de fornecimento</div>
+          <p class="doc-lead" style="margin-bottom:16px">Projeto completo — equipamentos, instalação, homologação e suporte. Frete CIF incluso. Preço fixo conforme especificações abaixo.</p>
+
+          <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:20px;margin-bottom:18px">
+            <!-- PRICING BLOCK -->
+            <div style="background:#FFF7ED;border:1.5px solid #F26522;border-radius:10px;padding:28px 24px">
+              <div class="option-label or" style="margin-bottom:6px">Bateria BESS</div>
+              <div class="option-name" id="op_a_nome" style="font-size:20px;margin-bottom:18px">Evercore</div>
+              <div style="font-size:11px;color:#9CA3AF;margin-bottom:4px;font-weight:600;letter-spacing:1px;text-transform:uppercase">Investimento total</div>
+              <div class="option-price rec-price" id="op_a_preco" style="font-size:36px">R$ 418.143</div>
+              <div id="op_a_preco_cents" style="font-size:11px;color:#9CA3AF;margin-bottom:20px">,29</div>
+              <div style="border-top:1px solid #FED7AA;padding-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div>
+                  <div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;margin-bottom:3px">Stacks</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E" id="op_a_stacks">8×</div>
+                </div>
+                <div>
+                  <div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;margin-bottom:3px">Capacidade</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E" id="op_a_kwh">128,56 kWh</div>
+                </div>
+                <div>
+                  <div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;margin-bottom:3px">R$/kWh</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#F26522" id="op_a_kwh_preco">R$ 1.708</div>
+                </div>
+                <div>
+                  <div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9CA3AF;margin-bottom:3px">Garantia</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0C1A2E">10 anos</div>
+                </div>
+              </div>
+            </div>
+            <!-- SCOPE QUICK LIST -->
+            <div>
+              <div class="doc-h3" style="margin-bottom:12px">O que está incluso</div>
+              <div class="scope-list">
+                <div class="scope-item"><div class="scope-check">✓</div>Projeto elétrico completo</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Instalação por equipe própria certificada</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Homologação junto à distribuidora</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Comissionamento e testes de performance</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Treinamento operacional</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Configuração do monitoramento Solis Cloud</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Frete CIF (entrega na obra)</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Assistência técnica pós-instalação</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Garantia de equipamentos e instalação</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Suporte técnico nacional</div>
+              </div>
+            </div>
+          </div>
+
+          <table class="doc-table" style="margin-bottom:14px">
+            <thead><tr><th>Item principal</th><th>Especificação</th><th>Qtd</th><th>Detalhe</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tag tag-or">Inversores</span></td><td><strong>Solis S6-EH3P20K LV</strong></td><td>2 un.</td><td>Híbrido trifásico 20kW 220V</td></tr>
+              <tr><td><span class="tag tag-bl">Baterias</span></td><td><strong id="tab_a_marca">Evercore</strong></td><td id="tab_stacks">8 un.</td><td id="tab_kwh_a">16,07 kWh/stack · 128,56 kWh total · LFP HV</td></tr>
+              <tr><td><span class="tag tag-gr">Módulos</span></td><td id="tab_mods"><strong>Gokin 66HTBD-620F</strong></td><td id="tab_mods_qtd">66 un.</td><td>620W Bifacial N-Type</td></tr>
+              <tr><td><span class="tag tag-pu">Estrutura</span></td><td>Perfil MD-H38 + haste fibrocimento</td><td>—</td><td>Conf. projeto</td></tr>
+              <tr><td colspan="2"><strong>Preço total — investimento</strong></td><td colspan="2"><strong class="or" id="tab_a_preco" style="font-size:14px">R$ 418.143,29</strong></td></tr>
+            </tbody>
+          </table>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="hl-box hl-box-blue">
+              <div class="hl-box-label">Condições de pagamento</div>
+              <p><strong>À vista:</strong> desconto de 5% · <strong>50%+50%:</strong> entrada na assinatura, saldo na entrega · <strong>Financiamento:</strong> crédito solar via parceiros, até 60× sem entrada</p>
+            </div>
+            <div class="hl-box">
+              <div class="hl-box-label">Validade e frete</div>
+              <p>Proposta válida até <strong id="pg4_validade">20/11/2026</strong>. Preços sujeitos a variação cambial. Frete <strong>CIF</strong> incluso. Entrega prevista para <strong>15/11/2026</strong>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <div class="page-footer-left">LumenGrid Brasil Ltda · lumengridbrasil.com.br · Feito por Domani Consultoria</div>
+          <div class="page-footer-right">Página 4 de 6</div>
+        </div>
+      </div>
+
+      <div class="page-gap"></div>
+
+      <!-- ─── PAGE 5: ANÁLISE FINANCEIRA ─── -->
+      <div class="proposal-page content-page" id="pg5">
+        <div class="page-header-line"></div>
+        <div class="page-header">
+          <!-- Logo oficial — versão clara, sem rect de fundo -->
+          <svg width="108" height="36" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" aria-label="LumenGrid">
+            <defs><style>@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&family=Inter:wght@400&display=swap');</style></defs>
+            <g transform="translate(50,50) scale(3)" fill="none">
+              <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="68" cy="19" r="6" fill="#F57832"/>
+            </g>
+            <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+              <tspan fill="#F26522">LUMEN</tspan><tspan fill="#111111">GRID</tspan>
+            </text>
+            <text x="378" y="265" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="22" letter-spacing="7" fill="#F26522">ENERGIA INTELIGENTE</text>
+          </svg>
+          <div class="page-header-meta">Proposta LG-BESS-958 · Análise Financeira</div>
+        </div>
+        <div class="page-content">
+          <div class="doc-section-label">05 — Análise Financeira e Retorno</div>
+          <div class="doc-h2" style="margin-bottom:4px">Viabilidade econômica</div>
+          <p class="doc-lead" style="margin-bottom:14px">Projeção conservadora. Referência: <strong>Opção B</strong>. Tarifa: <span id="fin_tarifa_ref">R$ 0,95/kWh</span>. Sem considerar reajuste tarifário histórico (+10%/ano).</p>
+
+          <div class="roi-row">
+            <div class="roi-card green">
+              <div class="num" id="fin_payback">6,2 anos</div>
+              <div class="lbl">Payback Simples</div>
+            </div>
+            <div class="roi-card orange">
+              <div class="num" id="fin_eco_ano">R$ 66.906</div>
+              <div class="lbl">Economia Anual</div>
+            </div>
+            <div class="roi-card blue">
+              <div class="num" id="fin_ret25">R$ 1,67M</div>
+              <div class="lbl">Retorno em 25 anos</div>
+            </div>
+          </div>
+
+          <table class="doc-table" style="margin-bottom:12px">
+            <thead><tr><th>Indicador</th><th>Valor</th><th>Memória de Cálculo</th></tr></thead>
+            <tbody>
+              <tr><td>Potência instalada</td><td><strong id="fin_kwp">40,92 kWp</strong></td><td><span id="fin_kwp_calc">66 módulos × 620 Wp</span></td></tr>
+              <tr><td>Geração mensal estimada</td><td><strong id="fin_kwh_mes">4.290 kWh/mês</strong></td><td><span id="fin_kwh_calc">66 módulos × 65 kWh/mês</span></td></tr>
+              <tr><td>Tarifa de referência</td><td><strong id="fin_tarifa">R$ 0,95/kWh</strong></td><td>Tarifa comercial com tributos</td></tr>
+              <tr><td>Economia geração solar / mês</td><td><strong id="fin_eco_ger">R$ 4.075,50</strong></td><td id="fin_eco_ger_calc">4.290 kWh × R$ 0,95</td></tr>
+              <tr><td>Redução de demanda / mês</td><td><strong id="fin_demanda">R$ 1.500,00</strong></td><td>Via peak shaving BESS</td></tr>
+              <tr><td>Economia total / mês</td><td><strong class="gr" id="fin_eco_total">R$ 5.575,50</strong></td><td>Geração + redução de demanda</td></tr>
+              <tr><td>Economia anual</td><td><strong class="gr" id="fin_eco_ano2">R$ 66.906</strong></td><td></td></tr>
+              <tr><td>Investimento (Opção B)</td><td><strong id="fin_inv">R$ 415.288,38</strong></td><td>Inclui equipamentos + instalação</td></tr>
+              <tr><td>Payback simples</td><td><strong class="or" id="fin_payback2">~6,2 anos</strong></td><td>Sem reajuste tarifário</td></tr>
+              <tr><td>Payback com reajuste histórico</td><td><strong class="or" id="fin_payback_re">~5,0 anos</strong></td><td>Média histórica ANEEL +10%/ano</td></tr>
+              <tr><td>CO₂ evitado / ano</td><td><strong style="color:#059669" id="fin_co2">~24 toneladas</strong></td><td>Grid emission factor 0,47 kgCO₂/kWh</td></tr>
+              <tr><td>Vida útil do sistema</td><td><strong>25+ anos</strong></td><td>Módulos; baterias: 10 anos garantia</td></tr>
+            </tbody>
+          </table>
+
+          <div class="hl-box hl-box-blue">
+            <div class="hl-box-label">Impacto do reajuste tarifário</div>
+            <p>As tarifas de energia no Brasil subiram em média <strong>+10% ao ano</strong> de 2015 a 2026. Com esse histórico, a economia gerada pelo sistema em 2036 será aproximadamente <strong>2,6× maior</strong> do que em 2026 — acelerando o payback e ampliando o retorno total do investimento.</p>
+          </div>
+        </div>
+        <div class="page-footer">
+          <div class="page-footer-left">LumenGrid Brasil Ltda · lumengridbrasil.com.br · Feito por Domani Consultoria</div>
+          <div class="page-footer-right">Página 5 de 6</div>
+        </div>
+      </div>
+
+      <div class="page-gap"></div>
+
+      <!-- ─── PAGE 6: ESCOPO + DIFERENCIAIS + CTA ─── -->
+      <div class="proposal-page content-page" id="pg6">
+        <div class="page-header-line"></div>
+        <div class="page-header">
+          <!-- Logo oficial — versão clara, sem rect de fundo -->
+          <svg width="108" height="36" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" aria-label="LumenGrid">
+            <defs><style>@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&family=Inter:wght@400&display=swap');</style></defs>
+            <g transform="translate(50,50) scale(3)" fill="none">
+              <path d="M59 15 A36 36 0 1 1 25 25" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="68" cy="19" r="6" fill="#F57832"/>
+            </g>
+            <text x="375" y="215" font-family="'Raleway','Inter',sans-serif" font-weight="600" font-size="80" letter-spacing="16">
+              <tspan fill="#F26522">LUMEN</tspan><tspan fill="#111111">GRID</tspan>
+            </text>
+            <text x="378" y="265" font-family="'Inter','DM Sans',sans-serif" font-weight="400" font-size="22" letter-spacing="7" fill="#F26522">ENERGIA INTELIGENTE</text>
+          </svg>
+          <div class="page-header-meta">Proposta LG-BESS-958 · Escopo e Próximos Passos</div>
+        </div>
+        <div class="page-content" style="padding:28px 44px 24px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:16px">
+            <div>
+              <div class="doc-section-label">06 — Escopo</div>
+              <div class="doc-h3">O que está incluso</div>
+              <div class="scope-list">
+                <div class="scope-item"><div class="scope-check">✓</div>Projeto elétrico e memorial descritivo</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Instalação por equipe técnica própria certificada</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Homologação junto à distribuidora</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Comissionamento e testes de performance</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Treinamento operacional para equipe local</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Configuração do monitoramento Solis Cloud</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Frete CIF (entrega na obra, sem custo extra)</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Assistência técnica pós-instalação</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Garantia de equipamentos e instalação</div>
+                <div class="scope-item"><div class="scope-check">✓</div>Suporte técnico nacional</div>
+              </div>
+            </div>
+            <div>
+              <div class="doc-section-label">07 — Por que LumenGrid</div>
+              <div class="diff-grid">
+                <div class="diff-card">
+                  <div class="diff-icon">📡</div>
+                  <div class="diff-title">Monitoramento 24/7</div>
+                  <div class="diff-desc">Dashboard em tempo real, alertas automáticos e relatórios mensais</div>
+                </div>
+                <div class="diff-card">
+                  <div class="diff-icon">🛡️</div>
+                  <div class="diff-title">Garantias sólidas</div>
+                  <div class="diff-desc">25a módulos · 10a baterias · 5a inversores — suporte durante todo o período</div>
+                </div>
+                <div class="diff-card">
+                  <div class="diff-icon">🔧</div>
+                  <div class="diff-title">Equipe própria</div>
+                  <div class="diff-desc">Sem terceirização. Técnicos LumenGrid em até 24h para falhas críticas</div>
+                </div>
+                <div class="diff-card">
+                  <div class="diff-icon">🤝</div>
+                  <div class="diff-title">Consultor dedicado</div>
+                  <div class="diff-desc">Ponto de contato único. Sem call center, sem filas — pessoa real</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-doc">
+            <div>
+              <div class="cta-doc-label">Próximos Passos</div>
+              <div class="cta-doc-title">Pronto para transformar energia<br>em patrimônio?</div>
+              <div class="cta-doc-sub">Fale com nosso time técnico-comercial para esclarecer dúvidas, ajustar detalhes do projeto ou avançar com a assinatura do contrato. Esta proposta é válida até <span id="cta_validade">20/11/2026</span>.</div>
+            </div>
+            <div class="cta-doc-contacts">
+              <div class="cta-contact-item"><div class="c-label">Consultor</div><div class="c-val" id="cta_consultor">—</div></div>
+              <div class="cta-contact-item"><div class="c-label">WhatsApp</div><div class="c-val" id="cta_tel">—</div></div>
+              <div class="cta-contact-item"><div class="c-label">E-mail</div><div class="c-val" id="cta_email">—</div></div>
+            </div>
+          </div>
+
+          <div id="obs_box" style="display:none" class="hl-box hl-box-blue">
+            <div class="hl-box-label">Observações</div>
+            <p id="obs_text"></p>
+          </div>
+
+          <div class="sign-row">
+            <div class="sign-block">
+              <div class="s-label">Assinatura do cliente</div>
+              <div class="s-name" id="sign_cliente">CT Fazenda da Grama – Garbin Arquitetos</div>
+              <div class="s-role" id="sign_resp"></div>
+            </div>
+            <div class="sign-block">
+              <div class="s-label">LumenGrid Brasil Ltda</div>
+              <div class="s-name" id="sign_consultor">Consultor responsável</div>
+              <div class="s-role">Proposta <span id="sign_num">LG-BESS-958</span> · <span id="sign_data">06/11/2026</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <div class="page-footer-left">LumenGrid Brasil Ltda · lumengridbrasil.com.br · Feito por Domani Consultoria</div>
+          <div class="page-footer-right">Página 6 de 6</div>
+        </div>
+      </div>
+
+    </div><!-- /proposal-pages -->
+  </div><!-- /preview-wrap -->
+</div><!-- /gen-body -->
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">Gerando PDF… aguarde</div>
+</div>
+
+<script>
+// ─── PDF IMPORT ──────────────────────────────────────────────
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('importZone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if(file && file.type==='application/pdf') processPDF(file);
+  else setImportStatus('err','Arquivo inválido. Envie um PDF.');
+}
+function handleFileInput(input){
+  const file = input.files[0];
+  if(file) processPDF(file);
+}
+
+async function extractPDFText(file){
+  const ab = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data: ab}).promise;
+  let text = '';
+  for(let i=1; i<=pdf.numPages; i++){
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(it=>it.str).join(' ') + '\n';
+  }
+  return text;
+}
+
+function parseJNG(text){
+  const r = {};
+  const n = s => parseFloat(s.replace(/\./g,'').replace(',','.'));
+
+  // ── Número do orçamento
+  const numM = text.match(/N[ºo°]\s*([\w\-]+)/i);
+  if(numM) r.num = 'LG-BESS-'+numM[1].replace(/\s/g,'');
+
+  // ── Data de emissão
+  const emissM = text.match(/Emiss[aã]o[:\s]*([\d]{2}\/[\d]{2}\/[\d]{4})/i);
+  if(emissM){ const[d,m,y]=emissM[1].split('/'); r.data=`${y}-${m}-${d}`; }
+
+  // ── Validade
+  const valM = text.match(/V[aá]lid[oa][^:]*:[:\s]*([\d]{2}\/[\d]{2}\/[\d]{4})/i);
+  if(valM){ const[d,m,y]=valM[1].split('/'); r.validade=`${y}-${m}-${d}`; }
+
+  // ── kWp total
+  const kwpM = text.match(/POT[EÊ]NCIA\s+M[OÓ]DULOS[^0-9]*([\d,\.]+)\s*kWp/i)
+            || text.match(/([\d,\.]+)\s*kWp/i);
+  if(kwpM) r.kWp = n(kwpM[1]);
+
+  // ── kWh armazenamento total
+  const kwhM = text.match(/ARMAZENAMENTO[^0-9]*([\d,\.]+)\s*kWh/i)
+            || text.match(/([\d,\.]+)\s*kWh/i);
+  if(kwhM) r.kWhTotal = n(kwhM[1]);
+
+  // ── Módulos: Wp
+  const wpM = text.match(/(\d{3,4})\s*W\s*BIFACIAL/i)
+           || text.match(/MODULO FOTOVOLTAICO[^|]*\|\s*(\d{3,4})W/i)
+           || text.match(/FOTOVOLTAICO[^|]*(\d{3,4})W/i);
+  if(wpM) r.wp = parseInt(wpM[1]);
+
+  // ── Módulos: modelo (ex: 66HTBD-620F, GOKIN)
+  const modM = text.match(/([A-Z0-9]{4,}\-[A-Z0-9]+F)\b/i)  // ex: 66HTBD-620F
+            || text.match(/GOKIN\s+([^\s|,]+)/i);
+  if(modM) r.modModelo = modM[1];
+
+  // ── Módulos: quantidade — busca qtd próxima ao item de módulo
+  // Encontra o bloco do item fotovoltaico e pega o último número isolado antes do próximo item
+  const modBloco = text.match(/MODULO FOTOVOLTAICO[\s\S]{0,300}/i);
+  if(modBloco){
+    // Qtd costuma ser o último número de 2 dígitos no bloco antes da próxima linha
+    const qtdM = modBloco[0].match(/\b(\d{2,3})\b(?=[^0-9]*(?:Pronta|Sob|$))/i)
+              || modBloco[0].match(/Qtd[^\d]*(\d+)/i);
+    if(qtdM) r.mods = parseInt(qtdM[1]);
+  }
+  // Fallback: calcular de kWp e Wp
+  if(!r.mods && r.kWp && r.wp) r.mods = Math.round((r.kWp*1000)/r.wp);
+
+  // ── Inversores: modelo
+  const invM = text.match(/SOLIS\s+(S\d[\w\-]+(?:\s+LV)?)/i)
+            || text.match(/INVERSOR[^|]*SOLIS\s+([^\s|]+)/i);
+  if(invM){ const qty = text.match(/S6-EH3P20[\s\S]{0,200}/i);
+    const qM = qty && qty[0].match(/\b([12])\b(?=[^0-9]*(?:Sob|Pronta|importa))/i);
+    r.inversor = `${qM?qM[1]+'× ':''}Solis ${invM[1]}`.trim();
+  }
+
+  // ── Baterias: marca
+  if(/DYNESS/i.test(text)) r.bMarca='Dyness STACK314';
+  else if(/EVERCORE/i.test(text)) r.bMarca='Evercore';
+  else if(/PYLONTECH/i.test(text)) r.bMarca='Pylontech';
+  else if(/BYD/i.test(text)) r.bMarca='BYD';
+
+  // ── Baterias: stacks (quantidade)
+  const batBloco = text.match(/BATERIA LITIO[\s\S]{0,300}/i)
+                || text.match(/STACK314[\s\S]{0,300}/i);
+  if(batBloco){
+    const qM = batBloco[0].match(/\b([4-9]|1[0-6])\b(?=[^0-9]*(?:Sob|Pronta|importa))/i);
+    if(qM) r.stacks = parseInt(qM[1]);
+  }
+
+  // ── kWh por stack — extrair do nome: ex "16,07KWH"
+  const kwhStM = text.match(/BATERIA[^|]*?([\d,]+)\s*KWH/i)
+              || text.match(/([\d,]+)\s*kWh[^a-z]/i);
+  if(kwhStM){ const v=n(kwhStM[1]); if(v>1&&v<50) r.kwhStack=v; }
+  // Fallback: calcular
+  if(!r.kwhStack && r.kWhTotal && r.stacks) r.kwhStack=+(r.kWhTotal/r.stacks).toFixed(2);
+
+  // ── Preço total (À vista ou Total)
+  const priceM = text.match(/Total[\s\S]{0,10}R\$\s*([\d\.\,]+)/i)
+              || text.match(/À vista[^\d]*([\d\.\,]+)/i)
+              || text.match(/R\$\s*([\d]{3,}[\.\,][\d\.\,]+)/);
+  if(priceM) r.preco = n(priceM[1]);
+
+  return r;
+}
+
+function setImportStatus(type, msg){
+  const el = document.getElementById('importStatus');
+  el.className = 'import-status '+type;
+  el.textContent = msg;
+}
+
+async function processPDF(file){
+  setImportStatus('loading','Lendo PDF…');
+  document.getElementById('importResult').classList.remove('show');
+  try{
+    const text = await extractPDFText(file);
+    const data = parseJNG(text);
+    applyImportData(data);
+  }catch(e){
+    console.error(e);
+    setImportStatus('err','Erro ao ler o PDF. Tente outro arquivo.');
+  }
+}
+
+function applyImportData(d){
+  const fields = [];
+  const set = (id, val, label) => {
+    const el = document.getElementById(id);
+    if(el && val !== undefined && val !== null){
+      el.value = val;
+      fields.push({label, val});
+    }
+  };
+  if(d.num)       set('f_num',       d.num,          'Nº Proposta');
+  if(d.data)      set('f_data',      d.data,          'Data emissão');
+  if(d.validade)  set('f_validade',  d.validade,      'Validade');
+  if(d.mods)      set('f_mods',      d.mods,          'Módulos');
+  if(d.wp)        set('f_wp',        d.wp,            'Wp/módulo');
+  if(d.modModelo) set('f_mod_modelo',d.modModelo,     'Modelo módulo');
+  if(d.inversor)  set('f_inversor',  d.inversor,      'Inversor');
+  if(d.stacks)    set('f_stacks',    d.stacks,        'Stacks');
+  if(d.kwhStack)  set('f_kwh_stack', d.kwhStack,      'kWh/stack');
+  if(d.bMarca)    set('f_a_marca',   d.bMarca,        'Bateria');
+  if(d.preco)     set('f_a_preco',   d.preco,         'Preço fornecedor');
+
+  if(fields.length === 0){
+    setImportStatus('err','Nenhum dado reconhecido. Verifique se é um orçamento JNG.');
+    return;
+  }
+
+  // Show result summary
+  const res = document.getElementById('importResult');
+  res.innerHTML = fields.map(f=>
+    `<div class="import-result-row"><span class="import-result-key">${f.label}</span><span class="import-result-val">${f.val}</span></div>`
+  ).join('');
+  res.classList.add('show');
+
+  setImportStatus('ok', `${fields.length} campos preenchidos automaticamente`);
+  atualizar();
+}
+
+// ─── DEFAULTS ───────────────────────────────────────────────
+const DEFAULTS = {
+  f_cliente:'CT Fazenda da Grama – Garbin Arquitetos',
+  f_responsavel:'',f_cargo:'',f_local:'Itupeva / SP',
+  f_email_cliente:'',
+  f_num:'LG-BESS-958',
+  f_data: new Date().toISOString().slice(0,10),
+  f_validade:'',
+  f_consumo:'',
+  f_mods:'66',f_wp:'620',
+  f_mod_modelo:'Gokin 66HTBD-620F Bifacial N-Type',
+  f_inversor:'2× Solis S6-EH3P20K LV (20kW, 220V)',
+  f_stacks:'8',f_kwh_stack:'16.07',
+  f_tarifa:'0.95',f_demanda:'1500',
+  f_a_marca:'Evercore',f_a_preco:'418143.29',
+  f_consultor:'',f_tel:'',f_email:'',f_obs:''
+};
+
+function resetForm(){
+  for(const[k,v] of Object.entries(DEFAULTS)){
+    const el=document.getElementById(k);
+    if(el) el.value=v;
+  }
+  atualizar();
+}
+
+// ─── FORMAT ─────────────────────────────────────────────────
+function fmtBRL(n){return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2}).format(n)}
+function fmtBRLshort(n){
+  if(n>=1e6) return 'R$ '+(n/1e6).toFixed(2).replace('.',',')+'M';
+  return 'R$ '+Math.round(n).toLocaleString('pt-BR');
+}
+function fmtDate(iso){
+  if(!iso) return '—';
+  const[y,m,d]=iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+function fmtNum(n,dec=2){return n.toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+
+// ─── GET ─────────────────────────────────────────────────────
+function g(id){return document.getElementById(id)}
+function gv(id,def=0){const v=parseFloat(document.getElementById(id)?.value);return isNaN(v)?def:v}
+function gt(id,def=''){return document.getElementById(id)?.value?.trim()||def}
+
+// ─── SET ─────────────────────────────────────────────────────
+function s(id,val){const el=g(id);if(el)el.textContent=val}
+function sh(id,html){const el=g(id);if(el)el.innerHTML=html}
+
+// ─── MAIN UPDATE ─────────────────────────────────────────────
+function atualizar(){
+  // Inputs
+  const mods   = gv('f_mods',66);
+  const wp     = gv('f_wp',620);
+  const stacks = gv('f_stacks',8);
+  const kwhSt  = gv('f_kwh_stack',16.07);
+  const tarifa = gv('f_tarifa',0.95);
+  const demanda= gv('f_demanda',1500);
+  const aPreco = gv('f_a_preco',418143.29);
+
+  // Calcs
+  const kWp       = +(mods * wp / 1000).toFixed(2);
+  const kWhTotal  = +(stacks * kwhSt).toFixed(2);
+  const kWhMes    = mods * 65;
+  const autoFull  = +(kWhTotal / 40).toFixed(1);
+  const autoPart  = +(kWhTotal / 10).toFixed(1);
+  const ecoGer    = +(kWhMes * tarifa).toFixed(2);
+  const ecoTotal  = +(ecoGer + demanda).toFixed(2);
+  const ecoAno    = +(ecoTotal * 12).toFixed(2);
+  const payback   = +(aPreco / ecoAno).toFixed(1);
+  const paybackRe = +(payback * 0.78).toFixed(1);
+  const ret25     = +(ecoAno * 25 * 1.3).toFixed(0);
+  const precoKwh  = +(aPreco / kWhTotal).toFixed(0);
+  const co2       = +(kWhMes * 12 * 0.47 / 1000).toFixed(1);
+
+  // ── SIDEBAR CALCS
+  s('c_kwp',       fmtNum(kWp,2)+' kWp');
+  s('c_kwh_mes',   kWhMes.toLocaleString('pt-BR')+' kWh');
+  s('c_kwh_total', fmtNum(kWhTotal,2)+' kWh');
+  s('c_auto_full', autoFull+' h');
+  s('c_auto_part', autoPart+' h');
+  s('c_preco_kwh', fmtBRLshort(precoKwh));
+  s('c_eco_ger',   fmtBRL(ecoGer));
+  s('c_eco_total', fmtBRL(ecoTotal));
+  s('c_eco_ano',   fmtBRLshort(ecoAno));
+  s('c_payback',   payback+' anos');
+  s('c_ret25',     fmtBRLshort(ret25));
+
+  // ── PROPOSAL TEXTS
+  const cliente  = gt('f_cliente','—');
+  const local    = gt('f_local','—');
+  const num      = gt('f_num','LG-BESS-958');
+  const dataStr  = fmtDate(gt('f_data',''));
+  const valStr   = fmtDate(gt('f_validade',''));
+  const aMarca   = gt('f_a_marca','Evercore');
+  const resp     = gt('f_responsavel','');
+  const cargo    = gt('f_cargo','');
+  const consultor= gt('f_consultor','');
+  const tel      = gt('f_tel','');
+  const email    = gt('f_email','');
+  const consumo  = gt('f_consumo','');
+  const obs      = gt('f_obs','');
+  const modModelo= gt('f_mod_modelo','Gokin 66HTBD-620F Bifacial N-Type');
+  const inversor = gt('f_inversor','2× Solis S6-EH3P20K LV (20kW, 220V)');
+
+  // PAGE 1 — COVER
+  s('cv_num',   num);
+  s('cv_cliente', cliente.split('–')[0].split('-')[0].trim());
+  s('cv_local',  local);
+  s('cv_data',   dataStr);
+  s('cv_validade', valStr||'—');
+  s('cv_kwp',    fmtNum(kWp,2));
+  s('cv_kwh',    fmtNum(kWhTotal,2));
+  s('cv_kwh_mes',kWhMes.toLocaleString('pt-BR'));
+  s('cv_payback_cover', '~'+payback+' a');
+
+  // PAGE 2
+  s('pg2_meta',   'Proposta '+num+' · '+cliente+' · Confidencial');
+  s('pg2_intro_patch', ''); // keep default
+  s('pg2_kwp',   fmtNum(kWp,2));
+  s('pg2_kwh',   fmtNum(kWhTotal,2));
+  s('pg2_kwh_mes', kWhMes.toLocaleString('pt-BR'));
+  s('pg2_payback', '~'+payback+' a');
+  s('pg2_cliente', cliente);
+  s('pg2_responsavel', resp||'—');
+  s('pg2_cargo', cargo ? '('+cargo+')' : '');
+  s('pg2_local', local);
+  s('pg2_num',  num);
+  s('pg2_data', dataStr);
+  s('pg2_validade', valStr||'—');
+  s('pg2_consumo', consumo ? consumo.toLocaleString('pt-BR')+' kWh/mês' : '—');
+  // Update intro paragraph
+  const introEl = g('pg2_intro');
+  if(introEl) introEl.textContent = `O presente projeto propõe a implantação de um sistema fotovoltaico híbrido de ${fmtNum(kWp,2)} kWp com banco de armazenamento de energia de ${fmtNum(kWhTotal,2)} kWh para ${cliente} (${local}). A solução combina geração solar de alta eficiência com baterias LFP (Lítio Ferro Fosfato), garantindo autoprodução de energia, continuidade operacional em caso de falha da rede e redução significativa na fatura de energia elétrica.`;
+
+  // PAGE 3
+  s('pg3_meta', 'Proposta '+num+' · Especificações Técnicas');
+  s('dg_mods', mods+'× '+wp+'W\n'+fmtNum(kWp,2)+' kWp');
+  s('dg_bess', stacks+'× Stacks LFP\n'+fmtNum(kWhTotal,2)+' kWh');
+  s('spec_mod_modelo', modModelo);
+  s('spec_mods', mods+' módulos');
+  s('spec_wp', wp+' Wp');
+  s('spec_kwp', fmtNum(kWp,2)+' kWp');
+  s('spec_kwh_mes', kWhMes.toLocaleString('pt-BR')+' kWh/mês');
+  s('spec_inversor', inversor);
+  s('spec_stacks', stacks+' unidades');
+  s('spec_kwh_stack', fmtNum(kwhSt,2)+' kWh');
+  s('spec_kwh_total', fmtNum(kWhTotal,2)+' kWh');
+  s('spec_auto_full', '~'+autoFull+' horas');
+  s('spec_auto_part', '~'+autoPart+' horas');
+
+  // PAGE 4
+  const aInt = Math.floor(aPreco); const aCents = (aPreco-aInt).toFixed(2).substring(1);
+  s('op_a_nome', aMarca);
+  s('op_a_preco', 'R$ '+aInt.toLocaleString('pt-BR'));
+  s('op_a_preco_cents', aCents);
+  s('op_a_stacks', stacks+'×');
+  s('op_a_kwh', fmtNum(kWhTotal,2)+' kWh');
+  s('op_a_kwh_preco', 'R$ '+precoKwh.toLocaleString('pt-BR'));
+  s('tab_a_marca', aMarca);
+  s('tab_stacks', stacks+' un.');
+  s('tab_kwh_a', fmtNum(kwhSt,2)+' kWh/stack · '+fmtNum(kWhTotal,2)+' kWh total · LFP HV');
+  s('tab_mods', modModelo);
+  s('tab_mods_qtd', mods+' un.');
+  s('tab_a_preco', fmtBRL(aPreco));
+  s('pg4_validade', valStr||'—');
+
+  // PAGE 5
+  s('fin_tarifa_ref', 'R$ '+tarifa.toFixed(2).replace('.',',')+'/kWh');
+  s('fin_payback',   payback+' anos');
+  s('fin_eco_ano',   fmtBRLshort(ecoAno));
+  s('fin_ret25',     fmtBRLshort(ret25));
+  s('fin_kwp',       fmtNum(kWp,2)+' kWp');
+  s('fin_kwp_calc',  mods+' módulos × '+wp+' Wp');
+  s('fin_kwh_mes',   kWhMes.toLocaleString('pt-BR')+' kWh/mês');
+  s('fin_kwh_calc',  mods+' módulos × 65 kWh/mês');
+  s('fin_tarifa',    'R$ '+tarifa.toFixed(2).replace('.',',') +'/kWh');
+  s('fin_eco_ger',   fmtBRL(ecoGer));
+  s('fin_eco_ger_calc', kWhMes.toLocaleString('pt-BR')+' kWh × R$ '+tarifa.toFixed(2).replace('.',','));
+  s('fin_demanda',   fmtBRL(demanda));
+  s('fin_eco_total', fmtBRL(ecoTotal));
+  s('fin_eco_ano2',  fmtBRLshort(ecoAno));
+  s('fin_inv',       fmtBRL(aPreco));
+  s('fin_payback2',  '~'+payback+' anos');
+  s('fin_payback_re','~'+paybackRe+' anos');
+  s('fin_co2',       '~'+co2+' toneladas');
+
+  // PAGE 6
+  s('cta_validade', valStr||'—');
+  s('cta_consultor', consultor||'—');
+  s('cta_tel',      tel||'—');
+  s('cta_email',    email||'—');
+  if(obs){g('obs_box').style.display='block'; s('obs_text',obs);}
+  else{g('obs_box').style.display='none';}
+  s('sign_cliente', cliente);
+  s('sign_resp',    resp+(cargo?' – '+cargo:''));
+  s('sign_consultor', consultor||'LumenGrid Brasil');
+  s('sign_num',     num);
+  s('sign_data',    dataStr);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  resetForm();
+  atualizar();
+});
+
+// ─── SCALE PREVIEW ────────────────────────────────────────────
+function scalePreview(){
+  const wrap = g('previewWrap');
+  const pages = document.querySelectorAll('.proposal-page');
+  const avail = wrap.clientWidth - 48;
+  const scale = Math.min(1, avail / 794);
+  pages.forEach(p=>{
+    p.style.transform = `scale(${scale})`;
+    p.style.transformOrigin = 'top left';
+    p.style.marginBottom = `${(1123*(scale-1))}px`;
+  });
+}
+window.addEventListener('resize', scalePreview);
+document.addEventListener('DOMContentLoaded', ()=>setTimeout(scalePreview,100));
+
+// ─── GENERATE PDF ─────────────────────────────────────────────
+async function gerarPDF(){
+  if(!window.html2canvas || !window.jspdf){
+    alert('Aguarde o carregamento das bibliotecas e tente novamente.');return;
+  }
+  const overlay = g('loadingOverlay');
+  const loadTxt = g('loadingText');
+  overlay.classList.add('show');
+
+  try{
+    // Temporarily reset scale for capture
+    const pages = document.querySelectorAll('.proposal-page');
+    pages.forEach(p=>{p.style.transform='';p.style.marginBottom='';});
+
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+
+    for(let i=0;i<pages.length;i++){
+      loadTxt.textContent = `Renderizando página ${i+1} de ${pages.length}…`;
+      const canvas = await html2canvas(pages[i],{
+        scale:2,
+        allowTaint:true,
+        useCORS:true,
+        width:794,height:1123,
+        windowWidth:794,
+        logging:false
+      });
+      const img = canvas.toDataURL('image/jpeg',0.92);
+      if(i>0) pdf.addPage();
+      pdf.addImage(img,'JPEG',0,0,210,297,undefined,'FAST');
+    }
+
+    const cliente = gt('f_cliente','cliente').replace(/[^a-zA-Z0-9À-ú]/g,'_').substring(0,30);
+    const num     = gt('f_num','proposta').replace(/[^a-zA-Z0-9]/g,'-');
+    pdf.save(`Proposta_LumenGrid_${num}_${cliente}.pdf`);
+  }catch(e){
+    console.error(e);
+    alert('Erro ao gerar PDF. Verifique o console para detalhes.');
+  }finally{
+    overlay.classList.remove('show');
+    setTimeout(scalePreview, 100);
+  }
+}
+</script>
+</body>
+</html>
