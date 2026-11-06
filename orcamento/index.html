@@ -44,9 +44,9 @@ nav{
   transition:border-color .3s;
 }
 .nav-brand{display:flex;align-items:center;gap:13px;text-decoration:none;flex-shrink:0}
-.nav-icon{height:36px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(242,101,34,.75)) drop-shadow(0 0 5px rgba(242,101,34,.45)) drop-shadow(0 2px 8px rgba(0,0,0,.9))}
+.nav-orbital{width:36px;height:36px;flex-shrink:0;overflow:visible}
 .nav-wordmark{display:flex;flex-direction:column;gap:2px;line-height:1}
-.nav-wname{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-0.3px;line-height:1}
+.nav-wname{font-family:'Raleway',sans-serif;font-weight:600;font-size:15px;letter-spacing:6px;text-transform:uppercase;color:#f0f0f0;line-height:1}
 .nw-l{color:#F26522}.nw-g{color:#FAFAFA}
 .nav-wtag{font-family:'Inter',sans-serif;font-weight:400;font-size:7px;letter-spacing:3.5px;text-transform:uppercase;color:rgba(242,101,34,.85);margin-top:3px;display:block}
 .nav-links{display:flex;align-items:center;gap:2px}
@@ -305,9 +305,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- NAV -->
 <nav id="mainNav">
   <a class="nav-brand" href="/">
-    <img class="nav-icon" src="/imagens/LOGOS/logo-icone.png" alt="LumenGrid">
-    <div class="nav-wordmark">
-      <div class="nav-wname"><span class="nw-l">LUMEN</span><span class="nw-g">GRID</span></div>
+    <svg class="nav-orbital" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+      <path d="M59 15 A36 36 0 1 1 25 25" stroke="rgba(240,240,240,.9)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="68" cy="19" r="6" fill="#F57832"/>
+    </svg>
+    <div>
+      <div class="nav-wname">LUMENGRID</div>
       <span class="nav-wtag">Energia Inteligente</span>
     </div>
   </a>
