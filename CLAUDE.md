@@ -5,6 +5,25 @@
 - Git repo hospedado em lumengridbrasil.com.br
 - `portal.html` = painel central de navegação — todos os links devem ser acessíveis a partir dele
 - URL: https://lumengridbrasil.com.br/portal.html
+- **Site oficial e referência de design**: `REDESIGN/index-redesign.html` — usar SEMPRE como referência de tipografia, paleta e componentes
+
+## Tipografia Oficial (referência: REDESIGN/index-redesign.html)
+
+```css
+h1,h2,h3 { font-family:'Raleway',sans-serif; font-weight:300; line-height:1.08; }
+h1 { font-size:clamp(24px,2.6vw,44px); letter-spacing:-1.2px; }
+h2 { font-size:clamp(20px,2vw,36px); letter-spacing:-.8px; }
+h3 { font-size:clamp(16px,1.4vw,22px); letter-spacing:-.3px; }
+body { font-family:'Inter',system-ui,sans-serif; }
+```
+
+Paleta oficial: `--or:#F57832` · `--ink:#111111` · `--warm:#f0efeb` · `--t2:#5d5d5d`
+
+Google Fonts padrão:
+```html
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600&family=Inter:wght@300;400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600&family=Inter:wght@300;400;500&display=swap"></noscript>
+```
 
 ## Estrutura do Projeto
 
