@@ -323,11 +323,29 @@ footer{background:var(--navy);border-top:1px solid rgba(255,255,255,.07);padding
   .wrap{padding:0 20px}
   section{padding:52px 0}
   .hero-body{padding:0 24px 24px}
-  .hero-nav{padding:24px}
-  .hero-h1{font-size:32px}
+  .hero-nav{padding:20px 24px;flex-wrap:wrap;gap:12px}
+  .hero-nav svg{width:160px;height:40px}
+  .hero-h1{font-size:28px;letter-spacing:-1px}
+  .hero-sub{font-size:15px}
   .price-block{grid-template-columns:1fr}
   .price-main{font-size:36px}
   .sign-row{grid-template-columns:1fr;gap:24px}
+  .spec-table,.cf-table{font-size:12px}
+  .spec-table td,.cf-table td,.cf-table th{padding:7px 10px}
+  footer{flex-direction:column;gap:12px;text-align:center;padding:20px}
+  .scope-list{min-width:0}
+  .cta-bar{flex-direction:column;text-align:center}
+}
+@media(max-width:600px){
+  .hero-h1{font-size:24px}
+  .price-main{font-size:30px}
+  h2{font-size:22px!important}
+  h3{font-size:17px!important}
+  .sc-payback{font-size:34px}
+  .m-num{font-size:18px}
+  .hero-kpi-num{font-size:18px}
+  .diff-card{padding:18px 16px}
+  .card-num{font-size:24px}
 }
 </style>
 </head>
@@ -490,7 +508,7 @@ footer{background:var(--navy);border-top:1px solid rgba(255,255,255,.07);padding
     <!-- DIAGRAMA -->
     <div style="background:#fff;border:1.5px solid var(--g200);border-radius:14px;padding:28px">
       <h3 style="font-size:18px;margin-bottom:20px;color:var(--navy)">Arquitetura do sistema</h3>
-      <div style="display:flex;align-items:center;justify-content:center;gap:0;overflow-x:auto">
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch">
 
         <div style="background:rgba(242,101,34,.07);border:2px solid rgba(242,101,34,.3);border-radius:10px;padding:14px 18px;text-align:center;min-width:130px;flex-shrink:0">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="1.5" stroke-linecap="round" style="margin:0 auto 6px;display:block"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>
@@ -523,7 +541,7 @@ footer{background:var(--navy);border-top:1px solid rgba(255,255,255,.07);padding
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:24px">
         <div class="info green">
           <div class="info-label">Autonomia estimada — cargas essenciais (26,6 kW)</div>
           <p>Com 111,4 kWh úteis (92,8% da capacidade nominal), o sistema garante <strong>≈ 4,2 horas</strong> de operação contínua nas cargas prioritárias do CT.</p>
