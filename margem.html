@@ -34,7 +34,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .nav-link:hover{color:var(--t2);border-color:rgba(255,255,255,.12)}
 
 /* LAYOUT */
-.main{display:grid;grid-template-columns:370px 1fr;gap:0;min-height:calc(100vh - 54px)}
+.main{display:grid;grid-template-columns:380px 1fr;gap:0;min-height:calc(100vh - 54px)}
 
 /* INPUT PANEL */
 .inp-panel{background:var(--s1);border-right:1px solid var(--b1);overflow-y:auto;padding:20px 18px 40px}
@@ -42,16 +42,31 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .sec:last-child{border-bottom:none}
 .sec-title{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:12px;padding-left:8px;border-left:3px solid var(--or)}
 .fg{margin-bottom:9px}
-.fg label{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:3px}
+.fg label{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:3px}
 .fi-wrap{display:flex;align-items:stretch}
-.fi-unit{background:var(--s3);border:1.5px solid var(--b1);border-left:none;border-radius:0 6px 6px 0;padding:7px 10px;font-size:11px;color:var(--t3);font-weight:600;white-space:nowrap;display:flex;align-items:center}
+.fi-unit{background:var(--s3);border:1.5px solid var(--b1);border-left:none;border-radius:0 6px 6px 0;padding:7px 10px;font-size:11px;color:var(--t3);font-weight:600;white-space:nowrap;display:flex;align-items:center;min-width:36px;justify-content:center}
 .fi-with-unit{border-radius:6px 0 0 6px!important;flex:1}
 .fi,.fsel{width:100%;padding:7px 10px;background:var(--s2);border:1.5px solid var(--b1);border-radius:6px;font-size:12px;color:var(--t1);font-family:'Inter',sans-serif;transition:border-color .15s}
 .fi:focus,.fsel:focus{outline:none;border-color:rgba(232,100,26,.5)}
 .fi::placeholder{color:var(--t3)}
+.fi[readonly]{background:var(--s3);color:var(--blue);cursor:default}
 .fsel option{background:var(--s2)}
 .frow{display:flex;gap:8px}.frow>.fg{flex:1}
-.fi-note{font-size:9px;color:var(--t3);margin-top:2px}
+.fi-note{font-size:9px;color:var(--t3);margin-top:3px;line-height:1.4}
+.fi-note.active{color:var(--or)}
+
+/* MODE TOGGLE — % / R$ */
+.mode-toggle{margin-left:auto;display:inline-flex;border:1px solid var(--b1);border-radius:4px;overflow:hidden;flex-shrink:0}
+.mt-btn{background:transparent;border:none;padding:2px 8px;font-size:9px;font-weight:700;color:var(--t3);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;line-height:1.5}
+.mt-btn:hover{color:var(--t2)}
+.mt-btn.active{background:var(--or);color:#fff}
+
+/* INSTALL FIELDS */
+.inst-auto-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.inst-auto-label{font-size:9px;color:var(--blue);font-weight:600}
+.inst-custom-clear{font-size:9px;color:var(--red);cursor:pointer;margin-left:auto;font-weight:600;padding:2px 6px;border:1px solid rgba(248,113,113,.3);border-radius:4px;transition:all .15s;display:none}
+.inst-custom-clear:hover{background:var(--red-d)}
+.inst-using-custom{font-size:9px;color:var(--or);font-weight:600;margin-top:3px;display:none}
 
 /* RESULT PANEL */
 .res-panel{padding:20px 24px;overflow-y:auto}
@@ -122,6 +137,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 /* Faixa table */
 .faixa-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;overflow:hidden}
 .faixa-hdr{padding:10px 18px;border-bottom:1px solid var(--b1);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);display:flex;align-items:center;gap:6px}
+.faixa-tabs{display:flex;gap:1px;margin-left:auto}
+.faixa-tab{padding:3px 10px;font-size:9px;font-weight:700;border-radius:4px;cursor:pointer;color:var(--t3);border:1px solid var(--b1);background:transparent;font-family:'Inter',sans-serif;transition:all .15s}
+.faixa-tab.active{background:var(--or);color:#fff;border-color:var(--or)}
 .faixa-table{width:100%;border-collapse:collapse}
 .faixa-table th{padding:7px 16px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);text-align:left;border-bottom:1px solid var(--b1)}
 .faixa-table td{padding:9px 16px;font-size:12px;border-bottom:1px solid var(--b2);color:var(--t2)}
@@ -161,6 +179,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <!-- ═══ PAINEL DE INPUTS ═══ -->
 <div class="inp-panel">
 
+  <!-- SISTEMA -->
   <div class="sec">
     <div class="sec-title">Sistema</div>
     <div class="frow">
@@ -174,45 +193,72 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       </div>
     </div>
     <div class="fg">
-      <label>kWp do Sistema <span id="kvpAuto" style="font-size:9px;color:var(--blue);margin-left:4px;display:none">● calculado</span></label>
+      <label>kWp do Sistema <span id="kvpAuto" style="font-size:9px;color:var(--blue);display:none">● calculado</span></label>
       <input class="fi" type="number" id="kvp" placeholder="Ex: 6.6" step="0.1" min="0" oninput="onKvpManual()">
       <div class="fi-note">Preencha placas + potência para calcular automaticamente, ou informe diretamente</div>
     </div>
     <div class="fg">
       <label>Tipo</label>
-      <select class="fsel" id="tipo">
+      <select class="fsel" id="tipo" onchange="onTipoChange()">
         <option value="solar">Solar (On-Grid)</option>
         <option value="hibrido">Híbrido (com Bateria)</option>
       </select>
     </div>
   </div>
 
+  <!-- CUSTOS DO PROJETO -->
   <div class="sec">
     <div class="sec-title">Custos do Projeto</div>
+
     <div class="fg">
-      <label>Equipamentos — Inversor + Módulos (R$) <span id="kitAutoTag" style="font-size:9px;color:var(--blue);margin-left:4px;display:none">● da planilha</span></label>
-      <input class="fi" type="number" id="cEquip" placeholder="0,00" step="100">
-      <!-- Seletor de kits da planilha -->
+      <label>Equipamentos — Inversor + Módulos <span id="kitAutoTag" style="font-size:9px;color:var(--blue);display:none">● da planilha</span></label>
+      <input class="fi" type="number" id="cEquip" placeholder="0,00" step="100" oninput="calcular()">
       <div id="kitSelector" style="display:none;margin-top:6px;border:1px solid var(--b1);border-radius:6px;overflow:hidden"></div>
     </div>
-    <div class="fg" id="cBatWrap" style="display:none">
-      <label>Bateria (R$)</label>
-      <input class="fi" type="number" id="cBat" placeholder="0,00" step="100">
+
+    <!-- BATERIA (híbrido) -->
+    <div id="hibridoWrap" style="display:none">
+      <div class="frow">
+        <div class="fg">
+          <label>Qtde de Baterias</label>
+          <input class="fi" type="number" id="numBaterias" placeholder="Ex: 1" min="0" step="1" value="1" oninput="onBatChange()">
+        </div>
+        <div class="fg">
+          <label>Custo Bateria (R$)</label>
+          <input class="fi" type="number" id="cBat" placeholder="0,00" step="100" oninput="calcular()">
+        </div>
+      </div>
+    </div>
+
+    <!-- INSTALAÇÃO PADRÃO + PERSONALIZADA -->
+    <div class="fg">
+      <label>Instalação — Padrão (auto)</label>
+      <div class="fi-wrap">
+        <input class="fi fi-with-unit" type="text" id="cInstAuto" readonly placeholder="—">
+        <span class="fi-unit" style="color:var(--blue);font-size:9px">Auto</span>
+      </div>
+      <div class="fi-note" id="instAutoNote">Calculado pela faixa kWp</div>
     </div>
     <div class="fg">
-      <label>Instalação (R$) <span id="instAuto" style="font-size:9px;color:var(--blue);margin-left:4px;display:none">● auto</span></label>
-      <input class="fi" type="number" id="cInst" placeholder="0,00" step="100">
+      <div class="inst-auto-row">
+        <label style="margin-bottom:0">Instalação — Personalizada</label>
+        <span class="inst-custom-clear" id="instCustomClear" onclick="clearCustomInst()">✕ limpar</span>
+      </div>
+      <input class="fi" type="number" id="cInstCustom" placeholder="Deixe vazio para usar o padrão acima..." step="100" oninput="onCustomInstChange()">
+      <div class="inst-using-custom" id="instUsingCustom">● Usando valor personalizado no cálculo</div>
     </div>
+
     <div class="fg">
-      <label>Homologação (R$) <span id="homolAuto" style="font-size:9px;color:var(--blue);margin-left:4px;display:none">● auto</span></label>
-      <input class="fi" type="number" id="cHomol" placeholder="0,00" step="50">
+      <label>Homologação (R$) <span id="homolAuto" style="font-size:9px;color:var(--blue);display:none">● auto</span></label>
+      <input class="fi" type="number" id="cHomol" placeholder="0,00" step="50" oninput="calcular()">
     </div>
     <div class="fg">
       <label>Frete (R$)</label>
-      <input class="fi" type="number" id="cFrete" placeholder="0,00" step="50">
+      <input class="fi" type="number" id="cFrete" placeholder="0,00" step="50" oninput="calcular()">
     </div>
   </div>
 
+  <!-- PARÂMETROS FINANCEIROS -->
   <div class="sec">
     <div class="sec-title">Parâmetros Financeiros</div>
     <div class="fg">
@@ -225,32 +271,46 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     </div>
     <div class="frow">
       <div class="fg">
-        <label>Gestão OP / Pós-venda %</label>
+        <label>
+          Gestão OP / Pós-venda
+          <span class="mode-toggle">
+            <button class="mt-btn active" id="mt_gestao_pct" onclick="setMode('gestao','pct')">%</button>
+            <button class="mt-btn" id="mt_gestao_val" onclick="setMode('gestao','val')">R$</button>
+          </span>
+        </label>
         <div class="fi-wrap">
-          <input class="fi fi-with-unit" type="number" id="pPosVenda" value="20" min="0" max="100" step="1">
-          <span class="fi-unit">%</span>
+          <input class="fi fi-with-unit" type="number" id="pPosVenda" value="20" min="0" step="1" oninput="calcular()">
+          <span class="fi-unit" id="unit_gestao">%</span>
         </div>
+        <div class="fi-note" id="note_gestao">% da margem bruta</div>
       </div>
       <div class="fg">
-        <label>Impostos %</label>
+        <label>
+          Impostos
+          <span class="mode-toggle">
+            <button class="mt-btn active" id="mt_impostos_pct" onclick="setMode('impostos','pct')">%</button>
+            <button class="mt-btn" id="mt_impostos_val" onclick="setMode('impostos','val')">R$</button>
+          </span>
+        </label>
         <div class="fi-wrap">
-          <input class="fi fi-with-unit" type="number" id="pImpostos" value="10" min="0" max="50" step="0.5">
-          <span class="fi-unit">%</span>
+          <input class="fi fi-with-unit" type="number" id="pImpostos" value="10" min="0" max="50" step="0.5" oninput="calcular()">
+          <span class="fi-unit" id="unit_impostos">%</span>
         </div>
+        <div class="fi-note" id="note_impostos">% do preço de venda</div>
       </div>
     </div>
     <div class="frow">
       <div class="fg">
         <label>PIS + COFINS %</label>
         <div class="fi-wrap">
-          <input class="fi fi-with-unit" type="number" id="pPisCofins" value="3.65" min="0" max="15" step="0.05">
+          <input class="fi fi-with-unit" type="number" id="pPisCofins" value="3.65" min="0" max="15" step="0.05" oninput="calcular()">
           <span class="fi-unit">%</span>
         </div>
       </div>
       <div class="fg">
         <label>Custo Financeiro %</label>
         <div class="fi-wrap">
-          <input class="fi fi-with-unit" type="number" id="pFinCusto" value="0" min="0" max="20" step="0.5">
+          <input class="fi fi-with-unit" type="number" id="pFinCusto" value="0" min="0" max="20" step="0.5" oninput="calcular()">
           <span class="fi-unit">%</span>
         </div>
       </div>
@@ -258,31 +318,39 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     <div class="fg" id="entradaWrap" style="display:none">
       <label>Entrada % (base para custo financeiro)</label>
       <div class="fi-wrap">
-        <input class="fi fi-with-unit" type="number" id="pEntrada" value="50" min="0" max="100" step="5">
+        <input class="fi fi-with-unit" type="number" id="pEntrada" value="50" min="0" max="100" step="5" oninput="calcular()">
         <span class="fi-unit">%</span>
       </div>
     </div>
   </div>
 
+  <!-- MARGEM E COMISSÃO -->
   <div class="sec">
     <div class="sec-title">Margem e Comissão</div>
     <div class="fg">
-      <label>Preço Alvo (R$) <span style="font-size:9px;color:var(--t3)">— opcional: informe e veja a margem resultante</span></label>
-      <input class="fi" type="number" id="precoAlvo" placeholder="Deixe vazio para calcular pela margem alvo" step="100">
+      <label>Preço Alvo (R$) <span style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0">— opcional</span></label>
+      <input class="fi" type="number" id="precoAlvo" placeholder="Deixe vazio para calcular pela margem alvo" step="100" oninput="onPrecoAlvoChange()">
     </div>
     <div class="fg" id="margemInputWrap">
       <label>Margem Alvo %</label>
       <div class="fi-wrap">
-        <input class="fi fi-with-unit" type="number" id="pMargem" value="30" min="1" max="80" step="0.5">
+        <input class="fi fi-with-unit" type="number" id="pMargem" value="30" min="1" max="80" step="0.5" oninput="calcular()">
         <span class="fi-unit">%</span>
       </div>
     </div>
     <div class="fg">
-      <label>Comissão do Vendedor % <span style="font-size:9px;color:var(--t3)">(deduzida da margem)</span></label>
+      <label>
+        Comissão do Vendedor
+        <span class="mode-toggle">
+          <button class="mt-btn active" id="mt_comissao_pct" onclick="setMode('comissao','pct')">%</button>
+          <button class="mt-btn" id="mt_comissao_val" onclick="setMode('comissao','val')">R$</button>
+        </span>
+      </label>
       <div class="fi-wrap">
-        <input class="fi fi-with-unit" type="number" id="pComissao" value="5" min="0" max="30" step="0.5">
-        <span class="fi-unit">%</span>
+        <input class="fi fi-with-unit" type="number" id="pComissao" value="5" min="0" step="0.5" oninput="calcular()">
+        <span class="fi-unit" id="unit_comissao">%</span>
       </div>
+      <div class="fi-note" id="note_comissao">% da Margem CASH</div>
     </div>
   </div>
 
@@ -295,7 +363,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     ⚠️ Parâmetros inválidos: divisor negativo. Reduza a margem alvo, impostos ou custo financeiro.
   </div>
 
-  <!-- KPIs — 4 colunas -->
+  <!-- KPIs -->
   <div class="kpi-row">
     <div class="kpi kpi-or">
       <div class="kpi-lbl">Preço de Venda</div>
@@ -319,7 +387,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     </div>
   </div>
 
-  <!-- Análise Rápida — 4 métricas chave -->
+  <!-- Análise Rápida -->
   <div class="analysis-grid">
     <div class="an-card">
       <div class="an-label">Instalação / Custo Total</div>
@@ -441,7 +509,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       <span class="bk-pct" id="bFinPct">—</span>
     </div>
     <div class="bk-cols bk-neg" style="border-bottom:1px solid rgba(251,191,36,.25)">
-      <span class="bk-label">(−) Gestão OP<span class="bk-badge badge-yellow" id="bPosVendaPerc">—</span><span style="font-size:9px;color:var(--t3);margin-left:4px">fixo — 20% da margem bruta</span></span>
+      <span class="bk-label">(−) Gestão OP<span class="bk-badge badge-yellow" id="bPosVendaPerc">—</span></span>
       <span class="bk-val" id="bPosVenda">—</span>
       <span class="bk-pct" id="bPosVendaPct">—</span>
     </div>
@@ -466,7 +534,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       <span class="bk-pct" id="bCashPisPct">—</span>
     </div>
 
-    <!-- Cartão de Crédito — visível apenas quando selecionado -->
+    <!-- Cartão de Crédito -->
     <div id="ccBlock" style="display:none">
       <div class="bk-cols bk-section">CARTÃO DE CRÉDITO</div>
       <div class="bk-cols">
@@ -487,30 +555,51 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     </div>
   </div>
 
-  <!-- Tabela de Faixas -->
+  <!-- Tabela de Referência -->
   <div class="faixa-card">
     <div class="faixa-hdr">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Referência — Instalação e Homologação por Faixa
-      <span style="font-size:9px;color:var(--t3);margin-left:auto">Clique para aplicar</span>
+      Referência — Instalação por Faixa
+      <span style="font-size:9px;color:var(--t3);margin-left:6px;font-weight:400;text-transform:none;letter-spacing:0">Clique para aplicar</span>
+      <div class="faixa-tabs" style="margin-left:auto">
+        <button class="faixa-tab active" id="tabSolar" onclick="setFaixaTab('solar')">Solar</button>
+        <button class="faixa-tab" id="tabHibrido" onclick="setFaixaTab('hibrido')">Híbrido</button>
+      </div>
     </div>
-    <table class="faixa-table">
-      <thead>
-        <tr>
-          <th>Faixa</th>
-          <th>R$/Wp Instalação</th>
-          <th style="text-align:right">Homologação</th>
-        </tr>
-      </thead>
-      <tbody id="faixaBody"></tbody>
-    </table>
+    <div id="faixaSolarTable">
+      <table class="faixa-table">
+        <thead>
+          <tr>
+            <th>Faixa</th>
+            <th>R$/Wp Instalação</th>
+            <th style="text-align:right">Homologação</th>
+          </tr>
+        </thead>
+        <tbody id="faixaBody"></tbody>
+      </table>
+    </div>
+    <div id="faixaHibridoTable" style="display:none">
+      <table class="faixa-table">
+        <thead>
+          <tr>
+            <th>Faixa</th>
+            <th>Instalação (1 bat.)</th>
+            <th style="text-align:right">Homologação</th>
+          </tr>
+        </thead>
+        <tbody id="faixaHibridoBody"></tbody>
+      </table>
+      <div style="padding:8px 16px;font-size:9px;color:var(--t3);border-top:1px solid var(--b2)">
+        Fórmula: R$4.400 + R$350/placa + R$1.200/bateria · Clique para aplicar como personalizado
+      </div>
+    </div>
   </div>
 
 </div><!-- /res-panel -->
 </div><!-- /main -->
 
 <script>
-// ── PRECIFICAÇÃO DE KITS (sincronizar com precificacao_kits.html) ─────────────
+// ── PRECIFICAÇÃO DE KITS ──────────────────────────────────────
 const KITS_PRECIF = [
   { placas:4,  inv:'GoodWe 3kW',   mod:'Jinko 620W',    equip:4800  },
   { placas:4,  inv:'GoodWe 3kW',   mod:'Leapton 600W',  equip:4520  },
@@ -606,28 +695,24 @@ const KITS_PRECIF = [
   { placas:40, inv:'GoodWe 20kW',  mod:'Leapton 600W',  equip:33500 },
   { placas:40, inv:'FoxESS Micro', mod:'Jinko 620W',    equip:39000 },
   { placas:40, inv:'FoxESS Micro', mod:'Leapton 600W',  equip:36200 },
-  // ── Leapton 630W ──────────────────────────────────────────────
   { placas:6,  inv:'FoxESS Micro', mod:'Leapton 630W',  equip:6501  },
   { placas:8,  inv:'FoxESS Micro', mod:'Leapton 630W',  equip:7760  },
   { placas:12, inv:'FoxESS Micro', mod:'Leapton 630W',  equip:11400 },
   { placas:16, inv:'FoxESS Micro', mod:'Leapton 630W',  equip:15200 },
   { placas:20, inv:'FoxESS Micro', mod:'Leapton 630W',  equip:19000 },
-  // ── Ronma 620W ────────────────────────────────────────────────
   { placas:8,  inv:'FoxESS Micro', mod:'Ronma 620W',    equip:7901  },
   { placas:12, inv:'FoxESS Micro', mod:'Ronma 620W',    equip:12400 },
   { placas:16, inv:'FoxESS Micro', mod:'Ronma 620W',    equip:16600 },
   { placas:20, inv:'FoxESS Micro', mod:'Ronma 620W',    equip:20800 },
-  // ── DMEGC 625W ────────────────────────────────────────────────
   { placas:26, inv:'FoxESS Micro', mod:'DMEGC 625W',    equip:24168 },
   { placas:40, inv:'FoxESS Micro', mod:'DMEGC 625W',    equip:38520 },
   { placas:32, inv:'FoxESS Micro', mod:'DMEGC 625W',    equip:28316 },
   { placas:36, inv:'FoxESS Micro', mod:'DMEGC 625W',    equip:32368 },
-  // ── OSDA 710W ─────────────────────────────────────────────────
   { placas:34, inv:'GoodWe 12kW TRI (2x)', mod:'OSDA 710W', equip:39820 },
   { placas:40, inv:'GoodWe 20kW',          mod:'OSDA 710W', equip:47000 },
 ];
 
-// ── FAIXAS ───────────────────────────────────────────────────
+// ── FAIXAS SOLAR ─────────────────────────────────────────────
 const FAIXAS = [
   { label:'0 a 3 kWp',   min:0,  max:3,  rsPorWp:0.84, homol:500  },
   { label:'3 a 6 kWp',   min:3,  max:6,  rsPorWp:0.60, homol:500  },
@@ -637,29 +722,145 @@ const FAIXAS = [
   { label:'20 a 45 kWp', min:20, max:45, rsPorWp:0.38, homol:1450 },
 ];
 
+// ── FAIXAS HÍBRIDO ────────────────────────────────────────────
+// Fórmula: R$4.400 + R$350/placa + R$1.200/bateria (c/ 1 bat)
+const FAIXAS_HIBRIDO = [
+  { label:'4–6 placas (~3 kWp)',    placasRef:5,  bats:1, inst:4400+5*350+1*1200,  homol:500  },
+  { label:'7–10 placas (~5 kWp)',   placasRef:8,  bats:1, inst:4400+8*350+1*1200,  homol:500  },
+  { label:'11–16 placas (~8 kWp)',  placasRef:12, bats:1, inst:4400+12*350+1*1200, homol:800  },
+  { label:'17–24 placas (~13 kWp)', placasRef:20, bats:1, inst:4400+20*350+1*1200, homol:1050 },
+  { label:'25–40 placas (~21 kWp)', placasRef:30, bats:1, inst:4400+30*350+1*1200, homol:1450 },
+];
+
+// ── STATE ─────────────────────────────────────────────────────
+const fieldModes = { gestao:'pct', impostos:'pct', comissao:'pct' };
+let _faixaTab = 'solar'; // 'solar' | 'hibrido'
+
+// ── RENDER FAIXA TABLES ───────────────────────────────────────
 (function(){
   const tbody = document.getElementById('faixaBody');
   FAIXAS.forEach(f => {
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${f.label}</td><td class="td-or">R$ ${f.rsPorWp.toFixed(2)}/Wp</td><td class="td-val">R$ ${fmtN(f.homol)}</td>`;
-    tr.addEventListener('click', () => aplicarFaixa(f, tr));
+    tr.addEventListener('click', () => aplicarFaixaSolar(f, tr));
     tbody.appendChild(tr);
+  });
+
+  const tbodyH = document.getElementById('faixaHibridoBody');
+  FAIXAS_HIBRIDO.forEach(f => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${f.label}</td><td class="td-or">R$ ${fmtN(f.inst)}</td><td class="td-val">R$ ${fmtN(f.homol)}</td>`;
+    tr.addEventListener('click', () => aplicarFaixaHibrido(f, tr));
+    tbodyH.appendChild(tr);
   });
 })();
 
-function aplicarFaixa(f, tr) {
-  document.querySelectorAll('.faixa-table tr').forEach(r => r.classList.remove('active'));
+function setFaixaTab(tab) {
+  _faixaTab = tab;
+  document.getElementById('faixaSolarTable').style.display  = tab === 'solar'   ? '' : 'none';
+  document.getElementById('faixaHibridoTable').style.display = tab === 'hibrido' ? '' : 'none';
+  document.getElementById('tabSolar').classList.toggle('active',   tab === 'solar');
+  document.getElementById('tabHibrido').classList.toggle('active', tab === 'hibrido');
+}
+
+function aplicarFaixaSolar(f, tr) {
+  document.querySelectorAll('#faixaBody tr').forEach(r => r.classList.remove('active'));
   tr.classList.add('active');
   const kp = parseFloat(document.getElementById('kvp').value) || ((f.min + f.max) / 2);
-  document.getElementById('cInst').value  = Math.round(kp * 1000 * f.rsPorWp);
-  document.getElementById('cHomol').value = f.homol;
+  // Aplica como padrão (auto) — não como personalizado
+  document.getElementById('cInstAuto').value = Math.round(kp * 1000 * f.rsPorWp);
+  document.getElementById('cHomol').value    = f.homol;
+  document.getElementById('homolAuto').style.display = 'inline';
   calcular();
+}
+
+function aplicarFaixaHibrido(f, tr) {
+  document.querySelectorAll('#faixaHibridoBody tr').forEach(r => r.classList.remove('active'));
+  tr.classList.add('active');
+  // Aplica como personalizado (valor de referência da tabela)
+  document.getElementById('cInstCustom').value = f.inst;
+  document.getElementById('cHomol').value       = f.homol;
+  onCustomInstChange();
+}
+
+// ── MODO % / R$ ───────────────────────────────────────────────
+function setMode(field, mode) {
+  fieldModes[field] = mode;
+  document.getElementById('mt_'+field+'_pct').classList.toggle('active', mode === 'pct');
+  document.getElementById('mt_'+field+'_val').classList.toggle('active', mode === 'val');
+
+  if (field === 'gestao') {
+    document.getElementById('unit_gestao').textContent = mode === 'pct' ? '%' : 'R$';
+    document.getElementById('note_gestao').textContent = mode === 'pct' ? '% da margem bruta' : 'valor fixo deduzido da margem bruta';
+    if (mode === 'pct' && parseFloat(document.getElementById('pPosVenda').value) > 100) {
+      document.getElementById('pPosVenda').value = 20; // reset para % padrão
+    }
+  }
+  if (field === 'impostos') {
+    document.getElementById('unit_impostos').textContent = mode === 'pct' ? '%' : 'R$';
+    document.getElementById('note_impostos').textContent = mode === 'pct' ? '% do preço de venda' : 'valor fixo de impostos';
+    if (mode === 'pct' && parseFloat(document.getElementById('pImpostos').value) > 100) {
+      document.getElementById('pImpostos').value = 10;
+    }
+  }
+  if (field === 'comissao') {
+    document.getElementById('unit_comissao').textContent = mode === 'pct' ? '%' : 'R$';
+    document.getElementById('note_comissao').textContent = mode === 'pct' ? '% da Margem CASH' : 'valor fixo de comissão';
+    if (mode === 'pct' && parseFloat(document.getElementById('pComissao').value) > 100) {
+      document.getElementById('pComissao').value = 5;
+    }
+  }
+  calcular();
+}
+
+// ── INSTALAÇÃO: CUSTOM vs AUTO ────────────────────────────────
+function getInstValue() {
+  const custom = parseFloat(document.getElementById('cInstCustom').value);
+  if (!isNaN(custom) && custom > 0) return custom;
+  return parseFloat(document.getElementById('cInstAuto').value) || 0;
+}
+
+function onCustomInstChange() {
+  const hasCustom = parseFloat(document.getElementById('cInstCustom').value) > 0;
+  document.getElementById('instCustomClear').style.display  = hasCustom ? 'inline' : 'none';
+  document.getElementById('instUsingCustom').style.display  = hasCustom ? 'block'  : 'none';
+  calcular();
+}
+
+function clearCustomInst() {
+  document.getElementById('cInstCustom').value = '';
+  document.getElementById('instCustomClear').style.display = 'none';
+  document.getElementById('instUsingCustom').style.display = 'none';
+  calcular();
+}
+
+// ── INSTALAÇÃO AUTO: CÁLCULO ──────────────────────────────────
+function calcAutoInst(kp) {
+  const tipo = document.getElementById('tipo').value;
+  if (tipo === 'hibrido') return calcAutoInstHibrido(kp);
+  const faixa = FAIXAS.find(f => kp > f.min && kp <= f.max) || FAIXAS[FAIXAS.length - 1];
+  return Math.round(kp * 1000 * faixa.rsPorWp);
+}
+
+function calcAutoInstHibrido(kp) {
+  const numBats   = parseInt(document.getElementById('numBaterias').value) || 0;
+  const numPlacas = parseInt(document.getElementById('numPlacas').value)   || 0;
+  if (numBats === 0) {
+    // Sem bateria: mesmo que solar + R$2.000
+    const rwp = kp<=3?0.84:kp<=6?0.60:kp<=9?0.50:kp<=12?0.44:kp<=20?0.42:0.38;
+    return Math.round(kp * 1000 * rwp) + 2000;
+  }
+  return 4400 + numPlacas * 350 + numBats * 1200;
+}
+
+function getFaixaSolar(kp) {
+  return FAIXAS.find(f => kp > f.min && kp <= f.max) || FAIXAS[FAIXAS.length - 1];
 }
 
 // ── PLACAS + WP → kWp ────────────────────────────────────────
 function onPlacasWpChange() {
-  const placas  = parseInt(document.getElementById('numPlacas').value)  || 0;
-  const wp      = parseFloat(document.getElementById('wpPlaca').value)  || 0;
+  const placas = parseInt(document.getElementById('numPlacas').value) || 0;
+  const wp     = parseFloat(document.getElementById('wpPlaca').value) || 0;
   if (placas > 0 && wp > 0) {
     const kp = +(placas * wp / 1000).toFixed(2);
     document.getElementById('kvp').value = kp;
@@ -680,15 +881,47 @@ function onKvpManual() {
 
 function applyKvp(kp) {
   if (!kp) return;
-  const faixa = FAIXAS.find(f => kp > f.min && kp <= f.max) || FAIXAS[FAIXAS.length - 1];
-  document.getElementById('cInst').value  = Math.round(kp * 1000 * faixa.rsPorWp);
-  document.getElementById('cHomol').value = faixa.homol;
-  document.getElementById('instAuto').style.display  = 'inline';
+  const faixa = getFaixaSolar(kp);
+  const autoInst = calcAutoInst(kp);
+
+  document.getElementById('cInstAuto').value  = autoInst;
+  document.getElementById('cHomol').value      = faixa.homol;
+  document.getElementById('instAutoNote').textContent =
+    document.getElementById('tipo').value === 'hibrido'
+      ? 'Fórmula híbrido: R$4.400 + R$350/pl + R$1.200/bat'
+      : 'R$ ' + (faixa.rsPorWp).toFixed(2) + '/Wp · faixa ' + faixa.label;
   document.getElementById('homolAuto').style.display = 'inline';
+
+  // Destacar linha ativa na tabela solar
   document.querySelectorAll('#faixaBody tr').forEach((tr, i) => tr.classList.toggle('active', FAIXAS[i] === faixa));
   calcular();
 }
 
+function onBatChange() {
+  const kp = parseFloat(document.getElementById('kvp').value) || 0;
+  if (kp > 0) applyKvp(kp);
+  else calcular();
+}
+
+// ── TIPO SISTEMA ─────────────────────────────────────────────
+function onTipoChange() {
+  const isHibrido = document.getElementById('tipo').value === 'hibrido';
+  document.getElementById('hibridoWrap').style.display = isHibrido ? '' : 'none';
+  document.getElementById('bBatRow').style.display     = isHibrido ? '' : 'none';
+
+  // Limpa instalação personalizada ao trocar tipo (custos são diferentes)
+  clearCustomInst();
+
+  // Recalcula instalação auto para o novo tipo
+  const kp = parseFloat(document.getElementById('kvp').value) || 0;
+  if (kp > 0) applyKvp(kp);
+
+  // Sincroniza tab da tabela de referência com o tipo
+  setFaixaTab(isHibrido ? 'hibrido' : 'solar');
+  calcular();
+}
+
+// ── KIT SELECTOR ──────────────────────────────────────────────
 function renderKitSelector(placas) {
   const kits = KITS_PRECIF.filter(k => k.placas === placas);
   const sel  = document.getElementById('kitSelector');
@@ -699,16 +932,14 @@ function renderKitSelector(placas) {
     const label = k.inv + ' + ' + k.mod;
     html += `<div class="kit-opt" data-equip="${k.equip}" onclick="selectKit(this,${k.equip})"
       style="padding:7px 12px;font-size:11px;cursor:pointer;border-bottom:1px solid var(--b2);
-             display:flex;justify-content:space-between;align-items:center;
-             transition:background .15s;${i===0?'border-radius:6px 6px 0 0':''}
-             ${i===kits.length-1?'border-bottom:none;border-radius:0 0 6px 6px':''}">
+             display:flex;justify-content:space-between;align-items:center;transition:background .15s;
+             ${i===0?'border-radius:6px 6px 0 0':''}${i===kits.length-1?'border-bottom:none;border-radius:0 0 6px 6px':''}">
       <span style="color:var(--t2)">${label}</span>
       <span style="font-weight:700;color:var(--or)">R$ ${fmtN(k.equip)}</span>
     </div>`;
   });
   sel.innerHTML = html;
   sel.style.display = 'block';
-  // Auto-seleciona o primeiro
   selectKit(sel.querySelector('.kit-opt'), kits[0].equip);
 }
 
@@ -723,63 +954,34 @@ function selectKit(el, equip) {
 // ── FORMA DE PAGAMENTO ────────────────────────────────────────
 function onFormaPagChange() {
   const forma = document.getElementById('formaPagamento').value;
-  // Custo Financeiro só aparece para financiamento
-  const finVal = parseFloat(document.getElementById('pFinCusto').value) || 0;
-  if (forma === 'financiamento') {
-    document.getElementById('entradaWrap').style.display = '';
-  } else {
-    document.getElementById('entradaWrap').style.display = 'none';
-  }
+  document.getElementById('entradaWrap').style.display = forma === 'financiamento' ? '' : 'none';
   calcular();
 }
 
-// ── AUTO FILL kWp ────────────────────────────────────────────
-document.getElementById('kvp').addEventListener('input', function() {
-  onKvpManual();
-});
-
-// ── TIPO SISTEMA ─────────────────────────────────────────────
-document.getElementById('tipo').addEventListener('change', function() {
-  const on = this.value === 'hibrido';
-  document.getElementById('cBatWrap').style.display = on ? '' : 'none';
-  document.getElementById('bBatRow').style.display  = on ? '' : 'none';
-  calcular();
-});
-
-// ── CUSTO FINANCEIRO ─────────────────────────────────────────
-document.getElementById('pFinCusto').addEventListener('input', function() {
-  calcular();
-});
-
 // ── PREÇO ALVO ───────────────────────────────────────────────
-document.getElementById('precoAlvo').addEventListener('input', function() {
-  document.getElementById('margemInputWrap').style.opacity = parseFloat(this.value) > 0 ? '0.4' : '1';
+function onPrecoAlvoChange() {
+  document.getElementById('margemInputWrap').style.opacity = parseFloat(document.getElementById('precoAlvo').value) > 0 ? '0.4' : '1';
   calcular();
-});
-
-// ── INPUTS ───────────────────────────────────────────────────
-document.querySelectorAll('.fi,.fsel').forEach(el => {
-  el.addEventListener('input',  calcular);
-  el.addEventListener('change', calcular);
-});
+}
 
 // ── CÁLCULO PRINCIPAL ────────────────────────────────────────
 function calcular() {
-  const tipo        = document.getElementById('tipo').value;
-  const formaPag    = document.getElementById('formaPagamento').value;
-  const cEquip   = v('cEquip');
-  const cBat     = tipo === 'hibrido' ? v('cBat') : 0;
-  const cInst    = v('cInst');
-  const cHomol   = v('cHomol');
-  const cFrete   = v('cFrete');
-  const pPosVenda  = v('pPosVenda')  / 100;
-  const pImpostos  = v('pImpostos')  / 100;
-  // Custo financeiro só se aplica quando forma = financiamento
-  const pFinCusto  = formaPag === 'financiamento' ? v('pFinCusto') / 100 : 0;
-  const pEntrada   = v('pEntrada')   / 100;
-  const pMargem    = v('pMargem')    / 100;
-  const pComissao  = v('pComissao')  / 100;
-  const pPisCofins = v('pPisCofins') / 100;
+  const tipo     = document.getElementById('tipo').value;
+  const formaPag = document.getElementById('formaPagamento').value;
+
+  const cEquip  = v('cEquip');
+  const cBat    = tipo === 'hibrido' ? v('cBat') : 0;
+  const cInst   = getInstValue();
+  const cHomol  = v('cHomol');
+  const cFrete  = v('cFrete');
+
+  const pPosVendaRaw  = v('pPosVenda');
+  const pImpostosRaw  = v('pImpostos');
+  const pComissaoRaw  = v('pComissao');
+  const pPisCofins    = v('pPisCofins') / 100;
+  const pFinCusto     = formaPag === 'financiamento' ? v('pFinCusto') / 100 : 0;
+  const pEntrada      = v('pEntrada')   / 100;
+  const pMargem       = v('pMargem')    / 100;
 
   const custoDireto = cEquip + cBat + cInst + cHomol + cFrete;
   const finEfetivo  = (1 - pEntrada) * pFinCusto;
@@ -793,24 +995,54 @@ function calcular() {
   if (modoPrecoAlvo) {
     preco = precoAlvoInput;
   } else {
-    const divisor = 1 - pImpostos - pMargem - finEfetivo;
-    if (divisor <= 0) { alertEl.classList.add('show'); resetUI(); return; }
-    preco = custoDireto / divisor;
+    // Impostos: se modo R$, ajusta o divisor
+    let pImpostosEf;
+    if (fieldModes.impostos === 'val') {
+      // Impostos em R$ fixo: inclui no numerador, remove do divisor
+      const divisor = 1 - pMargem - finEfetivo;
+      if (divisor <= 0) { alertEl.classList.add('show'); resetUI(); return; }
+      preco = (custoDireto + pImpostosRaw) / divisor;
+    } else {
+      pImpostosEf = pImpostosRaw / 100;
+      const divisor = 1 - pImpostosEf - pMargem - finEfetivo;
+      if (divisor <= 0) { alertEl.classList.add('show'); resetUI(); return; }
+      preco = custoDireto / divisor;
+    }
   }
   alertEl.classList.remove('show');
 
-  const impostosVal   = preco * pImpostos;
-  const finVal        = preco * finEfetivo;
-  const margemBruta   = preco - custoDireto - impostosVal - finVal;
-  const pMargemEfetiva = margemBruta / preco;
+  // Impostos
+  let impostosVal;
+  if (fieldModes.impostos === 'val') {
+    impostosVal = pImpostosRaw;
+  } else {
+    impostosVal = preco * (pImpostosRaw / 100);
+  }
 
-  // Pós-venda = 20% da margem bruta; comissão = % do saldo após gestão OP
-  const posVendaVal = margemBruta * pPosVenda;
-  const aposGestao  = margemBruta - posVendaVal;
-  const comissaoVal = aposGestao * pComissao;
-  const margemLiq   = aposGestao - comissaoVal;
-  const margemLiqPerc = margemLiq / preco;
-  const cashPis     = margemLiq * (1 - pPisCofins);
+  const finVal      = preco * finEfetivo;
+  const margemBruta = preco - custoDireto - impostosVal - finVal;
+
+  // Gestão OP
+  let posVendaVal;
+  if (fieldModes.gestao === 'val') {
+    posVendaVal = pPosVendaRaw; // R$ fixo
+  } else {
+    posVendaVal = margemBruta * (pPosVendaRaw / 100);
+  }
+
+  const aposGestao = margemBruta - posVendaVal;
+
+  // Comissão
+  let comissaoVal;
+  if (fieldModes.comissao === 'val') {
+    comissaoVal = pComissaoRaw; // R$ fixo
+  } else {
+    comissaoVal = aposGestao * (pComissaoRaw / 100);
+  }
+
+  const margemLiq     = aposGestao - comissaoVal;
+  const margemLiqPerc = preco > 0 ? margemLiq / preco : 0;
+  const cashPis       = margemLiq * (1 - pPisCofins);
 
   const p = n => preco > 0 ? n / preco : 0;
 
@@ -825,14 +1057,14 @@ function calcular() {
   set('kLiquidaPerc',  fmtPerc(margemLiqPerc) + ' do preço');
 
   // Análise rápida
-  set('anInstCusto',    custoDireto > 0 ? fmtPerc(cInst / custoDireto) : '—');
-  set('anInstPreco',    fmtPerc(p(cInst)));
+  set('anInstCusto',      custoDireto > 0 ? fmtPerc(cInst / custoDireto) : '—');
+  set('anInstPreco',      fmtPerc(p(cInst)));
   set('anMargemAplicada', fmtPerc(aposGestao / preco));
-  set('anMargemSub',    modoPrecoAlvo ? 'margem CASH efetiva (preço fixo)' : 'margem CASH s/ preço');
-  set('anEquipPreco',   fmtPerc(p(cEquip + cBat)));
+  set('anMargemSub',      modoPrecoAlvo ? 'efetiva (preço fixo)' : 's/ preço');
+  set('anEquipPreco',     fmtPerc(p(cEquip + cBat)));
 
   // Stacked bar
-  const pImpFin = pImpostos + finEfetivo;
+  const pImpFin = p(impostosVal) + finEfetivo;
   setSeg('segEquip',    p(cEquip + cBat) * 100);
   setSeg('segInst',     p(cInst)         * 100);
   setSeg('segHomol',    p(cHomol+cFrete) * 100);
@@ -840,7 +1072,6 @@ function calcular() {
   setSeg('segGestao',   p(posVendaVal)   * 100);
   setSeg('segComissao', p(comissaoVal)   * 100);
   setSeg('segLiquida',  Math.max(p(margemLiq), 0) * 100);
-
   set('lpEquip',    fmtPerc(p(cEquip + cBat)));
   set('lpInst',     fmtPerc(p(cInst)));
   set('lpHomol',    fmtPerc(p(cHomol + cFrete)));
@@ -849,55 +1080,52 @@ function calcular() {
   set('lpComissao', fmtPerc(p(comissaoVal)));
   set('lpLiquida',  fmtPerc(Math.max(p(margemLiq), 0)));
 
-  // Gauge (escala 0–40%)
+  // Gauge
   const gp = Math.max(margemLiqPerc * 100, 0);
   const gaugePct   = Math.min(gp / 40 * 100, 100);
   const gaugeColor = gp < 10 ? 'var(--red)' : gp < 20 ? 'var(--yellow)' : 'var(--green)';
-  const gaugeEl = document.getElementById('gaugeFill');
-  gaugeEl.style.width      = gaugePct + '%';
-  gaugeEl.style.background = gaugeColor;
+  document.getElementById('gaugeFill').style.width      = gaugePct + '%';
+  document.getElementById('gaugeFill').style.background = gaugeColor;
   set('gaugeLabel',  fmtPerc(margemLiqPerc) + ' margem líquida');
   set('gaugeStatus', gp < 10 ? '⚠️ Baixa' : gp < 20 ? '⚡ Moderada' : '✅ Saudável');
 
   // Breakdown
-  set('bEquip',         fmtR(cEquip));     set('bEquipPct',      fmtPerc(p(cEquip)));
-  set('bBat',           fmtR(cBat));       set('bBatPct',        fmtPerc(p(cBat)));
-  set('bInst',          fmtR(cInst));      set('bInstPct',       fmtPerc(p(cInst)));
-  set('bHomol',         fmtR(cHomol));     set('bHomolPct',      fmtPerc(p(cHomol)));
-  set('bFrete',         fmtR(cFrete));     set('bFretePct',      fmtPerc(p(cFrete)));
-  set('bCustoTotal',    fmtR(custoDireto)); set('bCustoTotalPct', fmtPerc(p(custoDireto)));
-  set('bPreco',         fmtR(preco));
-  set('bImpostos',      fmtR(impostosVal)); set('bImpostosPct',   fmtPerc(p(impostosVal)));
-  set('bImpostosPerc',  fmtPerc(pImpostos));
-  set('bFin',           fmtR(finVal));      set('bFinPct',        fmtPerc(p(finVal)));
-  set('bFinPercLabel',  pFinCusto > 0 ? fmtPerc(finEfetivo) + ' ef.' : '');
+  set('bEquip',       fmtR(cEquip));      set('bEquipPct',      fmtPerc(p(cEquip)));
+  set('bBat',         fmtR(cBat));        set('bBatPct',        fmtPerc(p(cBat)));
+  set('bInst',        fmtR(cInst));       set('bInstPct',       fmtPerc(p(cInst)));
+  set('bHomol',       fmtR(cHomol));      set('bHomolPct',      fmtPerc(p(cHomol)));
+  set('bFrete',       fmtR(cFrete));      set('bFretePct',      fmtPerc(p(cFrete)));
+  set('bCustoTotal',  fmtR(custoDireto)); set('bCustoTotalPct', fmtPerc(p(custoDireto)));
+  set('bPreco',       fmtR(preco));
+  set('bImpostos',    fmtR(impostosVal)); set('bImpostosPct',   fmtPerc(p(impostosVal)));
+  set('bImpostosPerc',fieldModes.impostos === 'val' ? fmtR(impostosVal) : fmtPerc(impostosVal/preco));
+  set('bFin',         fmtR(finVal));      set('bFinPct',        fmtPerc(p(finVal)));
+  set('bFinPercLabel', pFinCusto > 0 ? fmtPerc(finEfetivo) + ' ef.' : '');
   document.getElementById('bFinRow').style.display = pFinCusto > 0 ? '' : 'none';
-  set('bCustoDeducao',  fmtR(custoDireto)); set('bCustoDeducaoPct', fmtPerc(p(custoDireto)));
-  set('bMargemCash',    fmtR(aposGestao)); set('bMargemCashPct', fmtPerc(aposGestao / preco));
-  set('bPosVenda',      fmtR(posVendaVal)); set('bPosVendaPct',   fmtPerc(p(posVendaVal)));
-  set('bPosVendaPerc',  fmtPerc(pPosVenda));
-  set('bComissao',      fmtR(comissaoVal)); set('bComissaoPct',   fmtPerc(p(comissaoVal)));
-  set('bComissaoPerc',  fmtPerc(pComissao));
-  set('bLiquida',       fmtR(margemLiq));   set('bLiquidaPct',    fmtPerc(margemLiqPerc));
-  set('bCashPis',       fmtR(cashPis));     set('bCashPisPct',    fmtPerc(p(cashPis)));
-  set('bPisCofinsPerc', fmtPerc(pPisCofins));
+  set('bCustoDeducao',    fmtR(custoDireto)); set('bCustoDeducaoPct', fmtPerc(p(custoDireto)));
+  set('bMargemCash',      fmtR(aposGestao));  set('bMargemCashPct',   fmtPerc(aposGestao / preco));
+  set('bPosVenda',        fmtR(posVendaVal)); set('bPosVendaPct',     fmtPerc(p(posVendaVal)));
+  set('bPosVendaPerc',    fieldModes.gestao === 'val' ? fmtR(posVendaVal) : fmtPerc(pPosVendaRaw/100));
+  set('bComissao',        fmtR(comissaoVal)); set('bComissaoPct',     fmtPerc(p(comissaoVal)));
+  set('bComissaoPerc',    fieldModes.comissao === 'val' ? fmtR(comissaoVal) : fmtPerc(pComissaoRaw/100));
+  set('bLiquida',         fmtR(margemLiq));   set('bLiquidaPct',      fmtPerc(margemLiqPerc));
+  set('bCashPis',         fmtR(cashPis));     set('bCashPisPct',      fmtPerc(p(cashPis)));
+  set('bPisCofinsPerc',   fmtPerc(pPisCofins));
 
-  // ── CARTÃO DE CRÉDITO ─────────────────────────────────────
+  // Cartão de Crédito
   const ccBlock = document.getElementById('ccBlock');
   if (formaPag === 'cartao' && cEquip > 0) {
-    const repasse    = preco - cEquip;
-    const custoCC    = repasse * 0.05;
-    const liqCC      = margemLiq - custoCC;
-    set('bRepasse',      fmtR(repasse));    set('bRepassePct',    fmtPerc(p(repasse)));
-    set('bCustoCC',      fmtR(custoCC));    set('bCustoCCPct',    fmtPerc(p(custoCC)));
-    set('bLiquidaCC',    fmtR(liqCC));      set('bLiquidaCCPct',  fmtPerc(p(liqCC)));
+    const repasse = preco - cEquip;
+    const custoCC = repasse * 0.05;
+    const liqCC   = margemLiq - custoCC;
+    set('bRepasse',   fmtR(repasse)); set('bRepassePct',   fmtPerc(p(repasse)));
+    set('bCustoCC',   fmtR(custoCC)); set('bCustoCCPct',   fmtPerc(p(custoCC)));
+    set('bLiquidaCC', fmtR(liqCC));  set('bLiquidaCCPct', fmtPerc(p(liqCC)));
     ccBlock.style.display = '';
-    // Atualiza KPI Margem Líquida com valor s/ cartão
     set('kLiquida',     fmtR(liqCC));
     set('kLiquidaPerc', fmtPerc(liqCC / preco) + ' do preço');
   } else {
     ccBlock.style.display = 'none';
-    // Restaura KPI Margem Líquida sem CC
     set('kLiquida',     fmtR(margemLiq));
     set('kLiquidaPerc', fmtPerc(margemLiqPerc) + ' do preço');
   }
@@ -928,6 +1156,8 @@ function fmtR(n)  { return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDig
 function fmtN(n)  { return n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 function fmtPerc(n){ return (n*100).toFixed(1) + '%'; }
 
+// Inicialização
+document.addEventListener('DOMContentLoaded', calcular);
 calcular();
 </script>
 </body>
