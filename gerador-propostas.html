@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Gerador de Propostas · LumenGrid</title>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;700&family=DM+Sans:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;700&family=DM+Sans:wght@400;500;600;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -18,9 +18,9 @@
 html{font-size:14px}
 body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
 nav{background:rgba(7,11,20,.96);border-bottom:1px solid var(--border);padding:14px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.nav-logo{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;gap:10px}
+.nav-logo{font-family:'Raleway',sans-serif;font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
 .nav-logo .l{color:var(--or)}.nav-logo .g{color:#FAFAFA}
-.nav-sub{font-size:7px;color:rgba(242,101,34,.7);letter-spacing:.3em;text-transform:uppercase;margin-top:1px}
+.nav-sub{font-size:7px;color:rgba(242,101,34,.9);letter-spacing:2.8px;text-transform:uppercase;margin-top:2px;font-family:'Raleway',sans-serif;font-weight:500}
 .nav-badge{background:rgba(242,101,34,.1);border:1px solid var(--bor);color:var(--or);font-size:10px;font-weight:700;padding:5px 14px;border-radius:20px}
 .wrap{max-width:860px;margin:0 auto;padding:40px 24px 100px}
 .page-eye{font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--or);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
@@ -77,8 +77,13 @@ footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top
 <body>
 
 <nav>
-  <div style="display:flex;align-items:center;gap:10px">
-    <img src="imagens/LOGOS/logo-icone.png" height="40" alt="LumenGrid" style="filter:drop-shadow(0 0 10px rgba(242,101,34,.55))">
+  <div style="display:flex;align-items:center;gap:12px">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:40px;height:40px;filter:drop-shadow(0 0 10px rgba(242,101,34,.55)) drop-shadow(0 0 3px rgba(242,101,34,.3))">
+      <path d="M 56 14 A 36 36 0 1 1 38 16" stroke="#F26522" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="56" cy="14" r="11" fill="rgba(242,101,34,0.1)"/>
+      <circle cx="56" cy="14" r="7" fill="rgba(242,101,34,0.28)"/>
+      <circle cx="56" cy="14" r="4" fill="#F26522"/>
+    </svg>
     <div>
       <div class="nav-logo"><span class="l">LUMEN</span><span class="g">GRID</span></div>
       <div class="nav-sub">Energia Inteligente</div>
