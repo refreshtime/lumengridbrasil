@@ -160,7 +160,13 @@ footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top
       <div class="field" style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
         <label>Total de painéis <span style="font-size:9px;font-weight:400;color:var(--dim)">· Ronma Black Premium 620W · valor preenchido automaticamente</span></label>
         <div class="chips" id="s-chips-pl" style="flex-wrap:wrap;gap:7px;margin-top:8px">
-          <div class="chip" data-val="3" data-price="bat" onclick="selChipPl(this)" style="border-style:dashed" title="3 painéis já inclusos — valor vem da seleção de baterias">3 ★</div>
+          <div class="chip" data-val="3" data-price="63000" onclick="selChipPl(this)">3</div>
+          <div class="chip" data-val="4" data-price="66640" onclick="selChipPl(this)">4</div>
+          <div class="chip" data-val="5" data-price="67912" onclick="selChipPl(this)">5</div>
+          <div class="chip" data-val="6" data-price="69185" onclick="selChipPl(this)">6</div>
+          <div class="chip" data-val="7" data-price="70457" onclick="selChipPl(this)">7</div>
+          <div class="chip" data-val="8" data-price="71730" onclick="selChipPl(this)">8</div>
+          <div class="chip" data-val="9" data-price="73002" onclick="selChipPl(this)">9</div>
           <div class="chip" data-val="10" data-price="74270" onclick="selChipPl(this)">10</div>
           <div class="chip" data-val="11" data-price="75470" onclick="selChipPl(this)">11</div>
           <div class="chip" data-val="12" data-price="77470" onclick="selChipPl(this)">12</div>
@@ -173,7 +179,7 @@ footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top
           <div class="chip" data-val="19" data-price="101415" onclick="selChipPl(this)">19</div>
           <div class="chip" data-val="20" data-price="104700" onclick="selChipPl(this)">20</div>
         </div>
-        <div style="font-size:10px;color:var(--dim);margin-top:6px">★ inclusos no kit de baterias · 10–20 painéis preenchimento automático pelo Tabela EC</div>
+        <div style="font-size:10px;color:var(--dim);margin-top:6px">3 painéis = valor padrão R$63k · 4–20 painéis preenchimento automático pela Tabela EC</div>
       </div>
 
       <div class="toggle-row" onclick="togSec('s-tog-mais20','s-body-mais20')">
@@ -400,16 +406,7 @@ function atualizarPlano(){
   var batChip=document.querySelector('#s-chips-bat .chip.sel-sig');
   var mais20=v('s-tog-mais20')&&v('s-tog-mais20').checked;
   var mais20Val=mais20?parseInt((val('s-mais20-val')||'').replace(/\D/g,''))||0:0;
-  var basePrice=0;
-  if(plChip){
-    if(plChip.dataset.price==='bat'){
-      basePrice=batChip?parseInt(batChip.dataset.price)||0:0;
-    } else {
-      basePrice=parseInt(plChip.dataset.price)||0;
-    }
-  } else if(batChip&&batChip.dataset.price){
-    basePrice=parseInt(batChip.dataset.price)||0;
-  }
+  var basePrice=plChip?parseInt(plChip.dataset.price)||0:0;
   var total=basePrice+(mais20?mais20Val:0);
   if(total>0){var el=v('s-plan');if(el)el.value=String(total);}
   var totEl=document.getElementById('s-mais20-tot');
