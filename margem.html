@@ -726,11 +726,11 @@ const FAIXAS = [
 // ── FAIXAS HÍBRIDO ────────────────────────────────────────────
 // Fórmula: R$4.400 + R$350/placa + R$1.200/bateria (c/ 1 bat)
 const FAIXAS_HIBRIDO = [
-  { label:'4–6 placas (~3 kWp)',    placasRef:5,  bats:1, inst:4400+5*350+1*1200,  homol:500  },
-  { label:'7–10 placas (~5 kWp)',   placasRef:8,  bats:1, inst:4400+8*350+1*1200,  homol:500  },
-  { label:'11–16 placas (~8 kWp)',  placasRef:12, bats:1, inst:4400+12*350+1*1200, homol:800  },
-  { label:'17–24 placas (~13 kWp)', placasRef:20, bats:1, inst:4400+20*350+1*1200, homol:1050 },
-  { label:'25–40 placas (~21 kWp)', placasRef:30, bats:1, inst:4400+30*350+1*1200, homol:1450 },
+  { label:'4–6 placas (~3 kWp)',    placasRef:5,  bats:1, inst:2000+5*350+1*1200,  homol:500  },
+  { label:'7–10 placas (~5 kWp)',   placasRef:8,  bats:1, inst:2000+8*350+1*1200,  homol:500  },
+  { label:'11–16 placas (~8 kWp)',  placasRef:12, bats:1, inst:2000+12*350+1*1200, homol:800  },
+  { label:'17–24 placas (~13 kWp)', placasRef:20, bats:1, inst:2000+20*350+1*1200, homol:1050 },
+  { label:'25–40 placas (~21 kWp)', placasRef:30, bats:1, inst:2000+30*350+1*1200, homol:1450 },
 ];
 
 // ── HELPERS: EQUIPAMENTO PERSONALIZADO ───────────────────────
@@ -872,7 +872,7 @@ function calcAutoInstHibrido(kp) {
     const rwp = kp<=3?0.84:kp<=6?0.60:kp<=9?0.50:kp<=12?0.44:kp<=20?0.42:0.38;
     return Math.round(kp * 1000 * rwp) + 2000;
   }
-  return 4400 + numPlacas * 350 + numBats * 1200;
+  return 2000 + numPlacas * 350 + numBats * 1200;
 }
 
 function getFaixaSolar(kp) {

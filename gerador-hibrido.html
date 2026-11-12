@@ -804,7 +804,7 @@ function degInstalHi(placas,bats,kwp){
     const rwp=kwp<=3?0.84:kwp<=6?0.60:kwp<=9?0.50:kwp<=12?0.44:kwp<=20?0.42:0.38;
     return Math.round(kwp*1000*rwp)+2000;
   }
-  return 4400+placas*350+bats*1200;
+  return 2000+placas*350+bats*1200;
 }
 function calcHibridoKit(k){
   const wpUnit=getModWpHi(k.mod);
