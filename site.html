@@ -481,10 +481,12 @@ footer{padding:48px 6vw;border-top:1px solid rgba(255,255,255,.07);background:#0
   .test-grid{grid-template-columns:repeat(2,1fr)}
   .test-grid .test-card:last-child{display:none}
   .hero-features{grid-template-columns:repeat(2,1fr)}
-  #hibrido-infografico .sec-inner>div{grid-template-columns:1fr;gap:40px}
-  #hibrido-infografico img{max-width:480px;margin:0 auto}
+  #hibrido-infografico .sec-inner>div{grid-template-columns:1fr!important;gap:40px!important}
+  #hibrido-infografico img{max-width:100%;margin:0 auto}
+  #hibrido-infografico .reveal-right{order:2}
 }
 @media(max-width:768px){
+  #hibrido-infografico{padding:56px 5vw}
   /* Hero mobile: foto empilhada acima do texto */
   .hero{padding:60px 0 0;min-height:auto;overflow:visible;background:#070B14}
   .hero-photo{
@@ -1171,13 +1173,13 @@ footer{padding:48px 6vw;border-top:1px solid rgba(255,255,255,.07);background:#0
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg>
             <span style="font-size:14px;color:var(--t2)"><strong style="color:var(--t1)">Durante o dia</strong> — os painéis atendem o consumo, carregam as baterias e podem enviar o excedente para a rede.</span>
           </div>
-          <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-left:2px solid rgba(242,101,34,.5);border-radius:0 8px 8px 0">
+          <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-left:2px solid rgba(242,101,34,.6);border-radius:0 8px 8px 0">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            <span style="font-size:14px;color:var(--t2)"><strong style="color:var(--t1)">Durante a noite</strong> — a energia armazenada pode ser utilizada conforme a configuração do sistema.</span>
+            <span style="font-size:14px;color:rgba(240,244,248,.82)"><strong style="color:var(--t1)">Durante a noite</strong> — a energia armazenada pode ser utilizada conforme a configuração do sistema.</span>
           </div>
-          <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-left:3px solid rgba(255,255,255,.2);border-radius:0 8px 8px 0">
-            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(241,241,245,.6)" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span style="font-size:14px;color:var(--t2)"><strong style="color:var(--t1)">Durante apagões</strong> — o sistema aciona as cargas definidas no projeto. Você continua conectado.</span>
+          <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;background:rgba(242,101,34,.07);border:1px solid rgba(242,101,34,.22);border-left:3px solid var(--or);border-radius:0 8px 8px 0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span style="font-size:14px;color:rgba(240,244,248,.82)"><strong style="color:var(--t1)">Durante apagões</strong> — o sistema aciona as cargas definidas no projeto. Você continua conectado.</span>
           </div>
         </div>
         <p class="reveal" style="font-size:12px;color:var(--t3);margin-top:20px;line-height:1.6">A autonomia e as cargas atendidas dependem da capacidade das baterias, da potência do inversor e do consumo dos equipamentos.</p>

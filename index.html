@@ -524,12 +524,30 @@ nav{
 .sobre-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
 .sobre-desc{font-family:'Raleway',sans-serif;font-weight:300;font-size:17px;color:var(--t2);line-height:1.85;margin:16px 0 24px;letter-spacing:.1px}
 .sobre-editorial{display:flex;flex-direction:column;gap:40px}
-.sobre-quote{
-  font-family:'Raleway',sans-serif;font-weight:300;
-  font-size:clamp(18px,1.8vw,24px);line-height:1.55;letter-spacing:-.3px;
-  color:var(--t1);font-style:normal;
-  border-left:2px solid var(--or);padding-left:28px;
+.sobre-manifesto{
+  background:rgba(245,120,50,.07);
+  border:1px solid rgba(245,120,50,.24);
+  border-left:3px solid var(--or);
+  border-radius:0 14px 14px 0;
+  padding:28px 32px;
 }
+.sobre-manifesto-eyebrow{
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:500;
+  text-transform:uppercase;letter-spacing:2.5px;
+  color:var(--or);opacity:.9;margin-bottom:16px;
+}
+.sobre-manifesto-hl{
+  font-family:'Raleway',sans-serif;font-weight:300;
+  font-size:clamp(20px,1.9vw,27px);line-height:1.4;letter-spacing:-.4px;
+  color:var(--t1);margin-bottom:14px;
+}
+.sobre-manifesto-hl strong{font-weight:600;color:var(--or)}
+.sobre-manifesto-body{
+  font-family:'Inter',sans-serif;font-size:13px;
+  color:var(--t3);line-height:1.75;
+}
+/* manter backward compat */
+.sobre-quote{display:none}
 .sobre-stats{
   display:grid;grid-template-columns:1fr 1fr;gap:32px;
   padding-top:36px;border-top:1px solid var(--b1);
@@ -941,7 +959,8 @@ footer{
   .proj-grid{grid-template-columns:repeat(2,1fr)}
   .proj-card.proj-wide{grid-column:span 2}
   .hero-features{grid-template-columns:repeat(2,1fr)}
-  #hibrido-infografico .over-grid{grid-template-columns:1fr;gap:40px}
+  #hibrido-infografico .over-grid{grid-template-columns:1fr!important;gap:36px!important}
+  #hibrido-infografico .over-grid>div:last-child{order:2}
   .cmp-dark-head{grid-template-columns:1fr 140px 160px}
   .cmp-dark-row{grid-template-columns:1fr 140px 160px}
   .cmp-dark-foot{grid-template-columns:1fr 140px 160px}
@@ -1382,9 +1401,16 @@ footer{
 
       <div class="reveal-right">
         <div class="sobre-editorial">
-          <blockquote class="sobre-quote">
-            Não vendemos painéis solares. Desenvolvemos a infraestrutura energética que vai trabalhar por você pelos próximos 25 anos — com engenharia responsável, suporte real e projetos que duram.
-          </blockquote>
+          <div class="sobre-manifesto">
+            <div class="sobre-manifesto-eyebrow">Nossa Abordagem</div>
+            <p class="sobre-manifesto-hl">
+              Não existe projeto padrão.<br>
+              <strong>Existe o seu.</strong>
+            </p>
+            <p class="sobre-manifesto-body">
+              Do dimensionamento à homologação, cada detalhe é pensado para o seu consumo — com suporte real depois que o sistema entra em operação. Energia que não para. Conta que não assusta. Sistema que dura 25 anos.
+            </p>
+          </div>
           <div class="sobre-stats">
             <div>
               <span class="sobre-stat-num accent">8+</span>
@@ -1468,11 +1494,13 @@ footer{
       <iframe
         src="https://drive.google.com/file/d/1kZ6Tls9tXNXO9HUHkYUTL4QUV8zX-nSW/preview"
         style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-        allow="autoplay"
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        allowfullscreen
         loading="lazy"
         title="Depoimento de cliente LumenGrid"
       ></iframe>
     </div>
+    <a href="https://drive.google.com/file/d/1kZ6Tls9tXNXO9HUHkYUTL4QUV8zX-nSW/view" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:10px;font-family:'Inter',sans-serif;font-size:11px;color:rgba(241,241,245,.35);text-decoration:none;letter-spacing:.5px">Abrir vídeo em nova aba ↗</a>
   </div>
 </section>
 
@@ -1576,24 +1604,24 @@ footer{
           </div>
 
           <!-- Noite -->
-          <div style="display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start;padding:20px 22px;background:rgba(17,17,17,.05);border:1px solid rgba(17,17,17,.1);border-radius:10px">
-            <div style="width:44px;height:44px;border-radius:10px;background:rgba(17,17,17,.07);border:1px solid rgba(17,17,17,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(17,17,17,.55)" stroke-width="1.6" stroke-linecap="round" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <div style="display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start;padding:20px 22px;background:rgba(17,17,17,.08);border:1px solid rgba(17,17,17,.2);border-left:2px solid rgba(17,17,17,.35);border-radius:0 10px 10px 0">
+            <div style="width:44px;height:44px;border-radius:10px;background:rgba(17,17,17,.1);border:1px solid rgba(17,17,17,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(17,17,17,.7)" stroke-width="1.6" stroke-linecap="round" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             </div>
             <div>
               <div style="font-family:'Raleway',sans-serif;font-size:13px;font-weight:600;color:#111111;margin-bottom:4px;letter-spacing:.1px">Durante a noite</div>
-              <div style="font-family:'Raleway',sans-serif;font-size:12px;font-weight:300;color:rgba(17,17,17,.62);line-height:1.65">A energia armazenada nas baterias cobre o consumo — sem depender da rede.</div>
+              <div style="font-family:'Raleway',sans-serif;font-size:12px;font-weight:300;color:rgba(17,17,17,.7);line-height:1.65">A energia armazenada nas baterias cobre o consumo — sem depender da rede.</div>
             </div>
           </div>
 
           <!-- Apagão -->
-          <div style="display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start;padding:20px 22px;background:rgba(17,17,17,.05);border:1px solid rgba(17,17,17,.1);border-radius:10px">
-            <div style="width:44px;height:44px;border-radius:10px;background:rgba(17,17,17,.07);border:1px solid rgba(17,17,17,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(17,17,17,.55)" stroke-width="1.6" stroke-linecap="round" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div style="display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start;padding:20px 22px;background:rgba(245,120,50,.1);border:1px solid rgba(245,120,50,.3);border-left:2px solid var(--or);border-radius:0 10px 10px 0">
+            <div style="width:44px;height:44px;border-radius:10px;background:rgba(245,120,50,.13);border:1px solid rgba(245,120,50,.28);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#F57832" stroke-width="1.6" stroke-linecap="round" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
             <div>
               <div style="font-family:'Raleway',sans-serif;font-size:13px;font-weight:600;color:#111111;margin-bottom:4px;letter-spacing:.1px">Durante apagões</div>
-              <div style="font-family:'Raleway',sans-serif;font-size:12px;font-weight:300;color:rgba(17,17,17,.62);line-height:1.65">O inversor aciona automaticamente as cargas definidas no projeto. Você continua conectado.</div>
+              <div style="font-family:'Raleway',sans-serif;font-size:12px;font-weight:300;color:rgba(17,17,17,.7);line-height:1.65">O inversor aciona automaticamente as cargas definidas no projeto. Você continua conectado.</div>
             </div>
           </div>
 
@@ -1952,12 +1980,21 @@ function sigPlayVideo(){
   const btn=document.getElementById('sig-play-btn');
   const video=document.getElementById('sig-video');
   const wrap=document.getElementById('sig-video-wrap');
-  poster.style.visibility='hidden';   /* esconde sem remover do fluxo (fallback seguro) */
   btn.style.display='none';
-  video.style.display='block';
   wrap.style.cursor='default';
   wrap.onclick=null;
-  video.play().catch(()=>{});         /* ignora erro de autoplay em browsers restritivos */
+  video.style.display='block';
+  /* Poster some apenas quando o vídeo realmente começa a reproduzir — evita tela preta no mobile */
+  video.addEventListener('playing',()=>{poster.style.visibility='hidden';},{once:true});
+  video.load();  /* força releitura do source no mobile */
+  video.play().catch(()=>{
+    /* fallback: reexibe botão play para o usuário tentar de novo */
+    video.style.display='none';
+    poster.style.visibility='visible';
+    btn.style.display='flex';
+    wrap.style.cursor='pointer';
+    wrap.onclick=sigPlayVideo;
+  });
 }
 
 /* ─── HERO ORBITAL ANIMATION ─── */
