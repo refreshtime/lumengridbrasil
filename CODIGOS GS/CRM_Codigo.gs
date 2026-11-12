@@ -68,6 +68,7 @@ function doPost(e) {
     else if (action === 'replace_receitas')  result = saveFinJson('Fin_Receitas',  body.data);
     else if (action === 'replace_despesas')  result = saveFinJson('Fin_Despesas',  body.data);
     else if (action === 'replace_previsoes') result = saveFinJson('Fin_Previsoes', body.data);
+    else if (action === 'migrar_giovani')    result = migrarLeadsParaGiovani();
     else result = { error: 'Ação desconhecida: ' + action };
   } catch(err) {
     result = { error: err.message };
@@ -568,7 +569,7 @@ function verificarNovosLeadsMeta() {
       ? headers.indexOf('responsavel')
       : 4; // coluna E por padrão
 
-    const VENDEDORES_VALIDOS = ['Lucas', 'Kelly', 'Hingrid', 'Ana', 'Comercial Lumen'];
+    const VENDEDORES_VALIDOS = ['Lucas', 'Kelly', 'Hingrid', 'Ana', 'Comercial Lumen', 'Giovani'];
 
     const crmLeads = getLeadsCRM();
     const existingTels = new Set(crmLeads.map(l => (l.tel||l.telefone||'').replace(/\D/g,'')));
@@ -732,6 +733,39 @@ function restoreBackup(abaName) {
   sheet.getRange(1, 1).setValue(raw);
   gravarTabelaLegivel(sheet, leads);
   return { ok: true, count: leads.length, restored: abaName };
+}
+
+// ────────────────────────────────────────────────
+// MIGRAÇÃO PONTUAL — Transferir leads "Comercial Lumen" → Giovani
+// Execute UMA VEZ no Apps Script para corrigir os leads existentes
+// ────────────────────────────────────────────────
+function migrarLeadsParaGiovani() {
+  const leads = getLeadsCRM();
+  let migrados = 0;
+  let ignorados = [];
+
+  leads.forEach(lead => {
+    if (lead.resp !== 'Comercial Lumen') return;
+    const nome = (lead.nome || '').toLowerCase();
+    if (nome.includes('teste')) {
+      ignorados.push(lead.nome);
+      return;
+    }
+    lead.resp = 'Giovani';
+    lead.updatedAt = Date.now();
+    lead.history = lead.history || [];
+    lead.history.push({
+      text: 'Responsável migrado de "Comercial Lumen" para "Giovani" (correção em lote)',
+      user: 'Sistema',
+      ts: Date.now()
+    });
+    migrados++;
+  });
+
+  saveLeadsCRM(leads);
+  Logger.log('Migração concluída: ' + migrados + ' leads transferidos para Giovani.');
+  Logger.log('Ignorados (teste): ' + ignorados.length + ' — ' + ignorados.join(', '));
+  return { ok: true, migrados, ignorados };
 }
 
 // ────────────────────────────────────────────────

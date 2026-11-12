@@ -1794,7 +1794,29 @@ function temHomologacao(lead) {
   return homologacoesIndex.has((lead.nome || '').trim().toLowerCase());
 }
 
+// Migração pontual: Comercial Lumen → Giovani (roda uma vez por dispositivo)
+function migrarLeadsGiovaniLocal() {
+  if (localStorage.getItem('lg_migr_giovani_v1')) return;
+  const leads = getAllLeadsRaw();
+  let count = 0;
+  leads.forEach(l => {
+    if (l.resp !== 'Comercial Lumen') return;
+    if ((l.nome || '').toLowerCase().includes('teste')) return;
+    l.resp = 'Giovani';
+    l.updatedAt = Date.now();
+    (l.history = l.history || []).push({ text: 'Responsável migrado para Giovani (correção em lote)', user: 'Sistema', ts: Date.now() });
+    count++;
+  });
+  if (count > 0) {
+    localStorage.setItem('lg_leads', JSON.stringify(leads));
+    pushAllLeadsToSB();
+    console.log('[CRM] Migração Giovani: ' + count + ' leads atualizados.');
+  }
+  localStorage.setItem('lg_migr_giovani_v1', '1');
+}
+
 function initApp() {
+  migrarLeadsGiovaniLocal();
   const u = currentUser;
   document.getElementById('greetName').textContent = u;
   document.getElementById('headerName').textContent = u;
