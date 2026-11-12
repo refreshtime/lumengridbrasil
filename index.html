@@ -1490,17 +1490,42 @@ footer{
     <div style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:3px;color:rgba(245,120,50,.8);margin-bottom:14px">Depoimento</div>
     <h2 style="font-family:'Raleway',sans-serif;font-weight:300;font-size:clamp(26px,3vw,40px);letter-spacing:-1.5px;line-height:1.1;color:#F4F4F5;margin-bottom:10px">Resultado real.<br><em style="font-style:normal;color:#F57832">Na voz de quem viveu.</em></h2>
     <p style="font-family:'Inter',sans-serif;font-size:14px;color:rgba(241,241,245,.4);margin-bottom:36px">Cliente LumenGrid compartilha como a energia solar mudou sua rotina.</p>
-    <div style="position:relative;width:100%;padding-bottom:56.25%;border-radius:16px;overflow:hidden;background:#111;box-shadow:0 16px 60px rgba(0,0,0,.6)">
-      <iframe
-        src="https://drive.google.com/file/d/1kZ6Tls9tXNXO9HUHkYUTL4QUV8zX-nSW/preview"
-        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
+    <!-- Facade: iframe no desktop, abre Drive diretamente no mobile (iOS Safari não aceita Drive embed) -->
+    <div id="dep-wrap" style="position:relative;width:100%;padding-bottom:56.25%;border-radius:16px;overflow:hidden;background:#111;box-shadow:0 16px 60px rgba(0,0,0,.6);cursor:pointer" onclick="depPlayVideo()">
+      <!-- Poster/thumb enquanto iframe não carregou -->
+      <div id="dep-poster" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#111 0%,#1a1a1a 100%)">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+          <div style="width:72px;height:72px;border-radius:50%;background:rgba(245,120,50,.95);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 18px rgba(245,120,50,.12),0 8px 36px rgba(245,120,50,.4)">
+            <svg viewBox="0 0 24 24" fill="#fff" width="28" height="28" style="margin-left:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.5)">Assistir depoimento</span>
+        </div>
+      </div>
+      <!-- Iframe carrega após clique no desktop -->
+      <iframe id="dep-iframe"
+        src=""
+        data-src="https://drive.google.com/file/d/1kZ6Tls9tXNXO9HUHkYUTL4QUV8zX-nSW/preview"
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;display:none"
         allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
         allowfullscreen
-        loading="lazy"
         title="Depoimento de cliente LumenGrid"
       ></iframe>
     </div>
-    <a href="https://drive.google.com/file/d/1kZ6Tls9tXNXO9HUHkYUTL4QUV8zX-nSW/view" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:10px;font-family:'Inter',sans-serif;font-size:11px;color:rgba(241,241,245,.35);text-decoration:none;letter-spacing:.5px">Abrir vídeo em nova aba ↗</a>
+    <script>
+    function depPlayVideo(){
+      var isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||window.innerWidth<=768;
+      if(isMobile){
+        window.open('https://drive.google.com/file/d/1kZ6Tls9tXNXO9HUHkYUTL4QUV8zX-nSW/view','_blank');
+      } else {
+        var fr=document.getElementById('dep-iframe');
+        fr.src=fr.dataset.src;
+        fr.style.display='block';
+        document.getElementById('dep-poster').style.display='none';
+        document.getElementById('dep-wrap').style.cursor='default';
+        document.getElementById('dep-wrap').onclick=null;
+      }
+    }
+    </script>
   </div>
 </section>
 
@@ -1639,7 +1664,7 @@ footer{
         <img src="imagens/TECNOLOGIA/infografico-sistema-hibrido.webp"
              alt="Como funciona o sistema híbrido LumenGrid"
              width="533" height="800" loading="lazy"
-             style="width:100%;border-radius:16px;display:block;position:relative;z-index:1;box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05)">
+             style="width:100%;height:auto;border-radius:16px;display:block;position:relative;z-index:1;box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05)">
       </div>
 
     </div>
@@ -1983,14 +2008,16 @@ function sigPlayVideo(){
   btn.style.display='none';
   wrap.style.cursor='default';
   wrap.onclick=null;
+  /* iOS exige display:block para aceitar play(); opacity:0 evita tela preta enquanto buferiza */
   video.style.display='block';
-  /* Poster some apenas quando o vídeo realmente começa a reproduzir — evita tela preta no mobile */
-  video.addEventListener('playing',()=>{poster.style.visibility='hidden';},{once:true});
-  video.load();  /* força releitura do source no mobile */
+  video.style.opacity='0';
+  video.addEventListener('playing',()=>{
+    video.style.opacity='1';
+    poster.style.display='none';
+  },{once:true});
   video.play().catch(()=>{
-    /* fallback: reexibe botão play para o usuário tentar de novo */
     video.style.display='none';
-    poster.style.visibility='visible';
+    video.style.opacity='';
     btn.style.display='flex';
     wrap.style.cursor='pointer';
     wrap.onclick=sigPlayVideo;
