@@ -156,6 +156,7 @@ const CONSULTOR_TO_RESP = {
   'hingrid': 'Hingrid',
   'kelly':   'Kelly',
   'ana':     'Ana',
+  'giovani': 'Giovani',
   'custom':  'Comercial Lumen'
 };
 

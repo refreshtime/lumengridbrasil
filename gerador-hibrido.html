@@ -1757,7 +1757,7 @@ function getSBHib(){
 
 async function syncPropostaHibToSB(dados){
   const sb=getSBHib();if(!sb)return;
-  const RESP_MAP={'lucas':'Lucas','hingrid':'Hingrid','kelly':'Kelly','bruno':'Bruno','giovani':'Giovani Rosa'};
+  const RESP_MAP={'lucas':'Lucas','hingrid':'Hingrid','kelly':'Kelly','bruno':'Bruno','giovani':'Giovani'};
   const resp=RESP_MAP[dados.consultorKey]||dados.consultor||null;
   try{
     const tel=String(dados.telefone||'');
