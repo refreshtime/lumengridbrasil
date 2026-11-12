@@ -211,22 +211,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
     <div class="sec-title">Custos do Projeto</div>
 
     <div class="fg">
-      <label>Equipamentos — Inversor + Módulos <span id="kitAutoTag" style="font-size:9px;color:var(--blue);display:none">● da planilha</span></label>
-      <input class="fi" type="number" id="cEquip" placeholder="0,00" step="100" oninput="calcular()">
+      <label>Equipamentos — Kit padrão <span id="kitAutoTag" style="font-size:9px;color:var(--blue);display:none">● da planilha</span></label>
+      <div class="fi-wrap">
+        <input class="fi fi-with-unit" type="text" id="cEquipAuto" readonly placeholder="Selecione placas para ver opções">
+        <span class="fi-unit" style="color:var(--blue);font-size:9px">Auto</span>
+      </div>
       <div id="kitSelector" style="display:none;margin-top:6px;border:1px solid var(--b1);border-radius:6px;overflow:hidden"></div>
     </div>
+    <div class="fg">
+      <div class="inst-auto-row">
+        <label style="margin-bottom:0">Equipamentos — Personalizado</label>
+        <span class="inst-custom-clear" id="equipCustomClear" onclick="clearCustomEquip()">✕ limpar</span>
+      </div>
+      <input class="fi" type="number" id="cEquipCustom" placeholder="Deixe vazio para usar o kit acima..." step="100" oninput="onCustomEquipChange()">
+      <div class="inst-using-custom" id="equipUsingCustom">● Usando valor personalizado no cálculo</div>
+    </div>
 
-    <!-- BATERIA (híbrido) -->
+    <!-- HÍBRIDO: só qtde baterias (preço já incluso no kit) -->
     <div id="hibridoWrap" style="display:none">
-      <div class="frow">
-        <div class="fg">
-          <label>Qtde de Baterias</label>
-          <input class="fi" type="number" id="numBaterias" placeholder="Ex: 1" min="0" step="1" value="1" oninput="onBatChange()">
-        </div>
-        <div class="fg">
-          <label>Custo Bateria (R$)</label>
-          <input class="fi" type="number" id="cBat" placeholder="0,00" step="100" oninput="calcular()">
-        </div>
+      <div class="fg">
+        <label>Qtde de Baterias <span style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0">— preço já incluso no kit acima</span></label>
+        <input class="fi" type="number" id="numBaterias" placeholder="Ex: 1" min="0" step="1" value="1" oninput="onBatChange()">
+        <div class="fi-note">Informe para calcular o custo de instalação corretamente</div>
       </div>
     </div>
 
@@ -460,11 +466,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
       <span class="bk-label">Equipamentos (Inversor + Módulos)</span>
       <span class="bk-val" id="bEquip">—</span>
       <span class="bk-pct" id="bEquipPct">—</span>
-    </div>
-    <div class="bk-cols" id="bBatRow" style="display:none">
-      <span class="bk-label">Bateria</span>
-      <span class="bk-val" id="bBat">—</span>
-      <span class="bk-pct" id="bBatPct">—</span>
     </div>
     <div class="bk-cols">
       <span class="bk-label">Instalação</span>
@@ -732,6 +733,27 @@ const FAIXAS_HIBRIDO = [
   { label:'25–40 placas (~21 kWp)', placasRef:30, bats:1, inst:4400+30*350+1*1200, homol:1450 },
 ];
 
+// ── HELPERS: EQUIPAMENTO PERSONALIZADO ───────────────────────
+function getEquipValue() {
+  const custom = parseFloat(document.getElementById('cEquipCustom').value);
+  if (!isNaN(custom) && custom > 0) return custom;
+  return parseFloat(document.getElementById('cEquipAuto').value) || 0;
+}
+
+function onCustomEquipChange() {
+  const hasCustom = parseFloat(document.getElementById('cEquipCustom').value) > 0;
+  document.getElementById('equipCustomClear').style.display = hasCustom ? 'inline' : 'none';
+  document.getElementById('equipUsingCustom').style.display = hasCustom ? 'block'  : 'none';
+  calcular();
+}
+
+function clearCustomEquip() {
+  document.getElementById('cEquipCustom').value = '';
+  document.getElementById('equipCustomClear').style.display = 'none';
+  document.getElementById('equipUsingCustom').style.display = 'none';
+  calcular();
+}
+
 // ── STATE ─────────────────────────────────────────────────────
 const fieldModes = { gestao:'pct', impostos:'pct', comissao:'pct' };
 let _faixaTab = 'solar'; // 'solar' | 'hibrido'
@@ -907,7 +929,6 @@ function onBatChange() {
 function onTipoChange() {
   const isHibrido = document.getElementById('tipo').value === 'hibrido';
   document.getElementById('hibridoWrap').style.display = isHibrido ? '' : 'none';
-  document.getElementById('bBatRow').style.display     = isHibrido ? '' : 'none';
 
   // Limpa instalação personalizada ao trocar tipo (custos são diferentes)
   clearCustomInst();
@@ -946,7 +967,7 @@ function renderKitSelector(placas) {
 function selectKit(el, equip) {
   document.querySelectorAll('#kitSelector .kit-opt').forEach(e => e.style.background = '');
   el.style.background = 'rgba(232,100,26,.10)';
-  document.getElementById('cEquip').value = equip;
+  document.getElementById('cEquipAuto').value = equip;
   document.getElementById('kitAutoTag').style.display = 'inline';
   calcular();
 }
@@ -969,8 +990,7 @@ function calcular() {
   const tipo     = document.getElementById('tipo').value;
   const formaPag = document.getElementById('formaPagamento').value;
 
-  const cEquip  = v('cEquip');
-  const cBat    = tipo === 'hibrido' ? v('cBat') : 0;
+  const cEquip  = getEquipValue();
   const cInst   = getInstValue();
   const cHomol  = v('cHomol');
   const cFrete  = v('cFrete');
@@ -983,7 +1003,7 @@ function calcular() {
   const pEntrada      = v('pEntrada')   / 100;
   const pMargem       = v('pMargem')    / 100;
 
-  const custoDireto = cEquip + cBat + cInst + cHomol + cFrete;
+  const custoDireto = cEquip + cInst + cHomol + cFrete;
   const finEfetivo  = (1 - pEntrada) * pFinCusto;
 
   const precoAlvoInput = parseFloat(document.getElementById('precoAlvo').value) || 0;
@@ -1061,18 +1081,18 @@ function calcular() {
   set('anInstPreco',      fmtPerc(p(cInst)));
   set('anMargemAplicada', fmtPerc(aposGestao / preco));
   set('anMargemSub',      modoPrecoAlvo ? 'efetiva (preço fixo)' : 's/ preço');
-  set('anEquipPreco',     fmtPerc(p(cEquip + cBat)));
+  set('anEquipPreco',     fmtPerc(p(cEquip)));
 
   // Stacked bar
   const pImpFin = p(impostosVal) + finEfetivo;
-  setSeg('segEquip',    p(cEquip + cBat) * 100);
+  setSeg('segEquip',    p(cEquip) * 100);
   setSeg('segInst',     p(cInst)         * 100);
   setSeg('segHomol',    p(cHomol+cFrete) * 100);
   setSeg('segImpostos', pImpFin          * 100);
   setSeg('segGestao',   p(posVendaVal)   * 100);
   setSeg('segComissao', p(comissaoVal)   * 100);
   setSeg('segLiquida',  Math.max(p(margemLiq), 0) * 100);
-  set('lpEquip',    fmtPerc(p(cEquip + cBat)));
+  set('lpEquip',    fmtPerc(p(cEquip)));
   set('lpInst',     fmtPerc(p(cInst)));
   set('lpHomol',    fmtPerc(p(cHomol + cFrete)));
   set('lpImpostos', fmtPerc(pImpFin));
@@ -1091,7 +1111,6 @@ function calcular() {
 
   // Breakdown
   set('bEquip',       fmtR(cEquip));      set('bEquipPct',      fmtPerc(p(cEquip)));
-  set('bBat',         fmtR(cBat));        set('bBatPct',        fmtPerc(p(cBat)));
   set('bInst',        fmtR(cInst));       set('bInstPct',       fmtPerc(p(cInst)));
   set('bHomol',       fmtR(cHomol));      set('bHomolPct',      fmtPerc(p(cHomol)));
   set('bFrete',       fmtR(cFrete));      set('bFretePct',      fmtPerc(p(cFrete)));
@@ -1134,10 +1153,10 @@ function calcular() {
 function resetUI() {
   ['kPreco','kCusto','kMargem','kLiquida',
    'anInstCusto','anInstPreco','anMargemAplicada','anEquipPreco',
-   'bEquip','bBat','bInst','bHomol','bFrete','bCustoTotal',
+   'bEquip','bInst','bHomol','bFrete','bCustoTotal',
    'bPreco','bImpostos','bFin','bMargemCash','bPosVenda',
    'bComissao','bLiquida','bCashPis'].forEach(id => set(id, '—'));
-  ['bEquipPct','bBatPct','bInstPct','bHomolPct','bFretePct','bCustoTotalPct',
+  ['bEquipPct','bInstPct','bHomolPct','bFretePct','bCustoTotalPct',
    'bCustoDeducaoPct','bImpostosPct','bFinPct','bMargemCashPct','bPosVendaPct',
    'bComissaoPct','bLiquidaPct','bCashPisPct'].forEach(id => set(id, '—'));
   set('bCustoDeducao', '—');
