@@ -248,41 +248,6 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 <div class="form-panel">
 <div class="form-inner">
 
-<!-- ── KITS PRÉ-DEFINIDOS ── -->
-<div style="margin:-20px -18px 20px;padding:16px 18px 18px;background:linear-gradient(135deg,rgba(232,100,26,.06),rgba(232,100,26,.02));border-bottom:2px solid rgba(232,100,26,.25)">
-  <div class="fs-title" style="margin-bottom:10px">&#9889; Kits Pré-Definidos — Inicie aqui</div>
-
-  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
-    <div>
-      <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Inversor</div>
-      <select id="kitInvSel" class="fi" style="width:100%;font-size:11px;padding:7px 10px" onchange="onKitInvChange()">
-        <option value="">— Selecionar Inversor —</option>
-        <option value="0">GoodWe GW5K — 5 kW · Jinko 620W</option>
-        <option value="1">GoodWe GW7.5K — 7,5 kW · Jinko 620W</option>
-        <option value="2">GoodWe GW12K Trifásico — 12 kW · Leapton 600W</option>
-        <option value="3">⚠ Sofar HYD-7.5K — 7,5 kW · Jinko 620W [NÃO PRIORIZAR]</option>
-      </select>
-    </div>
-    <div>
-      <div style="font-size:8px;font-weight:700;color:var(--uim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Baterias</div>
-      <select id="kitBatSel" class="fi" style="width:100%;font-size:11px;padding:7px 10px" onchange="onKitBatChange()" disabled>
-        <option value="">— Selecionar Baterias —</option>
-      </select>
-    </div>
-  </div>
-
-  <div id="kitPreviewCard" style="display:none;margin-bottom:10px">
-    <div id="kitPreviewInfo" style="font-size:8.5px;color:var(--uim);margin-bottom:8px;line-height:1.6;background:rgba(255,255,255,.04);border-radius:5px;padding:7px 9px;border:1px solid var(--uib)"></div>
-    <div id="kitPreviewPrices" style="display:flex;gap:4px"></div>
-    <div style="font-size:7.5px;color:var(--uim);margin-top:5px;line-height:1.5">Ajuste <strong>Qtd. Módulos</strong> no formulário abaixo — preço atualiza automaticamente.</div>
-  </div>
-
-  <div style="background:rgba(231,76,60,.08);border-left:3px solid #e74c3c;border-radius:4px;padding:8px 10px;font-size:8.5px;line-height:1.65;color:#c0392b">
-    <strong>&#9888; Preço Mínimo:</strong> somente se houver proposta concorrente em mãos e após visita técnica.<br>
-    <strong>&#9888; Preço Bomba:</strong> margem mínima absoluta — exige confirmação e validação da gestão. Nunca oferecer na abertura da negociação.
-  </div>
-</div>
-
   <div class="fs">
     <div class="fs-title">Cliente</div>
     <label class="fl">Nome do Cliente / Empresa <span class="req-star">*</span></label>
@@ -323,11 +288,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <select class="fsel" id="modModelSel" onchange="onModModelChange(this)">
       <option value="">— Selecionar —</option>
       <option value="JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)" data-power="620" selected>Jinko Bifacial 620W — JKM620N-66HL4M BDV ★ padrão</option>
-      <option value="Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)" data-power="600">Leapton Bifacial 600W — LP182-M-72 (23.22%)</option>
-      <option value="Leapton LP182-182-M-72-NB Bifacial 630W Frame Composto" data-power="630">Leapton Bifacial 630W — LP182-M-72</option>
-      <option value="Ronma Solar N-Type 620W" data-power="620">Ronma N-Type 620W</option>
       <option value="DMEGC Solar 625W Bifacial N-Type" data-power="625">DMEGC Bifacial 625W N-Type</option>
-      <option value="OSDA Solar 710W Bifacial N-Type" data-power="710">OSDA Bifacial 710W N-Type</option>
+      <option value="Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)" data-power="600">Leapton Bifacial 600W — LP182-M-72</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="modModel" placeholder="Modelo personalizado" style="display:none">
@@ -338,12 +300,10 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Inversor Híbrido <span class="req-star">*</span></label>
     <select class="fsel" id="invModelSel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="GoodWe GW5K-ES Híbrido Bifásico 2MPPT 127/220V 5kW" data-power="5" selected>GoodWe GW5K-ES Híbrido 5kW ★ padrão</option>
-      <option value="GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5">GoodWe GW7.5K-ES-LD-G10 Híbrido 7.5kW</option>
-      <option value="FoxESS Híbrido Bifásico 3MPPT 127/220V 11.4kW" data-power="11.4">FoxESS Híbrido Bifásico 11.4kW</option>
-      <option value="FoxESS US Híbrido Bifásico 3MPPT 127/220V 5.7kW" data-power="5.7">FoxESS US Híbrido Bifásico 5.7kW</option>
-      <option value="GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW" data-power="12">GoodWe GW12K-ET-L-G10 Híbrido Trifásico 12kW</option>
-      <option value="Sofar HYD7.5KTL-EP3 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5">⚠ Sofar HYD7.5KTL-EP3 Híbrido 7.5kW [NÃO PRIORIZAR]</option>
+      <option value="GoodWe GW3.5K-ET Híbrido Monofásico 2MPPT 220V 3.5kW" data-power="3.5">GoodWe GW3.5K Híbrido Monofásico 3.5kW</option>
+      <option value="GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5" selected>GoodWe GW7.5K Híbrido Bifásico 7.5kW ★ padrão</option>
+      <option value="GoodWe GW10K-ET Híbrido Monofásico 2MPPT 220V 10kW" data-power="10">GoodWe GW10K Híbrido Monofásico 10kW</option>
+      <option value="GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW" data-power="12">GoodWe GW12K Híbrido Trifásico 12kW</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="invModel" placeholder="Modelo personalizado" style="display:none" oninput="autoCalcHibrido()">
@@ -367,9 +327,8 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo da Bateria</label>
     <select class="fsel" id="batModelSel" onchange="onBatModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH" data-kwh="5">GOODWE LYNX LFP Classe A — Parede 5 kWh</option>
-      <option value="BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 10 kWH" data-kwh="10">GOODWE LYNX LFP Classe A — Parede 10 kWh</option>
-      <option value="FoxESS Bateria LiFePO4 5.2kWh" data-kwh="5.2">FoxESS Bateria LiFePO4 5.2kWh</option>
+      <option value="GoodWe Lynx A LFP 5kWh — Parede (BT Mono/Bifásico)" data-kwh="5" selected>GoodWe LYNX A 5kWh — Parede BT ★ padrão</option>
+      <option value="GoodWe Lynx F LFP 3.2kWh — Rack Trifásico (AT)" data-kwh="3.2">GoodWe LYNX F 3.2kWh — Rack AT (Trifásico)</option>
       <option value="custom">Outro (digitar)</option>
     </select>
     <input class="fi" id="batModel" placeholder="Modelo personalizado" style="display:none">
@@ -430,8 +389,14 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
 
   <div class="fs">
     <div class="fs-title">Investimento</div>
-    <!-- Indicador de nível de preço do kit (aparece após applyKit) -->
-    <div id="kitNivelStrip" style="display:none;background:linear-gradient(135deg,rgba(232,100,26,.06),rgba(232,100,26,.02));border:1px solid rgba(232,100,26,.25);border-radius:8px;padding:10px 14px;margin-bottom:10px;flex-wrap:wrap;gap:4px;align-items:flex-end"></div>
+    <!-- Indicador de nível de preço -->
+    <div id="nivelPrecoStrip" style="display:none;background:#f8f9fc;border:1px solid var(--uib);border-radius:6px;padding:8px 10px;margin-bottom:8px;font-size:9px">
+      <div style="font-size:8px;font-weight:800;letter-spacing:1.5px;color:var(--or);text-transform:uppercase;margin-bottom:5px">Nível de Preço</div>
+      <div style="display:flex;gap:6px">
+        <button id="btnNivelCheio" onclick="setNivelHibrido('cheio')" style="flex:1;padding:5px 4px;border-radius:5px;font-size:8.5px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px solid var(--or);background:var(--or);color:#fff;transition:all .2s">Preço Cheio<br><span id="lblCheio" style="font-size:10px;font-weight:900"></span></button>
+        <button id="btnNivelMinimo" onclick="setNivelHibrido('minimo')" style="flex:1;padding:5px 4px;border-radius:5px;font-size:8.5px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px solid #e67e22;background:transparent;color:#e67e22;transition:all .2s">Preço Mínimo<br><span id="lblMinimo" style="font-size:10px;font-weight:900"></span></button>
+      </div>
+    </div>
     <div class="frow">
       <div><label class="fl">Valor Total (R$) <span id="projectValueTag" class="auto-tag">kit · Cheio · preço dinâmico</span></label><input class="fi" type="number" id="projectValue" placeholder="Calculado automaticamente"></div>
     </div>
@@ -539,14 +504,6 @@ async function parseCSVHibrido(url) {
 }
 
 const IMG_BASE='https://lumengridbrasil.com.br/imagens/';
-const PRECO_KVP_MIN=5000;
-
-function getHibridoValores(qty,pwr,precoKvp){
-  // Mínimo sempre dinâmico: kVp × precoKvp (R$5.000/kVp)
-  const kVp=(qty||0)*(pwr||0)/1000;
-  const base=kVp>0?Math.round(kVp*precoKvp):0;
-  return{base,label:'mín R$'+PRECO_KVP_MIN.toLocaleString('pt-BR')+'/kVp'};
-}
 
 function $(id){return document.getElementById(id);}
 function get(id){const el=$(id);return el?el.value.trim():'';}
@@ -667,26 +624,14 @@ function onBatModelChange(sel){
   }
 }
 
-// ── KITS PRÉ-DEFINIDOS ──
-let kitAtivo=false;
-let kitAtual=null;
-let currentNivelHi='cheio'; // nível de preço ativo: 'cheio' | 'minimo' | 'bomba'
-
-// Baterias disponíveis por inversor (ki → [{nbat, ci, label}])
-const KIT_BATS=[
-  [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh'}],
-  [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10 kWh'},{nbat:3,ci:2,label:'3 Baterias · 15 kWh'}],
-  [{nbat:1,ci:0,label:'1 Bateria · 5 kWh'}],
-  [{nbat:1,ci:0,label:'1 Bateria · 5,1 kWh'},{nbat:2,ci:1,label:'2 Baterias · 10,2 kWh'}], // Sofar — NÃO PRIORIZAR
-];
+let currentNivelHi='cheio'; // nível de preço ativo: 'cheio' | 'minimo'
 
 // Deriva chave de marca do módulo selecionado (Jinko / DMEGC / Leapton)
 function getModKeyHi(){
   const v=($('modModelSel')?.value||'').toLowerCase();
   if(v.includes('jinko'))return'Jinko';
   if(v.includes('dmegc'))return'DMEGC';
-  if(v.includes('osda'))return'Jinko';   // OSDA → preço próximo ao Jinko
-  return'Leapton';                        // Leapton 600/630W, Ronma → base Leapton
+  return'Leapton'; // Leapton 600W
 }
 
 // Busca preço em KITS_HIBRIDOS por (placas, modKey, invKw, bats) com interpolação linear
@@ -727,71 +672,7 @@ function getKitPrecosHi(placas,modKey,invKw,bats){
   }
 }
 
-function onKitInvChange(){
-  const ki=parseInt($('kitInvSel').value);
-  const batSel=$('kitBatSel');
-  batSel.innerHTML='<option value="">— Selecionar Baterias —</option>';
-  $('kitPreviewCard').style.display='none';
-  if(isNaN(ki)){batSel.disabled=true;return;}
-  batSel.disabled=false;
-  KIT_BATS[ki].forEach(b=>{
-    const o=document.createElement('option');
-    o.value=JSON.stringify({ki,ci:b.ci});
-    o.textContent=b.label;
-    batSel.appendChild(o);
-  });
-  // Atualiza imediatamente os campos de inversor no formulário abaixo
-  const kit=KITS_DATA[ki];
-  if(kit){
-    const invSel=$('invModelSel');
-    let f=false;
-    for(let i=0;i<invSel.options.length;i++){
-      if(invSel.options[i].value===kit.invVal){invSel.selectedIndex=i;f=true;break;}
-    }
-    if(!f){invSel.value='custom';}
-    $('invModel').value=kit.invVal;
-    $('invModel').style.display='none';
-    $('invPower').value=kit.invPwr;
-    calcOverload();
-  }
-}
-
-function onKitBatChange(){
-  const v=$('kitBatSel').value;
-  if(!v){$('kitPreviewCard').style.display='none';return;}
-  const{ki,ci}=JSON.parse(v);
-  const kit=KITS_DATA[ki];const conf=kit.configs[ci];
-  const pl=conf.qty||kit.baseQty||9;
-  // Preenche campos de bateria automaticamente
-  const batSel=$('batModelSel');
-  let f=false;for(let i=0;i<batSel.options.length;i++){if(batSel.options[i].value===kit.batVal){batSel.selectedIndex=i;f=true;break;}}
-  if(!f)batSel.value='custom';
-  $('batModel').value=kit.batVal;$('batModel').style.display='none';
-  $('batQty').value=conf.nbat;
-  $('batteryKwh').value=(kit.batKwh*conf.nbat).toFixed(1);
-  recalcAutonomy();
-  renderKitPreview(ki,ci,pl);
-}
-
-function renderKitPreview(ki,ci,pl){
-  const kit=KITS_DATA[ki];const conf=kit.configs[ci];
-  const mv=kit.modVal.toLowerCase();
-  const modKeyPv=mv.includes('jinko')?'Jinko':mv.includes('dmegc')?'DMEGC':'Leapton';
-  const precos=getKitPrecosHi(pl,modKeyPv,kit.invPwr,conf.nbat);
-  if(!precos)return;
-  const fmt=v=>'R$\u00a0'+Math.round(v).toLocaleString('pt-BR');
-  const invName=['GoodWe GW5K','GoodWe GW7.5K','GoodWe GW12K Tri','⚠ Sofar HYD-7.5K'][ki]||'Inversor';
-  const modLabel=kit.modPwr+'W '+(mv.includes('jinko')?'Jinko':mv.includes('leapton')?'Leapton':mv.includes('dmegc')?'DMEGC':'módulo');
-  $('kitPreviewInfo').innerHTML=`<strong>${invName}</strong> &nbsp;·&nbsp; ${pl} pl. ${modLabel} &nbsp;·&nbsp; ${conf.nbat} bat${conf.nbat>1?'s':''} · ${(kit.batKwh*conf.nbat).toFixed(0)} kWh &nbsp;·&nbsp; <strong>${(pl*kit.modPwr/1000).toFixed(2)} kVp</strong>`;
-  $('kitPreviewPrices').innerHTML=`
-    <button class="btn bp" style="flex:1;font-size:9px;padding:6px 4px;text-align:center" onclick="applyKit(${ki},${ci},'cheio')">Cheio<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.cheio)}</span></button>
-    <button class="btn" style="flex:1;font-size:9px;padding:6px 4px;text-align:center;background:transparent;border:1.5px solid #e67e22;color:#e67e22" onclick="applyKit(${ki},${ci},'minimo')">Mínimo<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.minimo)}</span></button>
-    <button class="btn" style="flex:1;font-size:9px;padding:6px 4px;text-align:center;background:transparent;border:1.5px solid #e74c3c;color:#e74c3c" onclick="applyKit(${ki},${ci},'bomba')">Bomba<br><span style="font-size:10.5px;font-weight:900">${fmt(precos.bomba)}</span></button>
-  `;
-  $('kitPreviewCard').style.display='block';
-}
-
-// ── KITS HÍBRIDOS — dados (sincronizado com precificacao_kits.html) ──
+// ── KITS HÍBRIDOS — dados ──
 // Compatibilidade baterias: BT (Lynx A 5kWh, Unipower 5.1kWh) = monofásico/bifásico
 //                           AT (Lynx F 3.2kWh) = trifásico (GW12kW+) OBRIGATÓRIO
 const KITS_HIBRIDOS_FALLBACK=window.LG_KITS_HI||[];
@@ -814,116 +695,16 @@ function calcHibridoKit(k){
   const custoDireto=k.equip+instalDEG+homo;
   const margem=margemHi(k.bats);
   const minimo=Math.round(custoDireto/(1-margem)/10)*10;
-  const bomba=Math.round(custoDireto/0.76/10)*10+2000;
   const cheio=minimo/(1-0.06);
-  return{minimo:minimo+1000,bomba,cheio:Math.round(cheio)+2000};
+  return{minimo:minimo+1000,cheio:Math.round(cheio)+2000};
 }
 
-// precoMin = preço mínimo (31% margem s/ NEG)
-// precoBomba = custo direto / 0.76 (margem mínima 24% — somente após visita técnica)
-const KITS_DATA=[
-  // 0: GoodWe GW5K
-  {invVal:'GoodWe GW5K-ES Híbrido Bifásico 2MPPT 127/220V 5kW',invPwr:5,
-   modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
-   configs:[
-     {nbat:1,preco:42446,precoMin:37336,precoBomba:34900},
-     {nbat:2,preco:49446,precoMin:44336,precoBomba:41250},
-   ]},
-  // 1: GoodWe GW7.5K
-  {invVal:'GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
-   modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:9,extras:850,
-   configs:[
-     {nbat:1,preco:48000,precoMin:43500,precoBomba:40490},
-     {nbat:2,preco:55270,precoMin:52000,precoBomba:48210},
-     {nbat:3,preco:62000,precoMin:58700,precoBomba:53520},
-   ]},
-  // 2: GoodWe GW12K Trifásico
-  {invVal:'GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW',invPwr:12,
-   modVal:'Leapton LP182-182-M-72-NB Bifacial 600W Frame Composto (23.22%)',modPwr:600,
-   batVal:'BATERIA LFP LYNX CLASSE A - PAREDE - GOODWE 5 kWH',batKwh:5,baseQty:11,extras:850,
-   configs:[
-     {nbat:1,qty:11,preco:51140,precoMin:47130,precoBomba:43790},
-   ]},
-  // 3: Sofar HYD-7.5K — ⚠ NÃO PRIORIZAR — usar somente se cliente exigir ou GoodWe indisponível
-  {invVal:'Sofar HYD7.5KTL-EP3 Híbrido Bifásico 2MPPT 127/220V 7.5kW',invPwr:7.5,
-   modVal:'JKM620N-66HL4M BDV — Módulo Bifacial 620W JINKO (Ef. 22.95% / Frame Alumínio)',modPwr:620,
-   batVal:'BATERIA LFP UNIPOWER 5,1 kWh',batKwh:5.1,baseQty:9,extras:850,
-   configs:[
-     {nbat:1,preco:35000,precoMin:32500,precoBomba:32000},
-     {nbat:2,preco:41000,precoMin:38500,precoBomba:38000},
-   ]},
-];
-
-function applyKit(ki,ci,nivel){
-  nivel=nivel||'cheio';
-  const kit=KITS_DATA[ki];const conf=kit&&kit.configs[ci];if(!kit||!conf)return;
-  if(nivel==='bomba'){
-    const ok=confirm('⚠ ATENÇÃO: PREÇO BOMBA SOMENTE DEPOIS DE VISITA TÉCNICA E VALIDAÇÃO\n\nEsse preço só pode ser utilizado após visita técnica realizada e autorização da gestão.\n\nDeseja continuar com o Preço Bomba?');
-    if(!ok)return;
-  }
-  kitAtivo=true;kitAtual={kit,conf,nivel,ki,ci};
-  // Inversor
-  const invSel=$('invModelSel');
-  let f=false;for(let i=0;i<invSel.options.length;i++){if(invSel.options[i].value===kit.invVal){invSel.selectedIndex=i;f=true;break;}}
-  if(!f)invSel.value='custom';
-  $('invModel').value=kit.invVal;$('invModel').style.display='none';$('invPower').value=kit.invPwr;
-  calcOverload();
-  // Módulo
-  const modSel=$('modModelSel');
-  f=false;for(let i=0;i<modSel.options.length;i++){if(modSel.options[i].value===kit.modVal){modSel.selectedIndex=i;f=true;break;}}
-  if(!f)modSel.value='custom';
-  $('modModel').value=kit.modVal;$('modModel').style.display='none';$('modPower').value=kit.modPwr;
-  // Preserva qtd de placas atual se o mesmo kit já estiver ativo (ex: mudança de nível Cheio→Mínimo)
-  const baseQtyKit=conf.qty||kit.baseQty||9;
-  const qty=(kitAtivo&&kitAtual&&kitAtual.ki===ki&&getN('modQty')>0)?getN('modQty'):baseQtyKit;
-  $('modQty').value=qty;
-  // Bateria
-  const batSel=$('batModelSel');
-  f=false;for(let i=0;i<batSel.options.length;i++){if(batSel.options[i].value===kit.batVal){batSel.selectedIndex=i;f=true;break;}}
-  if(!f)batSel.value='custom';
-  $('batModel').value=kit.batVal;$('batModel').style.display='none';
-  $('batQty').value=conf.nbat;$('batteryKwh').value=(kit.batKwh*conf.nbat).toFixed(1);
-  $('isencaoICMS').checked=true;
+function setNivelHibrido(nivel){
   currentNivelHi=nivel;
-  autoCalcHibrido();
-  recalcAutonomy();
-}
-
-function updateNivelIndicator(conf,nivel){
-  const el=$('kitNivelStrip');
-  if(!el||!conf)return;
-  const fmtBR=v=>'R$\u00a0'+Math.round(v).toLocaleString('pt-BR');
-  const activeStyle='font-weight:900;font-size:12px;';
-  const inactiveStyle='font-size:11px;opacity:.55;cursor:pointer;';
-  el.style.display='flex';
-  el.innerHTML=`
-    <div style="font-size:8px;font-weight:800;letter-spacing:1.5px;color:var(--or);text-transform:uppercase;margin-bottom:6px;width:100%">Nível de Preço do Kit</div>
-    <div onclick="changeKitNivel('cheio')" style="${nivel==='cheio'?activeStyle+'color:var(--or)':inactiveStyle+'color:var(--uim)'}">
-      <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Preço Cheio</div>
-      <div>${fmtBR(conf.preco)}</div>
-    </div>
-    <div style="color:var(--uib);align-self:center;padding:0 8px">|</div>
-    <div onclick="changeKitNivel('minimo')" style="${nivel==='minimo'?activeStyle+'color:#e67e22':inactiveStyle+'color:var(--uim)'}">
-      <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Preço Mínimo</div>
-      <div>${fmtBR(conf.precoMin)}</div>
-    </div>
-    <div style="color:var(--uib);align-self:center;padding:0 8px">|</div>
-    <div onclick="changeKitNivel('bomba')" style="${nivel==='bomba'?activeStyle+'color:#e74c3c':inactiveStyle+'color:#e74c3c;opacity:.5'}">
-      <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Preço Bomba</div>
-      <div>${fmtBR(conf.precoBomba)}</div>
-      <div style="font-size:8px;color:#e74c3c;font-weight:700">somente pós visita</div>
-    </div>
-  `;
-}
-
-function changeKitNivel(nivel){
-  if(nivel==='bomba'){
-    const ok=confirm('⚠ ATENÇÃO: PREÇO BOMBA SOMENTE DEPOIS DE VISITA TÉCNICA E VALIDAÇÃO\n\nEsse preço só pode ser utilizado após visita técnica realizada e autorização da gestão.\n\nDeseja continuar com o Preço Bomba?');
-    if(!ok)return;
-  }
-  currentNivelHi=nivel;
+  const isCheio=nivel==='cheio';
+  const btnC=$('btnNivelCheio'),btnM=$('btnNivelMinimo');
+  if(btnC){btnC.style.background=isCheio?'var(--or)':'transparent';btnC.style.color=isCheio?'#fff':'var(--or)';btnC.style.border='1.5px solid var(--or)';}
+  if(btnM){btnM.style.background=!isCheio?'#e67e22':'transparent';btnM.style.color=!isCheio?'#fff':'#e67e22';btnM.style.border='1.5px solid #e67e22';}
   autoCalcHibrido();
 }
 
@@ -975,11 +756,21 @@ function autoCalcHibrido(){
     const precos=getKitPrecosHi(qtyFinal,modKey,invKw,batQtyVal);
     if(precos){
       const nivel=currentNivelHi;
-      $('projectValue').value=Math.round(nivel==='bomba'?precos.bomba:nivel==='minimo'?precos.minimo:precos.cheio);
+      $('projectValue').value=Math.round(nivel==='minimo'?precos.minimo:precos.cheio);
       const tag=$('projectValueTag');
-      const nLabel=nivel==='bomba'?'BOMBA':nivel==='minimo'?'Mínimo':'Cheio';
-      if(tag)tag.textContent='kit · '+nLabel+' · '+modKey;
-      updateNivelIndicator({preco:precos.cheio,precoMin:precos.minimo,precoBomba:precos.bomba},nivel);
+      if(tag)tag.textContent='kit · '+(nivel==='minimo'?'Mínimo':'Cheio')+' · '+modKey;
+      // Atualiza strip de nível de preço
+      const strip=$('nivelPrecoStrip');
+      if(strip){
+        strip.style.display='block';
+        const lblC=$('lblCheio'),lblM=$('lblMinimo');
+        if(lblC)lblC.textContent='R$\u00a0'+Math.round(precos.cheio).toLocaleString('pt-BR');
+        if(lblM)lblM.textContent='R$\u00a0'+Math.round(precos.minimo).toLocaleString('pt-BR');
+        const isCheio=nivel==='cheio';
+        const btnC=$('btnNivelCheio'),btnM=$('btnNivelMinimo');
+        if(btnC){btnC.style.background=isCheio?'var(--or)':'transparent';btnC.style.color=isCheio?'#fff':'var(--or)';}
+        if(btnM){btnM.style.background=!isCheio?'#e67e22':'transparent';btnM.style.color=!isCheio?'#fff':'#e67e22';}
+      }
     }
   }
   calcOverload();
@@ -1007,7 +798,7 @@ function resetForm(){
   document.querySelector('input[name=validMode][value="dias"]').checked=true;onValidModeChange();
   $('warPainel').value='25';$('warInvHib').value='10';
   $('warBateria').value='6.000 ciclos';$('warInstalacao').value='1';$('warAssistencia').value='Inclusa';
-  $('batQty').value='1';$('precoKvp').value='5000';
+  $('batQty').value='1';
   $('monthlyGen').removeAttribute('data-manual');
   $('hasWallbox').checked=false;$('wallboxField').style.display='none';
   $('wallboxModel').value='';$('wallboxNote').value='';
@@ -1017,13 +808,11 @@ function resetForm(){
   document.querySelector('input[name=vend][value="lucas"]').checked=true;
   $('vendCustom').style.display='none';
   $('preview').style.display='none';$('prevEmpty').style.display='';
-  const nivelEl=$('kitNivelStrip');if(nivelEl)nivelEl.style.display='none';
-  kitAtivo=false;kitAtual=null;
-  const invSelK=$('kitInvSel');if(invSelK)invSelK.selectedIndex=0;
-  const batSelK=$('kitBatSel');if(batSelK){batSelK.innerHTML='<option value="">— Selecionar Baterias —</option>';batSelK.disabled=true;}
-  const prevCard=$('kitPreviewCard');if(prevCard)prevCard.style.display='none';
+  const nivelEl=$('nivelPrecoStrip');if(nivelEl)nivelEl.style.display='none';
+  currentNivelHi='cheio';
   const sel=$('modModelSel');sel.selectedIndex=1;onModModelChange(sel);
-  const isel=$('invModelSel');isel.selectedIndex=1;onInvModelChange(isel);
+  const isel=$('invModelSel');isel.selectedIndex=2;onInvModelChange(isel);
+  const bsel=$('batModelSel');if(bsel)bsel.selectedIndex=1;
   equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
   renderEquipmentTable();
 }
@@ -1125,10 +914,6 @@ function generateProposal(criarCard){
     if(!confirmar)return;
   }
 
-  // Validação: alerta se nível bomba
-  if(kitAtual&&kitAtual.nivel==='bomba'){
-    alert('⚠ ATENÇÃO: PREÇO BOMBA SOMENTE DEPOIS DE VISITA TÉCNICA E VALIDAÇÃO\n\nEssa proposta está sendo gerada com o Preço Bomba. Certifique-se de que a visita técnica foi realizada e a gestão autorizou este preço antes de enviar ao cliente.');
-  }
   // Validação obrigatória
   const erros=[];
   if(!get('invModel'))erros.push('Modelo do inversor h\u00edbrido');
@@ -1874,9 +1659,8 @@ function printPDF(){
 function onModQtyChange(){ autoCalcHibrido(); }
 $('modQty').addEventListener('input',onModQtyChange);
 $('modQty').addEventListener('change',onModQtyChange);
-$('modPower').addEventListener('input',function(){kitAtivo=false;autoCalcHibrido();});
+$('modPower').addEventListener('input',autoCalcHibrido);
 $('invPower').addEventListener('input',calcOverload);
-$('precoKvp').addEventListener('input',function(){if(!kitAtivo)autoCalcHibrido();});
 $('monthlyGen').addEventListener('input',function(){this.dataset.manual='1';});
 $('hasWallbox').addEventListener('change',function(){$('wallboxField').style.display=this.checked?'':'none';});
 $('batQty').addEventListener('change',function(){if($('isencaoICMS').checked)onIsencaoICMS();onBatQtyChange();});
