@@ -736,7 +736,10 @@ window.addEventListener('scroll', () => {
 
 /* ── PHONE MASK ── */
 document.getElementById('telefone').addEventListener('input', function(e) {
-  let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+  let v = e.target.value.replace(/\D/g, '');
+  // Remove código do país 55 se digitado
+  if (v.length > 11 && v.startsWith('55')) v = v.slice(2);
+  v = v.slice(0, 11);
   if (v.length > 10) {
     v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
   } else if (v.length > 6) {
