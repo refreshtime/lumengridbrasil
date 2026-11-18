@@ -280,8 +280,11 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   <div class="fs">
     <div class="fs-title">Sistema Solar</div>
     <div class="frow">
-      <div><label class="fl">Qtd Módulos</label><input class="fi" type="number" id="modQty" placeholder="Ex: 10" min="0"></div>
+      <div><label class="fl">Qtd Módulos</label><input class="fi" type="number" id="modQty" placeholder="Ex: 10" min="0" oninput="autoCalc()"></div>
       <div><label class="fl">Potência (W)</label><input class="fi" type="number" id="modPower" placeholder="Ex: 550" min="0"></div>
+    </div>
+    <div id="aviso40placas" style="display:none;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:8px 12px;font-size:11px;font-weight:600;color:#856404;margin-top:4px">
+      ⚠ Acima de 40 placas — este sistema requer <strong>cotação especial</strong>. Não é possível gerar proposta automaticamente. Entre em contato com a equipe técnica.
     </div>
     <label class="fl">Modelo do Módulo <span class="req-star">*</span></label>
     <select class="fsel" id="modModelSel" onchange="onModModelChange(this)">
@@ -533,11 +536,12 @@ const KIT_NEG=window.LG_KIT_NEG||{};
 const KITS_OG_FALLBACK=window.LG_KITS_OG||[];
 let KITS_OG = KITS_OG_FALLBACK;
 // modKey ex: 'Jinko 620W', 'Ronma 620W'
-function getKitPrecos(placas,modKey,isMicro){
+function getKitPrecos(placas,modKey,isMicro,invKw){
   const wpUnit=getWpFromModKey(modKey);
   const [brand,watt]=(modKey||'Jinko 620W').split(' ');
   const invKey=isMicro?'FoxESS':'GoodWe';
   const kwp=placas*wpUnit/1000;
+  const invDelta=(!isMicro&&invKw)?calcInvDelta(calcMinInvKw(kwp),invKw):0;
   const faixa=KIT_FAIXAS.find(f=>kwp>f.min&&kwp<=f.max)||KIT_FAIXAS[KIT_FAIXAS.length-1];
   const instal=faixa.rwp*placas*wpUnit+faixa.homo;
   const margem=KIT_MARGEM[placas]||0.33;
@@ -570,7 +574,7 @@ function getKitPrecos(placas,modKey,isMicro){
     }
   }
 
-  const direto=equip+instal;
+  const direto=equip+invDelta+instal;
   const formulaMin=direto/(1-margem);
   const minimo=promo!==null?promo:Math.round(formulaMin/10)*10;
   const cheio=Math.round(minimo/(1-neg));
@@ -594,6 +598,35 @@ const INV_AUTO=[
   {v:'GoodWe Premium On-Grid 20kW',  kw:20},
   {v:'GoodWe Premium On-Grid 30kW',  kw:30},
 ];
+// Delta por passo acima do inversor mínimo necessário
+const INV_STEPS=[
+  {kw:3,   delta:0},
+  {kw:3.3, delta:500},
+  {kw:5,   delta:500},
+  {kw:6,   delta:700},
+  {kw:7,   delta:700},
+  {kw:8,   delta:700},
+  {kw:10,  delta:700},
+  {kw:12,  delta:1000},
+  {kw:15,  delta:1000},
+  {kw:18,  delta:1000},
+  {kw:20,  delta:1000},
+  {kw:30,  delta:1000},
+];
+function calcMinInvKw(kVp){
+  const needed=kVp/1.4;
+  const inv=INV_AUTO.find(i=>i.kw>=needed);
+  return inv?inv.kw:INV_AUTO[INV_AUTO.length-1].kw;
+}
+function calcInvDelta(minKw,selKw){
+  if(!selKw||selKw<=minKw)return 0;
+  const minIdx=INV_STEPS.findIndex(s=>s.kw>=minKw);
+  const selIdx=INV_STEPS.findIndex(s=>s.kw>=selKw);
+  if(minIdx<0||selIdx<=minIdx)return 0;
+  let d=0;
+  for(let i=minIdx+1;i<=selIdx;i++)d+=INV_STEPS[i].delta;
+  return d;
+}
 function autoSelectInverter(kVp){
   const sel=$('invModelSel');
   if(!sel||sel.dataset.manual)return;
@@ -628,13 +661,22 @@ function autoCalc(){
   const kVp=qty&&pwr?qty*pwr/1000:0;
   $('totalPower').value=kVp>0?kVp.toFixed(2)+' kVp':'';
   if(!$('monthlyGen').dataset.manual&&qty>0)$('monthlyGen').value=Math.round(qty*65);
-  if(qty>0&&modKey!=='Outro'){
-    const kp=getKitPrecos(qty,modKey,isMicro);
-    $('projectValue').value=kp.cheio;
+  // ── Aviso 40 placas ──
+  const aviso40=$('aviso40placas');
+  if(qty>40){
+    if(aviso40)aviso40.style.display='block';
+    $('projectValue').value='';
+    const strip=$('nivelPrecoStrip');if(strip)strip.style.display='none';
+    calcOverload();return;
   }
-  // Micro: 1 microinversor a cada 4 placas
+  if(aviso40)aviso40.style.display='none';
+  // Atualiza inversor antes do cálculo (garante delta correto)
   if(isMicro&&qty>0)$('invQty').value=Math.ceil(qty/4);
   else if(!isMicro)autoSelectInverter(kVp);
+  if(qty>0&&modKey!=='Outro'){
+    const kp=getKitPrecos(qty,modKey,isMicro,getN('invPower'));
+    $('projectValue').value=kp.cheio;
+  }
   // Atualiza strip de nível de preço
   updateNivelSolarStrip();
   calcOverload();
@@ -646,8 +688,8 @@ function updateNivelSolarStrip(){
   const qty=getN('modQty');
   const strip=$('nivelPrecoStrip');
   if(!strip)return;
-  if(!qty||modKey==='Outro'){strip.style.display='none';return;}
-  const kp=getKitPrecos(qty,modKey,isMicro);
+  if(!qty||qty>40||modKey==='Outro'){strip.style.display='none';return;}
+  const kp=getKitPrecos(qty,modKey,isMicro,getN('invPower'));
   const fmtBR=v=>'R$\u00a0'+v.toLocaleString('pt-BR');
   strip.style.display='block';
   const lblC=$('lblCheio');const lblM=$('lblMinimo');
@@ -664,8 +706,8 @@ function setNivelSolar(nivel){
   const flags=_getModFlags();
   const{modKey,isMicro}=flags;
   const qty=getN('modQty');
-  if(!qty||modKey==='Outro')return;
-  const kp=getKitPrecos(qty,modKey,isMicro);
+  if(!qty||qty>40||modKey==='Outro')return;
+  const kp=getKitPrecos(qty,modKey,isMicro,getN('invPower'));
   $('projectValue').value=nivel==='cheio'?kp.cheio:kp.minimo;
   updateNivelSolarStrip();
 }
@@ -854,6 +896,11 @@ function checkPhoneCRM(){
 }
 
 function generateProposal(criarCard=true){
+  // ── LIMITE 40 PLACAS ──
+  if(getN('modQty')>40){
+    alert('⚠ SISTEMA ACIMA DE 40 PLACAS\n\nSistemas com mais de 40 placas requerem cotação especial.\nNão é possível gerar proposta automaticamente.\n\nEntre em contato com a equipe técnica para precificação personalizada.');
+    return;
+  }
   // ── VALIDAÇÃO CRM: telefone já cadastrado ──
   const leadExistente=checkPhoneCRM();
   if(leadExistente){
@@ -890,7 +937,7 @@ function generateProposal(criarCard=true){
     const _flags=_getModFlags();
     const{modKey:_mk,isMicro:_isM}=_flags;
     if(_mk!=='Outro'){
-    const _kp=getKitPrecos(_qty,_mk,_isM);
+    const _kp=getKitPrecos(_qty,_mk,_isM,getN('invPower'));
     if(_pv<_kp.minimo-50){
       alert('⚠ ATENÇÃO: PREÇO ABAIXO DO MÍNIMO PERMITIDO\n\nO valor informado ('+fmtBRL(_pv)+') está abaixo do Preço Mínimo para este sistema ('+fmtBRL(_kp.minimo)+').\n\nAjuste o valor antes de gerar a proposta.');
       return;

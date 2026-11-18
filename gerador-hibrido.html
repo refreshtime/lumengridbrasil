@@ -281,7 +281,7 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
   <div class="fs">
     <div class="fs-title">Sistema Solar</div>
     <div class="frow">
-      <div><label class="fl">Qtd Módulos <span class="req-star">*</span></label><input class="fi" type="number" id="modQty" placeholder="Ex: 10" min="0"></div>
+      <div><label class="fl">Qtd Módulos <span class="req-star">*</span></label><input class="fi" type="number" id="modQty" placeholder="Ex: 10" min="0" oninput="autoCalcHibrido()"></div>
       <div><label class="fl">Potência (W)</label><input class="fi" type="number" id="modPower" placeholder="Ex: 550" min="0"></div>
     </div>
     <label class="fl">Modelo do Módulo <span class="req-star">*</span></label>
@@ -300,9 +300,9 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <label class="fl">Modelo do Inversor Híbrido <span class="req-star">*</span></label>
     <select class="fsel" id="invModelSel" onchange="onInvModelChange(this)">
       <option value="">— Selecionar —</option>
-      <option value="GoodWe GW3.5K-ET Híbrido Monofásico 2MPPT 220V 3.5kW" data-power="3.5">GoodWe GW3.5K Híbrido Monofásico 3.5kW</option>
+      <option value="GoodWe GW5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 5kW" data-power="5">GoodWe GW5K Híbrido Bifásico 5kW</option>
       <option value="GoodWe GW7.5K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 7.5kW" data-power="7.5" selected>GoodWe GW7.5K Híbrido Bifásico 7.5kW ★ padrão</option>
-      <option value="GoodWe GW10K-ET Híbrido Monofásico 2MPPT 220V 10kW" data-power="10">GoodWe GW10K Híbrido Monofásico 10kW</option>
+      <option value="GoodWe GW10K-ES-LD-G10 Híbrido Bifásico 2MPPT 127/220V 10kW" data-power="10">GoodWe GW10K Híbrido Bifásico 10kW</option>
       <option value="GoodWe GW12K-ET-L-G10 Híbrido Trifásico 3MPPT 380V 12kW" data-power="12">GoodWe GW12K Híbrido Trifásico 12kW</option>
       <option value="custom">Outro (digitar)</option>
     </select>
@@ -334,6 +334,24 @@ body{font-family:'Montserrat','Segoe UI',sans-serif;background:var(--ui);color:v
     <input class="fi" id="batModel" placeholder="Modelo personalizado" style="display:none">
     <label class="fl">Descrição / Backup</label>
     <input class="fi" id="batDesc" placeholder="Ex: Backup — ~8h de autonomia para cargas essenciais">
+  </div>
+
+  <div id="microComplemento" class="fs" style="display:none;border-left:3px solid #e74c3c">
+    <div class="fs-title" style="color:#e74c3c">⚡ Complemento Microinversor</div>
+    <div style="background:#fff5f5;border:1px solid rgba(231,76,60,.2);border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:10px;line-height:1.65;color:#555">
+      O inversor híbrido suporta até <strong id="microMaxPl">—</strong> placas (<span id="microOvLabel">—</span>% overload).<br>
+      As <strong id="microExtraPl">—</strong> placas excedentes serão atendidas por <strong id="microQtyTxt">—</strong> microinversor(es) FoxESS 2.5kW.
+    </div>
+    <div class="frow">
+      <div>
+        <label class="fl">Kit Híbrido (<span id="microMaxPl2">—</span> pl)</label>
+        <input class="fi" id="microHibPreco" readonly style="background:#f8f9fc;color:#333">
+      </div>
+      <div>
+        <label class="fl">Complemento Micro (<span id="microExtraPl2">—</span> pl)</label>
+        <input class="fi" id="microMicroPreco" readonly style="background:#f8f9fc;color:#333">
+      </div>
+    </div>
   </div>
 
   <div class="fs">
@@ -694,9 +712,10 @@ function calcHibridoKit(k){
   const homo=kwp<=6?500:kwp<=9?800:kwp<=12?950:kwp<=20?1050:1450;
   const custoDireto=k.equip+instalDEG+homo;
   const margem=margemHi(k.bats);
-  const minimo=Math.round(custoDireto/(1-margem)/10)*10;
-  const cheio=minimo/(1-0.06);
-  return{minimo:minimo+1000,cheio:Math.round(cheio)+2000};
+  const minimoCalc=Math.round(custoDireto/(1-margem)/10)*10;
+  const minimoFinal=Math.max(46000, minimoCalc+1000);
+  const cheio=minimoFinal/(1-0.06);
+  return{minimo:minimoFinal,cheio:Math.round(cheio)+2000};
 }
 
 function setNivelHibrido(nivel){
@@ -724,16 +743,52 @@ function onIsencaoICMS(){
   }
 }
 
+// Busca preço on-grid do complemento FoxESS Micro para as placas excedentes
+function getMicroPreco(extraPlacas,modKey){
+  const kitsOG=window.LG_KITS_OG||[];
+  const faixas=window.LG_KIT_FAIXAS||[];
+  const margemMap=window.LG_KIT_MARGEM||{};
+  const negMap=window.LG_KIT_NEG||{};
+  let pool=kitsOG.filter(k=>k.inv==='FoxESS Micro'&&k.mod.includes(modKey));
+  if(!pool.length)pool=kitsOG.filter(k=>k.inv==='FoxESS Micro'&&k.mod.includes('Jinko'));
+  if(!pool.length)return null;
+  const sorted=[...pool].sort((a,b)=>a.placas-b.placas);
+  let equip;
+  const exact=sorted.find(k=>k.placas===extraPlacas);
+  if(exact){equip=exact.equip;}
+  else{
+    const below=sorted.filter(k=>k.placas<extraPlacas).pop();
+    const above=sorted.find(k=>k.placas>extraPlacas);
+    if(below&&above){const r=(extraPlacas-below.placas)/(above.placas-below.placas);equip=Math.round(below.equip+r*(above.equip-below.equip));}
+    else if(below){const ppl=below.equip/below.placas;equip=Math.round(below.equip+(extraPlacas-below.placas)*ppl);}
+    else{const ppl=above.equip/above.placas;equip=Math.round(above.equip+(extraPlacas-above.placas)*ppl);}
+  }
+  const wpUnit=modKey==='Leapton'?600:modKey==='DMEGC'?625:620;
+  const kwp=extraPlacas*wpUnit/1000;
+  const faixa=faixas.find(f=>kwp>f.min&&kwp<=f.max)||faixas[faixas.length-1];
+  const instal=Math.round(kwp*1000*faixa.rwp)+faixa.homo;
+  const direto=equip+instal;
+  const margem=margemMap[extraPlacas]||0.28;
+  const neg=negMap[extraPlacas]||0.05;
+  const minimo=Math.round(direto/(1-margem)/10)*10;
+  const cheio=Math.round(minimo/(1-neg));
+  const microUnits=Math.ceil(extraPlacas/4);
+  return{minimo,cheio,equip,direto,microUnits};
+}
+
 function calcOverload(){
   const el=$('overloadInfo');if(!el)return;
   const qty=getN('modQty'),pwr=getN('modPower'),invPwr=getN('invPower');
   if(!qty||!pwr||!invPwr){el.style.display='none';return;}
-  const ov=((qty*pwr)/(invPwr*1000)-1)*100;
+  // Se micro ativo: exibir overload apenas das placas no híbrido
+  const hibPl=window._microComplement?window._microComplement.hibPlacas:qty;
+  const ov=((hibPl*pwr)/(invPwr*1000)-1)*100;
+  const microAtivo=!!window._microComplement;
   let c,t;
-  if(ov<0){c='#c0392b';t=`⚠ Inversor superdimensionado (placas = ${(qty*pwr/1000).toFixed(2)} kWp < inversor ${invPwr} kW)`;}
-  else if(ov<=34){c='#27ae60';t=`✓ Overload ${ov.toFixed(1)}% — adequado`;}
-  else if(ov<=55){c='#e67e22';t=`⚠ Overload ${ov.toFixed(1)}% — atenção (ideal até 34%)`;}
-  else{c='#c0392b';t=`✗ Overload ${ov.toFixed(1)}% — acima do limite seguro`;}
+  if(ov<0){c='#c0392b';t=`⚠ Inversor superdimensionado (${(hibPl*pwr/1000).toFixed(2)} kWp < ${invPwr} kW)`;}
+  else if(ov<=34){c='#27ae60';t=`✓ Overload ${ov.toFixed(1)}%${microAtivo?' ('+hibPl+' pl no híbrido)':''} — adequado`;}
+  else if(ov<=55){c='#e67e22';t=`⚠ Overload ${ov.toFixed(1)}%${microAtivo?' ('+hibPl+' pl no híbrido)':' — atenção'}`;}
+  else{c='#c0392b';t=`✗ Overload ${ov.toFixed(1)}%${microAtivo?' ('+hibPl+' pl no híbrido)':' — acima do limite seguro'}`;}
   el.textContent=t;el.style.cssText=`display:block;margin-top:4px;font-size:11px;font-weight:700;color:${c};padding:4px 8px;background:${c}18;border-radius:4px;border-left:3px solid ${c}`;
 }
 function autoCalcHibrido(){
@@ -749,27 +804,63 @@ function autoCalcHibrido(){
   else{$('totalPower').value='';}
   const genEl=$('monthlyGen');
   if(!genEl.dataset.manual&&qtyFinal>0)genEl.value=Math.round(qtyFinal*65);
-  // Preço: sempre via tabela de kits (marca + placas + inversor + baterias)
+  // Preço: via tabela de kits; se overload >48.8% em bifásico ≤10kW, adicionar complemento micro
   const invKw=getN('invPower');
+  const microDiv=$('microComplemento');
+  function _updateStrip(minimo,cheio,nivel,tag){
+    $('projectValue').value=Math.round(nivel==='minimo'?minimo:cheio);
+    const tagEl=$('projectValueTag');if(tagEl)tagEl.textContent=tag;
+    const strip=$('nivelPrecoStrip');
+    if(strip){
+      strip.style.display='block';
+      const lblC=$('lblCheio'),lblM=$('lblMinimo');
+      if(lblC)lblC.textContent='R$\u00a0'+Math.round(cheio).toLocaleString('pt-BR');
+      if(lblM)lblM.textContent='R$\u00a0'+Math.round(minimo).toLocaleString('pt-BR');
+      const isCheio=nivel==='cheio';
+      const btnC=$('btnNivelCheio'),btnM=$('btnNivelMinimo');
+      if(btnC){btnC.style.background=isCheio?'var(--or)':'transparent';btnC.style.color=isCheio?'#fff':'var(--or)';}
+      if(btnM){btnM.style.background=!isCheio?'#e67e22':'transparent';btnM.style.color=!isCheio?'#fff':'#e67e22';}
+    }
+  }
   if(qtyFinal>0&&invKw>0){
     const modKey=getModKeyHi();
-    const precos=getKitPrecosHi(qtyFinal,modKey,invKw,batQtyVal);
-    if(precos){
-      const nivel=currentNivelHi;
-      $('projectValue').value=Math.round(nivel==='minimo'?precos.minimo:precos.cheio);
-      const tag=$('projectValueTag');
-      if(tag)tag.textContent='kit · '+(nivel==='minimo'?'Mínimo':'Cheio')+' · '+modKey;
-      // Atualiza strip de nível de preço
-      const strip=$('nivelPrecoStrip');
-      if(strip){
-        strip.style.display='block';
-        const lblC=$('lblCheio'),lblM=$('lblMinimo');
-        if(lblC)lblC.textContent='R$\u00a0'+Math.round(precos.cheio).toLocaleString('pt-BR');
-        if(lblM)lblM.textContent='R$\u00a0'+Math.round(precos.minimo).toLocaleString('pt-BR');
-        const isCheio=nivel==='cheio';
-        const btnC=$('btnNivelCheio'),btnM=$('btnNivelMinimo');
-        if(btnC){btnC.style.background=isCheio?'var(--or)':'transparent';btnC.style.color=isCheio?'#fff':'var(--or)';}
-        if(btnM){btnM.style.background=!isCheio?'#e67e22':'transparent';btnM.style.color=!isCheio?'#fff':'#e67e22';}
+    const totalDC=qtyFinal*pwr;
+    const maxDC=invKw*1000*1.488;
+    if(totalDC>maxDC&&invKw<=10){
+      // Bifásico com overload excedido: híbrido no max + micro para o excedente
+      const maxPlacas=Math.floor(maxDC/pwr);
+      const extraPlacas=qtyFinal-maxPlacas;
+      const precosHib=getKitPrecosHi(maxPlacas,modKey,invKw,batQtyVal);
+      const microInfo=getMicroPreco(extraPlacas,modKey);
+      if(precosHib&&microInfo){
+        const nivel=currentNivelHi;
+        const totalMinimo=precosHib.minimo+microInfo.minimo;
+        const totalCheio=precosHib.cheio+microInfo.cheio;
+        _updateStrip(totalMinimo,totalCheio,nivel,'híbrido+micro · '+(nivel==='minimo'?'Mínimo':'Cheio'));
+        if(microDiv){
+          microDiv.style.display='block';
+          const ovPct=((maxPlacas*pwr/(invKw*1000))-1)*100;
+          const setText=(id,v)=>{const e=$(id);if(e)e.textContent=v;};
+          const setVal=(id,v)=>{const e=$(id);if(e)e.value=v;};
+          setText('microMaxPl',maxPlacas);setText('microMaxPl2',maxPlacas);
+          setText('microExtraPl',extraPlacas);setText('microExtraPl2',extraPlacas);
+          setText('microQtyTxt',microInfo.microUnits);
+          setText('microOvLabel',ovPct.toFixed(1));
+          const hib=nivel==='minimo'?precosHib.minimo:precosHib.cheio;
+          const mic=nivel==='minimo'?microInfo.minimo:microInfo.cheio;
+          setVal('microHibPreco','R$ '+hib.toLocaleString('pt-BR'));
+          setVal('microMicroPreco','R$ '+mic.toLocaleString('pt-BR'));
+        }
+        window._microComplement={placas:extraPlacas,units:microInfo.microUnits,hibPlacas:maxPlacas,modKey};
+      }
+    }else{
+      // Sem micro
+      if(microDiv)microDiv.style.display='none';
+      window._microComplement=null;
+      const precos=getKitPrecosHi(qtyFinal,modKey,invKw,batQtyVal);
+      if(precos){
+        const nivel=currentNivelHi;
+        _updateStrip(precos.minimo,precos.cheio,nivel,'kit · '+(nivel==='minimo'?'Mínimo':'Cheio')+' · '+modKey);
       }
     }
   }
@@ -812,7 +903,9 @@ function resetForm(){
   currentNivelHi='cheio';
   const sel=$('modModelSel');sel.selectedIndex=1;onModModelChange(sel);
   const isel=$('invModelSel');isel.selectedIndex=2;onInvModelChange(isel);
-  const bsel=$('batModelSel');if(bsel)bsel.selectedIndex=1;
+  window._microComplement=null;const microDiv=$('microComplemento');if(microDiv)microDiv.style.display='none';
+  $('invQty').value='1';
+  const bsel=$('batModelSel');if(bsel){bsel.selectedIndex=1;onBatModelChange(bsel);}
   equipmentList=JSON.parse(JSON.stringify(DEFAULT_EQUIPMENT));
   renderEquipmentTable();
 }
@@ -917,6 +1010,7 @@ function generateProposal(criarCard){
   // Validação obrigatória
   const erros=[];
   if(!get('invModel'))erros.push('Modelo do inversor h\u00edbrido');
+  if(!getN('modQty'))erros.push('Quantidade de módulos');
   if(!getN('batteryKwh')&&!get('batModel'))erros.push('Bateria (capacidade em kWh ou modelo)');
   if(criarCard&&!get('clientPhone')){
     alert('Preencha o telefone do cliente para gerar o card no CRM.\n\nSe preferir gerar a proposta sem registrar no CRM, clique em "Gerar sem card no CRM".');
@@ -1089,6 +1183,7 @@ function generateProposal(criarCard){
     batKwh?{label:'Armazenamento',qty:'—',spec:batKwh+' kWh',hero2:true}:null,
     modQty&&modModel?{label:'M\u00f3dulos Fotovoltaicos',qty:modQty+' un.',spec:modModel+(modPower?' \u00b7 '+modPower+' W':'')}:null,
     invQty?{label:'Inversor H\u00edbrido',qty:invQty+' un.',spec:(invModel||'Inversor H\u00edbrido')+(invPower?' \u00b7 '+invPower+' kW':'')}:null,
+    window._microComplement?{label:'Microinversor Complementar',qty:window._microComplement.units+' un.',spec:'FoxESS 2.5kW \u00b7 '+window._microComplement.placas+' placas adicionais'}:null,
     batKwh&&batModel?{label:'Bateria',qty:batQty+' un.',spec:batModel}:null,
     {label:'Estrutura de Fixa\u00e7\u00e3o',qty:'\u2713',spec:'Alum\u00ednio anodizado \u2014 conforme projeto'},
     {label:'Cabeamento CC / CA',qty:'\u2713',spec:'Fio solar 6mm\u00b2 certificado ABNT'},
@@ -1669,10 +1764,11 @@ document.querySelectorAll('input[name=vend]').forEach(r=>r.addEventListener('cha
 
 
 renderEquipmentTable();
-// Inicializa modelo padrão (Jinko + GoodWe) no carregamento da página
+// Inicializa modelo padrão (Jinko + GoodWe + Lynx A) no carregamento da página
 (function(){
   const ms=$('modModelSel');if(ms)onModModelChange(ms);
   const is=$('invModelSel');if(is)onInvModelChange(is);
+  const bs=$('batModelSel');if(bs)onBatModelChange(bs);
 })();
 
 // ── INIT — CARREGA KITS HÍBRIDOS DO SHEETS (ou usa fallback) ──
