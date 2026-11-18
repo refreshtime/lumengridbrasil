@@ -124,6 +124,13 @@ input::placeholder,textarea::placeholder{color:var(--dim)}
           <label>Nome do cliente</label>
           <input type="text" id="cliente" placeholder="Ex: João Silva" oninput="gerar()">
         </div>
+        <div class="field">
+          <label>Modelo do Inversor</label>
+          <div class="chips" id="chips-inv">
+            <div class="chip sel" data-val="" onclick="selChip('chips-inv',this);gerar()">EC 7,5 kW (padrão)</div>
+            <div class="chip" data-val="12" onclick="selChip('chips-inv',this);gerar()">EC 12 kW Trifásico</div>
+          </div>
+        </div>
       </div>
 
       <!-- Opção personalizada -->
@@ -304,6 +311,9 @@ function gerar() {
   var cliente = v('cliente').value.trim();
   if (cliente) params.push('cliente=' + enc(cliente));
 
+  var invChip = getChip('chips-inv');
+  if (invChip) params.push('inv=' + invChip);
+
   if (v('tog-cargas').checked) params.push('cargas=1');
   if (v('tog-sem-placas').checked) params.push('placas=0');
 
@@ -387,6 +397,7 @@ function resetar() {
   v('desc-desc').value = '';
   v('desc-validade').value = '';
   document.querySelectorAll('#chips-bat .chip').forEach(function(c,i){ c.classList.toggle('sel', i===0); });
+  document.querySelectorAll('#chips-inv .chip').forEach(function(c,i){ c.classList.toggle('sel', i===0); });
   gerar();
 }
 

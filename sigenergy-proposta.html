@@ -1427,15 +1427,15 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <div class="inv-title">Essencial</div>
       <div class="inv-subtitle">Autonomia para o essencial da casa</div>
       <table class="inv-table">
-        <tr class="inv-placas-row"><td>Painéis</td><td>3 painéis inclusos</td></tr>
-        <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
+        <tr class="inv-placas-row"><td>Painéis</td><td>6 painéis inclusos</td></tr>
+        <tr><td>Inversor</td><td id="inv-c1-inversor">SigenStor EC 7,5 kW</td></tr>
         <tr><td>Bateria</td><td>1× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight">9 kWh (100% DoD)</td></tr>
         <tr><td>Garantia inversor</td><td>10 anos</td></tr>
         <tr><td>Garantia bateria</td><td>10 anos</td></tr>
       </table>
       <div class="inv-price">
-        <div class="inv-price-v"><span>R$</span> 63.000</div>
+        <div class="inv-price-v"><span>R$</span> <span id="inv-c1-price">63.000</span></div>
         <div class="inv-price-l">Instalação inclusa · Preço fixo</div>
       </div>
       <p class="inv-card-note">* Capacidade máxima de 6 baterias por inversor</p>
@@ -1451,35 +1451,35 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <div class="inv-title">Autonomia Total</div>
       <div class="inv-subtitle">Máxima independência energética</div>
       <table class="inv-table">
-        <tr class="inv-placas-row"><td>Painéis</td><td>3 painéis inclusos</td></tr>
-        <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
+        <tr class="inv-placas-row"><td>Painéis</td><td>6 painéis inclusos</td></tr>
+        <tr><td>Inversor</td><td id="inv-c2-inversor">SigenStor EC 7,5 kW</td></tr>
         <tr><td>Bateria</td><td>2× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight">18 kWh (100% DoD)</td></tr>
         <tr><td>Garantia inversor</td><td>10 anos</td></tr>
         <tr><td>Garantia bateria</td><td>10 anos</td></tr>
       </table>
       <div class="inv-price">
-        <div class="inv-price-v"><span>R$</span> 79.000</div>
+        <div class="inv-price-v"><span>R$</span> <span id="inv-c2-price">79.000</span></div>
         <div class="inv-price-l">Instalação inclusa · Preço fixo</div>
       </div>
       <p class="inv-card-note">* Capacidade máxima de 6 baterias por inversor</p>
       <a class="btn-inv" id="inv-wpp2" href="#cta">Quero este sistema →</a>
     </div>
 
-    <div class="inv-card rv" data-d="3">
+    <div class="inv-card rv" data-d="3" id="inv-card-3">
       <div class="inv-name">Opção 3</div>
       <div class="inv-title">Reserva Ampliada</div>
       <div class="inv-subtitle">Alta capacidade de armazenamento</div>
       <table class="inv-table">
-        <tr class="inv-placas-row"><td>Painéis</td><td>3 painéis inclusos</td></tr>
-        <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
+        <tr class="inv-placas-row"><td>Painéis</td><td>6 painéis inclusos</td></tr>
+        <tr><td>Inversor</td><td id="inv-c3-inversor">SigenStor EC 7,5 kW</td></tr>
         <tr><td>Bateria</td><td>4× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight">36 kWh (100% DoD)</td></tr>
         <tr><td>Garantia inversor</td><td>10 anos</td></tr>
         <tr><td>Garantia bateria</td><td>10 anos</td></tr>
       </table>
       <div class="inv-price">
-        <div class="inv-price-v"><span>R$</span> 114.000</div>
+        <div class="inv-price-v"><span>R$</span> <span id="inv-c3-price">114.000</span></div>
         <div class="inv-price-l">Instalação inclusa · Preço fixo</div>
       </div>
       <p class="inv-card-note">* Capacidade máxima de 6 baterias por inversor</p>
@@ -1498,7 +1498,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 56px
       <table class="inv-table" id="inv-plan-table">
         <tr id="inv-plan-placas-row" style="display:none"><td>Painéis</td><td id="inv-plan-placas-val">—</td></tr>
         <tr id="inv-plan-geracao-row" style="display:none"><td>Geração estimada</td><td id="inv-plan-geracao-val">—</td></tr>
-        <tr><td>Inversor</td><td>SigenStor EC 7,5 kW</td></tr>
+        <tr><td>Inversor</td><td id="inv-plan-inversor">SigenStor EC 7,5 kW</td></tr>
         <tr id="inv-plan-micro-row" style="display:none"><td>Microinversor</td><td id="inv-plan-micro-val">—</td></tr>
         <tr><td>Bateria</td><td id="inv-plan-bat-val">6× SigenStor LFP 9 kWh</td></tr>
         <tr><td>Energia útil</td><td class="highlight" id="inv-plan-energy-val">54 kWh (100% DoD)</td></tr>
@@ -1994,6 +1994,21 @@ calcAutonomia();
     }
   }
 })();
+
+// ── PARÂMETRO: inv=12 → Sigenergy EC 12 kW Trifásico ──
+if (P.get('inv') === '12') {
+  var invNome = 'SigenStor EC 12 kW Trifásico';
+  var ids = ['inv-c1-inversor','inv-c2-inversor','inv-c3-inversor','inv-plan-inversor'];
+  ids.forEach(function(id){ var el=document.getElementById(id); if(el)el.textContent=invNome; });
+  // Preços 12kW: 1 bat = R$74.677, 2 bats = R$88.677
+  var c1p = document.getElementById('inv-c1-price'); if(c1p) c1p.textContent = '74.677';
+  var c2p = document.getElementById('inv-c2-price'); if(c2p) c2p.textContent = '88.677';
+  // Ocultar opção 3 (sem preço definido para 12kW)
+  var c3 = document.getElementById('inv-card-3'); if(c3) c3.style.display = 'none';
+  // Atualizar subtítulo
+  var sub = document.getElementById('inv-subtitle');
+  if(sub) sub.textContent = 'Inversor SigenStor EC 12 kW Trifásico · Instalação completa · Sem carregador veicular';
+}
 
 // ── PARÂMETRO: placas=0 → oculta linha de painéis das opções padrão ──
 if (P.get('placas') === '0') {
