@@ -362,8 +362,8 @@ body {
 }
 .header-brand { display: flex; align-items: center; gap: 16px; }
 .header-logo {
-  height: 48px;
-  filter: drop-shadow(0 0 12px rgba(242,101,34,.70)) drop-shadow(0 0 5px rgba(242,101,34,.40));
+  height: 60px;
+  width: auto;
 }
 .header-wordmark { display: flex; flex-direction: column; gap: 3px; }
 .header-wm-line { display: flex; align-items: baseline; line-height: 1; }
@@ -592,8 +592,7 @@ O local do inversor necessita de ventilação adequada para..."></textarea>
 <div class="editor">
   <div class="editor-header">
     <div class="editor-brand">
-      <img src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
-      <div class="editor-brand-wm"><span class="l">LUMEN</span><span class="g">GRID</span></div>
+      <img src="../REDESIGN/LOGOMARCA/lumengrid_horizontal_branca_transparente.svg" alt="LumenGrid" style="height:22px;width:auto;">
     </div>
     <div class="editor-sub">Gerador de Relatório de Visita Técnica</div>
   </div>
@@ -999,13 +998,7 @@ function render(d) {
   document.getElementById('page').innerHTML = `
     <div class="header">
       <div class="header-brand">
-        <img class="header-logo" src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid">
-        <div class="header-wordmark">
-          <div class="header-wm-line">
-            <span class="wm-l">LUMEN</span><span class="wm-g">GRID</span>
-          </div>
-          <div class="header-tagline">Energia Inteligente</div>
-        </div>
+        <img class="header-logo" src="../REDESIGN/LOGOMARCA/lumengrid_horizontal_branca_transparente.svg" alt="LumenGrid">
       </div>
       <div class="header-doc">
         <div class="header-doc-title">Documento</div>
@@ -1173,7 +1166,7 @@ body{background:#E8E8E8;font-family:'DM Sans',sans-serif;display:flex;flex-direc
 .page{width:794px;background:#FAFAFA;position:relative;display:flex;flex-direction:column;box-shadow:0 4px 40px rgba(0,0,0,.18)}
 .header{background:#0f0f0f;padding:36px 52px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #F26522}
 .header-brand{display:flex;align-items:center;gap:16px}
-.header-logo{height:48px;filter:drop-shadow(0 0 12px rgba(242,101,34,.70)) drop-shadow(0 0 5px rgba(242,101,34,.40))}
+.header-logo{height:60px;width:auto}
 .header-wordmark{display:flex;flex-direction:column;gap:3px}
 .header-wm-line{display:flex;align-items:baseline;line-height:1}
 .wm-l{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;color:#F26522;letter-spacing:-.3px}
@@ -1283,7 +1276,7 @@ var secoesHTML=dados.secoes.map(function(s,i){return renderSecao(s,i);}).join(''
 var obsHTML=dados.observacoes?'<div class="obs-box"><div class="obs-label">Observações</div>'+esc(dados.observacoes)+'</div>':'';
 
 document.getElementById('page').innerHTML=
-  '<div class="header"><div class="header-brand"><img class="header-logo" src="../imagens/LOGOS/logo-icone.png" alt="LumenGrid"><div class="header-wordmark"><div class="header-wm-line"><span class="wm-l">LUMEN</span><span class="wm-g">GRID</span></div><div class="header-tagline">Energia Inteligente</div></div></div><div class="header-doc"><div class="header-doc-title">Documento</div><div class="header-doc-name">Relatório de Visita Técnica</div></div></div>'+
+  '<div class="header"><div class="header-brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" fill="none" style="height:60px;width:auto" aria-label="LumenGrid"><g transform="translate(50,50) scale(3)"><path d="M59 15 A36 36 0 1 1 25 25" stroke="#FAFAFA" stroke-width="4" stroke-linecap="round"/><circle cx="68" cy="19" r="6" fill="#F57832"/></g><text x="375" y="215" font-family="Raleway,sans-serif" font-weight="600" font-size="80" letter-spacing="16"><tspan fill="#F26522">LUMEN</tspan><tspan fill="#FAFAFA">GRID</tspan></text><text x="378" y="265" font-family="Inter,sans-serif" font-weight="400" font-size="22" letter-spacing="7" fill="#F26522">ENERGIA INTELIGENTE</text></svg></div><div class="header-doc"><div class="header-doc-title">Documento</div><div class="header-doc-name">Relatório de Visita Técnica</div></div></div>'+
   '<div class="ficha">'+
     '<div class="ficha-item"><div class="ficha-label">Cliente</div><div class="ficha-value">'+esc(dados.cliente)+'</div></div>'+
     '<div class="ficha-item"><div class="ficha-label">Endereço</div><div class="ficha-value">'+esc(dados.endereco)+(dados.bairro?'<br>'+esc(dados.bairro):'')+'</div></div>'+
