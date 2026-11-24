@@ -144,6 +144,15 @@ footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top
         Sigenergy SigenStor EC
       </div>
 
+      <div class="field" style="margin-bottom:18px">
+        <label>Inversor</label>
+        <div class="chips" id="s-chips-inv">
+          <div class="chip sel-sig" data-inv="" onclick="selInv(this,'')">7,5 kW Monofásico</div>
+          <div class="chip" data-inv="12" onclick="selInv(this,'12')">12 kW Trifásico</div>
+        </div>
+        <div id="s-inv-hint" style="font-size:10px;color:var(--dim);margin-top:5px;display:none">Inversor trifásico — disponível com 1 ou 2 baterias</div>
+      </div>
+
       <div class="field">
         <label>Baterias</label>
         <div class="chips" id="s-chips-bat">
@@ -379,6 +388,39 @@ footer{text-align:center;padding:20px;font-size:10px;color:var(--dim);border-top
 var BASE_SIG = 'https://lumengridbrasil.com.br/sigenergy-proposta.html';
 var BASE_AB  = 'https://lumengridbrasil.com.br/proposta-offgrid.html';
 
+var INV_PRICES = {
+  '':  {1:69185, 2:88677, 3:105185, 4:124685, 5:144185, 6:166385},
+  '12':{1:74677, 2:88677}
+};
+
+function selInv(chip, inv){
+  document.querySelectorAll('#s-chips-inv .chip').forEach(function(c){c.classList.remove('sel-sig');});
+  chip.classList.add('sel-sig');
+  var prices = INV_PRICES[inv] || INV_PRICES[''];
+  var fmtPrice = function(n){return 'R$'+(n/1000).toFixed(1).replace('.',',')+' k';};
+  document.querySelectorAll('#s-chips-bat .chip').forEach(function(c){
+    var n = parseInt(c.dataset.val);
+    if(prices[n]){
+      c.dataset.price = prices[n];
+      c.style.opacity = '';
+      c.style.pointerEvents = '';
+      c.style.textDecoration = '';
+      c.textContent = n+' · '+(n*9)+' kWh · '+fmtPrice(prices[n]);
+    } else {
+      c.dataset.price = '0';
+      c.style.opacity = '.3';
+      c.style.pointerEvents = 'none';
+      c.style.textDecoration = 'line-through';
+      // deselect if currently selected
+      c.classList.remove('sel-sig');
+    }
+  });
+  var hint = document.getElementById('s-inv-hint');
+  if(hint) hint.style.display = inv==='12' ? 'block' : 'none';
+  atualizarPlano();
+  gerarSig();
+}
+
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
@@ -466,6 +508,9 @@ function gerarSig(){
   p.push('consultor='+val('s-consultor'));
   p.push('cliente='+enc(cliente));
   var validade=val('s-validade'); if(validade) p.push('validade='+enc(validade));
+  var invChip=document.querySelector('#s-chips-inv .chip.sel-sig');
+  var inv=invChip?invChip.dataset.inv:'';
+  if(inv) p.push('inv='+inv);
   var nbat=getChip('s-chips-bat'); if(nbat) p.push('plan_bats='+nbat);
   if(planTotal) p.push('plan='+planTotal);
   if(!v('s-tog-sem-placas').checked){
@@ -533,6 +578,7 @@ function resetarSig(){
   ['s-tog-sem-placas','s-tog-cargas','s-tog-desc1','s-tog-desc2','s-tog-mais20'].forEach(function(id){if(v(id))v(id).checked=false;});
   ['s-body-desc1','s-body-desc2','s-body-mais20'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove('open');});
   document.querySelectorAll('#s-chips-bat .chip,#s-chips-pl .chip').forEach(function(c){c.classList.remove('sel','sel-sig','sel-gw');});
+  selInv(document.querySelector('#s-chips-inv .chip'),'');
   var totEl=document.getElementById('s-mais20-tot');if(totEl)totEl.style.display='none';
   gerarSig();
 }
