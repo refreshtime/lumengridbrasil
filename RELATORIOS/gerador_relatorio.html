@@ -285,12 +285,22 @@ body {
 .preview-area {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   background: #d4d4d4;
   padding: 28px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+#preview-wrap {
+  width: 794px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 0;
+  transform-origin: top center;
 }
 
 /* ════════════════════════════════
@@ -648,8 +658,10 @@ O local do inversor necessita de ventilação adequada para..."></textarea>
 
 <!-- ════════════ PREVIEW DO RELATÓRIO ════════════ -->
 <div class="preview-area">
-  <div class="page" id="page"></div>
-  <div class="page page-foto" id="page2" style="display:none; margin-top:32px;"></div>
+  <div id="preview-wrap">
+    <div class="page" id="page"></div>
+    <div class="page page-foto" id="page2" style="display:none; margin-top:32px;"></div>
+  </div>
 </div>
 
 <script>
@@ -675,6 +687,7 @@ let secaoCounter = 0;
   adicionarSecao('Padrão de entrada', 'Foram identificadas as seguintes adequações necessárias:');
 
   document.querySelector('.editor').addEventListener('input', debounce(atualizaPreview, 200));
+  window.addEventListener('resize', ajustarEscala);
 
   document.getElementById('campo-imagem').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -980,6 +993,26 @@ function render(d) {
 
 function atualizaPreview() {
   render(coletaDados());
+  ajustarEscala();
+}
+
+function ajustarEscala() {
+  const preview = document.querySelector('.preview-area');
+  const wrap    = document.getElementById('preview-wrap');
+  if (!wrap || !preview) return;
+
+  // Reset para medir altura natural
+  wrap.style.transform    = '';
+  wrap.style.marginBottom = '';
+
+  const avail = preview.clientWidth - 56; // 28px padding × 2
+  const scale = Math.min(1, avail / 794);
+
+  if (scale < 1) {
+    const naturalH = wrap.offsetHeight;
+    wrap.style.transform    = `scale(${scale})`;
+    wrap.style.marginBottom = `-${naturalH * (1 - scale)}px`;
+  }
 }
 
 /* ═══════════════════════════════════════════════════
