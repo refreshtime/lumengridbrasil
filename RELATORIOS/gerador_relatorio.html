@@ -281,6 +281,42 @@ body {
   display: none;
 }
 
+/* ─── IMAGEM DE SEÇÃO (relatório) ─── */
+.secao-img-wrap { margin: 12px 0 14px; }
+.secao-img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,.08);
+  display: block;
+}
+
+/* ─── QUEBRA DE PÁGINA (apenas preview, hidden no print) ─── */
+.page-break-hint {
+  position: absolute;
+  left: 0; right: 0;
+  border-top: 2px dashed rgba(242,101,34,.45);
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 5;
+}
+.page-break-hint::before {
+  content: '— quebra de página —';
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(242,101,34,.70);
+  background: #FAFAFA;
+  padding: 2px 10px;
+  margin-top: -8px;
+  border-radius: 3px;
+}
+@media print { .page-break-hint { display: none !important; } }
+
 /* ─── ÁREA DE PREVIEW ─── */
 .preview-area {
   flex: 1;
@@ -732,6 +768,12 @@ function adicionarSecao(titulo='', conteudo='') {
           oninput="this.closest('.secao-card').querySelector('.sec-preview-label').textContent = this.value || 'Nova seção'; atualizaPreview();">
       </div>
       <div>
+        <span class="sec-flabel">Imagem da seção <span class="sec-flabel-hint">— opcional, aparece após o título</span></span>
+        <input type="file" class="sec-img-input" accept="image/*" style="color:rgba(250,250,250,.4);font-size:11px;width:100%;margin-top:3px;">
+        <img class="sec-img-thumb" src="" alt="" style="display:none;width:100%;max-height:80px;object-fit:cover;border-radius:4px;margin-top:5px;border:1px solid rgba(242,101,34,.2);">
+        <button class="btn btn-danger-soft btn-mini sec-btn-rem-img" style="display:none;margin-top:4px;" onclick="removerImagemSecao(event,this)">Remover imagem</button>
+      </div>
+      <div>
         <span class="sec-flabel">Conteúdo <span class="sec-flabel-hint">— linha em branco = parágrafo · " - " no início = item de lista</span></span>
         <textarea class="sec-textarea inp-conteudo" placeholder="Foram identificadas as seguintes adequações:
 
@@ -743,6 +785,24 @@ A instalação seguirá as normas da ABNT.">${escHtml(conteudo)}</textarea>
     </div>`;
 
   lista.appendChild(card);
+
+  // listener de imagem da seção
+  card.querySelector('.sec-img-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      card.dataset.imgUrl = ev.target.result;
+      const thumb  = card.querySelector('.sec-img-thumb');
+      const remBtn = card.querySelector('.sec-btn-rem-img');
+      thumb.src = ev.target.result;
+      thumb.style.display = 'block';
+      remBtn.style.display = 'inline-flex';
+      atualizaPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+
   renumerarSecoes();
   atualizaPreview();
 }
@@ -758,6 +818,18 @@ function renumerarSecoes() {
   document.querySelectorAll('.secao-card').forEach((card, i) => {
     card.querySelector('.sec-badge').textContent = i + 1;
   });
+}
+
+function removerImagemSecao(e, btn) {
+  e.stopPropagation();
+  const card = btn.closest('.secao-card');
+  card.dataset.imgUrl = '';
+  card.querySelector('.sec-img-input').value = '';
+  const thumb = card.querySelector('.sec-img-thumb');
+  thumb.src = '';
+  thumb.style.display = 'none';
+  btn.style.display = 'none';
+  atualizaPreview();
 }
 
 function toggleSecao(header) {
@@ -860,7 +932,8 @@ function coletaDados() {
   document.querySelectorAll('.secao-card').forEach(card => {
     const titulo   = card.querySelector('.inp-titulo').value.trim();
     const conteudo = card.querySelector('.inp-conteudo').value;
-    secoes.push({ titulo, conteudo });
+    const imgUrl   = card.dataset.imgUrl || '';
+    secoes.push({ titulo, conteudo, imgUrl });
   });
 
   return {
@@ -883,6 +956,11 @@ function coletaDados() {
 function renderSecao(s, idx) {
   const blocos = parseConteudo(s.conteudo);
 
+  const imgHTML = s.imgUrl ? `
+    <div class="secao-img-wrap">
+      <img src="${s.imgUrl}" class="secao-img" alt="Imagem da seção">
+    </div>` : '';
+
   let conteudoHTML = '';
   let listaOpen    = false;
 
@@ -902,6 +980,7 @@ function renderSecao(s, idx) {
       <div class="secao-numero">${idx + 1}</div>
       <div class="secao-conteudo">
         <div class="secao-titulo">${escHtml(s.titulo) || '—'}</div>
+        ${imgHTML}
         ${conteudoHTML}
       </div>
     </div>`;
@@ -993,7 +1072,20 @@ function render(d) {
 
 function atualizaPreview() {
   render(coletaDados());
+  mostrarQuebraPagina();
   ajustarEscala();
+}
+
+function mostrarQuebraPagina() {
+  const page = document.getElementById('page');
+  const existing = page.querySelector('.page-break-hint');
+  if (existing) existing.remove();
+  if (page.offsetHeight > 1123) {
+    const hint = document.createElement('div');
+    hint.className = 'page-break-hint';
+    hint.style.top = '1123px';
+    page.appendChild(hint);
+  }
 }
 
 function ajustarEscala() {
@@ -1118,6 +1210,8 @@ body{background:#E8E8E8;font-family:'DM Sans',sans-serif;display:flex;flex-direc
 .foto-legenda-box{background:rgba(242,101,34,.06);border:1px solid rgba(242,101,34,.20);border-left:4px solid #F26522;border-radius:6px;padding:14px 18px}
 .foto-legenda-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F26522;margin-bottom:5px}
 .foto-legenda-txt{font-family:'DM Sans',sans-serif;font-size:13px;color:#3a3a3a;line-height:1.60}
+.secao-img-wrap{margin:12px 0 14px}
+.secao-img{width:100%;max-height:260px;object-fit:contain;border-radius:6px;border:1px solid rgba(0,0,0,.08);display:block}
 @page{size:A4 portrait;margin:0}
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
@@ -1169,6 +1263,7 @@ function parseConteudo(texto){
 
 function renderSecao(s,idx){
   var blocos=parseConteudo(s.conteudo);
+  var imgHTML=s.imgUrl?'<div class="secao-img-wrap"><img src="'+s.imgUrl+'" class="secao-img" alt="Imagem da seção"></div>':'';
   var html='';
   var listaOpen=false;
   blocos.forEach(function(b){
@@ -1181,7 +1276,7 @@ function renderSecao(s,idx){
     }
   });
   if(listaOpen) html+='</div>';
-  return '<div class="secao"><div class="secao-numero">'+(idx+1)+'</div><div class="secao-conteudo"><div class="secao-titulo">'+(esc(s.titulo)||'—')+'</div>'+html+'</div></div>';
+  return '<div class="secao"><div class="secao-numero">'+(idx+1)+'</div><div class="secao-conteudo"><div class="secao-titulo">'+(esc(s.titulo)||'—')+'</div>'+imgHTML+html+'</div></div>';
 }
 
 var secoesHTML=dados.secoes.map(function(s,i){return renderSecao(s,i);}).join('');
